@@ -1,0 +1,21 @@
+{
+  "java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2024\\jdk",
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "extensions.ignoreRecommendations": true,
+  "update.mode": "none",
+  "update.showReleaseNotes": false,
+  "http.systemCertificates": false,
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2024\\jdk",
+    "PATH": "C:\\Users\\Public\\wpilib\\2024\\jdk\\bin;${env:PATH}"
+  },
+  "editor.tabSize": 2,
+  "editor.accessibilitySupport": "off",
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "java.format.settings.profile": "Google4917Style",
+  "java.format.settings.url": "C:\\Users\\Public\\wpilib\\2024\\vscode\\data\\user-data\\User\\eclipse-java-google-4917-style.xml",
+  "editor.formatOnSave": true,
+  "files.hotExit": "off"
+  "workbench.colorTheme": "Default Dark Modern"
+}
