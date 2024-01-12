@@ -10,12 +10,11 @@
     "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2024\\jdk",
     "PATH": "C:\\Users\\Public\\wpilib\\2024\\jdk\\bin;${env:PATH}"
   },
+  "redhat.telemetry.enabled": false,
   "editor.tabSize": 2,
-  "editor.accessibilitySupport": "off",
   "editor.inlayHints.enabled": "offUnlessPressed",
   "java.format.settings.profile": "Google4917Style",
   "java.format.settings.url": "C:\\Users\\Public\\wpilib\\2024\\vscode\\data\\user-data\\User\\eclipse-java-google-4917-style.xml",
   "editor.formatOnSave": true,
   "files.hotExit": "off"
-  "workbench.colorTheme": "Default Dark Modern"
 }
