@@ -92,7 +92,7 @@ public class SwerveModule {
   //     boolean reverseTurningEncoderDirection, double turningEncoderOffsetRad) {
 
   public SwerveModule(int driveMotorId, int turningMotorId, int turningEncoderId,
-      SensorDirectionValue kReverseTurningEncoderDirection, double turningEncoderOffsetRad) {
+      SensorDirectionValue reverseTurningEncoderDirection, double turningEncoderOffsetRad) {
 
     // Create all the hardware objects
     m_driveMotor = new TalonFX(driveMotorId);
@@ -131,7 +131,7 @@ public class SwerveModule {
 
       CANcoderConfiguration configs = new CANcoderConfiguration();
       configs.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-      configs.MagnetSensor.SensorDirection = kReverseTurningEncoderDirection;
+      configs.MagnetSensor.SensorDirection = reverseTurningEncoderDirection;
       // configs.MagnetSensor.MagnetOffset
 
       //write these configs to the cancoder

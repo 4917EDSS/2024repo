@@ -34,10 +34,10 @@ public class DrivetrainSub extends SubsystemBase {
           new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
   // Create the 4 swerve modules
-  private final SwerveModule m_frontLeft =
-      new SwerveModule(  
-              Constants.CanIds.kDriveMotorFL,
-          Constants.CanIds.kTurningMotorFL,Constants.CanIds.kEncoderFL,
+  private final SwerveModule m_frontLeft = new SwerveModule(
+      Constants.CanIds.kDriveMotorFL,
+      Constants.CanIds.kTurningMotorFL,
+      Constants.CanIds.kEncoderFL,
       Constants.SwerveModuleConstants.kReverseTurningEncoderDirectionFL,
       Constants.SwerveModuleConstants.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight = new SwerveModule(
