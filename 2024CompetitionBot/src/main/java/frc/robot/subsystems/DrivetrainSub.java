@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,29 +34,29 @@ public class DrivetrainSub extends SubsystemBase {
           new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
   // Create the 4 swerve modules
-  private final SwerveModule m_frontLeft = new SwerveModule(
-      Constants.CanIds.kDriveMotorFL,
-      Constants.CanIds.kTurningMotorFL,
-      Constants.CanIds.kEncoderFL,
-      false,
+  private final SwerveModule m_frontLeft =
+      new SwerveModule(  
+              Constants.CanIds.kDriveMotorFL,
+          Constants.CanIds.kTurningMotorFL,Constants.CanIds.kEncoderFL,
+      Constants.SwerveModuleConstants.kReverseTurningEncoderDirectionFL,
       Constants.SwerveModuleConstants.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight = new SwerveModule(
       Constants.CanIds.kDriveMotorFR,
       Constants.CanIds.kTurningMotorFR,
       Constants.CanIds.kEncoderFR,
-      false,
+      Constants.SwerveModuleConstants.kReverseTurningEncoderDirectionFR,
       Constants.SwerveModuleConstants.kAbsoluteEncoderOffsetFR);
   private final SwerveModule m_backLeft = new SwerveModule(
       Constants.CanIds.kDriveMotorBL,
       Constants.CanIds.kTurningMotorBL,
       Constants.CanIds.kEncoderBL,
-      false,
+      Constants.SwerveModuleConstants.kReverseTurningEncoderDirectionBL,
       Constants.SwerveModuleConstants.kAbsoluteEncoderOffsetBL);
   private final SwerveModule m_backRight = new SwerveModule(
       Constants.CanIds.kDriveMotorBR,
       Constants.CanIds.kTurningMotorBR,
       Constants.CanIds.kEncoderBR,
-      false,
+      Constants.SwerveModuleConstants.kReverseTurningEncoderDirectionBR,
       Constants.SwerveModuleConstants.kAbsoluteEncoderOffsetBR);
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
