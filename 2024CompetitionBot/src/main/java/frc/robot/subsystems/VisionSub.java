@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class VisionSub extends SubsystemBase {
 
@@ -42,7 +43,23 @@ public class VisionSub extends SubsystemBase {
     SmartDashboard.putNumber("ta", getTargetArea());
     SmartDashboard.putBoolean("tv", hasTarget());
     SmartDashboard.putNumber("tid", getPrimaryID());
+    SmartDashboard.putNumber("Distance(m)", getDistance(getPrimaryID()));
+  }
 
+  public double getDistance(int id) { // In meters
+    if(id < 1 || id > 16) // Got bad apriltag
+      return 0.0;
+    double height = Constants.VisionConstants.kApriltagHeights[id + 1] + Constants.VisionConstants.kApriltagOffset;
+    double distance = calcDistance(height);
+
+    return distance;
+  }
+
+  private double calcDistance(double height) { // Basic trig
+    double theta = getVerticalAngle();
+    theta = Math.toRadians(theta);
+    double distance = height / Math.tan(theta);
+    return distance;
   }
 
   public double getHorizontalAngle() { // Horizontal offset between -27 to 27 degrees or -29.8 to 29.8 degrees

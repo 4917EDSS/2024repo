@@ -39,6 +39,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_visionSub.setPipeline(2); // Apriltag vision
   }
 
   /**
