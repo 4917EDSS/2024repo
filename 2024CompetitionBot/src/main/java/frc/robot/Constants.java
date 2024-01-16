@@ -21,4 +21,10 @@ public final class Constants {
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
   }
+  public final static class VisionConstants {
+    public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
+    public static final double kApriltagHeights[] =
+        {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
+  }
+
 }
