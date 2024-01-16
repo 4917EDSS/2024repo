@@ -5,7 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.ctre.phoenix.motorcontrol.ControlMode;
+// import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,6 +23,10 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 // import com.ctre.phoenix.sensors.SensorTimeBase;
 // import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -63,9 +68,10 @@ public class SwerveModule {
   }
 
   // Member variables
-  private final TalonFX m_driveMotor;
-  private final CANSparkMax m_turningMotor;
-  private final CANcoder m_turningEncoder;
+  private final TalonFX m_turningMotor;
+  private final CANSparkMax m_driveMotor;
+  //private final CANcoder m_driveEncoder;
+  private final RelativeEncoder m_driveEncoder;
 
   private final PIDController m_drivePIDController =
       new PIDController(1.0, 0, 0);
@@ -95,9 +101,10 @@ public class SwerveModule {
       SensorDirectionValue reverseTurningEncoderDirection, double turningEncoderOffsetRad) {
 
     // Create all the hardware objects
-    m_driveMotor = new TalonFX(driveMotorId);
-    m_turningMotor = new CANSparkMax(turningMotorId, CANSparkLowLevel.MotorType.kBrushless);
-    m_turningEncoder = new CANcoder(turningEncoderId);
+    m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
+    m_turningMotor = new TalonFX(turningMotorId);
+    m_driveEncoder = m_driveMotor.getEncoder();
+    //m_turningEncoder = new CANcoder(turningEncoderId);
 
     m_driveMotor.setInverted(true);
 
@@ -110,7 +117,7 @@ public class SwerveModule {
       FeedbackConfigs fbconfigs = new FeedbackConfigs();
       fbconfigs.withRotorToSensorRatio(ModuleConstants.kDriveEncoderDistancePerPulseMmPerTick);
       fbconfigs.withSensorToMechanismRatio(1);
-      m_driveMotor.getConfigurator().apply(fbconfigs);
+      //m_driveMotor.getConfigurator().apply(fbconfigs);
     }
 
 
@@ -135,7 +142,7 @@ public class SwerveModule {
       // configs.MagnetSensor.MagnetOffset
 
       //write these configs to the cancoder
-      m_turningEncoder.getConfigurator().apply(configs);
+      //m_turningEncoder.getConfigurator().apply(configs);
     }
 
 
@@ -155,7 +162,7 @@ public class SwerveModule {
   public SwerveModulePosition getPosition() {
     // return new SwerveModulePosition(m_driveMotor.getSelectedSensorPosition() / 1000.0,
     // new Rotation2d(getTurningPositionAbsoluteRad()));
-    return new SwerveModulePosition(m_driveMotor.getPosition().getValueAsDouble() / 1000.0,
+    return new SwerveModulePosition(m_driveEncoder.getPosition(),
         new Rotation2d(getTurningPositionAbsoluteRad()));
   }
 
@@ -188,14 +195,14 @@ public class SwerveModule {
     }
 
     // Calculate the turning motor output from the turning PID controller.
-    // m_driveMotor.set(ControlMode.PercentOutput, driveOutput);
-    m_driveMotor.setControl(new DutyCycleOut(driveOutput));
+    m_driveMotor.set(driveOutput);
+    //m_driveMotor.setControl(new DutyCycleOut(driveOutput));
     m_turningMotor.set(turnOutput);
   }
 
   public void stop() {
     // m_driveMotor.set(ControlMode.PercentOutput, 0);
-    m_driveMotor.setControl(new DutyCycleOut(0));
+    m_driveMotor.set(0);
     m_turningMotor.set(0);
   }
 
@@ -226,26 +233,26 @@ public class SwerveModule {
 
   public double getDrivePositionM() {
     // return m_driveMotor.getSelectedSensorPosition();
-    return m_driveMotor.getPosition().getValueAsDouble();
+    return m_driveEncoder.getPosition();
   }
 
   public double getTurningPosition() {
-    return m_turningMotor.getEncoder().getPosition();
+    return m_driveEncoder.getPosition();
   }
 
   public double getDriveVelocityMPerS() {
     // return m_driveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveVelocityFactor;
-    return m_driveMotor.getVelocity().getValueAsDouble() * ModuleConstants.kDriveVelocityFactor;
+    return m_driveEncoder.getPosition() * ModuleConstants.kDriveVelocityFactor;
   }
 
   public double getTurningVelocity() {
-    return m_turningMotor.getEncoder().getVelocity();
+    return 0.0; // No velocity function for TalonFX                         m_turningMotor.getEncoder().getVelocity();
   }
 
   public double getTurningPositionAbsoluteRad() {
     // double position = m_turningEncoder.getAbsolutePosition() - m_turningEncoderOffset;
 
-    double position = m_turningEncoder.getPosition().getValueAsDouble() - m_turningEncoderOffset;
+    double position = m_turningMotor.getPosition().getValueAsDouble();//m_turningEncoder.getPosition().getValueAsDouble() - m_turningEncoderOffset;
 
 
     // Compensate for the offset's effect on the absolute encorder roll-over
@@ -261,7 +268,7 @@ public class SwerveModule {
 
   public void resetEncoders() {
     // m_driveMotor.setSelectedSensorPosition(0.0);
-    m_driveMotor.setPosition(0.0);
+    m_driveEncoder.setPosition(m_turningEncoderOffset);
     // m_turningMotor.getEncoder().setPosition(0.0); // Can't reset this absolute encoder
   }
 }
