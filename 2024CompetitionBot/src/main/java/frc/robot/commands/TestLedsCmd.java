@@ -23,6 +23,7 @@ public class TestLedsCmd extends Command {
   public TestLedsCmd(LedSub LedSub, LedColour colour) {
     m_ledSub = LedSub;
     m_LedColour = colour;
+    m_ledSub.setZoneColour(LedZones.ALL, colour);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(LedSub);
   }
@@ -30,7 +31,7 @@ public class TestLedsCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ledSub.setZoneColour(LedZones.ALL, m_LedColour);
+    m_ledSub.setZoneColour(LedZones.ALL, m_LedColour.GREEN);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

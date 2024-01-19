@@ -22,6 +22,11 @@ public final class Constants {
   public final static class CanIds {
     public final static int kIntakeMotor = 27;
   }
+  public final static class CanIds {
+    public static final int kIntakeRollers = 25;
+    public static final int kGroundIntakeUpDownPivot = 26;
+    public final static int kFlywheelMotor = 20;
+  }
 
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;

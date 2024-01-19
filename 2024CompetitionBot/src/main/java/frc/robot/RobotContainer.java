@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import frc.robot.subsystems.ShooterSub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,6 +36,7 @@ public class RobotContainer {
   private final IntakeSub m_exampleSubsystem = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
+  private final ShooterSub m_shooterSub = new ShooterSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -73,6 +75,7 @@ public class RobotContainer {
     //Change to operator controller
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+    //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
   }
 
   /**
@@ -83,6 +86,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new PrintCommand("No auto yet");
+  }
+
+  public void initSubsystems() {
+    m_ledSub.init();
   }
 }
 
