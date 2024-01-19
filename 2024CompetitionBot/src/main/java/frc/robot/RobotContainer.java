@@ -5,10 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TestLedsCmd;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSub;
+// import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -31,7 +32,7 @@ import frc.robot.subsystems.LedSub.LedZones;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final IntakeSub m_exampleSubsystem = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
 
@@ -81,7 +82,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return new PrintCommand("No auto yet");
   }
 }
 

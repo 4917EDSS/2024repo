@@ -4,12 +4,20 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkLowLevel;
+import frc.robot.Constants;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class IntakeSub extends SubsystemBase {
+
+  private final CANSparkMax m_intakeMotor =
+      new CANSparkMax(Constants.CanIds.kIntakeMotor, CANSparkLowLevel.MotorType.kBrushless);
+
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public IntakeSub() {}
+
 
   /**
    * Example command factory method.
