@@ -74,6 +74,7 @@ public class RobotContainer {
     //Change to operator controller
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+    //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
   }
 
   /**
@@ -84,6 +85,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+  public void initSubsystems() {
+    m_ledSub.init();
   }
 }
 
