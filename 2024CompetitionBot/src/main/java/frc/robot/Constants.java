@@ -17,6 +17,17 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class CanIds {
+    public final static int kDriveMotorFL = 1; // NEOs 
+    public final static int kDriveMotorFR = 3;
+    public final static int kDriveMotorBL = 5;
+    public final static int kDriveMotorBR = 7;
+
+    public final static int kSteeringMotorFL = 2; // Falcons 
+    public final static int kSteeringMotorFR = 4;
+    public final static int kSteeringMotorBL = 6;
+    public final static int kSteeringMotorBR = 8;
+  }
 
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
