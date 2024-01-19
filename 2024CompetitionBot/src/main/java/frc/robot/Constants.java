@@ -17,6 +17,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public final static class CanIds {
+    public final static int kFlywheelMotor = 20;
+  }
 
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
