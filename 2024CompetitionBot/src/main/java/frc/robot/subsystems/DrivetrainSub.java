@@ -16,23 +16,27 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
-  public static final double kMaxSpeed = 3.0; // 3 meters per second
+  public static final double kMaxSpeed = 10.0; // 3 meters per second
 
   // Locations of Swerve Modules relative to the center of the robot
-  private final Translation2d m_frontLeftLocation = new Translation2d(-0.381, -0.318); // I have no idea why these are 0.381
+  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.318);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.318);
-  private final Translation2d m_backRightLocation = new Translation2d(0.381, 0.318);
+  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.318);
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL, Constants.DriveConstants.kAbsoluteEncoderOffsetFL);
+      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
+          Constants.DriveConstants.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR, Constants.DriveConstants.kAbsoluteEncoderOffsetFR);
+      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR,
+          Constants.DriveConstants.kAbsoluteEncoderOffsetFR);
   private final SwerveModule m_backLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL, Constants.DriveConstants.kAbsoluteEncoderOffsetBL);
+      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL,
+          Constants.DriveConstants.kAbsoluteEncoderOffsetBL);
   private final SwerveModule m_backRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR, Constants.DriveConstants.kAbsoluteEncoderOffsetBR);
+      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
+          Constants.DriveConstants.kAbsoluteEncoderOffsetBR);
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
@@ -51,7 +55,23 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   // TODO: Possibly remove fieldOriented option since there is no reason for the bot not to be field oriented
+
+
   public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented, double periodSeconds) { // Period should be time period between whenever this is called
+    if(Math.abs(xSpeed) < 0.1)
+      xSpeed = 0.0;
+    if(Math.abs(ySpeed) < 0.1)
+      ySpeed = 0.0;
+    if(Math.abs(rotationSpeed) < 0.1)
+      rotationSpeed = 0.0;
+    xSpeed *= 10.0;
+    ySpeed *= 10.0;
+    rotationSpeed *= 7.0;
+    ChassisSpeeds speedS =
+        fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d())
+            : new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+
+    //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
 
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
         fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d())
@@ -82,7 +102,7 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("XPOS", xPos);
     SmartDashboard.putNumber("YPOS", yPos);
     SmartDashboard.putNumber("GYRO", m_gyro.getAngle());
-    
+
     SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
     SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
     SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());

@@ -52,16 +52,16 @@ public class RobotContainer {
     configureBindings();
     m_visionSub.setPipeline(2); // Apriltag vision
     m_drivetrainSub.setDefaultCommand(
-      // The left stick controls translation of the robot.
-      // Turning is controlled by the X axis of the right stick.
-      new RunCommand(
-        () -> m_drivetrainSub.drive(
-          m_driverController.getLeftY(),
-          m_driverController.getLeftX(),
-          m_driverController.getRightX(),
-        true, 
-        0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
-        m_drivetrainSub));
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new RunCommand(
+            () -> m_drivetrainSub.drive(
+                m_driverController.getLeftY(),
+                m_driverController.getLeftX(),
+                m_driverController.getRightX(),
+                true,
+                0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+            m_drivetrainSub));
   }
 
   /**
