@@ -16,6 +16,13 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+  }
+
+  public final static class CanIds {
+    public static final int kIntakeRollers = 25;
+    public static final int kGroundIntakeUpDownPivot = 26;
+    public final static int kFlywheelMotor = 20;
   }
   public static class CanIds {
     public final static int kDriveMotorFL = 1; // NEOs 

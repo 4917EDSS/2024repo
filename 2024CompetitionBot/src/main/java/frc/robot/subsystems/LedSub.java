@@ -119,31 +119,31 @@ public class LedSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if(m_newColoursAvailible) {
-    //   m_ledStrip.setData(m_ledBuffer);
-    //   m_newColoursAvailible = false;
-    // }
+    if(m_newColoursAvailible) {
+      m_ledStrip.setData(m_ledBuffer);
+      m_newColoursAvailible = false;
+    }
 
 
-    // if(m_isFlashing) {
-    //   long timeSinceIntakeLoaded = RobotController.getFPGATime() - m_time;
+    if(m_isFlashing) {
+      long timeSinceIntakeLoaded = RobotController.getFPGATime() - m_time;
 
-    //   if(timeSinceIntakeLoaded < 250000) { // Led ON time
-    //     setZoneColour(LedZones.ALL, LedColour.GREEN);
-    //   }
-    //   if(250000 <= timeSinceIntakeLoaded && timeSinceIntakeLoaded <= 500000) {
-    //     setZoneColour(LedZones.ALL, LedColour.RED);
-    //   }
-    //   if(timeSinceIntakeLoaded > 500000) {
-    //     m_time = RobotController.getFPGATime();
-    //     m_ledblinktimes++;
-    //   }
-    //   if(m_ledblinktimes >= 3) {//when it is done flashing
-    //     m_isFlashing = false;
-    //     m_ledblinktimes = 0;
-    //     changeColourHome();
-    //   }
-    // }
+      if(timeSinceIntakeLoaded < 250000) { // Led ON time
+        setZoneColour(LedZones.ALL, LedColour.GREEN);
+      }
+      if(250000 <= timeSinceIntakeLoaded && timeSinceIntakeLoaded <= 500000) {
+        setZoneColour(LedZones.ALL, LedColour.RED);
+      }
+      if(timeSinceIntakeLoaded > 500000) {
+        m_time = RobotController.getFPGATime();
+        m_ledblinktimes++;
+      }
+      if(m_ledblinktimes >= 3) {//when it is done flashing
+        m_isFlashing = false;
+        m_ledblinktimes = 0;
+        changeColourHome();
+      }
+    }
 
 
   }
