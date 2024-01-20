@@ -14,20 +14,27 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public final static class ShooterPivotPositionConstants {
+    public static final double kSpeakerPosition = 1;
+    public static final double kTrapPosition = 2;
+    public static final double kAmpPosition = 3;
+  }
+
   public final static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
 
   public final static class DriveConstants {
-    public static final double kAbsoluteEncoderOffsetFL = -0.358;
-    public static final double kAbsoluteEncoderOffsetFR = -0.323;
-    public static final double kAbsoluteEncoderOffsetBL = 0.345;
-    public static final double kAbsoluteEncoderOffsetBR = -0.435;
+    public static final double kAbsoluteEncoderOffsetFL = -2.224; //-0.358 + 1.892;
+    public static final double kAbsoluteEncoderOffsetFR = 0.716; //-0.323 + 2.004;
+    public static final double kAbsoluteEncoderOffsetBL = 1.003; //0.345 - 0.835;
+    public static final double kAbsoluteEncoderOffsetBR = 3.031; //-0.435 - 3.574;
   }
 
   public final static class CanIds {
-    public final static int kDriveMotorFL = 1; // NEOs 
+    public final static int kDriveMotorFL = 1;// NEOs 
     public final static int kDriveMotorFR = 3;
     public final static int kDriveMotorBL = 5;
     public final static int kDriveMotorBR = 7;
@@ -42,18 +49,26 @@ public final class Constants {
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 11;
 
-    public static final int kIntakeRollers = 25;
-    public static final int kGroundIntakeUpDownPivot = 26;
-    public final static int kFlywheelMotor = 20;
+    public final static int kIntakeRollers = 25;
+    public final static int kGroundIntakeUpDownPivot = 26;
+    public final static int kShooterFlywheel = 20;
+    public final static int kShooterPivot = 21;
+    public final static int kShooterFeeder = 22;
+
     public final static int kClimbMotorRight = 27;
     public final static int kClimbMotorLeft = 29;
+
   }
+
   public final static class DioIds {
-    public static final int kIntakeLimitPort = 0;
+    public final static int kShooterNoteLimit = 0;
+    public final static int kIntakeLimitPort = 1;
   }
+
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
   }
+
   public final static class VisionConstants {
     public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
     public static final double kApriltagHeights[] =
@@ -71,3 +86,4 @@ public final class Constants {
     public static final double kTickCofficient = 0.25/42;
   }
 }
+  

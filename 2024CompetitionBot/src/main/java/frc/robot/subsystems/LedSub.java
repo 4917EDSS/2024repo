@@ -192,15 +192,15 @@ public class LedSub extends SubsystemBase {
     setZoneRGB(zone, ledColour.red, ledColour.green, ledColour.blue);
   }
 
-  private boolean setBuffer(int position, int r, int g, int b) {
+  private void setBuffer(int position, int r, int g, int b) {
     if(m_ledColourBuffer[position][0] == r && m_ledColourBuffer[position][1] == g && m_ledColourBuffer[position][2] == b) {
-      return false;
+      return;
     }
     m_ledBuffer.setRGB(position, r, b, g); 
     m_ledColourBuffer[position][0] = r;
     m_ledColourBuffer[position][1] = g;
     m_ledColourBuffer[position][2] = b;
-    return true;
+    m_newColoursAvailable = true;
   }
   /**
    * Set all the LEDs in the specified zone to the specified RGB value. Recomment that you use setZoneColour instead.
@@ -228,9 +228,7 @@ public class LedSub extends SubsystemBase {
     m_newColoursAvailable = false;
 
     for(int i = zone.start; i <= zone.end; i++) {
-     if (setBuffer(i, r, b, g)) {
-      m_newColoursAvailable = true;
-     }
+      setBuffer(i, r, b, g);
     }
 
     if(zone.mirror) {
@@ -238,10 +236,7 @@ public class LedSub extends SubsystemBase {
       int start = kLedStripLength - zone.end - 1;
       int end = kLedStripLength - zone.start - 1;
       for(int i = start; i <= end; i++) {
-       if (setBuffer(i, r, b, g)){
-        m_newColoursAvailable = true;
-       }
-
+        setBuffer(i, r, b, g);
       }
     }
     

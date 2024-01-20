@@ -5,6 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ShooterFeederCmd;
+import frc.robot.commands.ShooterFlywheelCmd;
+import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
@@ -58,8 +61,7 @@ public class RobotContainer {
                 m_driverController.getLeftY(),
                 m_driverController.getLeftX(),
                 m_driverController.getRightX(),
-                true,
-                0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+                0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
   }
 
@@ -83,6 +85,9 @@ public class RobotContainer {
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
+    // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
+    //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
+    //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
     //here we are making the climb
     m_driverController.square().onTrue(new ClimbCmdSetHeightCmd(m_climbSub, Constants.ClimbConstants.kHookScoring));
@@ -102,6 +107,10 @@ public class RobotContainer {
 
   public void initSubsystems() {
     m_ledSub.init();
+  }
+
+  public void resetGyro() {
+    m_drivetrainSub.resetGyro();
   }
 }
 
