@@ -34,10 +34,12 @@ public final class Constants {
     public final static int kEncoderFR = 13;
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 17;
-    
+
     public static final int kIntakeRollers = 25;
     public static final int kGroundIntakeUpDownPivot = 26;
     public final static int kFlywheelMotor = 20;
+    public final static int kClimbMotorRight = 27;
+    public final static int kClimbMotorLeft = 29;
   }
   public final static class DioIds {
     public static final int kIntakeLimitPort = 0;
