@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -13,6 +15,8 @@ import frc.robot.Constants;
 
 
 public class ShooterSub extends SubsystemBase {
+
+
   /** Creates a new Shooter. */
 
   private final CANSparkMax m_Flywheel =
@@ -78,7 +82,7 @@ public class ShooterSub extends SubsystemBase {
     return m_Flywheel.getEncoder().getVelocity();
   }
 
-  public double getPivotDistance() {
+  public double getPivotPosition() {
     return m_Pivot.getEncoder().getPosition();
   }
 
@@ -86,7 +90,7 @@ public class ShooterSub extends SubsystemBase {
     return m_Pivot.getEncoder().getVelocity();
   }
 
-  public boolean isNoteatPosition() {
+  public boolean isNoteAtPosition() {
     return m_NotePosition.get();
   }
 
@@ -94,6 +98,15 @@ public class ShooterSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    updatesmartdashboard();
   }
 
+  private void updatesmartdashboard() {
+    SmartDashboard.putNumber("Shooter Flywheel velicity", getFlywheelVelocity());
+    SmartDashboard.putNumber("Shooter Pivot Position", getPivotPosition());
+    SmartDashboard.putNumber("Shooter Pivot Velocity", getPivotVelocity());
+    SmartDashboard.putNumber("Shooter Flywheel Power", m_Flywheel.get());
+    SmartDashboard.putNumber("Shooter Pivot Power", m_Pivot.get());
+    SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
+  }
 }
