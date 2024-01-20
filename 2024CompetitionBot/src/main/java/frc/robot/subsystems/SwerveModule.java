@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -44,6 +45,7 @@ public class SwerveModule extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final TalonFX m_steeringMotor;
   private final RelativeEncoder m_driveEncoder;
+  private final CANcoder m_steeringEncoder;
 
   // PID Controllers
 
@@ -59,23 +61,23 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
 
-  public SwerveModule(int driveMotorID, int steeringMotorID) { // Drive motor ID, Steering motor ID
+  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID) { // Drive motor ID, Steering motor ID
 
     // Initialize motors and sensors
     m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     m_steeringMotor = new TalonFX(steeringMotorID);
     m_driveEncoder = m_driveMotor.getEncoder();
+    m_steeringEncoder = new CANcoder(steeringEncoderID);
 
 
     // Set conversion factors
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityFactor);
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveDistanceFactor);
 
-
   }
 
   public double getTurningRotation() { // In radians
-    return m_steeringMotor.getPosition().getValueAsDouble() * ModuleConstants.kTurningConversionFactor;
+    return m_steeringEncoder.getAbsolutePosition().getValueAsDouble();//m_steeringMotor.getPosition().getValueAsDouble() * ModuleConstants.kTurningConversionFactor;
   }
 
   public SwerveModuleState getState() {
