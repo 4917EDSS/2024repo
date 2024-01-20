@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.RobotController;
 public class LedSub extends SubsystemBase {
   // Constants
   private final static int kLedStripLength = 8;
-  private boolean m_newColoursAvailible = false;
+  private static int[][] m_ledColourBuffer = new int [kLedStripLength][3];
+  private boolean m_newColoursAvailable = false;
   public boolean m_isFlashing; //true if flash is on (game piece gets loaded)
   public long m_time; //time of when the flash starts
   private int m_ledblinktimes = 0; // Number of times the led should blink when flashing
@@ -119,9 +120,9 @@ public class LedSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(m_newColoursAvailible) {
+    if(m_newColoursAvailable) {
       m_ledStrip.setData(m_ledBuffer);
-      m_newColoursAvailible = false;
+      m_newColoursAvailable = false;
     }
 
 
@@ -191,6 +192,16 @@ public class LedSub extends SubsystemBase {
     setZoneRGB(zone, ledColour.red, ledColour.green, ledColour.blue);
   }
 
+  private boolean setBuffer(int position, int r, int g, int b) {
+    if(m_ledColourBuffer[position][0] == r && m_ledColourBuffer[position][1] == g && m_ledColourBuffer[position][2] == b) {
+      return false;
+    }
+    m_ledBuffer.setRGB(position, r, b, g); 
+    m_ledColourBuffer[position][0] = r;
+    m_ledColourBuffer[position][1] = g;
+    m_ledColourBuffer[position][2] = b;
+    return true;
+  }
   /**
    * Set all the LEDs in the specified zone to the specified RGB value. Recomment that you use setZoneColour instead.
    */
@@ -213,9 +224,13 @@ public class LedSub extends SubsystemBase {
     if(b > 255) {
       b = 255;
     }
+    
+    m_newColoursAvailable = false;
 
     for(int i = zone.start; i <= zone.end; i++) {
-      m_ledBuffer.setRGB(i, r, b, g); //this function takes in RBG
+     if (setBuffer(i, r, b, g)) {
+      m_newColoursAvailable = true;
+     }
     }
 
     if(zone.mirror) {
@@ -223,10 +238,13 @@ public class LedSub extends SubsystemBase {
       int start = kLedStripLength - zone.end - 1;
       int end = kLedStripLength - zone.start - 1;
       for(int i = start; i <= end; i++) {
-        m_ledBuffer.setRGB(i, r, b, g); //this function takes in RBG
+       if (setBuffer(i, r, b, g)){
+        m_newColoursAvailable = true;
+       }
+
       }
     }
-    m_newColoursAvailible = true;
+    
   }
 
 

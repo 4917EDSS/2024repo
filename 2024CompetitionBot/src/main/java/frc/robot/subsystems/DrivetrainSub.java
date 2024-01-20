@@ -26,13 +26,13 @@ public class DrivetrainSub extends SubsystemBase {
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL);
+      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL, Constants.DriveConstants.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR);
+      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR, Constants.DriveConstants.kAbsoluteEncoderOffsetFR);
   private final SwerveModule m_backLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL);
+      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL, Constants.DriveConstants.kAbsoluteEncoderOffsetBL);
   private final SwerveModule m_backRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR);
+      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR, Constants.DriveConstants.kAbsoluteEncoderOffsetBR);
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
@@ -82,6 +82,11 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("XPOS", xPos);
     SmartDashboard.putNumber("YPOS", yPos);
     SmartDashboard.putNumber("GYRO", m_gyro.getAngle());
+    
+    SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
+    SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
+    SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());
+    SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
   }
 
 
