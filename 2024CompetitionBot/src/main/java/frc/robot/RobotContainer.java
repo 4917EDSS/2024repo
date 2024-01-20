@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TestLedsCmd;
+import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
@@ -23,7 +24,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.ClimbCmdSetHightCmd;
+import frc.robot.commands.ClimbCmdSetHeightCmd;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final VisionSub m_visionSub = new VisionSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final ShooterSub m_shooterSub = new ShooterSub();
+  private final ClimbSub m_climbSub = new ClimbSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -83,9 +85,9 @@ public class RobotContainer {
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
 
     //here we are making the climb
-    m_driverController.square().onTrue(new ClimbCmdSetHightCmd(0));
-    m_driverController.circle().onTrue(new ClimbCmdSetHightCmd(1));
-    m_driverController.triangle().onTrue(new ClimbCmdSetHightCmd(2));
+    m_driverController.square().onTrue(new ClimbCmdSetHeightCmd(m_climbSub, Constants.ClimbConstants.kHookScoring));
+    m_driverController.circle().onTrue(new ClimbCmdSetHeightCmd(m_climbSub, Constants.ClimbConstants.kHookJustup));
+    m_driverController.triangle().onTrue(new ClimbCmdSetHeightCmd(m_climbSub, Constants.ClimbConstants.kHookRaised));
   }
 
   /**

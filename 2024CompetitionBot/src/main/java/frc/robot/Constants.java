@@ -41,7 +41,7 @@ public final class Constants {
     public final static int kEncoderFR = 13;
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 11;
-    
+
     public static final int kIntakeRollers = 25;
     public static final int kGroundIntakeUpDownPivot = 26;
     public final static int kFlywheelMotor = 20;
@@ -59,5 +59,15 @@ public final class Constants {
     public static final double kApriltagHeights[] =
         {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
 
+  }
+  public static final class ClimbConstants {
+    //TODO Change all the hights
+    //all meshermintes need to be fixed and are in m
+    public static final double kHookRaised = 2;
+    public static final double kHooklowered = 0;
+    public static final double kHookJustup = 1.5;
+    public static final double kHookScoring = 0.25;
+    //0.25 incorrect needs to be fixed
+    public static final double kTickCofficient = 0.25/42;
   }
 }
