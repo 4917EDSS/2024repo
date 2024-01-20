@@ -5,10 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ClimbSub;
+import frc.robot.subsystems.DrivetrainSub;
 
-public class Climb extends Command {
+public class ClimbCmdSetHight extends Command {
   /** Creates a new Climb. */
-  public Climb() {
+  public ClimbCmdSetHight(int position) {
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
