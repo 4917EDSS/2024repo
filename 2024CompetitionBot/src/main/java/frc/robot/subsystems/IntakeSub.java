@@ -18,7 +18,7 @@ import com.revrobotics.CANSparkLowLevel;
 public class IntakeSub extends SubsystemBase {
   private final CANSparkMax m_intakeRollers =
       new CANSparkMax(Constants.CanIds.kIntakeRollers, CANSparkLowLevel.MotorType.kBrushless);
-  // Line below most likely will not be used, but can be used as a working encoder if necessary
+  // Line below most likely will not be used, but can be used as a working absolute encoder if necessary
   private final SparkAbsoluteEncoder m_intakeEncoder = m_intakeRollers.getAbsoluteEncoder (Type.kDutyCycle);
   private final DigitalInput m_intakeLimitSwitch = new DigitalInput(Constants.DioIds.kIntakeLimitPort);
   /** Creates a new Intake. */
