@@ -31,7 +31,7 @@ import frc.robot.subsystems.ShooterSub;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSub m_exampleSubsystem = new IntakeSub();
+  private final IntakeSub m_intakeSub = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
