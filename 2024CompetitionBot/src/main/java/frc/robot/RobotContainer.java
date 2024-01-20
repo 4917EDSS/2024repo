@@ -60,7 +60,7 @@ public class RobotContainer {
                 m_driverController.getLeftX(),
                 m_driverController.getRightX(),
                 true,
-                0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+                0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
   }
 
