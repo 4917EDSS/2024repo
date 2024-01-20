@@ -6,8 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TestLedsCmd;
-import frc.robot.subsystems.IntakeSub;
-// import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
@@ -35,6 +34,7 @@ public class RobotContainer {
   private final IntakeSub m_exampleSubsystem = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final ShooterSub m_shooterSub = new ShooterSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -44,7 +44,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-
     configureBindings();
     m_visionSub.setPipeline(2); // Apriltag vision
   }
