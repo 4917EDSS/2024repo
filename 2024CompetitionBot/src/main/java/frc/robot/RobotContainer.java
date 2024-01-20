@@ -23,6 +23,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.commands.ClimbCmdSetHight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -82,9 +83,9 @@ public class RobotContainer {
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
 
     //here we are making the climb
-    // m_driverController.square().onTrue(new ClimbCmdSetHight(0));
-    // m_driverController.circle().onTrue(new ClimbCmdSetHight(1));
-    // m_driverController.triangle().onTrue(new ClimbCmdSetHight(2));
+    m_driverController.square().onTrue(new ClimbCmdSetHight(0));
+    m_driverController.circle().onTrue(new ClimbCmdSetHight(1));
+    m_driverController.triangle().onTrue(new ClimbCmdSetHight(2));
   }
 
   /**
