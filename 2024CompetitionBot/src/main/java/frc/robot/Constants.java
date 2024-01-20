@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   public final static class CanIds {
-    public final static int kDriveMotorFL = 1; // NEOs 
+    public final static int kDriveMotorFL = 1;// NEOs 
     public final static int kDriveMotorFR = 3;
     public final static int kDriveMotorBL = 5;
     public final static int kDriveMotorBR = 7;
@@ -34,10 +34,16 @@ public final class Constants {
     public final static int kEncoderFR = 13;
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 17;
-    
+
     public static final int kIntakeRollers = 25;
     public static final int kGroundIntakeUpDownPivot = 26;
-    public final static int kFlywheelMotor = 20;
+    public final static int kShooterFlywheel = 20;
+    public final static int kShooterPivot = 21;
+    public final static int kShooterFeeder = 22;
+
+  }
+  public final static class DioIds {
+    public final static int kShooterNoteLimit = 0;
   }
 
   public final static class PwmIds {

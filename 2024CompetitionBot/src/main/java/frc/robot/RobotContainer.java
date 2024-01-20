@@ -5,6 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ShooterFeederCmd;
+import frc.robot.commands.ShooterFlywheelCmd;
+import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
@@ -68,6 +71,9 @@ public class RobotContainer {
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
+    // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
+    //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
+    //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
   }
 
   /**
