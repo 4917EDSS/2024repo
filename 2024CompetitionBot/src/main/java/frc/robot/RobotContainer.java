@@ -80,6 +80,11 @@ public class RobotContainer {
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
+
+    //here we are making the climb
+    // m_driverController.square().onTrue(new ClimbCmdSetHight(0));
+    // m_driverController.circle().onTrue(new ClimbCmdSetHight(1));
+    // m_driverController.triangle().onTrue(new ClimbCmdSetHight(2));
   }
 
   /**

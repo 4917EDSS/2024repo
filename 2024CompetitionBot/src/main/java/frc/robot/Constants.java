@@ -45,8 +45,12 @@ public final class Constants {
     public static final int kIntakeRollers = 25;
     public static final int kGroundIntakeUpDownPivot = 26;
     public final static int kFlywheelMotor = 20;
+    public final static int kClimbMotorRight = 27;
+    public final static int kClimbMotorLeft = 29;
   }
-
+  public final static class DioIds {
+    public static final int kIntakeLimitPort = 0;
+  }
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
   }
@@ -54,6 +58,6 @@ public final class Constants {
     public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
     public static final double kApriltagHeights[] =
         {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
-  }
 
+  }
 }
