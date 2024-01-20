@@ -5,6 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ShooterFeederCmd;
+import frc.robot.commands.ShooterFlywheelCmd;
+import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
@@ -47,6 +51,17 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_visionSub.setPipeline(2); // Apriltag vision
+    m_drivetrainSub.setDefaultCommand(
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      new RunCommand(
+        () -> m_drivetrainSub.drive(
+          m_driverController.getLeftY(),
+          m_driverController.getLeftX(),
+          m_driverController.getRightX(),
+        true, 
+        0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+        m_drivetrainSub));
   }
 
   /**
@@ -69,6 +84,9 @@ public class RobotContainer {
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
+    // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
+    //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
+    //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
     //here we are making the climb
     m_driverController.square().onTrue(new ClimbCmdSetHight(0));

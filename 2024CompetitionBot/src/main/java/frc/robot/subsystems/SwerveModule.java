@@ -45,10 +45,11 @@ public class SwerveModule extends SubsystemBase {
   private final TalonFX m_steeringMotor;
   private final RelativeEncoder m_driveEncoder;
   private final CANcoder m_steeringEncoder;
+  private final double m_turningEncoderOffset;
 
   // PID Controllers
 
-  private final PIDController m_drivePID = new PIDController(0.1, 0, 0); // TODO: Tune the Driving PID
+  private final PIDController m_drivePID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(
@@ -61,7 +62,7 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
 
-  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID) { // Drive motor ID, Steering motor ID
+  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
 
     // Initialize motors and sensors
     m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
@@ -74,10 +75,22 @@ public class SwerveModule extends SubsystemBase {
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityFactor);
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveDistanceFactor);
 
+    m_turningEncoderOffset = absoluteEncoderOffsetRad;
+
   }
 
   public double getTurningRotation() { // In radians
-    return m_steeringEncoder.getAbsolutePosition().getValueAsDouble();//m_steeringMotor.getPosition().getValueAsDouble() * ModuleConstants.kTurningConversionFactor;
+    double position = m_steeringEncoder.getAbsolutePosition().getValueAsDouble() - m_turningEncoderOffset;//m_steeringMotor.getPosition().getValueAsDouble() * ModuleConstants.kTurningConversionFactor;
+    
+    // compensate for the offset's effect on the absolute encoder roll-over
+    // want values from -pi to +pi in rad
+    if(position < -Math.PI) {
+      position += (2 * Math.PI);
+    } else if(position > Math.PI) {
+      position -= (2 * Math.PI);
+    }
+
+    return position;
   }
 
   public SwerveModuleState getState() { // Swerve states are what Kinematics uses for calculations
@@ -92,6 +105,11 @@ public class SwerveModule extends SubsystemBase {
 
   public void setState(SwerveModuleState state) { // Set the proper motor speeds and directions for the given state
     var steeringRotation = new Rotation2d(getTurningRotation());
+
+    if(Math.abs(state.speedMetersPerSecond) < 0.1){ // deadband
+      stop();
+      return;
+    }
 
     // Optimize the state so it doesn't rotate 270 degrees for a 90 degree turn
     SwerveModuleState betterState = SwerveModuleState.optimize(state, steeringRotation);
@@ -112,6 +130,11 @@ public class SwerveModule extends SubsystemBase {
     double steeringPower = steeringOutput + steeringFeedforward;
     m_driveMotor.set(Math.min(Math.max(drivePower, -0.5), 0.5)); // Safety first
     m_steeringMotor.set(Math.min(Math.max(steeringPower, -0.4), 0.4));
+  }
+
+  public void stop(){
+    m_driveMotor.set(0);
+    m_steeringMotor.set(0);
   }
 
   @Override
