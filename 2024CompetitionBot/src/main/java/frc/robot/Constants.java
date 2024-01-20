@@ -24,6 +24,22 @@ public final class Constants {
     public static final int kGroundIntakeUpDownPivot = 26;
     public final static int kFlywheelMotor = 20;
   }
+  public static class CanIds {
+    public final static int kDriveMotorFL = 1; // NEOs 
+    public final static int kDriveMotorFR = 3;
+    public final static int kDriveMotorBL = 5;
+    public final static int kDriveMotorBR = 7;
+
+    public final static int kSteeringMotorFL = 2; // Falcons 
+    public final static int kSteeringMotorFR = 4;
+    public final static int kSteeringMotorBL = 6;
+    public final static int kSteeringMotorBR = 8;
+
+    public final static int kEncoderFL = 11;
+    public final static int kEncoderFR = 13;
+    public final static int kEncoderBL = 15;
+    public final static int kEncoderBR = 17;
+  }
 
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
