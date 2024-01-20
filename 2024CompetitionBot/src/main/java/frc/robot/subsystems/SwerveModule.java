@@ -37,7 +37,6 @@ public class SwerveModule extends SubsystemBase {
      */
     public static final double kDriveVelocityFactor = (10.0 / 1000.0); // mm/100ms to m/s 
 
-    public static final double kTurningConversionFactor = 2.0 * Math.PI; // Radians per pulse
   }
 
   // Motors and Encoders
@@ -49,14 +48,15 @@ public class SwerveModule extends SubsystemBase {
 
   // PID Controllers
 
-  private final PIDController m_drivePID = new PIDController(0.1, 0, 0);
+  private final PIDController m_drivePID = new PIDController(0.1, 0, 0); // TODO: Tune the Driving PID
 
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(
           ModuleConstants.kMaxModuleAngularSpeed,
-          ModuleConstants.kMaxModuleAngularAcceleration));
+          ModuleConstants.kMaxModuleAngularAcceleration)); // TODO: Also tune the Steering PID
 
   // These predict PID values which makes it work in real time
+  // TODO: Feed forward will probably need tuning as well
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0); // Distance, Velocity
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
@@ -80,7 +80,7 @@ public class SwerveModule extends SubsystemBase {
     return m_steeringEncoder.getAbsolutePosition().getValueAsDouble();//m_steeringMotor.getPosition().getValueAsDouble() * ModuleConstants.kTurningConversionFactor;
   }
 
-  public SwerveModuleState getState() {
+  public SwerveModuleState getState() { // Swerve states are what Kinematics uses for calculations
     return new SwerveModuleState(m_driveEncoder.getVelocity(),
         new Rotation2d(getTurningRotation()));
   }
