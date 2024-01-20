@@ -23,7 +23,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.ClimbCmdSetHight;
+import frc.robot.commands.ClimbCmdSetHightCmd;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,16 +49,16 @@ public class RobotContainer {
     configureBindings();
     m_visionSub.setPipeline(2); // Apriltag vision
     m_drivetrainSub.setDefaultCommand(
-      // The left stick controls translation of the robot.
-      // Turning is controlled by the X axis of the right stick.
-      new RunCommand(
-        () -> m_drivetrainSub.drive(
-          m_driverController.getLeftY(),
-          m_driverController.getLeftX(),
-          m_driverController.getRightX(),
-        true, 
-        0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
-        m_drivetrainSub));
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new RunCommand(
+            () -> m_drivetrainSub.drive(
+                m_driverController.getLeftY(),
+                m_driverController.getLeftX(),
+                m_driverController.getRightX(),
+                true,
+                0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+            m_drivetrainSub));
   }
 
   /**
@@ -83,9 +83,9 @@ public class RobotContainer {
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
 
     //here we are making the climb
-    m_driverController.square().onTrue(new ClimbCmdSetHight(0));
-    m_driverController.circle().onTrue(new ClimbCmdSetHight(1));
-    m_driverController.triangle().onTrue(new ClimbCmdSetHight(2));
+    m_driverController.square().onTrue(new ClimbCmdSetHightCmd(0));
+    m_driverController.circle().onTrue(new ClimbCmdSetHightCmd(1));
+    m_driverController.triangle().onTrue(new ClimbCmdSetHightCmd(2));
   }
 
   /**
