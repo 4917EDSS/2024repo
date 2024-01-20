@@ -9,9 +9,11 @@ import frc.robot.subsystems.ShooterSub;
 
 public class ShooterFeederCmd extends Command {
   private final ShooterSub m_ShooterSub;
+  private final boolean m_forward;
 
   /** Creates a new FeederRollersCmd. */
-  public ShooterFeederCmd(ShooterSub shooterSub) {
+  public ShooterFeederCmd(ShooterSub shooterSub, boolean forward) {
+    m_forward = forward;
     // Use addRequirements() here to declare subsystem dependencies.
     m_ShooterSub = shooterSub;
     addRequirements(shooterSub);
@@ -24,7 +26,8 @@ public class ShooterFeederCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ShooterSub.spinFeeder(10);
+    int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
+    m_ShooterSub.spinFeeder(0.10 * direction);
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +37,6 @@ public class ShooterFeederCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_ShooterSub.isNoteAtPosition();
   }
 }
