@@ -54,10 +54,12 @@ public class DrivetrainSub extends SubsystemBase {
     m_gyro.reset();
   }
 
-  // TODO: Possibly remove fieldOriented option since there is no reason for the bot not to be field oriented
+  public void resetGyro() {
+    m_gyro.reset();
+  }
 
 
-  public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented, double periodSeconds) { // Period should be time period between whenever this is called
+  public void drive(double xSpeed, double ySpeed, double rotationSpeed, double periodSeconds) { // Period should be time period between whenever this is called
     if(Math.abs(xSpeed) < 0.1)
       xSpeed = 0.0;
     if(Math.abs(ySpeed) < 0.1)
@@ -68,15 +70,12 @@ public class DrivetrainSub extends SubsystemBase {
     ySpeed *= 10.0;
     rotationSpeed *= 7.0;
     ChassisSpeeds speedS =
-        fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d())
-            : new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d());
 
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
 
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
-        fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d())
-            : new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed),
-        periodSeconds)); // Get swerve states
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxSpeed); // Keep motors below max speed (Might not need to be used)
 
@@ -98,10 +97,9 @@ public class DrivetrainSub extends SubsystemBase {
     updateOdemetry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
-
     SmartDashboard.putNumber("XPOS", xPos);
     SmartDashboard.putNumber("YPOS", yPos);
-    SmartDashboard.putNumber("GYRO", m_gyro.getAngle());
+    SmartDashboard.putNumber("GYRO", m_gyro.getAngle() % 360);
 
     SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
     SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());

@@ -59,7 +59,6 @@ public class RobotContainer {
                 m_driverController.getLeftY(),
                 m_driverController.getLeftX(),
                 m_driverController.getRightX(),
-                true,
                 0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
   }
@@ -106,6 +105,10 @@ public class RobotContainer {
 
   public void initSubsystems() {
     m_ledSub.init();
+  }
+
+  public void resetGyro() {
+    m_drivetrainSub.resetGyro();
   }
 }
 
