@@ -35,24 +35,29 @@ public final class Constants {
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 17;
 
-    public static final int kIntakeRollers = 25;
-    public static final int kGroundIntakeUpDownPivot = 26;
+    public final static int kIntakeRollers = 25;
+    public final static int kGroundIntakeUpDownPivot = 26;
     public final static int kShooterFlywheel = 20;
     public final static int kShooterPivot = 21;
     public final static int kShooterFeeder = 22;
+    public final static int kClimbMotorRight = 27;
+    public final static int kClimbMotorLeft = 29;
 
   }
+
   public final static class DioIds {
     public final static int kShooterNoteLimit = 0;
+    public final static int kIntakeLimitPort = 1;
   }
 
   public final static class PwmIds {
     public final static int kLedStripPwmPort = 0;
   }
+
   public final static class VisionConstants {
     public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
     public static final double kApriltagHeights[] =
         {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
-  }
 
+  }
 }

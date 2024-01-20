@@ -34,7 +34,7 @@ import frc.robot.subsystems.ShooterSub;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSub m_exampleSubsystem = new IntakeSub();
+  private final IntakeSub m_intakeSub = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
@@ -74,6 +74,11 @@ public class RobotContainer {
     // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
     //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
     //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
+
+    //here we are making the climb
+    // m_driverController.square().onTrue(new ClimbCmdSetHight(0));
+    // m_driverController.circle().onTrue(new ClimbCmdSetHight(1));
+    // m_driverController.triangle().onTrue(new ClimbCmdSetHight(2));
   }
 
   /**
