@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
@@ -31,7 +32,7 @@ import frc.robot.subsystems.ShooterSub;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSub m_exampleSubsystem = new IntakeSub();
+  private final IntakeSub m_intakeSub = new IntakeSub();
   private final LedSub m_ledSub = new LedSub();
   private final VisionSub m_visionSub = new VisionSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
@@ -46,6 +47,17 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_visionSub.setPipeline(2); // Apriltag vision
+    m_drivetrainSub.setDefaultCommand(
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      new RunCommand(
+        () -> m_drivetrainSub.drive(
+          m_driverController.getLeftY(),
+          m_driverController.getLeftX(),
+          m_driverController.getRightX(),
+        true, 
+        0.2), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
+        m_drivetrainSub));
   }
 
   /**
