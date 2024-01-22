@@ -16,7 +16,12 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
-  public static final double kMaxSpeed = 10.0; // 3 meters per second
+  // Speed multipliers
+  public static final double kDriveSpeed = 100.0;
+  public static final double kTurnSpeed = 50.0;
+
+
+  public static final double kMaxSpeed = 10000.0;// meters per second
 
   // Locations of Swerve Modules relative to the center of the robot
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
@@ -66,9 +71,9 @@ public class DrivetrainSub extends SubsystemBase {
       ySpeed = 0.0;
     if(Math.abs(rotationSpeed) < 0.1)
       rotationSpeed = 0.0;
-    xSpeed *= 10.0;
-    ySpeed *= 10.0;
-    rotationSpeed *= 7.0;
+    xSpeed *= kDriveSpeed;
+    ySpeed *= kDriveSpeed;
+    rotationSpeed *= kTurnSpeed;
     ChassisSpeeds speedS =
         ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d());
 
@@ -106,6 +111,4 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());
     SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
   }
-
-
 }
