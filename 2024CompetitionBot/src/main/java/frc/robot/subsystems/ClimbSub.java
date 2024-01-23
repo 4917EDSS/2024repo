@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
@@ -28,7 +29,12 @@ public class ClimbSub extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateSmartDashboard();
+  }
 
+  private void updateSmartDashboard() {
+    SmartDashboard.putNumber("Climb Left Power", m_climbMotorLeft.get());
+    SmartDashboard.putNumber("Climb Right Power", m_climbMotorRight.get());
   }
 
   public void setClimbPowerLeft(double leftPower) {
@@ -46,5 +52,13 @@ public class ClimbSub extends SubsystemBase {
 
   public static double getRightHeight() {
     return m_climbMotorRight.getEncoder().getPosition();
+  }
+
+  public double getLeftVelocity() {
+    return m_climbMotorLeft.getEncoder().getVelocity();
+  }
+
+  public double getRightVelocity() {
+    return m_climbMotorRight.getEncoder().getVelocity();
   }
 }

@@ -63,6 +63,9 @@ public class DrivetrainSub extends SubsystemBase {
     m_gyro.reset();
   }
 
+  public float getRoll() {
+    return m_gyro.getRoll();
+  }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed, double periodSeconds) { // Period should be time period between whenever this is called
     if(Math.abs(xSpeed) < 0.1)

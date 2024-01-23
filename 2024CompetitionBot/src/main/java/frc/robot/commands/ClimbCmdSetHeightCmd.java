@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
@@ -11,15 +12,17 @@ import frc.robot.subsystems.DrivetrainSub;
 
 
 public class ClimbCmdSetHeightCmd extends Command {
-  private final ClimbSub m_ClimbSub;
-  double m_targetHeight;
+  private final ClimbSub m_climbSub;
+  private final DrivetrainSub m_drivetrainSub;
+  private double m_targetHeight;
 
+  private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new Climb. */
-  public ClimbCmdSetHeightCmd(ClimbSub climbSub, double position) {
-    m_ClimbSub = climbSub;
-
-    m_targetHeight = position;
+  public ClimbCmdSetHeightCmd(ClimbSub climbSub, double height, DrivetrainSub drivetrainSub) {
+    m_climbSub = climbSub;
+    m_drivetrainSub = drivetrainSub;
+    m_targetHeight = height;
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -35,14 +38,22 @@ public class ClimbCmdSetHeightCmd extends Command {
   @Override
   public void execute() {
     //set power
-    double LeftEncoderValue = ClimbSub.getLeftHeight();
+    double direction;
+    double currentLeftHeight = m_climbSub.getLeftHeight();
+    double currentRightHeight = m_climbSub.getRightHeight();
+    double tolerance = 5;
+    int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
+    int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
+
+    // TODO Need to figure out PID controller for climbing 
+    //TODO final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction); //10 is a target velocity we don't know what it is
+    //TODO m_ShooterSub.movePivot(driveOutput);
+
     if(isLeftAtTargetHeight() == false)
-      m_ClimbSub.setClimbPowerLeft(5);
+      m_climbSub.setClimbPowerLeft(0.1 * leftDirection);
 
-    double RightEncoderValue = ClimbSub.getRightHeight();
     if(isRightAtTargetHeight() == false)
-      m_ClimbSub.setClimbPowerRight(5);
-
+      m_climbSub.setClimbPowerRight(0.1 * rightDirection);
   }
 
   // Called once the command ends or is interrupted.
