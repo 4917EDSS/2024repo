@@ -14,6 +14,7 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.subsystems.VisionSub;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
+import frc.robot.commands.DriveToRelativePositionCmd;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,11 +58,12 @@ public class RobotContainer {
     m_drivetrainSub.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
+        // Deadband is applied here because it causes problems for autos
         new RunCommand(
             () -> m_drivetrainSub.drive(
-                m_driverController.getLeftY(),
-                m_driverController.getLeftX(),
-                m_driverController.getRightX(),
+                (m_driverController.getLeftY() < 0.07 ? 0.0 : m_driverController.getLeftY()),
+                (m_driverController.getLeftX() < 0.07 ? 0.0 : m_driverController.getLeftX()),
+                (m_driverController.getRightX() < 0.07 ? 0.0 : m_driverController.getRightX()),
                 0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
   }
@@ -76,14 +79,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
-
+    //m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
+    //m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetRelativePos(), m_drivetrainSub));
+    m_driverController.share().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(2.0, 0.0)));
+    m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
 
     //m_driverController.triangle().onTrue(LedColour.GREEN);
 
     //Change to operator controller
     m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
     m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
     // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
     //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));

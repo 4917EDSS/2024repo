@@ -40,10 +40,10 @@ public class VisionSub extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("tx", getHorizontalAngle());
     SmartDashboard.putNumber("ty", getVerticalAngle());
-    SmartDashboard.putNumber("ta", getTargetArea());
-    SmartDashboard.putBoolean("tv", hasTarget());
-    SmartDashboard.putNumber("tid", getPrimaryID());
-    SmartDashboard.putNumber("Distance(m)", getDistance(getPrimaryID()));
+    //SmartDashboard.putNumber("ta", getTargetArea());
+    SmartDashboard.putBoolean("Target", hasTarget());
+    SmartDashboard.putNumber("Tag ID", getPrimaryID());
+    // Uncomment later but it's confusing right nowSmartDashboard.putNumber("Distance(m)", getDistance(getPrimaryID()));
   }
 
   public double getDistance(int id) { // In meters

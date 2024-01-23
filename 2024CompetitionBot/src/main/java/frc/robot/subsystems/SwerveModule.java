@@ -32,11 +32,9 @@ public class SwerveModule extends SubsystemBase {
     public static final double kMaxModuleAngularAcceleration = 100.0 * Math.PI; // In Radians Per Second Squared
 
     // Conversion factors
-    public static final double kDriveDistanceFactor = (1000.0 / 51782); // Millimeters per tick
-    /**
-     * mm/100ms to m/s
-     */
-    public static final double kDriveVelocityFactor = (10.0 / 1000.0); // mm/100ms to m/s 
+    public static final double kDriveDistanceFactor = (Math.PI * 0.1016) / (6.0 * 1.2);//Circumference(m) * gear ratio
+
+    public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
   }
 
@@ -155,12 +153,6 @@ public class SwerveModule extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putString("Motor units" + Integer.toString(m_driveMotor.getDeviceId()),
-        m_steeringEncoder.getAbsolutePosition().getUnits());
-    SmartDashboard.putNumber("Motor velocity" + Integer.toString(m_driveMotor.getDeviceId()),
-        m_driveEncoder.getVelocity());
-    SmartDashboard.putNumber("Wanted Velocity" + Integer.toString(m_driveMotor.getDeviceId()),
-        m_drivePID.getSetpoint());
     // This method will be called once per scheduler run
   }
 }
