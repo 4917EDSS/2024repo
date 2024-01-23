@@ -20,19 +20,25 @@ public class ShooterSub extends SubsystemBase {
   /** Creates a new Shooter. */
 
   private final CANSparkMax m_Flywheel =
-      new CANSparkMax(Constants.CanIds.kShooterFlywheel, CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax m_Feeder =
-      new CANSparkMax(Constants.CanIds.kShooterFeeder, CANSparkLowLevel.MotorType.kBrushless);
+      new CANSparkMax(Constants.CanIds.kFlywheel, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_UpperFeeder =
+      new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_LowerFeeder =
+      new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_Pivot =
-      new CANSparkMax(Constants.CanIds.kShooterPivot, CANSparkLowLevel.MotorType.kBrushless);
+      new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
+   private final CANSparkMax m_Transfer =
+      new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);    
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
 
   public ShooterSub() {
     //When true, positive power will turn motor backwards, negitive forwards.
     m_Flywheel.setInverted(false);
-    m_Feeder.setInverted(false);
+    m_UpperFeeder.setInverted(false);
+    m_LowerFeeder.setInverted(false);
     m_Pivot.setInverted(false);
+    m_Transfer.setInverted(false);
   }
 
   public void init() {
@@ -55,27 +61,39 @@ public class ShooterSub extends SubsystemBase {
 
   private void setBrake(IdleMode mode) {
     m_Flywheel.setIdleMode(mode);
-    m_Feeder.setIdleMode(mode);
+    m_UpperFeeder.setIdleMode(mode);
+    m_LowerFeeder.setIdleMode(mode);
     m_Pivot.setIdleMode(mode);
+    m_Transfer.setIdleMode(mode);
 
   }
 
   private void setCurrentLimit() {
     m_Flywheel.setSmartCurrentLimit(40);
-    m_Feeder.setSmartCurrentLimit(40);
+    m_UpperFeeder.setSmartCurrentLimit(40);
+    m_LowerFeeder.setSmartCurrentLimit(40);
     m_Pivot.setSmartCurrentLimit(40);
+    m_Transfer.setSmartCurrentLimit(40);
   }
 
   public void spinFlywheel(double power) {
     m_Flywheel.set(power);
   }
 
-  public void spinFeeder(double power) {
-    m_Feeder.set(power);
+  public void spinUpperFeeder(double power) {
+    m_UpperFeeder.set(power);
+  }
+
+  public void spinLowerFeeder(double power) {
+    m_LowerFeeder.set(power);
   }
 
   public void movePivot(double power) {
     m_Pivot.set(power);
+  }
+
+  public void spinTransfer(double power) {
+    m_Transfer.set(power);
   }
 
   public double getFlywheelVelocity() {
