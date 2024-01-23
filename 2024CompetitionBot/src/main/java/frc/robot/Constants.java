@@ -49,12 +49,13 @@ public final class Constants {
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 11;
 
-    public final static int kIntakeRollers = 25;
+    public final static int kIntakeRollers = 25; // CanSparks
     public final static int kGroundIntakeUpDownPivot = 26;
-    public final static int kShooterFlywheel = 20;
-    public final static int kShooterPivot = 21;
-    public final static int kShooterFeeder = 22;
-
+    public final static int kFlywheel = 20;
+    public final static int kPivot = 22;
+    public final static int kUpperFeeder = 24;
+    public final static int kLowerFeeder = 26;
+    public final static int kTransfer = 28;
     public final static int kClimbMotorRight = 27;
     public final static int kClimbMotorLeft = 29;
 

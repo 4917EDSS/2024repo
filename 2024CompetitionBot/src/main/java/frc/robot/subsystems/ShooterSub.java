@@ -19,20 +19,26 @@ public class ShooterSub extends SubsystemBase {
 
   /** Creates a new Shooter. */
 
-  private final CANSparkMax m_Flywheel =
-      new CANSparkMax(Constants.CanIds.kShooterFlywheel, CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax m_Feeder =
-      new CANSparkMax(Constants.CanIds.kShooterFeeder, CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax m_Pivot =
-      new CANSparkMax(Constants.CanIds.kShooterPivot, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_flywheel =
+      new CANSparkMax(Constants.CanIds.kFlywheel, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_upperFeeder =
+      new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_lowerFeeder =
+      new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax m_pivot =
+      new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
+   private final CANSparkMax m_transfer =
+      new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);    
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
 
   public ShooterSub() {
     //When true, positive power will turn motor backwards, negitive forwards.
-    m_Flywheel.setInverted(false);
-    m_Feeder.setInverted(false);
-    m_Pivot.setInverted(false);
+    m_flywheel.setInverted(false);
+    m_upperFeeder.setInverted(false);
+    m_lowerFeeder.setInverted(false);
+    m_pivot.setInverted(false);
+    m_transfer.setInverted(false);
   }
 
   public void init() {
@@ -40,54 +46,66 @@ public class ShooterSub extends SubsystemBase {
     setBrake(IdleMode.kBrake);
     resetFlywheel();
     resetPivot();
-    m_Flywheel.getEncoder().setVelocityConversionFactor(0.0259);
-    m_Pivot.getEncoder().setVelocityConversionFactor(0.0259);
-    m_Pivot.getEncoder().setPositionConversionFactor(0.68);
+    m_flywheel.getEncoder().setVelocityConversionFactor(0.0259);
+    m_pivot.getEncoder().setVelocityConversionFactor(0.0259);
+    m_pivot.getEncoder().setPositionConversionFactor(0.68);
   }
 
   public void resetFlywheel() {
-    m_Flywheel.getEncoder().setPosition(0);
+    m_flywheel.getEncoder().setPosition(0);
   }
 
   public void resetPivot() {
-    m_Pivot.getEncoder().setPosition(0);
+    m_pivot.getEncoder().setPosition(0);
   }
 
   private void setBrake(IdleMode mode) {
-    m_Flywheel.setIdleMode(mode);
-    m_Feeder.setIdleMode(mode);
-    m_Pivot.setIdleMode(mode);
+    m_flywheel.setIdleMode(mode);
+    m_upperFeeder.setIdleMode(mode);
+    m_lowerFeeder.setIdleMode(mode);
+    m_pivot.setIdleMode(mode);
+    m_transfer.setIdleMode(mode);
 
   }
 
   private void setCurrentLimit() {
-    m_Flywheel.setSmartCurrentLimit(40);
-    m_Feeder.setSmartCurrentLimit(40);
-    m_Pivot.setSmartCurrentLimit(40);
+    m_flywheel.setSmartCurrentLimit(40);
+    m_upperFeeder.setSmartCurrentLimit(40);
+    m_lowerFeeder.setSmartCurrentLimit(40);
+    m_pivot.setSmartCurrentLimit(40);
+    m_transfer.setSmartCurrentLimit(40);
   }
 
   public void spinFlywheel(double power) {
-    m_Flywheel.set(power);
+    m_flywheel.set(power);
   }
 
-  public void spinFeeder(double power) {
-    m_Feeder.set(power);
+  public void spinUpperFeeder(double power) {
+    m_upperFeeder.set(power);
+  }
+
+  public void spinLowerFeeder(double power) {
+    m_lowerFeeder.set(power);
   }
 
   public void movePivot(double power) {
-    m_Pivot.set(power);
+    m_pivot.set(power);
+  }
+
+  public void spinTransfer(double power) {
+    m_transfer.set(power);
   }
 
   public double getFlywheelVelocity() {
-    return m_Flywheel.getEncoder().getVelocity();
+    return m_flywheel.getEncoder().getVelocity();
   }
 
   public double getPivotPosition() {
-    return m_Pivot.getEncoder().getPosition();
+    return m_pivot.getEncoder().getPosition();
   }
 
   public double getPivotVelocity() {
-    return m_Pivot.getEncoder().getVelocity();
+    return m_pivot.getEncoder().getVelocity();
   }
 
   public boolean isNoteAtPosition() {
@@ -105,8 +123,8 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Flywheel velicity", getFlywheelVelocity());
     SmartDashboard.putNumber("Shooter Pivot Position", getPivotPosition());
     SmartDashboard.putNumber("Shooter Pivot Velocity", getPivotVelocity());
-    SmartDashboard.putNumber("Shooter Flywheel Power", m_Flywheel.get());
-    SmartDashboard.putNumber("Shooter Pivot Power", m_Pivot.get());
+    SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
+    SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
     SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
   }
 }
