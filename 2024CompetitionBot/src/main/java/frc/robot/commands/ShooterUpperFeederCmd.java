@@ -27,7 +27,7 @@ public class ShooterUpperFeederCmd extends Command {
   @Override
   public void execute() {
     int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
-    m_ShooterSub.spinFeeder(0.10 * direction);
+    m_ShooterSub.spinUpperFeeder(0.10 * direction);
   }
 
   // Called once the command ends or is interrupted.
