@@ -33,9 +33,9 @@ public class DrivetrainSub extends SubsystemBase {
 
   private Translation2d relativePos = new Translation2d(0.0, 0.0);
   private Translation2d odometryPos = new Translation2d(0.0, 0.0);
-  private PIDController m_odometryPIDx = new PIDController(0.2, 0.0, 0.0); // X and Y PIDs
-  private PIDController m_odometryPIDy = new PIDController(0.2, 0.0, 0.0);
-  private PIDController m_odometryPIDr = new PIDController(0.5, 0.0, 0.0); // Rotational PID
+  private PIDController m_odometryPIDx = new PIDController(0.1, 0.0, 0.0); // X and Y PIDs
+  private PIDController m_odometryPIDy = new PIDController(0.1, 0.0, 0.0);
+  private PIDController m_odometryPIDr = new PIDController(0.2, 0.0, 0.0); // Rotational PID
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
@@ -65,8 +65,8 @@ public class DrivetrainSub extends SubsystemBase {
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
     m_gyro.reset();
-    m_odometryPIDx.setTolerance(0.1); // In meters
-    m_odometryPIDy.setTolerance(0.1); // In meters
+    m_odometryPIDx.setTolerance(0.01); // In meters
+    m_odometryPIDy.setTolerance(0.01); // In meters
   }
 
   public void resetGyro() {
@@ -100,13 +100,12 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public boolean updateOdometryTransform() { // Returns true when at position
-    double xPower = m_odometryPIDx.calculate(getPos().getX(), odometryPos.getX());//MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), odometryPos.getX()), -100.5, 100.5);
-    double yPower = m_odometryPIDy.calculate(getPos().getY(), odometryPos.getY());//MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), odometryPos.getY()), -100.5, 100.5);
-    if(!m_odometryPIDx.atSetpoint() && !m_odometryPIDy.atSetpoint()) {
-      drive(xPower, yPower, 0.0, 0.02);
-      return false;
-    }
-    return true;
+    double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), odometryPos.getX()), -1.0, 1.0);
+    double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), odometryPos.getY()), -1.0, 1.0);
+    SmartDashboard.putNumber("Power X", xPower);
+    SmartDashboard.putNumber("Power Y", yPower);
+    drive(xPower, yPower, 0.0, 0.02);
+    return (m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint());
   }
 
   public void updateOdometry() {

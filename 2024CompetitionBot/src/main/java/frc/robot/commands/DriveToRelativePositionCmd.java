@@ -31,13 +31,14 @@ public class DriveToRelativePositionCmd extends Command {
         m_position.getY() + m_drivetrainSub.getPos().getY()); // Make position relative to robot position
     // Resetting odometry is not a good idea m_drivetrainSub.resetOdometry();
     m_drivetrainSub.translateOdometry(m_position); // Set tranlation position
-
+    new PrintCommand("Starting tralsnation");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     atSetpoint = m_drivetrainSub.updateOdometryTransform();
+    new PrintCommand("MOVING tralsnation");
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +51,6 @@ public class DriveToRelativePositionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return atSetpoint;
+    return false;
   }
 }

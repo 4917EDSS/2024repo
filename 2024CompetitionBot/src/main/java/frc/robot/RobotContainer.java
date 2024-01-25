@@ -61,9 +61,9 @@ public class RobotContainer {
         // Deadband is applied here because it causes problems for autos
         new RunCommand(
             () -> m_drivetrainSub.drive(
-                (m_driverController.getLeftY() < 0.07 ? 0.0 : m_driverController.getLeftY()),
-                (m_driverController.getLeftX() < 0.07 ? 0.0 : m_driverController.getLeftX()),
-                (m_driverController.getRightX() < 0.07 ? 0.0 : m_driverController.getRightX()),
+                (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX()),
+                (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY()),
+                (Math.abs(m_driverController.getRightX()) < 0.07 ? 0.0 : m_driverController.getRightX()),
                 0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
   }
