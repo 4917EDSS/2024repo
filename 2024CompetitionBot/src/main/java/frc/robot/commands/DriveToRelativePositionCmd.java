@@ -13,22 +13,22 @@ public class DriveToRelativePositionCmd extends Command {
   /** Creates a new DriveToPositionCmd. */
 
   private final DrivetrainSub m_drivetrainSub;
-  private Translation2d m_position;
+  private Translation2d m_relativePosition;
   private boolean atSetpoint = false;
 
   public DriveToRelativePositionCmd(DrivetrainSub drivetrainSub, Translation2d position) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSub);
     m_drivetrainSub = drivetrainSub;
-    m_position = position;
+    m_relativePosition = new Translation2d(position.getX(), position.getY());
 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_position = new Translation2d(m_position.getX() + m_drivetrainSub.getPos().getX(),
-        m_position.getY() + m_drivetrainSub.getPos().getY()); // Make position relative to robot position
+    Translation2d m_position = new Translation2d(m_relativePosition.getX() + m_drivetrainSub.getPos().getX(),
+        m_relativePosition.getY() + m_drivetrainSub.getPos().getY()); // Make position relative to robot position
     // Resetting odometry is not a good idea m_drivetrainSub.resetOdometry();
     m_drivetrainSub.translateOdometry(m_position); // Set tranlation position
     new PrintCommand("Starting tralsnation");
@@ -51,6 +51,6 @@ public class DriveToRelativePositionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return atSetpoint;
   }
 }

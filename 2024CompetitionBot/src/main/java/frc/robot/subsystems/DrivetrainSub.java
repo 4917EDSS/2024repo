@@ -28,13 +28,17 @@ public class DrivetrainSub extends SubsystemBase {
   // Locations of Swerve Modules relative to the center of the robot
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.318);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.318);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.318);
+  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.318);
 
-  private Translation2d relativePos = new Translation2d(0.0, 0.0);
+  // PID value setting
+  private double kPIDp = 0.4;
+  private double kPIDd = 0.0;
+  private double kThreshold = 0.05;
+
   private Translation2d odometryPos = new Translation2d(0.0, 0.0);
-  private PIDController m_odometryPIDx = new PIDController(0.1, 0.0, 0.0); // X and Y PIDs
-  private PIDController m_odometryPIDy = new PIDController(0.1, 0.0, 0.0);
+  private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
+  private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(0.2, 0.0, 0.0); // Rotational PID
 
   // Swerve Modules that control the motors
@@ -65,8 +69,11 @@ public class DrivetrainSub extends SubsystemBase {
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
     m_gyro.reset();
-    m_odometryPIDx.setTolerance(0.01); // In meters
-    m_odometryPIDy.setTolerance(0.01); // In meters
+    m_gyro.setAngleAdjustment(90);
+    m_odometryPIDx.setTolerance(kThreshold); // In meters
+    m_odometryPIDy.setTolerance(kThreshold); // In meters
+
+
   }
 
   public void resetGyro() {
@@ -82,7 +89,7 @@ public class DrivetrainSub extends SubsystemBase {
     ySpeed *= kDriveSpeed;
     rotationSpeed *= kTurnSpeed;
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
-
+    // X and Y are swapped because it drives sideways for some reason
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
         ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
 
@@ -100,9 +107,9 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public boolean updateOdometryTransform() { // Returns true when at position
-    double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), odometryPos.getX()), -1.0, 1.0);
-    double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), odometryPos.getY()), -1.0, 1.0);
-    SmartDashboard.putNumber("Power X", xPower);
+    double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), odometryPos.getX()), -0.5, 0.5);
+    double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), odometryPos.getY()), -0.5, 0.5);
+    SmartDashboard.putNumber("Power X", xPower); // TODO: Remove these after testing
     SmartDashboard.putNumber("Power Y", yPower);
     drive(xPower, yPower, 0.0, 0.02);
     return (m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint());
@@ -118,10 +125,6 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
         zero);
-  }
-
-  public void resetRelativePos() {
-    relativePos = getPos();
   }
 
   public double getDistanceRelativeOrigin() { // Distance from a relative point set by the reset
@@ -140,6 +143,8 @@ public class DrivetrainSub extends SubsystemBase {
     double yPos = m_odometry.getPoseMeters().getY();
     SmartDashboard.putNumber("XPOS", xPos);
     SmartDashboard.putNumber("YPOS", yPos);
+    SmartDashboard.putNumber("TARGET XPOS", odometryPos.getX());
+    SmartDashboard.putNumber("TARGET YPOS", odometryPos.getY());
     SmartDashboard.putNumber("GYRO", m_gyro.getAngle() % 360);
 
     SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
@@ -148,5 +153,19 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
 
     SmartDashboard.putNumber("Distance from point(m)", getDistanceRelativeOrigin());
+
+    kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
+    kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
+    kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
+    SmartDashboard.putNumber("Path kP", kPIDp);
+    SmartDashboard.putNumber("Path kD", kPIDd);
+    SmartDashboard.putNumber("Path Threshold (m)", kThreshold);
+
+    m_odometryPIDx.setP(kPIDp);
+    m_odometryPIDx.setD(kPIDd);
+    m_odometryPIDx.setTolerance(kThreshold);
+    m_odometryPIDy.setP(kPIDp);
+    m_odometryPIDy.setD(kPIDd);
+    m_odometryPIDy.setTolerance(kThreshold);
   }
 }

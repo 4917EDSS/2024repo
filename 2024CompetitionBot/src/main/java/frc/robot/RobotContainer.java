@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.subsystems.VisionSub;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -62,7 +63,7 @@ public class RobotContainer {
         new RunCommand(
             () -> m_drivetrainSub.drive(
                 (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX()),
-                (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY()),
+                (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : -m_driverController.getLeftY()),
                 (Math.abs(m_driverController.getRightX()) < 0.07 ? 0.0 : m_driverController.getRightX()),
                 0.02), // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed 
             m_drivetrainSub));
@@ -81,8 +82,12 @@ public class RobotContainer {
 
     //m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
     //m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetRelativePos(), m_drivetrainSub));
-    m_driverController.share().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(2.0, 0.0)));
-    m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+    m_driverController.share().onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+    m_driverController.povRight().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(2.0, 0.0)));
+    m_driverController.povLeft().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(-2.0, 0.0)));
+    m_driverController.povUp().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(0.0, 2.0)));
+    m_driverController.povDown().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(0.0, -2.0)));
+
 
     //m_driverController.triangle().onTrue(LedColour.GREEN);
 
