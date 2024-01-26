@@ -13,10 +13,10 @@ import com.revrobotics.CANSparkLowLevel;
 
 
 public class ClimbSub extends SubsystemBase {
-  private final static CANSparkMax m_climbMotorRight =
-      new CANSparkMax(Constants.CanIds.kClimbMotorRight, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorLeft =
       new CANSparkMax(Constants.CanIds.kClimbMotorLeft, CANSparkLowLevel.MotorType.kBrushless);
+  private final static CANSparkMax m_climbMotorRight =
+      new CANSparkMax(Constants.CanIds.kClimbMotorRight, CANSparkLowLevel.MotorType.kBrushless);
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
@@ -46,11 +46,11 @@ public class ClimbSub extends SubsystemBase {
     m_climbMotorRight.set(rightPower);
   }
 
-  public static double getLeftHeight() {
+  public double getLeftHeight() {
     return m_climbMotorLeft.getEncoder().getPosition();
   }
 
-  public static double getRightHeight() {
+  public double getRightHeight() {
     return m_climbMotorRight.getEncoder().getPosition();
   }
 

@@ -145,7 +145,10 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("YPOS", yPos);
     SmartDashboard.putNumber("TARGET XPOS", odometryPos.getX());
     SmartDashboard.putNumber("TARGET YPOS", odometryPos.getY());
+	
     SmartDashboard.putNumber("GYRO", m_gyro.getAngle() % 360);
+    SmartDashboard.putNumber("Yaw", m_gyro.getAngle() % 360);
+    SmartDashboard.putNumber("Roll", m_gyro.getRoll());
 
     SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
     SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
