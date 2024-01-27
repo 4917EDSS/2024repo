@@ -20,15 +20,15 @@ public class ShooterSub extends SubsystemBase {
   /** Creates a new Shooter. */
 
   private final CANSparkMax m_flywheel =
-      new CANSparkMax(Constants.CanIds.kFlywheel, CANSparkLowLevel.MotorType.kBrushless);
+      new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
       new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_lowerFeeder =
       new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
-   private final CANSparkMax m_transfer =
-      new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);    
+  // private final CANSparkMax m_transfer =
+  //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
 
@@ -38,7 +38,7 @@ public class ShooterSub extends SubsystemBase {
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(false);
-    m_transfer.setInverted(false);
+    //m_transfer.setInverted(false);
   }
 
   public void init() {
@@ -64,7 +64,7 @@ public class ShooterSub extends SubsystemBase {
     m_upperFeeder.setIdleMode(mode);
     m_lowerFeeder.setIdleMode(mode);
     m_pivot.setIdleMode(mode);
-    m_transfer.setIdleMode(mode);
+    //m_transfer.setIdleMode(mode);
 
   }
 
@@ -73,7 +73,7 @@ public class ShooterSub extends SubsystemBase {
     m_upperFeeder.setSmartCurrentLimit(40);
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
-    m_transfer.setSmartCurrentLimit(40);
+    //m_transfer.setSmartCurrentLimit(40);
   }
 
   public void spinFlywheel(double power) {
@@ -92,9 +92,9 @@ public class ShooterSub extends SubsystemBase {
     m_pivot.set(power);
   }
 
-  public void spinTransfer(double power) {
-    m_transfer.set(power);
-  }
+  //public void spinTransfer(double power) {
+  //m_transfer.set(power);
+  //}
 
   public double getFlywheelVelocity() {
     return m_flywheel.getEncoder().getVelocity();
@@ -116,7 +116,7 @@ public class ShooterSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updatesmartdashboard();
+    //updatesmartdashboard();
   }
 
   private void updatesmartdashboard() {

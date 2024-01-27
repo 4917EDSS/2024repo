@@ -40,26 +40,33 @@ public class ClimbCmdSetHeightCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     //set power
     double currentLeftHeight = m_climbSub.getLeftHeight();
     double currentRightHeight = m_climbSub.getRightHeight();
     int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
     int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
 
-    // TODO Need to figure out PID controller for climbing 
-    //TODO final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction); //10 is a target velocity we don't know what it is
+    // TODO Need to figure out PID controller for climbing
+    //TODO final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction);
+    //10 is a target velocity we don't know what it is
     //TODO m_ShooterSub.movePivot(driveOutput);
 
-    if(!isLeftAtTargetHeight() && (m_drivetrainSub.getRoll() <= 0.0)) {
-      m_climbSub.setClimbPowerLeft(0.1 * leftDirection);
+    //if(!isLeftAtTargetHeight() && (m_drivetrainSub.getRoll() <= 0.0)) {
+    if(!isLeftAtTargetHeight()) {
+      m_climbSub.setClimbPowerLeft(0.2 * leftDirection);
     } else {
       m_climbSub.setClimbPowerLeft(0.0);
     }
-    if(!isRightAtTargetHeight() && (m_drivetrainSub.getRoll() >= 0.0)) {
-      m_climbSub.setClimbPowerRight(0.1 * rightDirection);
+    //if(!isRightAtTargetHeight() && (m_drivetrainSub.getRoll() >= 0.0)) {
+    if(!isRightAtTargetHeight()) {
+      m_climbSub.setClimbPowerRight(0.2 * rightDirection);
     } else {
       m_climbSub.setClimbPowerRight(0.0);
     }
+
+    // m_climbSub.setClimbPowerRight(0.2);
+    // m_climbSub.setClimbPowerLeft(0.2);
   }
 
   // Called once the command ends or is interrupted.

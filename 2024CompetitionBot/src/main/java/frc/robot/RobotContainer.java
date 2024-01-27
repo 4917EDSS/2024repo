@@ -25,12 +25,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
+import frc.robot.commands.KillAllCmd;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -107,6 +109,23 @@ public class RobotContainer {
         .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookJustup, m_drivetrainSub, m_climbSub));
     m_driverController.triangle()
         .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookRaised, m_drivetrainSub, m_climbSub));
+    m_driverController.L3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+    m_driverController.R3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+    m_driverController.cross()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0), () -> m_climbSub.setClimbPowerLeft(0.0)));
+    m_driverController.options()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0), () -> m_climbSub.setClimbPowerLeft(0.0)));
+    m_driverController.touchpad()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0), () -> m_climbSub.setClimbPowerRight(0.0)));
+    m_driverController.PS()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0), () -> m_climbSub.setClimbPowerRight(0.0)));
+
   }
 
   /**

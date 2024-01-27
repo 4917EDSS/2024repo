@@ -34,30 +34,31 @@ public final class Constants {
   }
 
   public final static class CanIds {
-    public final static int kDriveMotorFL = 1;// NEOs 
+    // Neos for propulsion 
+    public final static int kDriveMotorFL = 1;
     public final static int kDriveMotorFR = 3;
     public final static int kDriveMotorBL = 5;
     public final static int kDriveMotorBR = 7;
-
-    public final static int kSteeringMotorFL = 2; // Falcons 
+    // Falcons for turning
+    public final static int kSteeringMotorFL = 2;
     public final static int kSteeringMotorFR = 4;
     public final static int kSteeringMotorBL = 6;
     public final static int kSteeringMotorBR = 8;
-
+    // Swerve turning encoders
     public final static int kEncoderFL = 17;
     public final static int kEncoderFR = 13;
     public final static int kEncoderBL = 15;
     public final static int kEncoderBR = 11;
 
-    public final static int kIntakeRollers = 25; // CanSparks
-    public final static int kGroundIntakeUpDownPivot = 26;
-    public final static int kFlywheel = 20;
-    public final static int kPivot = 22;
-    public final static int kUpperFeeder = 24;
-    public final static int kLowerFeeder = 26;
-    public final static int kTransfer = 28;
-    public final static int kClimbMotorRight = 27;
-    public final static int kClimbMotorLeft = 29;
+    public final static int kIntakeRollers = 18;
+    public final static int kFlywheelL = 19;
+    public final static int kFlywheelR = 20;
+    public final static int kPivot = 21;
+    public final static int kUpperFeeder = 22;
+    public final static int kLowerFeeder = 23;
+    //public final static int kTransfer = 28;
+    public final static int kClimbMotorL = 24;
+    public final static int kClimbMotorR = 25;
 
   }
 
@@ -83,8 +84,7 @@ public final class Constants {
     public static final double kHooklowered = 0;
     public static final double kHookJustup = 1.5;
     public static final double kHookScoring = 0.25;
-    //0.25 incorrect needs to be fixed
-    public static final double kTickCofficient = 0.25/42;
+    /** Convert ticks to meters (Ticks over 80cm) */
+    public static final double kTickCofficient = 0.8 / 769.637939453125;
   }
 }
-  
