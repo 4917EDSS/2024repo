@@ -52,7 +52,7 @@ public class ClimbCmdSetHeightCmd extends Command {
     //10 is a target velocity we don't know what it is
     //TODO m_ShooterSub.movePivot(driveOutput);
 
-    //if(!isLeftAtTargetHeight() && (m_drivetrainSub.getRoll() <= 0.0)) {
+    // if(!isLeftAtTargetHeight() && (m_drivetrainSub.getRoll() <= 0.0)) {
     if(!isLeftAtTargetHeight()) {
       m_climbSub.setClimbPowerLeft(0.2 * leftDirection);
     } else {
@@ -71,7 +71,10 @@ public class ClimbCmdSetHeightCmd extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_climbSub.setClimbPowerLeft(0.0);
+    m_climbSub.setClimbPowerRight(0.0);
+  }
 
   // Returns true when the command should end.
   @Override

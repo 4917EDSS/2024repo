@@ -80,9 +80,9 @@ public final class Constants {
   public static final class ClimbConstants {
     //TODO Change all the hights
     //all meshermintes need to be fixed and are in m
-    public static final double kHookRaised = 2;
-    public static final double kHooklowered = 0;
-    public static final double kHookJustup = 1.5;
+    public static final double kShortHookRaised = 0.40;
+    public static final double kHookLowered = 0.01;
+    public static final double kTallHookRaised = 0.20;
     public static final double kHookScoring = 0.25;
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;

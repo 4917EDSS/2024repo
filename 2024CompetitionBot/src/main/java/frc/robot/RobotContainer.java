@@ -84,7 +84,7 @@ public class RobotContainer {
 
     //m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
     //m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetRelativePos(), m_drivetrainSub));
-    m_driverController.share().onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+    //m_driverController.share().onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
     m_driverController.povRight().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(2.0, 0.0)));
     m_driverController.povLeft().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(-2.0, 0.0)));
     m_driverController.povUp().onTrue(new DriveToRelativePositionCmd(m_drivetrainSub, new Translation2d(0.0, 2.0)));
@@ -94,8 +94,8 @@ public class RobotContainer {
     //m_driverController.triangle().onTrue(LedColour.GREEN);
 
     //Change to operator controller
-    m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
-    m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+    m_driverController.share().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
+    m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
 
     //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
     // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
@@ -103,26 +103,26 @@ public class RobotContainer {
     //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
     //here we are making the climb
-    m_driverController.square()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookScoring, m_drivetrainSub, m_climbSub));
     m_driverController.circle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookJustup, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, m_drivetrainSub, m_climbSub));
+    m_driverController.circle()
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kTallHookRaised, m_drivetrainSub, m_climbSub));
     m_driverController.triangle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookRaised, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kShortHookRaised, m_drivetrainSub, m_climbSub));
     m_driverController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
     m_driverController.R3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
-    m_driverController.cross()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0), () -> m_climbSub.setClimbPowerLeft(0.0)));
-    m_driverController.options()
+    m_driverController.L2()
         .whileTrue(
             new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0), () -> m_climbSub.setClimbPowerLeft(0.0)));
-    m_driverController.touchpad()
+    m_driverController.L1()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0), () -> m_climbSub.setClimbPowerLeft(0.0)));
+    m_driverController.R1()
         .whileTrue(
             new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0), () -> m_climbSub.setClimbPowerRight(0.0)));
-    m_driverController.PS()
+    m_driverController.R2()
         .whileTrue(
             new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0), () -> m_climbSub.setClimbPowerRight(0.0)));
 

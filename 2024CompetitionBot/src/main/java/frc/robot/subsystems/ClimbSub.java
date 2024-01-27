@@ -21,6 +21,8 @@ public class ClimbSub extends SubsystemBase {
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
+    m_climbMotorLeft.setInverted(true);
+    m_climbMotorRight.setInverted(false);
     m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
     m_climbMotorRight.setIdleMode(IdleMode.kBrake);
     m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.ClimbConstants.kTickCofficient);
