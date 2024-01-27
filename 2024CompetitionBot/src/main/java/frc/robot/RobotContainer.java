@@ -103,12 +103,12 @@ public class RobotContainer {
     //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
     //here we are making the climb
+    m_driverController.cross()
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5, m_drivetrainSub, m_climbSub));
     m_driverController.circle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, m_drivetrainSub, m_climbSub));
-    m_driverController.circle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kTallHookRaised, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kTallHookRaised, 0.5, m_drivetrainSub, m_climbSub));
     m_driverController.triangle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kShortHookRaised, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kShortHookRaised, 0.5, m_drivetrainSub, m_climbSub));
     m_driverController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
     m_driverController.R3()
