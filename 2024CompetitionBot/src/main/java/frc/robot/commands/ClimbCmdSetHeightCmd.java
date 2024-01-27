@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import javax.swing.plaf.TreeUI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -23,7 +24,7 @@ public class ClimbCmdSetHeightCmd extends Command {
   private final double m_targetHeight;
   private final double m_power;
 
-  private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
+  //private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new Climb. */
   public ClimbCmdSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
@@ -53,52 +54,58 @@ public class ClimbCmdSetHeightCmd extends Command {
     int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
     int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
 
-    // MoveLeft = Go
-    // MoveRight = Go
+    boolean moveLeft = true;
+    boolean moveRight = true;
+
+    boolean isLeftAtTargetHeight = isLeftAtTargetHeight();
+    boolean isRightAtTargetHeight = isRightAtTargetHeight();
+    double roll_angle = m_drivetrainSub.getRoll();
+
 
     // Is left at height or right at height
-    // If left at height
-    // Stop left
-    // If right at height
-    // Stop right
-    // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
-    // if direction is positive
-    // Stop right motor
-    // else (direction is negative)
-    // Stop the left motor
-    // else if roll angle > maxRoll
-    // if direction is positive
-    // Stop left motor
-    // else
-    // Stop right motor
+    if(isLeftAtTargetHeight || isRightAtTargetHeight) {
 
+      // If left at height
+      if(isLeftAtTargetHeight) {
+        // Stop left
+        moveLeft = false;
+      }
+      // If right at height
+      if(isRightAtTargetHeight) {
+        // Stop right
+        moveRight = false;
+      }
+    } else if(roll_angle < kMinRollAngle) {
+      // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
 
-    // If moving hooks down and not tilted too far to the right, keep going
-    if((leftDirection < 0) && (m_drivetrainSub.getRoll() >= kMinRollAngle)) {
-      moveLeft = true;
+      // if direction is positive
+      if(leftDirection > 0) {
+        // Stop right motor
+        moveRight = false;
+      } else {
+        // else (direction is negative)
+        // Stop the left motor
+        moveLeft = false;
+      }
+      // else if roll angle > maxRoll
+    } else if(roll_angle > kMaxRollAngle) {
+      // if direction is positive
+      if(leftDirection > 0) {
+        // Stop left motor
+        moveLeft = false;
+      } else {
+        // else
+        // Stop right motor
+        moveRight = false;
+      }
     }
 
-
-    // TODO Need to figure out PID controller for climbing
-    //TODO final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction);
-    //10 is a target velocity we don't know what it is
-    //TODO m_ShooterSub.movePivot(driveOutput);
-
-    if(!isLeftAtTargetHeight() && (m_drivetrainSub.getRoll() >= kMinRollAngle)) {
-      //if(!isLeftAtTargetHeight()) {
+    if(moveLeft) {
       m_climbSub.setClimbPowerLeft(m_power * leftDirection);
-    } else {
-      m_climbSub.setClimbPowerLeft(0.0);
     }
-    if(!isRightAtTargetHeight() && (m_drivetrainSub.getRoll() <= kMaxRollAngle)) {
-      //if(!isRightAtTargetHeight()) {
+    if(moveRight) {
       m_climbSub.setClimbPowerRight(m_power * rightDirection);
-    } else {
-      m_climbSub.setClimbPowerRight(0.0);
     }
-
-    // m_climbSub.setClimbPowerRight(0.2);
-    // m_climbSub.setClimbPowerLeft(0.2);
   }
 
   // Called once the command ends or is interrupted.
