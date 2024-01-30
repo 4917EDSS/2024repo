@@ -11,6 +11,8 @@ import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 
 public class ClimbSub extends SubsystemBase {
@@ -18,6 +20,7 @@ public class ClimbSub extends SubsystemBase {
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =
       new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
+  private final SparkAbsoluteEncoder m_pivotEncoder = m_climbMotorRight.getAbsoluteEncoder(Type.kDutyCycle);
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
@@ -43,6 +46,8 @@ public class ClimbSub extends SubsystemBase {
     SmartDashboard.putNumber("Climb Right Power", m_climbMotorRight.get());
     SmartDashboard.putNumber("Climb Left Height", getLeftHeight());
     SmartDashboard.putNumber("Climb Right Height", getRightHeight());
+    SmartDashboard.putNumber("Pivot Velocity", getPivotVelocity());
+    SmartDashboard.putNumber("Pivot Position", getPivotPosition());
   }
 
   public void setClimbPowerLeft(double leftPower) {
@@ -74,5 +79,13 @@ public class ClimbSub extends SubsystemBase {
     System.out.println("Reseting Encoders");
     m_climbMotorLeft.getEncoder().setPosition(0.0);
     m_climbMotorRight.getEncoder().setPosition(0.0);
+  }
+
+  public double getPivotVelocity() {
+    return m_pivotEncoder.getVelocity();
+  }
+
+  public double getPivotPosition() {
+    return m_pivotEncoder.getPosition();
   }
 }
