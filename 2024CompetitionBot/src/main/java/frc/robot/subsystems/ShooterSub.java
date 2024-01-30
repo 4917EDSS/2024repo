@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,11 @@ public class ShooterSub extends SubsystemBase {
   //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
+
+
+  PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
+
+  ArmFeedforward m_armFeedforward = new ArmFeedforward(0, 0, 0);
 
   public ShooterSub() {
     //When true, positive power will turn motor backwards, negitive forwards.
@@ -90,6 +96,12 @@ public class ShooterSub extends SubsystemBase {
 
   public void movePivot(double power) {
     m_pivot.set(power);
+  }
+
+  public void setAngle(double angle) {
+    double pivotPower = m_shooterPivotPID.calculate(0.0, 0.0);
+    double pivotFeedforward = m_armFeedforward.calculate(0.0, 0.0, 0.0);
+    //TODO: Replace these placeholder values
   }
 
   //public void spinTransfer(double power) {
