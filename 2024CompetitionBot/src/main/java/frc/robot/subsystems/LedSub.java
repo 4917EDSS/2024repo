@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 public class LedSub extends SubsystemBase {
   // Constants
   private final static int kLedStripLength = 8;
-  private static int[][] m_ledColourBuffer = new int [kLedStripLength][3];
+  private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
   private boolean m_newColoursAvailable = false;
   public boolean m_isFlashing; //true if flash is on (game piece gets loaded)
   public long m_time; //time of when the flash starts
@@ -110,7 +110,6 @@ public class LedSub extends SubsystemBase {
   public LedSub() {
     System.out.println("LED SUB CONSTRUCTOR");
     m_ledStrip.setLength(m_ledBuffer.getLength());
-    setZoneColour(LedZones.ALL, LedColour.START_GREEN);
     m_ledStrip.setData(m_ledBuffer);
     m_ledStrip.start();
 
@@ -193,15 +192,17 @@ public class LedSub extends SubsystemBase {
   }
 
   private void setBuffer(int position, int r, int g, int b) {
-    if(m_ledColourBuffer[position][0] == r && m_ledColourBuffer[position][1] == g && m_ledColourBuffer[position][2] == b) {
+    if(m_ledColourBuffer[position][0] == r && m_ledColourBuffer[position][1] == g
+        && m_ledColourBuffer[position][2] == b) {
       return;
     }
-    m_ledBuffer.setRGB(position, r, b, g); 
+    m_ledBuffer.setRGB(position, r, b, g);
     m_ledColourBuffer[position][0] = r;
     m_ledColourBuffer[position][1] = g;
     m_ledColourBuffer[position][2] = b;
     m_newColoursAvailable = true;
   }
+
   /**
    * Set all the LEDs in the specified zone to the specified RGB value. Recomment that you use setZoneColour instead.
    */
@@ -224,7 +225,7 @@ public class LedSub extends SubsystemBase {
     if(b > 255) {
       b = 255;
     }
-    
+
     m_newColoursAvailable = false;
 
     for(int i = zone.start; i <= zone.end; i++) {
@@ -239,7 +240,7 @@ public class LedSub extends SubsystemBase {
         setBuffer(i, r, b, g);
       }
     }
-    
+
   }
 
 

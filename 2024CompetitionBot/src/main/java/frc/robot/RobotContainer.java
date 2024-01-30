@@ -54,6 +54,7 @@ public class RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandPS4Controller m_driverController =
             new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+    private final CommandPS4Controller m_operatorController = new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -106,8 +107,8 @@ public class RobotContainer {
         //m_driverController.triangle().onTrue(LedColour.GREEN);
 
         //Change to operator controller
-        m_driverController.L1().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
-        m_driverController.L2().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+        m_driverController.touchpad().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
+        m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
 
         //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
         // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
