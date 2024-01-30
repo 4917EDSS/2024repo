@@ -64,7 +64,6 @@ public class ClimbCmdSetHeightCmd extends Command {
 
     // Is left at height or right at height
     if(isLeftAtTargetHeight || isRightAtTargetHeight) {
-
       // If left at height
       if(isLeftAtTargetHeight) {
         // Stop left
@@ -77,7 +76,6 @@ public class ClimbCmdSetHeightCmd extends Command {
       }
     } else if(roll_angle < kMinRollAngle) {
       // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
-
       // if direction is positive
       if(leftDirection > 0) {
         // Stop right motor
@@ -102,9 +100,13 @@ public class ClimbCmdSetHeightCmd extends Command {
 
     if(moveLeft) {
       m_climbSub.setClimbPowerLeft(m_power * leftDirection);
+    } else {
+      m_climbSub.setClimbPowerLeft(0.0);
     }
     if(moveRight) {
       m_climbSub.setClimbPowerRight(m_power * rightDirection);
+    } else {
+      m_climbSub.setClimbPowerLeft(0.0);
     }
   }
 
