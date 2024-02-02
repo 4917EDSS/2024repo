@@ -206,4 +206,10 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setD(kRotPIDd);
     m_odometryPIDr.setTolerance(kTurnThreshold);
   }
+
+  public void init() {
+    resetGyro();
+    resetOdometry();
+
+  }
 }
