@@ -9,8 +9,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -70,6 +72,8 @@ public class SwerveModule extends SubsystemBase {
     m_steeringEncoder = new CANcoder(steeringEncoderID);
 
     // Make it loop from -PI to PI
+    m_driveMotor.setIdleMode(IdleMode.kBrake);
+    m_steeringMotor.setNeutralMode(NeutralModeValue.Brake);
     m_steeringPID.enableContinuousInput(-Math.PI, Math.PI);
 
 

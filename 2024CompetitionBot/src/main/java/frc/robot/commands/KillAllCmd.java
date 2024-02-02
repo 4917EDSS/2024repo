@@ -4,34 +4,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.LedSub.LedColour;
-import frc.robot.subsystems.LedSub.LedZones;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ClimbSub;
+import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.ShooterSub;
 
-/** An example command that uses an example subsystem. */
-public class TestLedsCmd extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final LedSub m_ledSub;
-  private final LedColour m_LedColour;
-
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param LedSub The subsystem used by this command.
-   */
-  public TestLedsCmd(LedSub LedSub, LedColour colour) {
-    m_ledSub = LedSub;
-    m_LedColour = colour;
+public class KillAllCmd extends Command {
+  /** Creates a new KillAllCmd. */
+  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, ShooterSub shooterSub) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(LedSub);
+    addRequirements(climbSub, drivetrainSub, intakeSub, shooterSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_ledSub.setZoneColour(LedZones.ALL, m_LedColour);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -44,7 +32,6 @@ public class TestLedsCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
-

@@ -5,25 +5,34 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 
 public class ClimbSub extends SubsystemBase {
-  private final static CANSparkMax m_climbMotorRight =
-      new CANSparkMax(Constants.CanIds.kClimbMotorRight, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorLeft =
-      new CANSparkMax(Constants.CanIds.kClimbMotorLeft, CANSparkLowLevel.MotorType.kBrushless);
+      new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
+  private final static CANSparkMax m_climbMotorRight =
+      new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
+  private final SparkAbsoluteEncoder m_pivotEncoder = m_climbMotorRight.getAbsoluteEncoder(Type.kDutyCycle);
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
+    m_climbMotorLeft.setInverted(true);
+    m_climbMotorRight.setInverted(false);
     m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
     m_climbMotorRight.setIdleMode(IdleMode.kBrake);
     m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.ClimbConstants.kTickCofficient);
     m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.ClimbConstants.kTickCofficient);
+    setClimbPowerLeft(0.0);
+    setClimbPowerRight(0.0);
+    SmartDashboard.putData("ClimbReset", new InstantCommand(() -> resetEncoders()));
 
   }
 
@@ -35,6 +44,10 @@ public class ClimbSub extends SubsystemBase {
   private void updateSmartDashboard() {
     SmartDashboard.putNumber("Climb Left Power", m_climbMotorLeft.get());
     SmartDashboard.putNumber("Climb Right Power", m_climbMotorRight.get());
+    SmartDashboard.putNumber("Climb Left Height", getLeftHeight());
+    SmartDashboard.putNumber("Climb Right Height", getRightHeight());
+    SmartDashboard.putNumber("Pivot Velocity", getPivotVelocity());
+    SmartDashboard.putNumber("Pivot Position", getPivotPosition());
   }
 
   public void setClimbPowerLeft(double leftPower) {
@@ -46,11 +59,11 @@ public class ClimbSub extends SubsystemBase {
     m_climbMotorRight.set(rightPower);
   }
 
-  public static double getLeftHeight() {
+  public double getLeftHeight() {
     return m_climbMotorLeft.getEncoder().getPosition();
   }
 
-  public static double getRightHeight() {
+  public double getRightHeight() {
     return m_climbMotorRight.getEncoder().getPosition();
   }
 
@@ -60,5 +73,19 @@ public class ClimbSub extends SubsystemBase {
 
   public double getRightVelocity() {
     return m_climbMotorRight.getEncoder().getVelocity();
+  }
+
+  public void resetEncoders() {
+    System.out.println("Reseting Encoders");
+    m_climbMotorLeft.getEncoder().setPosition(0.0);
+    m_climbMotorRight.getEncoder().setPosition(0.0);
+  }
+
+  public double getPivotVelocity() {
+    return m_pivotEncoder.getVelocity();
+  }
+
+  public double getPivotPosition() {
+    return m_pivotEncoder.getPosition();
   }
 }
