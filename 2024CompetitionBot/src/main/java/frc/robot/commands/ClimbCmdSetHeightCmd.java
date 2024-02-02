@@ -24,6 +24,9 @@ public class ClimbCmdSetHeightCmd extends Command {
   private final double m_targetHeight;
   private final double m_power;
 
+  private boolean m_leftMotorDone = false;
+  private boolean m_rightMotorDone = false;
+
   //private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new Climb. */
@@ -33,6 +36,7 @@ public class ClimbCmdSetHeightCmd extends Command {
     m_targetHeight = heightM;
     m_power = power;
 
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climbSub);
   }
@@ -40,7 +44,8 @@ public class ClimbCmdSetHeightCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_leftMotorDone = false;
+    m_rightMotorDone = false;
 
   }
 
@@ -54,6 +59,7 @@ public class ClimbCmdSetHeightCmd extends Command {
     int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
     int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
 
+
     boolean moveLeft = true;
     boolean moveRight = true;
 
@@ -61,6 +67,13 @@ public class ClimbCmdSetHeightCmd extends Command {
     boolean isRightAtTargetHeight = isRightAtTargetHeight();
     double roll_angle = m_drivetrainSub.getRoll();
 
+    if(isLeftAtTargetHeight) {
+      m_leftMotorDone = true;
+    }
+
+    if(isRightAtTargetHeight) {
+      m_rightMotorDone = true;
+    }
 
     // Is left at height or right at height
     if(isLeftAtTargetHeight || isRightAtTargetHeight) {
@@ -88,7 +101,7 @@ public class ClimbCmdSetHeightCmd extends Command {
       // else if roll angle > maxRoll
     } else if(roll_angle > kMaxRollAngle) {
       // if direction is positive
-      if(leftDirection > 0) {
+      if(rightDirection > 0) {
         // Stop left motor
         moveLeft = false;
       } else {
@@ -98,15 +111,15 @@ public class ClimbCmdSetHeightCmd extends Command {
       }
     }
 
-    if(moveLeft) {
+    if(moveLeft && !m_leftMotorDone) {
       m_climbSub.setClimbPowerLeft(m_power * leftDirection);
     } else {
       m_climbSub.setClimbPowerLeft(0.0);
     }
-    if(moveRight) {
+    if(moveRight && !m_rightMotorDone) {
       m_climbSub.setClimbPowerRight(m_power * rightDirection);
     } else {
-      m_climbSub.setClimbPowerLeft(0.0);
+      m_climbSub.setClimbPowerRight(0.0);
     }
   }
 
@@ -130,5 +143,6 @@ public class ClimbCmdSetHeightCmd extends Command {
   private boolean isRightAtTargetHeight() {
     return (Math.abs(m_climbSub.getRightHeight() - m_targetHeight) < kHeightTolerence);
   }
+
 }
 
