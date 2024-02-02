@@ -16,12 +16,15 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
+
+  private static final Orchestra orca = new Orchestra();
   // Speed multipliers
-  public static final double kMaxDriveSpeed = 1000.0; // In m/s
+  public static final double kMaxDriveSpeed = 100.0; // In m/s
   public static final double kMaxTurnSpeed = 30.0; // was 50
 
   //public static final double kMaxSpeed = 10000.0;// meters per second
@@ -42,6 +45,7 @@ public class DrivetrainSub extends SubsystemBase {
   private double kTurnThreshold = 1.0;
 
   private Pose2d targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+  private Rotation2d previousRotation;
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
@@ -81,6 +85,8 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDy.setTolerance(1.0, 3.0); // In degrees
 
     m_odometryPIDr.enableContinuousInput(-180.0, 180.0);
+
+    previousRotation = getRotation();
   }
 
   public Rotation2d getRotation() {
@@ -116,6 +122,37 @@ public class DrivetrainSub extends SubsystemBase {
     m_frontRight.setState(swerveStates[1]);
     m_backLeft.setState(swerveStates[2]);
     m_backRight.setState(swerveStates[3]);
+
+  }
+
+  public void driveHoldAngle(double xSpeed, double ySpeed, double rotationSpeed,
+      double periodSeconds) { // For driving with a joystick
+    xSpeed *= kMaxDriveSpeed;
+    ySpeed *= kMaxDriveSpeed;
+    rotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
+    //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
+    // X and Y are swapped because it drives sideways for some reason
+    if(rotationSpeed == 0.0) {
+      double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
+      rotationSpeed = MathUtil.clamp(
+          m_odometryPIDr.calculate(getRotationDegrees(),
+              MathUtil.inputModulus(prevDegrees, -180.0,
+                  180.0)),
+          -0.5, 0.5);
+    } else {
+      previousRotation = getRotation();
+    }
+    var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
+
+    // Drive motors
+    m_frontLeft.setState(swerveStates[0]);
+    m_frontRight.setState(swerveStates[1]);
+    m_backLeft.setState(swerveStates[2]);
+    m_backRight.setState(swerveStates[3]);
+
   }
 
   public void translateOdometry(Translation2d pos) { // Set target position 
@@ -206,4 +243,24 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setD(kRotPIDd);
     m_odometryPIDr.setTolerance(kTurnThreshold);
   }
+  /*
+   * public void fun() {
+   * if(!orca.isPlaying()) {
+   * orca.clearInstruments();
+   * orca.addInstrument(m_frontLeft.m_steeringMotor);
+   * orca.addInstrument(m_frontRight.m_steeringMotor);
+   * orca.addInstrument(m_backLeft.m_steeringMotor);
+   * orca.loadMusic("dat3n.chrp");
+   * orca.play();
+   * } else {
+   * orca.stop();
+   * }
+   * }
+   * 
+   * public void stop_fun() {
+   * if(orca.isPlaying()) {
+   * orca.stop();
+   * }
+   * }
+   */
 }

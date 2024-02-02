@@ -133,7 +133,7 @@ public class SwerveModule extends SubsystemBase {
     SwerveModuleState betterState = SwerveModuleState.optimize(state, steeringRotation);
 
     // Apparently this makes driving smoother by using the "cosine of angle error"
-    //betterState.speedMetersPerSecond *= betterState.angle.minus(steeringRotation).getCos();
+    betterState.speedMetersPerSecond *= betterState.angle.minus(steeringRotation).getCos();
 
     // Calculate power using velocity and PID
     final double driveOutput = m_drivePID.calculate(m_driveEncoder.getVelocity(), betterState.speedMetersPerSecond);
