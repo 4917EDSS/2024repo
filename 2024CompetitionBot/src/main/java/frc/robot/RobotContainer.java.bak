@@ -14,9 +14,12 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+<<<<<<< HEAD
 import java.util.Optional;
+=======
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+>>>>>>> 3c26ea2364b956eec88a164295ca841e47652398
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -54,13 +57,19 @@ public class RobotContainer {
     private final ShooterSub m_shooterSub = new ShooterSub();
     private final ClimbSub m_climbSub = new ClimbSub();
 
+<<<<<<< HEAD
   private static boolean m_isRedAlliance = true;
-  
 
+
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandPS4Controller m_driverController =
+      new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+=======
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandPS4Controller m_driverController =
             new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
     private final CommandPS4Controller m_operatorController = new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
+>>>>>>> 3c26ea2364b956eec88a164295ca841e47652398
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -121,7 +130,19 @@ public class RobotContainer {
         //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
         //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
+<<<<<<< HEAD
+  public void initSubsystems() {
+    if(DriverStation.getAlliance().isPresent()) {
+      if(DriverStation.getAlliance().get() == Alliance.Red) {
+        m_isRedAlliance = true;
+      } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
+        m_isRedAlliance = false;
+      }
+    }
 
+    m_ledSub.init();
+  }
+=======
         //here we are making the climb
         m_driverController.cross()
                 .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5, m_drivetrainSub,
@@ -152,6 +173,7 @@ public class RobotContainer {
                 .whileTrue(
                         new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
                                 () -> m_climbSub.setClimbPowerRight(0.0)));
+>>>>>>> 3c26ea2364b956eec88a164295ca841e47652398
 
     }
 
@@ -165,17 +187,9 @@ public class RobotContainer {
         return new PrintCommand("No auto yet");
     }
 
-	public void initSubsystems() {
-    if(DriverStation.getAlliance().isPresent()) {
-      if(DriverStation.getAlliance().get() == Alliance.Red) {
-        m_isRedAlliance = true;
-      } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
-        m_isRedAlliance = false;
-      }
+    public void initSubsystems() {
+        m_ledSub.init();
     }
-
-    m_ledSub.init();
-  }
 
     public void resetGyro() {
         m_drivetrainSub.resetGyro();
