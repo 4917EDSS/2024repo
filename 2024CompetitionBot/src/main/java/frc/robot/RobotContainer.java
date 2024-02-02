@@ -14,9 +14,12 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+import java.util.Optional;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.VisionSub;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -45,6 +48,9 @@ public class RobotContainer {
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final ShooterSub m_shooterSub = new ShooterSub();
   private final ClimbSub m_climbSub = new ClimbSub();
+
+  private static boolean m_isRedAlliance = true;
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -115,6 +121,14 @@ public class RobotContainer {
   }
 
   public void initSubsystems() {
+    if(DriverStation.getAlliance().isPresent()) {
+      if(DriverStation.getAlliance().get() == Alliance.Red) {
+        m_isRedAlliance = true;
+      } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
+        m_isRedAlliance = false;
+      }
+    }
+
     m_ledSub.init();
   }
 
