@@ -98,7 +98,6 @@ public class ClimbSub extends SubsystemBase {
   }
 
   public void init() {
-    new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5, m_drivetrainSub, m_climbSub);
     resetEncoders();
   }
 }
