@@ -20,6 +20,9 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
+
+  private double m_orientationOffsetDegrees = 0;
+
   // Speed multipliers
   public static final double kMaxDriveSpeed = 1000.0; // In m/s
   public static final double kMaxTurnSpeed = 30.0; // was 50
@@ -88,7 +91,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0);
+    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0) + m_orientationOffsetDegrees;
   }
 
   public void resetGyro() {
