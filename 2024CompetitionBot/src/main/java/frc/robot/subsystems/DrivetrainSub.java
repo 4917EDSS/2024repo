@@ -22,7 +22,9 @@ import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
 
-  private static final Orchestra orca = new Orchestra();
+  //private static final Orchestra orca = new Orchestra();
+  private double m_orientationOffsetDegrees = 0;
+
   // Speed multipliers
   public static final double kMaxDriveSpeed = 100.0; // In m/s
   public static final double kMaxTurnSpeed = 30.0; // was 50
@@ -94,7 +96,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0);
+    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0) + m_orientationOffsetDegrees;
   }
 
   public void resetGyro() {
@@ -263,4 +265,10 @@ public class DrivetrainSub extends SubsystemBase {
    * }
    * }
    */
+
+  public void init() {
+    resetGyro();
+    resetOdometry();
+
+  }
 }

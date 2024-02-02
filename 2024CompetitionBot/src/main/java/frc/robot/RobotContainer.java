@@ -14,11 +14,14 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.VisionSub;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,6 +38,7 @@ import frc.robot.subsystems.ShooterSub;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.subsystems.SwerveModule;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,6 +54,9 @@ public class RobotContainer {
         private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
         private final ShooterSub m_shooterSub = new ShooterSub();
         private final ClimbSub m_climbSub = new ClimbSub();
+
+        private static boolean m_isRedAlliance = true;
+
 
         // Replace with CommandPS4Controller or CommandJoystick if needed
         private final CommandPS4Controller m_driverController =
@@ -67,7 +74,7 @@ public class RobotContainer {
                                 // Turning is controlled by the X axis of the right stick.
                                 // Deadband is applied here because it causes problems for autos
                                 new RunCommand(
-                                                () -> m_drivetrainSub.driveHoldAngle(
+                                                () -> m_drivetrainSub.drive(
                                                                 (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0
                                                                                 : m_driverController.getLeftX()),
                                                                 (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0
@@ -119,6 +126,7 @@ public class RobotContainer {
                 //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
                 //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
 
+
                 //here we are making the climb
                 m_driverController.cross()
                                 .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5,
@@ -165,12 +173,28 @@ public class RobotContainer {
                 return new PrintCommand("No auto yet");
         }
 
+        // intialize the sub systems
+        // TODO couple initialize need to be done
         public void initSubsystems() {
+                m_climbSub.init();
+                m_drivetrainSub.init();
+                m_intakeSub.init();
                 m_ledSub.init();
+                m_shooterSub.init();
+                m_visionSub.init();
+
+                if(DriverStation.getAlliance().isPresent()) {
+                        if(DriverStation.getAlliance().get() == Alliance.Red) {
+                                m_isRedAlliance = true;
+                        } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
+                                m_isRedAlliance = false;
+                        }
+                }
         }
 
         public void resetGyro() {
                 m_drivetrainSub.resetGyro();
         }
+
 }
 
