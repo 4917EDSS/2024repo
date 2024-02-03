@@ -4,6 +4,12 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +22,8 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.Constants.OperatorConstants;
 
 
@@ -25,6 +33,10 @@ public class ClimbSub extends SubsystemBase {
   private final static CANSparkMax m_climbMotorRight =
       new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
   private final SparkAbsoluteEncoder m_pivotEncoder = m_climbMotorRight.getAbsoluteEncoder(Type.kDutyCycle);
+  private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Climb");
+  private final GenericEntry m_sbClimbLeftpower, m_sbClimbRightpower, m_sbClimbLeftheight, m_sbClimbRightheight,
+      m_sbPivotVelocity, m_sbPivotPosition;
+
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
@@ -38,20 +50,37 @@ public class ClimbSub extends SubsystemBase {
     setClimbPowerRight(0.0);
     SmartDashboard.putData("ClimbReset", new InstantCommand(() -> resetEncoders()));
 
+    m_sbClimbLeftpower = m_shuffleboardTab.add("Climb Left Power", 0).getEntry();
+    m_sbClimbRightpower = m_shuffleboardTab.add("Climb Right Power", 0).getEntry();
+    m_sbClimbLeftheight = m_shuffleboardTab.add("Climb Left Height", 0).getEntry();
+    m_sbClimbRightheight = m_shuffleboardTab.add("Climb Right Height", 0).getEntry();
+    m_sbPivotVelocity = m_shuffleboardTab.add("Pivot Velocity", 0).getEntry();
+    m_sbPivotPosition = m_shuffleboardTab.add("Pivot Position", 0).getEntry();
+
+
   }
 
   @Override
   public void periodic() {
-    updateSmartDashboard();
+    updateShuffleBoard();
   }
 
-  private void updateSmartDashboard() {
-    SmartDashboard.putNumber("Climb Left Power", m_climbMotorLeft.get());
-    SmartDashboard.putNumber("Climb Right Power", m_climbMotorRight.get());
-    SmartDashboard.putNumber("Climb Left Height", getLeftHeight());
-    SmartDashboard.putNumber("Climb Right Height", getRightHeight());
-    SmartDashboard.putNumber("Pivot Velocity", getPivotVelocity());
-    SmartDashboard.putNumber("Pivot Position", getPivotPosition());
+  private void updateShuffleBoard() {
+
+    // SmartDashboard.putNumber("Climb Left Power", m_climbMotorLeft.get());
+    // SmartDashboard.putNumber("Climb Right Power", m_climbMotorRight.get());
+    // SmartDashboard.putNumber("Climb Left Height", getLeftHeight());
+    // SmartDashboard.putNumber("Climb Right Height", getRightHeight());
+    // SmartDashboard.putNumber("Pivot Velocity", getPivotVelocity());
+    // SmartDashboard.putNumber("Pivot Position", getPivotPosition());
+
+
+    m_sbClimbLeftpower.setDouble(m_climbMotorLeft.get());
+    m_sbClimbRightpower.setDouble(m_climbMotorRight.get());
+    m_sbClimbLeftheight.setDouble(getLeftHeight());
+    m_sbClimbRightheight.setDouble(getRightHeight());
+    m_sbPivotVelocity.setDouble(getPivotVelocity());
+    m_sbPivotPosition.setDouble(getPivotPosition());
   }
 
   public void setClimbPowerLeft(double leftPower) {

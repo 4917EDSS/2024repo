@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,6 +17,7 @@ import frc.robot.Constants;
 public class VisionSub extends SubsystemBase {
 
   private final NetworkTable m_limelight;
+  private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Vision");
   private NetworkTableEntry m_tx;
   private NetworkTableEntry m_ty;
   private NetworkTableEntry m_ta;

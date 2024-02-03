@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.PwmIds;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 // import frc.robot.StateOfRobot;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /** Add your docs here. */
 
@@ -17,11 +19,13 @@ import edu.wpi.first.wpilibj.RobotController;
 public class LedSub extends SubsystemBase {
   // Constants
   private final static int kLedStripLength = 8;
+  //private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("LedSubTab");
+
   private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
-  private boolean m_newColoursAvailable = false;
-  public boolean m_isFlashing; //true if flash is on (game piece gets loaded)
-  public long m_time; //time of when the flash starts
-  private int m_ledblinktimes = 0; // Number of times the led should blink when flashing
+  private static boolean m_newColoursAvailable = false;
+  public static boolean m_isFlashing; //true if flash is on (game piece gets loaded)
+  public static long m_time; //time of when the flash starts
+  private static int m_ledblinktimes = 0; // Number of times the led should blink when flashing
 
   public enum LedZones {
     // The LED string start at the top left and is split up in a big U shape as follows:
@@ -175,6 +179,8 @@ public class LedSub extends SubsystemBase {
   public void init() {
     System.out.println("LED SUB INIT");
     setZoneColour(LedZones.ALL, LedColour.START_GREEN);
+    // m_shuffleboardTab
+    // .add("Pi", 3.14);
   }
 
   /**

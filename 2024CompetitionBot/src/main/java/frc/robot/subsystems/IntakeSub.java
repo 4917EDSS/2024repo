@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,22 +23,27 @@ public class IntakeSub extends SubsystemBase {
       new CANSparkMax(Constants.CanIds.kIntakeRollers, CANSparkLowLevel.MotorType.kBrushless);
   // Line below most likely will not be used, but can be used as a working absolute encoder if necessary
   private final DigitalInput m_intakeLimitSwitch = new DigitalInput(Constants.DioIds.kIntakeLimitPort);
+  private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Intake");
+  private final GenericEntry m_sbNoteIn;
 
   /** Creates a new Intake. */
-  public IntakeSub() {}
+  public IntakeSub() {
+    m_sbNoteIn = m_shuffleboardTab.add("Note In", false).getEntry();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // updateSmartDashboard();
+    updateShuffleBoard();
   }
 
   public boolean getNoteFullyIn() {
     return !m_intakeLimitSwitch.get();
   }
 
-  public void updateSmartDashboard() {
-    SmartDashboard.putBoolean("Note In", getNoteFullyIn());
+  public void updateShuffleBoard() {
+    //SmartDashboard.putBoolean("Note In", getNoteFullyIn());
+    m_sbNoteIn.setBoolean(getNoteFullyIn());
   }
 
   public void setIntakeMotors(double power) {
