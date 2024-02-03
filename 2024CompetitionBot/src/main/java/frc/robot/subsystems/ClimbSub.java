@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,11 +18,26 @@ import frc.robot.Constants;
 
 
 public class ClimbSub extends SubsystemBase {
+  public static SerialPort.Port kOnboard;
+
+  private final ClimbSub m_climbSub = new ClimbSub();
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final static CANSparkMax m_climbMotorLeft =
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =
       new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
   private final SparkAbsoluteEncoder m_pivotEncoder = m_climbMotorRight.getAbsoluteEncoder(Type.kDutyCycle);
+  // private final byte[] bufferByte = new byte[] {0x00};
+  private static int loopNumber = '0';
+  private static int dataSetLangth = '0';
+  private static int loopThroughBufferByte = '0';
+  private static int arrayNumberWanted = '1';
+
+
+  //creating an instances of RS_232 port
+  private final SerialPort m_SerialPort =
+      new SerialPort(Constants.ClimbConstants.kBaudRate, kOnboard);
+
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
@@ -102,4 +118,30 @@ public class ClimbSub extends SubsystemBase {
     resetEncoders();
   }
 
+  public void RS232Listen() {
+    //byte[] m_buffer = m_SerialPort.read(10);
+    m_SerialPort.setReadBufferSize(Constants.ClimbConstants.kBufferSize);
+    m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
+    //getBytesReceived
+
+    byte byteArray[];
+    byteArray = new byte[Constants.ClimbConstants.kBufferSize];
+
+    byte bufferByte[];
+    bufferByte = new byte[Constants.ClimbConstants.kBufferSize];
+
+    bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
+    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
+      if(bufferByte[loopThroughBufferByte] == 10100101) { //0xA5
+        dataSetLangth = bufferByte[loopThroughBufferByte + 1];
+      }
+      while(loopNumber <= dataSetLangth) {
+        byteArray[loopNumber] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+        arrayNumberWanted++;
+        loopNumber++;
+      }
+      loopThroughBufferByte++;
+    }
+    System.out.println(byteArray);
+  }
 }
