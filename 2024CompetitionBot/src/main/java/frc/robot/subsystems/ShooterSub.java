@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import frc.robot.Constants;
@@ -126,6 +127,13 @@ public class ShooterSub extends SubsystemBase {
     return m_NotePosition.get();
   }
 
+  public boolean isPivotAtReverseLimit() {
+    return m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
+
+  public boolean isPivotAtForwardLimit() {
+    return m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
 
   @Override
   public void periodic() {
