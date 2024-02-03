@@ -19,6 +19,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private boolean m_isInitialized = false;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -65,6 +67,10 @@ public class Robot extends TimedRobot {
     if(m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    if(!m_isInitialized) {
+      m_robotContainer.initSubsystems();
+      m_isInitialized = true;
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -79,6 +85,10 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if(m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+    if(!m_isInitialized) {
+      m_robotContainer.initSubsystems();
+      m_isInitialized = true;
     }
   }
 

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.RobotController;
 
 public class LedSub extends SubsystemBase {
   // Constants
-  private final static int kLedStripLength = 8;
+  public final static int kLedStripLength = 8;
   private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
   private boolean m_newColoursAvailable = false;
   public boolean m_isFlashing; //true if flash is on (game piece gets loaded)
@@ -44,7 +44,8 @@ public class LedSub extends SubsystemBase {
     DIAG_ARM_ENC(18, 18, false), //
     DIAG_INTAKE_LIMIT(19, 19, false), //
     DIAG_INTAKE_ENC(20, 20, false), //
-    DIAG_INTAKE_SENSOR(21, 21, false);
+    DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
+    DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
 
 
     public final int start;

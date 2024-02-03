@@ -91,4 +91,8 @@ public class VisionSub extends SubsystemBase {
   public void setPipeline(int line) { // Set the currect pipeline (NO_VISION, LIMELIGHT, or APRILTAG)
     m_pipeline.setNumber(line);
   }
+
+  public void init() {
+
+  }
 }

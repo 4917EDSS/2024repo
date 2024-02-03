@@ -27,10 +27,10 @@ public final class Constants {
   }
 
   public final static class DriveConstants {
-    public static final double kAbsoluteEncoderOffsetFL = -2.224; //-0.358 + 1.892;
-    public static final double kAbsoluteEncoderOffsetFR = 0.716; //-0.323 + 2.004;
-    public static final double kAbsoluteEncoderOffsetBL = 1.003; //0.345 - 0.835;
-    public static final double kAbsoluteEncoderOffsetBR = 3.031; //-0.435 - 3.574;
+    public static final double kAbsoluteEncoderOffsetFL = -2.292;//-2.224; //-0.358 + 1.892;
+    public static final double kAbsoluteEncoderOffsetFR = 0.586;//0.716; //-0.323 + 2.004;
+    public static final double kAbsoluteEncoderOffsetBL = 0.337;//1.003; //0.345 - 0.835;
+    public static final double kAbsoluteEncoderOffsetBR = 2.787;//3.031; //-0.435 - 3.574;
   }
 
   public final static class CanIds {
@@ -86,5 +86,30 @@ public final class Constants {
     public static final double kHookScoring = 0.25;
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
+  }
+  // public static final class AnalogInIds {
+  //   public static final int kFrontDistanceSenor = 0;
+  // }
+  public static final class AprilTagIds {
+    public static final class Blue {
+      public static final int kSourceRight = 1;
+      public static final int kSourceLeft = 2;
+      public static final int kAmp = 6;
+      public static final int kCenterStage = 14;
+      public static final int kStageLeft = 15;
+      public static final int kStageRight = 16;
+      public static final int kSpeakerCenter = 7;
+      public static final int kSpeakerLeft = 8;
+    }
+    public static final class Red {
+      public static final int kSpeakerRight = 3;
+      public static final int kSpeakerCenter = 4;
+      public static final int kAmp = 5;
+      public static final int kSourceRight = 9;
+      public static final int kSourceLeft = 10;
+      public static final int kStageLeft = 11;
+      public static final int kStageRight = 12;
+      public static final int kCenterStage = 13;
+    }
   }
 }
