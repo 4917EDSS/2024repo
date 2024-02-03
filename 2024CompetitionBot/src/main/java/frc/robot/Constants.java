@@ -87,9 +87,9 @@ public final class Constants {
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
   }
-  public static final class AnalogInIds {
-    public static final int kFrontDistanceSenor = 0;
-  }
+  // public static final class AnalogInIds {
+  //   public static final int kFrontDistanceSenor = 0;
+  // }
   public static final class AprilTagIds {
     public static final class Blue {
       public static final int kSourceRight = 1;
