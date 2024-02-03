@@ -19,8 +19,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 public class DrivetrainSub extends SubsystemBase {
+
+  //Analog sensors
+  private final AnalogInput m_frontDistanceSensor = new AnalogInput(Constants.AnalogInIds.kFrontDistanceSenor);
 
   //private static final Orchestra orca = new Orchestra();
   private double m_orientationOffsetDegrees = 0;
@@ -79,6 +83,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
+
     m_gyro.reset();
     m_gyro.setAngleAdjustment(90);
     m_odometryPIDx.setTolerance(kThreshold); // In meters
@@ -230,6 +235,7 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("Path kP", kPIDp);
     SmartDashboard.putNumber("Path kD", kPIDd);
     SmartDashboard.putNumber("Path Threshold", kThreshold);
+    SmartDashboard.putNumber("Sensor Distance", getFrontDistance());
 
     // Setting PID constants
 
@@ -270,5 +276,10 @@ public class DrivetrainSub extends SubsystemBase {
     resetGyro();
     resetOdometry();
 
+  }
+
+  public double getFrontDistance() {
+    // TODO: Convert voltage to distance in meters
+    return m_frontDistanceSensor.getAverageVoltage();
   }
 }
