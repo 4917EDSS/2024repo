@@ -20,10 +20,6 @@ import frc.robot.Constants.OperatorConstants;
 
 
 public class ClimbSub extends SubsystemBase {
-
-  private final ClimbSub m_climbSub = new ClimbSub();
-  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
-
   private final static CANSparkMax m_climbMotorLeft =
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =
