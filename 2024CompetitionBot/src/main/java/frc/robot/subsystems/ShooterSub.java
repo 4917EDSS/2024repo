@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import frc.robot.Constants;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.LedSub.LedZones;
 
 
 public class ShooterSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(SubsystemBase.class.getName());
 
 
   /** Creates a new Shooter. */

@@ -39,6 +39,7 @@ import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.subsystems.SwerveModule;
+import java.util.logging.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,6 +48,8 @@ import frc.robot.subsystems.SwerveModule;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+        private static Logger m_logger = Logger.getLogger(RobotContainer.class.getName());
+
         // The robot's subsystems and commands are defined here...
         private final IntakeSub m_intakeSub = new IntakeSub();
         private final LedSub m_ledSub = new LedSub();
@@ -176,6 +179,8 @@ public class RobotContainer {
         // intialize the sub systems
         // TODO couple initialize need to be done
         public void initSubsystems() {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                m_logger.info("Initialize subsystems");
                 m_climbSub.init();
                 m_drivetrainSub.init();
                 m_intakeSub.init();

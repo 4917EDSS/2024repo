@@ -4,15 +4,18 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import javax.swing.plaf.TreeUI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.VisionSub;
 
 
 public class ClimbCmdSetHeightCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ClimbCmdSetHeightCmd.class.getName());
   private final double kHeightTolerence = 0.01;
   private final double kRollZero = -4.3;
   private final double kRollTolerence = 10;

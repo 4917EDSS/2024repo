@@ -7,10 +7,13 @@ package frc.robot.commands;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class TestLedsCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(TestLedsCmd.class.getName());
+
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final LedSub m_ledSub;
   private final LedColour m_LedColour;

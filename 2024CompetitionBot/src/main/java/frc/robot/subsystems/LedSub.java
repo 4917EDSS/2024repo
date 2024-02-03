@@ -5,9 +5,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.PwmIds;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.RobotController;
 // import frc.robot.StateOfRobot;
 
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 
 
 public class LedSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(LedSub.class.getName());
   // Constants
   public final static int kLedStripLength = 8;
   private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
@@ -109,7 +112,6 @@ public class LedSub extends SubsystemBase {
 
   /** Creates a new LedSub. */
   public LedSub() {
-    System.out.println("LED SUB CONSTRUCTOR");
     m_ledStrip.setLength(m_ledBuffer.getLength());
     m_ledStrip.setData(m_ledBuffer);
     m_ledStrip.start();

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -26,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(SwerveModule.class.getName());
+
   /** Creates a new SwerveModule. */
   public static final class ModuleConstants {
 

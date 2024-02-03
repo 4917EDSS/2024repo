@@ -4,12 +4,15 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import org.ejml.equation.IntegerSequence.Range;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterPivotCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ShooterPivotCmd.class.getName());
+
 
   // PID Controllers
 
@@ -38,18 +41,18 @@ public class ShooterPivotCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* Step 1 power on the motor
-        Step 2 set position number
-        step 3 set direction
-        step 4 check
-        step 5 watch it move  */ 
-    
-    
-    
+    /*
+     * Step 1 power on the motor
+     * Step 2 set position number
+     * step 3 set direction
+     * step 4 check
+     * step 5 watch it move
+     */
+
+
     int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
     final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction); //10 is a target velocity we don't know what it is
     m_ShooterSub.movePivot(driveOutput);
-
 
 
   }

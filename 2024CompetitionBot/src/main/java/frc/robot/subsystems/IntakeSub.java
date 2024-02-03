@@ -17,11 +17,14 @@ import frc.robot.subsystems.LedSub.LedZones;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+import java.util.logging.Logger;
 import com.revrobotics.CANSparkLowLevel;
 import frc.robot.subsystems.LedSub;
 
 
 public class IntakeSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(IntakeSub.class.getName());
+
   private boolean m_beOrange = false;
   private boolean flashGreen = false;
   private final LedSub m_LedSub = new LedSub();
