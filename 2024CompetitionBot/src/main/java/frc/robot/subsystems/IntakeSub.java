@@ -15,7 +15,6 @@ import frc.robot.subsystems.LedSub.LedZones;
 
 
 public class IntakeSub extends SubsystemBase {
-  private final LedSub m_LedSub = new LedSub();
   private final CANSparkMax m_intakeRollers =
       new CANSparkMax(Constants.CanIds.kIntakeRollers, CANSparkLowLevel.MotorType.kBrushless);
   // Line below most likely will not be used, but can be used as a working absolute encoder if necessary
@@ -34,13 +33,13 @@ public class IntakeSub extends SubsystemBase {
     // Flash green
     // Set orange
     if(!m_noteWasIn && isNoteFullyIn()) {
-      m_LedSub.Flash(LedColour.GREEN);
-      m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+      // m_LedSub.Flash(LedColour.GREEN);
+      // m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
       m_noteWasIn = true;
     } else if(m_noteWasIn && !isNoteFullyIn()) {
       // If note-was-in and !isNoteFullyIn
       // Set green
-      m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
+      // m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
       m_noteWasIn = false;
     }
   }

@@ -22,7 +22,6 @@ public class ShooterSub extends SubsystemBase {
 
 
   /** Creates a new Shooter. */
-  private final LedSub m_LedSub = new LedSub();
   private final CANSparkMax m_flywheel =
       new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
@@ -139,13 +138,13 @@ public class ShooterSub extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //updatesmartdashboard();
-    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
-      m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
-    }
+    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
+    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
+    // }
 
-    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
-      m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
-    }
+    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
+    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
+    // }
 
 
   }
