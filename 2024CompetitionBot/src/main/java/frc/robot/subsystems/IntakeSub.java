@@ -4,15 +4,14 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.OperatorConstants;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.CANSparkLowLevel;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 
 public class IntakeSub extends SubsystemBase {
@@ -21,21 +20,36 @@ public class IntakeSub extends SubsystemBase {
   // Line below most likely will not be used, but can be used as a working absolute encoder if necessary
   private final DigitalInput m_intakeLimitSwitch = new DigitalInput(Constants.DioIds.kIntakeLimitPort);
 
+  private boolean m_noteWasIn = false;
+
   /** Creates a new Intake. */
   public IntakeSub() {}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // updateSmartDashboard();
+
+    // If note-was't-in and isNoteFullyIn
+    // Flash green
+    // Set orange
+    if(!m_noteWasIn && isNoteFullyIn()) {
+      // m_LedSub.Flash(LedColour.GREEN);
+      // m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+      m_noteWasIn = true;
+    } else if(m_noteWasIn && !isNoteFullyIn()) {
+      // If note-was-in and !isNoteFullyIn
+      // Set green
+      // m_LedSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
+      m_noteWasIn = false;
+    }
   }
 
-  public boolean getNoteFullyIn() {
+  public boolean isNoteFullyIn() {
     return !m_intakeLimitSwitch.get();
   }
 
   public void updateSmartDashboard() {
-    SmartDashboard.putBoolean("Note In", getNoteFullyIn());
+    SmartDashboard.putBoolean("Note In", isNoteFullyIn());
   }
 
   public void setIntakeMotors(double power) {

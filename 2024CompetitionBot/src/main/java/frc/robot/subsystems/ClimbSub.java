@@ -4,31 +4,26 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkLimitSwitch;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.ClimbCmdSetHeightCmd;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import frc.robot.commands.ClimbCmdSetHeightCmd;
-import frc.robot.subsystems.DrivetrainSub;
-import frc.robot.Constants.OperatorConstants;
 
 
 public class ClimbSub extends SubsystemBase {
-
-  private final ClimbSub m_climbSub = new ClimbSub();
-  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
-
   private final static CANSparkMax m_climbMotorLeft =
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =
       new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
   private final SparkAbsoluteEncoder m_pivotEncoder = m_climbMotorRight.getAbsoluteEncoder(Type.kDutyCycle);
+
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
@@ -97,7 +92,17 @@ public class ClimbSub extends SubsystemBase {
     return m_pivotEncoder.getPosition();
   }
 
+  public boolean isLeftAtLimit() {
+    return m_climbMotorLeft.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
+
+  public boolean isRightAtLimit() {
+    return m_climbMotorRight.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
+
   public void init() {
     resetEncoders();
   }
+
+
 }
