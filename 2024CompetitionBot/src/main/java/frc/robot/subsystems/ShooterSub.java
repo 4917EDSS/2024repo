@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
@@ -16,10 +17,18 @@ import com.revrobotics.CANSparkLowLevel;
 import frc.robot.Constants;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import edu.wpi.first.wpilibj.SerialPort;
 
 
 public class ShooterSub extends SubsystemBase {
+  private static int loopNumber = '0';
+  private static int dataSetLangth = '0';
+  private static int loopThroughBufferByte = '0';
+  private static int arrayNumberWanted = '1';
 
+
+  //creating an instances of RS_232 port
+  private final SerialPort m_SerialPort = new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kOnboard);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -156,5 +165,43 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
     SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
     SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
+  }
+
+  public void RS232Listen() {
+    //byte[] m_buffer = m_SerialPort.read(10);
+    m_SerialPort.setReadBufferSize(Constants.ClimbConstants.kBufferSize);
+    m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
+    //getBytesReceived
+
+    byte byteArray[];
+    byteArray = new byte[Constants.ClimbConstants.kBufferSize];
+
+    byte bufferByte[];
+    bufferByte = new byte[Constants.ClimbConstants.kBufferSize];
+
+    bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
+    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
+      if(bufferByte[loopThroughBufferByte] == 0xA5) { //0xA5
+        dataSetLangth = bufferByte[loopThroughBufferByte + 1];
+
+        while(loopNumber <= dataSetLangth) {
+          byteArray[loopNumber] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+          arrayNumberWanted++;
+          loopNumber++;
+        }
+      }
+      loopThroughBufferByte++;
+    }
+
+    StringBuilder sb = new StringBuilder(byteArray.length * 2);
+    for(byte b : byteArray) {
+      sb.append(String.format("%02x", b));
+    }
+    System.out.println("===========================================================");
+    System.out.println(sb);
+    System.out.println(byteArray);
+    System.out.println(bufferByte);
+    System.out.println("===========================================================");
+
   }
 }

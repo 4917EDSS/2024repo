@@ -89,7 +89,7 @@ public final class Constants {
     public static final int kBaudRate = 115200;
     public static final int kBufferSize = 20;
     public static final int kTimeOutLangth = 120;
-    public static final int kReadByteLength = 1;
+    public static final int kReadByteLength = 20;
   }
   // public static final class AnalogInIds {
   //   public static final int kFrontDistanceSenor = 0;
