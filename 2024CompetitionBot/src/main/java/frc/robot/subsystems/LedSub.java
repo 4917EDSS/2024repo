@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj.RobotController;
 
 public class LedSub extends SubsystemBase {
   // Constants
-  public final static int kLedStripLength = 8;
+  private final static int kLedStripLength = 8;
   private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
   private boolean m_newColoursAvailable = false;
-  public boolean m_isFlashing; //true if flash is on (game piece gets loaded)
-  public long m_time; //time of when the flash starts
+  private boolean m_isFlashing; //true if flash is on (game piece gets loaded)
+  private long m_time; //time of when the flash starts
   private int m_ledblinktimes = 0; // Number of times the led should blink when flashing
 
   public enum LedZones {
