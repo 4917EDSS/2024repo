@@ -10,14 +10,15 @@ import frc.robot.subsystems.IntakeSub;
 
 /** An example command that uses an example subsystem. */
 public class IntakeIntoLimitCmd extends Command {
-private IntakeSub m_intakeSub;
+  private IntakeSub m_intakeSub;
+
   /**
    * Creates a new ExampleCommand.
    *
-   * @param  The subsystem used by this command.
+   * @param The subsystem used by this command.
    */
   public IntakeIntoLimitCmd(IntakeSub intakeSub) {
-   m_intakeSub = intakeSub;
+    m_intakeSub = intakeSub;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSub);
   }
@@ -25,7 +26,7 @@ private IntakeSub m_intakeSub;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   m_intakeSub.setIntakeMotors (0.5);
+    m_intakeSub.setIntakeMotors(0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,13 +36,13 @@ private IntakeSub m_intakeSub;
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSub.setIntakeMotors (0);
+    m_intakeSub.setIntakeMotors(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return m_intakeSub.getNoteFullyIn ();
+    return m_intakeSub.isNoteFullyIn();
   }
 }
 
