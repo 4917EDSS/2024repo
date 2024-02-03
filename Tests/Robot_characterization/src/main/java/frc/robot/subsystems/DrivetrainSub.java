@@ -13,21 +13,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
-// import edu.wpi.first.wpilibj.AnalogInput;
 
 public class DrivetrainSub extends SubsystemBase {
-
-  //Analog sensors
-  //private final AnalogInput m_frontDistanceSensor = new AnalogInput(Constants.AnalogInIds.kFrontDistanceSenor);
 
   //private static final Orchestra orca = new Orchestra();
   private double m_orientationOffsetDegrees = 0;
@@ -43,12 +36,6 @@ public class DrivetrainSub extends SubsystemBase {
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.318);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.318);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.318);
-  private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("DriveTrain");
-  private final GenericEntry m_sbYPOS, m_sbXPOS, m_sbTargetXPOS, m_sbTargetYPOS, m_sbTargetROT, m_sbGYRO, m_sbYaw,
-      m_sbRoll, m_sbPitch, m_sbFLEncoder,
-      m_sbFREncoder, m_sbBLEncoder, m_sbBREncoder, m_sbRotKP, m_sbRotKD, m_sbRotThreshold, m_sbPathKP, m_sbPathKD,
-      m_sbPathThreshold;
-
 
   // PID value setting
   private double kPIDp = 0.4;
@@ -64,7 +51,6 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
-  private PIDController m_drivePIDr = new PIDController(0.1, 0.0, 0.0);
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
@@ -91,45 +77,29 @@ public class DrivetrainSub extends SubsystemBase {
           m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()});
 
 
+  public void setMotorPower(double power) {
+    m_frontLeft.setDrivePower(power);
+    m_backLeft.setDrivePower(power);
+    m_frontRight.setDrivePower(power);
+    m_backRight.setDrivePower(power);
+  }
+
+  public double getVelocity() {
+    return m_frontLeft.getVelocity();
+  }
+
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
-
     m_gyro.reset();
     m_gyro.setAngleAdjustment(90);
     m_odometryPIDx.setTolerance(kThreshold); // In meters
     m_odometryPIDy.setTolerance(kThreshold); // In meters
 
-    m_odometryPIDr.setTolerance(1.0, 3.0); // In degrees
+    m_odometryPIDy.setTolerance(1.0, 3.0); // In degrees
+
     m_odometryPIDr.enableContinuousInput(-180.0, 180.0);
 
-    m_drivePIDr.setTolerance(1.0);
-    m_drivePIDr.enableContinuousInput(-180.0, 180.0);
-
     previousRotation = getRotation();
-
-    m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
-    m_sbYPOS = m_shuffleboardTab.add("YPOS", 0.0).getEntry();
-    m_sbTargetXPOS = m_shuffleboardTab.add("TARGET XPOS", 0.0).getEntry();
-    m_sbTargetYPOS = m_shuffleboardTab.add("TARGET YPOS", 0.0).getEntry();
-    m_sbTargetROT = m_shuffleboardTab.add("TARGET ROT", 0.0).getEntry();
-
-    m_sbGYRO = m_shuffleboardTab.add("GYRO", 0.0).getEntry();
-    m_sbYaw = m_shuffleboardTab.add("Yaw", 0.0).getEntry();
-    m_sbRoll = m_shuffleboardTab.add("Roll", 0.0).getEntry();
-    m_sbPitch = m_shuffleboardTab.add("Pitch", 0.0).getEntry();
-
-    m_sbFLEncoder = m_shuffleboardTab.add("FL encoder", 0.0).getEntry();
-    m_sbFREncoder = m_shuffleboardTab.add("FR encoder", 0.0).getEntry();
-    m_sbBLEncoder = m_shuffleboardTab.add("BL encoder", 0.0).getEntry();
-    m_sbBREncoder = m_shuffleboardTab.add("BR encoder", 0.0).getEntry();
-
-    m_sbRotKP = m_shuffleboardTab.add("Rot kP", 0.0).getEntry();
-    m_sbRotKD = m_shuffleboardTab.add("Rot kD", 0.0).getEntry();
-    m_sbRotThreshold = m_shuffleboardTab.add("Rot Threshold", 0.0).getEntry();
-    m_sbPathKP = m_shuffleboardTab.add("Path kP", 0.0).getEntry();
-    m_sbPathKD = m_shuffleboardTab.add("Path kD", 0.0).getEntry();
-    m_sbPathThreshold = m_shuffleboardTab.add("Path Threshold", 0.0).getEntry();
-
   }
 
   public Rotation2d getRotation() {
@@ -137,7 +107,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return MathUtil.inputModulus(getRotation().getDegrees() + m_orientationOffsetDegrees, -180.0, 180.0);
+    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0) + m_orientationOffsetDegrees;
   }
 
   public void resetGyro() {
@@ -170,30 +140,23 @@ public class DrivetrainSub extends SubsystemBase {
 
   public void driveHoldAngle(double xSpeed, double ySpeed, double rotationSpeed,
       double periodSeconds) { // For driving with a joystick
-    double drivePower = Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
     xSpeed *= kMaxDriveSpeed;
     ySpeed *= kMaxDriveSpeed;
-
-    double newRotationSpeed = rotationSpeed;
-
+    rotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
-    double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
     if(rotationSpeed == 0.0) {
-      if((xSpeed != 0.0 || ySpeed != 0.0)) {
-        newRotationSpeed = MathUtil.clamp(
-            m_drivePIDr.calculate(getRotationDegrees(),
-                prevDegrees),
-            -drivePower, drivePower);
-      }
+      double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
+      rotationSpeed = MathUtil.clamp(
+          m_odometryPIDr.calculate(getRotationDegrees(),
+              MathUtil.inputModulus(prevDegrees, -180.0,
+                  180.0)),
+          -0.5, 0.5);
     } else {
       previousRotation = getRotation();
     }
-    newRotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
-    SmartDashboard.putNumber("Rotation Speed", newRotationSpeed); // TODO: Remove this
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
-        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, newRotationSpeed, m_gyro.getRotation2d()),
-        periodSeconds)); // Get swerve states
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
 
@@ -249,57 +212,22 @@ public class DrivetrainSub extends SubsystemBase {
     updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
-    /**
-     * SmartDashboard.putNumber("XPOS", xPos);
-     * SmartDashboard.putNumber("YPOS", yPos);
-     * SmartDashboard.putNumber("TARGET XPOS", targetPos.getX());
-     * SmartDashboard.putNumber("TARGET YPOS", targetPos.getY());
-     * SmartDashboard.putNumber("TARGET ROT",
-     * MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0));
-     * 
-     * SmartDashboard.putNumber("GYRO", getRotationDegrees());
-     * SmartDashboard.putNumber("Yaw", m_gyro.getAngle() % 360);
-     * SmartDashboard.putNumber("Roll", m_gyro.getRoll());
-     * SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
-     * 
-     * SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
-     * SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
-     * SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());
-     * SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
-     * 
-     * kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
-     * kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
-     * kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
-     * kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
-     * kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
-     * kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
-     * SmartDashboard.putNumber("Rot kP", kRotPIDp);
-     * SmartDashboard.putNumber("Rot kD", kRotPIDd);
-     * SmartDashboard.putNumber("Rot Threshold", kTurnThreshold);
-     * SmartDashboard.putNumber("Path kP", kPIDp);
-     * SmartDashboard.putNumber("Path kD", kPIDd);
-     * SmartDashboard.putNumber("Path Threshold", kThreshold);
-     * //SmartDashboard.putNumber("Sensor Distance", getFrontDistance());
-     **/
+    SmartDashboard.putNumber("XPOS", xPos);
+    SmartDashboard.putNumber("YPOS", yPos);
+    SmartDashboard.putNumber("TARGET XPOS", targetPos.getX());
+    SmartDashboard.putNumber("TARGET YPOS", targetPos.getY());
+    SmartDashboard.putNumber("TARGET ROT",
+        MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0));
 
-    SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
+    SmartDashboard.putNumber("GYRO", getRotationDegrees());
+    SmartDashboard.putNumber("Yaw", m_gyro.getAngle() % 360);
+    SmartDashboard.putNumber("Roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
 
-    double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
-    m_sbXPOS.setDouble(xPos);
-    m_sbYPOS.setDouble(yPos);
-    m_sbTargetXPOS.setDouble(targetPos.getX());
-    m_sbTargetYPOS.setDouble(targetPos.getY());
-    m_sbTargetROT.setDouble(rot);
-
-    m_sbGYRO.setDouble(getRotationDegrees());
-    m_sbYaw.setDouble(m_gyro.getAngle() % 360);
-    m_sbRoll.setDouble(m_gyro.getRoll());
-    m_sbPitch.setDouble(m_gyro.getPitch());
-
-    m_sbFLEncoder.setDouble(m_frontLeft.getTurningRotation());
-    m_sbFREncoder.setDouble(m_frontRight.getTurningRotation());
-    m_sbBLEncoder.setDouble(m_backLeft.getTurningRotation());
-    m_sbBREncoder.setDouble(m_backRight.getTurningRotation());
+    SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
+    SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
+    SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());
+    SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
 
     kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
     kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
@@ -307,12 +235,12 @@ public class DrivetrainSub extends SubsystemBase {
     kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
     kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
     kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
-    m_sbRotKP.setDouble(kRotPIDp);
-    m_sbRotKD.setDouble(kRotPIDd);
-    m_sbRotThreshold.setDouble(kTurnThreshold);
-    m_sbPathKP.setDouble(kPIDp);
-    m_sbPathKD.setDouble(kPIDd);
-    m_sbPathThreshold.setDouble(kThreshold);
+    SmartDashboard.putNumber("Rot kP", kRotPIDp);
+    SmartDashboard.putNumber("Rot kD", kRotPIDd);
+    SmartDashboard.putNumber("Rot Threshold", kTurnThreshold);
+    SmartDashboard.putNumber("Path kP", kPIDp);
+    SmartDashboard.putNumber("Path kD", kPIDd);
+    SmartDashboard.putNumber("Path Threshold", kThreshold);
 
     // Setting PID constants
 
@@ -354,9 +282,4 @@ public class DrivetrainSub extends SubsystemBase {
     resetOdometry();
 
   }
-
-  // public double getFrontDistance() {
-  //    //TODO: Convert voltage to distance in meters
-  //   return m_frontDistanceSensor.getAverageVoltage();
-  // }
 }

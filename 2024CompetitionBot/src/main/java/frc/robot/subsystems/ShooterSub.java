@@ -4,25 +4,32 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel;
 import frc.robot.Constants;
 
 
 public class ShooterSub extends SubsystemBase {
+  private static int loopNumber = '0';
+  private static int dataSetLangth = '0';
+  private static int loopThroughBufferByte = '0';
+  private static int arrayNumberWanted = '1';
 
+
+  //creating an instances of RS_232 port
+  private final SerialPort m_SerialPort = new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kOnboard);
 
   /** Creates a new Shooter. */
-
   private final CANSparkMax m_flywheel =
       new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
@@ -128,11 +135,27 @@ public class ShooterSub extends SubsystemBase {
     return m_NotePosition.get();
   }
 
+  public boolean isPivotAtReverseLimit() {
+    return m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
+
+  public boolean isPivotAtForwardLimit() {
+    return m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     //updatesmartdashboard();
+    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
+    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
+    // }
+
+    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
+    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
+    // }
+
+
   }
 
   private void updatesmartdashboard() {
@@ -142,5 +165,43 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
     SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
     SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
+  }
+
+  public void RS232Listen() {
+    //byte[] m_buffer = m_SerialPort.read(10);
+    m_SerialPort.setReadBufferSize(Constants.ClimbConstants.kBufferSize);
+    m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
+    //getBytesReceived
+
+    byte byteArray[];
+    byteArray = new byte[Constants.ClimbConstants.kBufferSize];
+
+    byte bufferByte[];
+    bufferByte = new byte[Constants.ClimbConstants.kBufferSize];
+
+    bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
+    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
+      if(bufferByte[loopThroughBufferByte] == 0xA5) { //0xA5
+        dataSetLangth = bufferByte[loopThroughBufferByte + 1];
+
+        while(loopNumber <= dataSetLangth) {
+          byteArray[loopNumber] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+          arrayNumberWanted++;
+          loopNumber++;
+        }
+      }
+      loopThroughBufferByte++;
+    }
+
+    StringBuilder sb = new StringBuilder(byteArray.length * 2);
+    for(byte b : byteArray) {
+      sb.append(String.format("%02x", b));
+    }
+    System.out.println("===========================================================");
+    System.out.println(sb);
+    System.out.println(byteArray);
+    System.out.println(bufferByte);
+    System.out.println("===========================================================");
+
   }
 }

@@ -74,7 +74,7 @@ public class RobotContainer {
                                 // Turning is controlled by the X axis of the right stick.
                                 // Deadband is applied here because it causes problems for autos
                                 new RunCommand(
-                                                () -> m_drivetrainSub.drive(
+                                                () -> m_drivetrainSub.driveHoldAngle(
                                                                 (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0
                                                                                 : m_driverController.getLeftX()),
                                                                 (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0
@@ -176,6 +176,7 @@ public class RobotContainer {
         // intialize the sub systems
         // TODO couple initialize need to be done
         public void initSubsystems() {
+                // m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
                 m_climbSub.init();
                 m_drivetrainSub.init();
                 m_intakeSub.init();
