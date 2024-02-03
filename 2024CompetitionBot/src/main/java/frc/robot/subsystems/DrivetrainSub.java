@@ -55,6 +55,7 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
+  private PIDController m_drivePIDr = new PIDController(0.1, 0.0, 0.0);
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
@@ -89,9 +90,11 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDx.setTolerance(kThreshold); // In meters
     m_odometryPIDy.setTolerance(kThreshold); // In meters
 
-    m_odometryPIDy.setTolerance(1.0, 3.0); // In degrees
-
+    m_odometryPIDr.setTolerance(1.0, 3.0); // In degrees
     m_odometryPIDr.enableContinuousInput(-180.0, 180.0);
+
+    m_drivePIDr.setTolerance(1.0);
+    m_drivePIDr.enableContinuousInput(-180.0, 180.0);
 
     previousRotation = getRotation();
   }
@@ -101,7 +104,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return MathUtil.inputModulus(getRotation().getDegrees(), -180.0, 180.0) + m_orientationOffsetDegrees;
+    return MathUtil.inputModulus(getRotation().getDegrees() + m_orientationOffsetDegrees, -180.0, 180.0);
   }
 
   public void resetGyro() {
@@ -134,23 +137,30 @@ public class DrivetrainSub extends SubsystemBase {
 
   public void driveHoldAngle(double xSpeed, double ySpeed, double rotationSpeed,
       double periodSeconds) { // For driving with a joystick
+    double drivePower = Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
     xSpeed *= kMaxDriveSpeed;
     ySpeed *= kMaxDriveSpeed;
-    rotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
+
+    double newRotationSpeed = rotationSpeed;
+
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
+    double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
     if(rotationSpeed == 0.0) {
-      double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
-      rotationSpeed = MathUtil.clamp(
-          m_odometryPIDr.calculate(getRotationDegrees(),
-              MathUtil.inputModulus(prevDegrees, -180.0,
-                  180.0)),
-          -0.5, 0.5);
+      if((xSpeed != 0.0 || ySpeed != 0.0)) {
+        newRotationSpeed = MathUtil.clamp(
+            m_drivePIDr.calculate(getRotationDegrees(),
+                prevDegrees),
+            -drivePower, drivePower);
+      }
     } else {
       previousRotation = getRotation();
     }
+    newRotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
+    SmartDashboard.putNumber("Rotation Speed", newRotationSpeed); // TODO: Remove this
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
-        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, newRotationSpeed, m_gyro.getRotation2d()),
+        periodSeconds)); // Get swerve states
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
 
@@ -217,6 +227,7 @@ public class DrivetrainSub extends SubsystemBase {
     SmartDashboard.putNumber("Yaw", m_gyro.getAngle() % 360);
     SmartDashboard.putNumber("Roll", m_gyro.getRoll());
     SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
 
     SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
     SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());

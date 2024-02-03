@@ -74,7 +74,7 @@ public class RobotContainer {
                                 // Turning is controlled by the X axis of the right stick.
                                 // Deadband is applied here because it causes problems for autos
                                 new RunCommand(
-                                                () -> m_drivetrainSub.drive(
+                                                () -> m_drivetrainSub.driveHoldAngle(
                                                                 (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0
                                                                                 : m_driverController.getLeftX()),
                                                                 (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0
