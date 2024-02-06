@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
@@ -17,9 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 
 public class ClimbSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(ClimbSub.class.getName());
+
   private final static CANSparkMax m_climbMotorLeft =
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =

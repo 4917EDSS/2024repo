@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -25,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(SwerveModule.class.getName());
+
   /** Creates a new SwerveModule. */
   public static final class ModuleConstants {
 
@@ -42,7 +46,7 @@ public class SwerveModule extends SubsystemBase {
   // Motors and Encoders
 
   private final CANSparkMax m_driveMotor;
-  private final TalonFX m_steeringMotor;
+  public final TalonFX m_steeringMotor;
   private final RelativeEncoder m_driveEncoder;
   private final CANcoder m_steeringEncoder;
   private final double m_turningEncoderOffset;
@@ -144,8 +148,8 @@ public class SwerveModule extends SubsystemBase {
     // Clamp these as needed
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
-    m_driveMotor.set(drivePower); // Safety first
-    m_steeringMotor.set(Math.min(Math.max(steeringPower, -0.4), 0.4));
+    m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
+    m_steeringMotor.set(MathUtil.clamp(steeringPower, -0.4, 0.4));
   }
 
   public void stop() {

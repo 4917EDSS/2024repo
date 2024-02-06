@@ -5,11 +5,14 @@
 package frc.robot.commands;
 
 
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSub;
 
 /** An example command that uses an example subsystem. */
 public class IntakeIntoLimitCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(IntakeIntoLimitCmd.class.getName());
+
   private IntakeSub m_intakeSub;
 
   /**

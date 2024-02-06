@@ -19,17 +19,23 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.AnalogInput;
 
 public class DrivetrainSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
+
 
   //Analog sensors
   //private final AnalogInput m_frontDistanceSensor = new AnalogInput(Constants.AnalogInIds.kFrontDistanceSenor);
 
-  //private static final Orchestra orca = new Orchestra();
+  private final Orchestra orca1 = new Orchestra();
+  private final Orchestra orca2 = new Orchestra();
+  private final Orchestra orca3 = new Orchestra();
+  private final Orchestra orca4 = new Orchestra();
   private double m_orientationOffsetDegrees = 0;
 
   // Speed multipliers
@@ -64,7 +70,7 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
-  private PIDController m_drivePIDr = new PIDController(0.1, 0.0, 0.0);
+  private PIDController m_drivePIDr = new PIDController(0.05, 0.0, 0.0);
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
@@ -93,7 +99,6 @@ public class DrivetrainSub extends SubsystemBase {
 
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
-
     m_gyro.reset();
     m_gyro.setAngleAdjustment(90);
     m_odometryPIDx.setTolerance(kThreshold); // In meters
@@ -184,7 +189,7 @@ public class DrivetrainSub extends SubsystemBase {
         newRotationSpeed = MathUtil.clamp(
             m_drivePIDr.calculate(getRotationDegrees(),
                 prevDegrees),
-            -drivePower, drivePower);
+            -1.0, 1.0);
       }
     } else {
       previousRotation = getRotation();
@@ -328,26 +333,36 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setD(kRotPIDd);
     m_odometryPIDr.setTolerance(kTurnThreshold);
   }
-  /*
-   * public void fun() {
-   * if(!orca.isPlaying()) {
-   * orca.clearInstruments();
-   * orca.addInstrument(m_frontLeft.m_steeringMotor);
-   * orca.addInstrument(m_frontRight.m_steeringMotor);
-   * orca.addInstrument(m_backLeft.m_steeringMotor);
-   * orca.loadMusic("dat3n.chrp");
-   * orca.play();
-   * } else {
-   * orca.stop();
-   * }
-   * }
-   * 
-   * public void stop_fun() {
-   * if(orca.isPlaying()) {
-   * orca.stop();
-   * }
-   * }
-   */
+
+  public void fun() {
+    if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
+      orca1.stop();
+      orca2.stop();
+      orca3.stop();
+      orca4.stop();
+      orca1.clearInstruments();
+      orca2.clearInstruments();
+      orca3.clearInstruments();
+      orca1.addInstrument(m_frontLeft.m_steeringMotor);
+      orca2.addInstrument(m_frontRight.m_steeringMotor);
+      orca3.addInstrument(m_backLeft.m_steeringMotor);
+      orca4.addInstrument(m_backRight.m_steeringMotor);
+      orca1.loadMusic("dat3n_downA.chrp");
+      orca2.loadMusic("dat3n_downB.chrp");
+      orca3.loadMusic("dat3n_downC.chrp");
+      orca4.loadMusic("dat3n_downA.chrp");
+      orca1.play();
+      orca2.play();
+      orca3.play();
+      orca4.play();
+    } else {
+      orca1.stop();
+      orca2.stop();
+      orca3.stop();
+      orca4.stop();
+    }
+  }
+
 
   public void init() {
     resetGyro();

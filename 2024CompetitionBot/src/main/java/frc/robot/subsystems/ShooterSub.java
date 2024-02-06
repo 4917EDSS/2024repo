@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
@@ -17,9 +18,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 
 public class ShooterSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
+
   private static int loopNumber = '0';
   private static int dataSetLangth = '0';
   private static int loopThroughBufferByte = '0';
@@ -43,18 +48,20 @@ public class ShooterSub extends SubsystemBase {
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
+  private final LedSub m_ledSub;
 
 
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
 
   ArmFeedforward m_armFeedforward = new ArmFeedforward(0, 0, 0);
 
-  public ShooterSub() {
+  public ShooterSub(LedSub ledSub) {
     //When true, positive power will turn motor backwards, negitive forwards.
     m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(false);
+    m_ledSub = ledSub;
     //m_transfer.setInverted(false);
   }
 
@@ -147,13 +154,13 @@ public class ShooterSub extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //updatesmartdashboard();
-    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
-    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
-    // }
+    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
+    }
 
-    // if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
-    //   m_LedSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
-    // }
+    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
+    }
 
 
   }
