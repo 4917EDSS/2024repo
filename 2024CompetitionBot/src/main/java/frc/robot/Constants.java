@@ -87,9 +87,10 @@ public final class Constants {
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
     public static final int kBaudRate = 115200;
-    public static final int kBufferSize = 20;
-    public static final int kTimeOutLangth = 120;
-    public static final int kReadByteLength = 20;
+    public static final int kBufferSize = 21;
+    public static final int kTimeOutLangth = 30;
+    public static final int kReadByteLength = 21;
+    public static final int kByteArrayLength = 15;
   }
   // public static final class AnalogInIds {
   //   public static final int kFrontDistanceSenor = 0;

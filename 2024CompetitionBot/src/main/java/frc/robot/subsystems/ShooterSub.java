@@ -20,10 +20,11 @@ import frc.robot.Constants;
 
 
 public class ShooterSub extends SubsystemBase {
-  private static int loopNumber = '0';
-  private static int dataSetLangth = '0';
-  private static int loopThroughBufferByte = '0';
-  private static int arrayNumberWanted = '1';
+  private static int loopNumber = 0;
+  private static int dataSetLength = 0;
+  private static int loopThroughBufferByte = 0;
+  private static int arrayNumberWanted = 1;
+  private static int byteArrayCount = 0;
 
 
   //creating an instances of RS_232 port
@@ -173,19 +174,23 @@ public class ShooterSub extends SubsystemBase {
     m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
     //getBytesReceived
 
-    byte byteArray[];
-    byteArray = new byte[Constants.ClimbConstants.kBufferSize];
+    byte byteArray[] = new byte[Constants.ClimbConstants.kByteArrayLength];
 
-    byte bufferByte[];
-    bufferByte = new byte[Constants.ClimbConstants.kBufferSize];
+    byte bufferByte[] = new byte[Constants.ClimbConstants.kBufferSize];
 
     bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
-    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
-      if(bufferByte[loopThroughBufferByte] == 0xA5) { //0xA5
-        dataSetLangth = bufferByte[loopThroughBufferByte + 1];
 
-        while(loopNumber <= dataSetLangth) {
-          byteArray[loopNumber] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+    byteArrayCount = 0;
+    loopThroughBufferByte = 0;
+
+    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
+      if(bufferByte[loopThroughBufferByte] == 0xA5) { //finds 0xA5, the start of the data sent
+        dataSetLength = bufferByte[loopThroughBufferByte + 1];
+
+        loopNumber = 0;
+        while(loopNumber < dataSetLength) {
+          byteArray[byteArrayCount] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+          byteArrayCount++;
           arrayNumberWanted++;
           loopNumber++;
         }
@@ -202,6 +207,5 @@ public class ShooterSub extends SubsystemBase {
     System.out.println(byteArray);
     System.out.println(bufferByte);
     System.out.println("===========================================================");
-
   }
 }
