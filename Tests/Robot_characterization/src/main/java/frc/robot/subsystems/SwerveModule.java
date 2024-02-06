@@ -147,7 +147,7 @@ public class SwerveModule extends SubsystemBase {
     // Clamp these as needed
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
-    m_driveMotor.set(MathUtil.clamp(drivePower, -1, 1)); // Safety first
+    m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
     m_steeringMotor.set(Math.min(Math.max(steeringPower, -0.4), 0.4));
   }
 
