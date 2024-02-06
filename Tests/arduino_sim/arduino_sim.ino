@@ -2,11 +2,15 @@ unsigned char packetData[7] = {0};
 unsigned int sensors[2] = {0,100};
 int dataLength = 4;
 
+#define BUTTON_PIN 7
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   packetData[0] = 0xA5;
   packetData[1] = dataLength + 1;
+
+  pinMode(BUTTON_PIN, INPUT);
 }
 
 
@@ -30,5 +34,7 @@ void loop() {
   sensors[0]++;
   sensors[1]++;
 
+  //while(digitalRead(BUTTON_PIN) == HIGH);
   Serial.write(packetData, dataLength + 3);
+  //while(digitalRead(BUTTON_PIN) == LOW);
 }
