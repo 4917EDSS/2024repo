@@ -48,11 +48,11 @@ import frc.robot.subsystems.SwerveModule;
  */
 public class RobotContainer {
         // The robot's subsystems and commands are defined here...
-        private final IntakeSub m_intakeSub = new IntakeSub();
         private final LedSub m_ledSub = new LedSub();
+        private final IntakeSub m_intakeSub = new IntakeSub(m_ledSub);
         private final VisionSub m_visionSub = new VisionSub();
         private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
-        private final ShooterSub m_shooterSub = new ShooterSub();
+        private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
         private final ClimbSub m_climbSub = new ClimbSub();
 
         private static boolean m_isRedAlliance = true;
@@ -128,6 +128,7 @@ public class RobotContainer {
 
 
                 //here we are making the climb
+                m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
                 m_driverController.cross()
                                 .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5,
                                                 m_drivetrainSub,
@@ -177,10 +178,10 @@ public class RobotContainer {
         // TODO couple initialize need to be done
         public void initSubsystems() {
                 // m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
+                m_ledSub.init();
                 m_climbSub.init();
                 m_drivetrainSub.init();
                 m_intakeSub.init();
-                m_ledSub.init();
                 m_shooterSub.init();
                 m_visionSub.init();
 

@@ -29,15 +29,12 @@ public class VelocityCharacterization extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //for(int j = 0; j < 100; j++) {
-    //System.out.println("Looped");
-    //new WaitCommand(1);
-    //m_drivetrainSub.drive(0.0, 0.5, 0.0, 0.02);
-    //}
-    //new WaitCommand(1.0);
-    //System.out.println("Finished waiting");
-    //m_drivetrainSub.setMotorPower(1);
-    //System.out.println("It worked");
+    SmartDashboard.putNumber("Velocity", velocity);
+    SmartDashboard.putNumber("Average Rotational Velocity", averageVelocity);
+    for(int i = 0; i < 50; i++) {
+      m_drivetrainSub.drive(0.0, 1.0, 0.0, 0.02);
+    }
+    new WaitCommand(1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,25 +42,25 @@ public class VelocityCharacterization extends Command {
   public void execute() {
     velocity = m_drivetrainSub.getVelocity();
     SmartDashboard.putNumber("Velocity", velocity);
+    SmartDashboard.putNumber("Average Rotational Velocity", averageVelocity);
     if(velocity > maxVelocity) {
       maxVelocity = velocity;
     }
-    m_drivetrainSub.drive(0.0, 0.5, 0.0, 0.02);
-    p++;
-    SmartDashboard.putNumber("Drive Enabled", p);
+    m_drivetrainSub.drive(0.0, 1.0, 0.0, 0.02);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drivetrainSub.setMotorPower(0);
+    System.out.println("Reached End condition");
+    m_drivetrainSub.drive(0.0, 0.0, 0.0, 0.02);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     buffer[index] = velocity;
-    if(index < 50) {
+    if(index < 49) {
       index += 1;
     } else {
       index = 0;
