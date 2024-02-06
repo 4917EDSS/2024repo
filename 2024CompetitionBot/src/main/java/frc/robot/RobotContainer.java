@@ -128,6 +128,7 @@ public class RobotContainer {
 
 
                 //here we are making the climb
+                m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
                 m_driverController.cross()
                                 .onTrue(new ClimbCmdSetHeightCmd(Constants.ClimbConstants.kHookLowered, 0.5,
                                                 m_drivetrainSub,
