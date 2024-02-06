@@ -27,7 +27,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   // Speed multipliers
   public static final double kMaxDriveSpeed = 100.0; // In m/s
-  public static final double kMaxTurnSpeed = 30.0; // was 50
+  public static final double kMaxTurnSpeed = 100.0; // was 50
 
   //public static final double kMaxSpeed = 10000.0;// meters per second
 
@@ -75,14 +75,6 @@ public class DrivetrainSub extends SubsystemBase {
   private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
           m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()});
-
-
-  public void setMotorPower(double power) {
-    m_frontLeft.setDrivePower(power);
-    m_backLeft.setDrivePower(power);
-    m_frontRight.setDrivePower(power);
-    m_backRight.setDrivePower(power);
-  }
 
   public double getVelocity() {
     return m_frontLeft.getVelocity();

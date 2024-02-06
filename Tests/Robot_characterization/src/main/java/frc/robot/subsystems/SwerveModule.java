@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -146,12 +147,8 @@ public class SwerveModule extends SubsystemBase {
     // Clamp these as needed
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
-    m_driveMotor.set(drivePower); // Safety first
+    m_driveMotor.set(MathUtil.clamp(drivePower, -1, 1)); // Safety first
     m_steeringMotor.set(Math.min(Math.max(steeringPower, -0.4), 0.4));
-  }
-
-  public void setDrivePower(double power) {
-    m_driveMotor.set(power);
   }
 
   public double getVelocity() {

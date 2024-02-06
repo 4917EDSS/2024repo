@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+// import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.DrivetrainSub;
 
 public class RotationalVelocityCharacterization extends Command {
@@ -22,7 +23,6 @@ public class RotationalVelocityCharacterization extends Command {
   int p = 0;
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-
   public RotationalVelocityCharacterization(DrivetrainSub drivetrainSub) {
     addRequirements(drivetrainSub);
     m_drivetrainSub = drivetrainSub;
@@ -31,11 +31,13 @@ public class RotationalVelocityCharacterization extends Command {
 
   @Override
   public void initialize() {
-    //for(int j = 0; j < 100; j++) {
-    //m_drivetrainSub.drive(0.0, 0.0, 0.5, 0.02);
-    //}
-    //new WaitCommand(1.0);
-    //m_drivetrainSub.setMotorPower(1);
+    //SmartDashboard.putNumberArray("Buffer", buffer);
+    SmartDashboard.putNumber("Rotational Velocity", velocity);
+    SmartDashboard.putNumber("Average Rotational Velocity", averageVelocity);
+    for(int i = 0; i < 25; i++) {
+      m_drivetrainSub.drive(0.0, 0.0, 1.0, 0.02);
+    }
+    new WaitCommand(1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,26 +45,27 @@ public class RotationalVelocityCharacterization extends Command {
   public void execute() {
     velocity = m_gyro.getRate();
     SmartDashboard.putNumber("Rotational Velocity", velocity);
+    SmartDashboard.putNumber("Average Rotational Velocity", averageVelocity);
     if(velocity > maxVelocity) {
       maxVelocity = velocity;
     }
-    p++;
-    SmartDashboard.putNumber("Rotation Enabled", p);
-    m_drivetrainSub.drive(0.0, 0.0, 0.5, 0.02);
+
+    m_drivetrainSub.drive(0.0, 0.0, 1.0, 0.02);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drivetrainSub.setMotorPower(0);
+    System.out.println("Reached End condition");
+    m_drivetrainSub.drive(0.0, 0.0, 0.0, 0.02);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     buffer[index] = velocity;
-    if(index < 50) {
+    if(index < 49) {
       index += 1;
     } else {
       index = 0;
@@ -74,6 +77,7 @@ public class RotationalVelocityCharacterization extends Command {
       SmartDashboard.putNumber("Max Rotational Velocity", maxVelocity);
       return true;
     } else {
+      averageVelocity = 0;
       return false;
     }
   }
