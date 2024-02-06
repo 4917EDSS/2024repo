@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.PwmIds;
@@ -17,6 +18,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
 public class LedSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(LedSub.class.getName());
+
   // Constants
   private final static int kLedStripLength = 8;
   //private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("LedSubTab");
