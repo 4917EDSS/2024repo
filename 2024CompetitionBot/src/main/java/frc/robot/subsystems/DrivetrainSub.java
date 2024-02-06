@@ -19,12 +19,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.AnalogInput;
 
 public class DrivetrainSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
+
 
   //Analog sensors
   //private final AnalogInput m_frontDistanceSensor = new AnalogInput(Constants.AnalogInIds.kFrontDistanceSenor);

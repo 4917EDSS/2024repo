@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class VisionSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(VisionSub.class.getName());
 
   private final NetworkTable m_limelight;
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Vision");

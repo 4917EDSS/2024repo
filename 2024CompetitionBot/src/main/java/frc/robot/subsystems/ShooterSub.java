@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
@@ -20,6 +21,8 @@ import frc.robot.Constants;
 
 
 public class ShooterSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
+
   private static int loopNumber = '0';
   private static int dataSetLangth = '0';
   private static int loopThroughBufferByte = '0';

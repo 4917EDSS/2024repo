@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,6 +18,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  private static Logger m_logger = Logger.getLogger(Robot.class.getName());
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -27,11 +33,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    m_logger.warning("################# ROBOT INIT START ##############");
+    Logger rootLogger = LogManager.getLogManager().getLogger("");
+    rootLogger.setLevel(Constants.kLogLevel);
+    for(Handler handler : rootLogger.getHandlers()) {
+      handler.setLevel(Constants.kLogLevel);
+    }
+
+    m_logger.info(">>>>>>>>>>># ROBOT INFO ##############");
+
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-
   }
 
   /**
