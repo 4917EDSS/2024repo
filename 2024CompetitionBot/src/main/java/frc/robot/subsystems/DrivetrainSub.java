@@ -350,7 +350,7 @@ public class DrivetrainSub extends SubsystemBase {
       orca1.loadMusic("dat3n_downA.chrp");
       orca2.loadMusic("dat3n_downB.chrp");
       orca3.loadMusic("dat3n_downC.chrp");
-      orca4.loadMusic("dat3n_downA.chrp");
+      orca4.loadMusic("dat3n_downD.chrp");
       orca1.play();
       orca2.play();
       orca3.play();
