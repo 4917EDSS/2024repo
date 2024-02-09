@@ -20,6 +20,7 @@ public class VisionSub extends SubsystemBase {
 
   private final NetworkTable m_limelight;
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Vision");
+  private final GenericEntry m_shuffleboardtx, m_shuffleboardty, m_shuffleboardta, m_target, m_tagID;
   private NetworkTableEntry m_tx;
   private NetworkTableEntry m_ty;
   private NetworkTableEntry m_ta;
@@ -39,17 +40,34 @@ public class VisionSub extends SubsystemBase {
     m_tid = m_limelight.getEntry("tid");
     m_getpipe = m_limelight.getEntry("getpipe");
     m_pipeline = m_limelight.getEntry("pipeline");
+
+    m_shuffleboardtx = m_shuffleboardTab.add("tx", 0).getEntry();
+    m_shuffleboardty = m_shuffleboardTab.add("ty", 0).getEntry();
+    m_shuffleboardta = m_shuffleboardTab.add("ta", 0).getEntry();
+    m_target = m_shuffleboardTab.add("has target", 0).getEntry();
+    m_tagID = m_shuffleboardTab.add("get primary", 0).getEntry();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("tx", getHorizontalAngle());
-    SmartDashboard.putNumber("ty", getVerticalAngle());
-    //SmartDashboard.putNumber("ta", getTargetArea());
-    SmartDashboard.putBoolean("Target", hasTarget());
-    SmartDashboard.putNumber("Tag ID", getPrimaryID());
+    updateShuffleBoard();
+    //m_sbPivotPosition = m_shuffleboardTab.add("Pivot Position", 0).getEntry();
+    // m_tx = m_shuffleboardTab.add("tx", 0).getEntry();
+    // m_ty = m_shuffleboardTab.add("ty", 0).getEntry();
+    // m_ta = m_shuffleboardTab.add("ta", 0).getEntry();
+
+    // m_target = m_shuffleboardTab.add("has target", 0).getEntry();
+    // m_tagID = m_shuffleboardTab.add("get primary", 0).getEntry();
+
+
+    // SmartDashboard.putNumber("tx", getHorizontalAngle());
+    // SmartDashboard.putNumber("ty", getVerticalAngle());
+    // //SmartDashboard.putNumber("ta", getTargetArea());
+    // SmartDashboard.putBoolean("Target", hasTarget());
+    // SmartDashboard.putNumber("Tag ID", getPrimaryID());
     // Uncomment later but it's confusing right nowSmartDashboard.putNumber("Distance(m)", getDistance(getPrimaryID()));
+
   }
 
   public double getDistance(int id) { // In meters
@@ -59,6 +77,21 @@ public class VisionSub extends SubsystemBase {
     double distance = calcDistance(height);
 
     return distance;
+  }
+
+  public void updateShuffleBoard() {
+    //SmartDashboard.putNumber("tx", getHorizontalAngle());
+    //SmartDashboard.putNumber("ty", getVerticalAngle());
+    //SmartDashboard.putNumber("ta", getTargetArea());
+    //SmartDashboard.putBoolean("Target", hasTarget());
+    //SmartDashboard.putNumber("Tag ID", getPrimaryID());
+
+    m_shuffleboardtx.setDouble(getHorizontalAngle());
+    m_shuffleboardty.setDouble(getVerticalAngle());
+    //m_shuffleboardta.setDouble(getTargetArea());
+    m_target.setBoolean(hasTarget());
+    m_tagID.setDouble(getPrimaryID());
+
   }
 
   private double calcDistance(double height) { // Basic trig

@@ -34,7 +34,7 @@ public class RotationalVelocityCharacterization extends Command {
     //SmartDashboard.putNumberArray("Buffer", buffer);
     SmartDashboard.putNumber("Rotational Velocity", velocity);
     SmartDashboard.putNumber("Average Rotational Velocity", averageVelocity);
-    for(int i = 0; i < 25; i++) {
+    for(int i = 0; i < 100; i++) {
       m_drivetrainSub.drive(0.0, 0.0, 1.0, 0.02);
     }
     new WaitCommand(1);
