@@ -54,16 +54,20 @@ public class DrivetrainSub extends SubsystemBase {
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
+      new SwerveModule(Constants.DriveConstants.CanIds.kDriveMotorFL, Constants.DriveConstants.CanIds.kSteeringMotorFL,
+          Constants.DriveConstants.CanIds.kEncoderFL,
           Constants.DriveConstants.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR,
+      new SwerveModule(Constants.DriveConstants.CanIds.kDriveMotorFR, Constants.DriveConstants.CanIds.kSteeringMotorFR,
+          Constants.DriveConstants.CanIds.kEncoderFR,
           Constants.DriveConstants.kAbsoluteEncoderOffsetFR);
   private final SwerveModule m_backLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL,
+      new SwerveModule(Constants.DriveConstants.CanIds.kDriveMotorBL, Constants.DriveConstants.CanIds.kSteeringMotorBL,
+          Constants.DriveConstants.CanIds.kEncoderBL,
           Constants.DriveConstants.kAbsoluteEncoderOffsetBL);
   private final SwerveModule m_backRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
+      new SwerveModule(Constants.DriveConstants.CanIds.kDriveMotorBR, Constants.DriveConstants.CanIds.kSteeringMotorBR,
+          Constants.DriveConstants.CanIds.kEncoderBR,
           Constants.DriveConstants.kAbsoluteEncoderOffsetBR);
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
