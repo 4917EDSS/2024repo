@@ -11,8 +11,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Parity;
+import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,9 +35,9 @@ public class ShooterSub extends SubsystemBase {
 
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-
   //creating an instances of RS_232 port
-  private final SerialPort m_SerialPort = new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kOnboard);
+  private final SerialPort m_SerialPort =
+      new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -50,6 +53,8 @@ public class ShooterSub extends SubsystemBase {
 
   private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
+  private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
+      m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
   private final LedSub m_ledSub;
 
 
@@ -65,6 +70,13 @@ public class ShooterSub extends SubsystemBase {
     m_pivot.setInverted(false);
     m_ledSub = ledSub;
     //m_transfer.setInverted(false);
+
+    m_shooterFlywheelVelocity = m_shuffleboardTab.add("Shooter Flywheel Velocity", 0).getEntry();
+    m_shooterPivotPosition = m_shuffleboardTab.add("Shooter Pivot Position", 0).getEntry();
+    m_shooterPivotVelocity = m_shuffleboardTab.add("Shooter Pivot velocity", 0).getEntry();
+    m_shooterflywheelPower = m_shuffleboardTab.add("ShooterFlywheel power", 0).getEntry();
+    m_shooterPivotPower = m_shuffleboardTab.add("Shooter Pivot Power", 0).getEntry();
+    m_shooterNoteInPosition = m_shuffleboardTab.add("Shooter Note In Position", 0).getEntry();
   }
 
   public void init() {
@@ -156,6 +168,8 @@ public class ShooterSub extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //updatesmartdashboard();
+    updateShuffleBoard();
+
     if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
       m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
     }
@@ -167,13 +181,20 @@ public class ShooterSub extends SubsystemBase {
 
   }
 
-  private void updatesmartdashboard() {
-    SmartDashboard.putNumber("Shooter Flywheel velicity", getFlywheelVelocity());
-    SmartDashboard.putNumber("Shooter Pivot Position", getPivotPosition());
-    SmartDashboard.putNumber("Shooter Pivot Velocity", getPivotVelocity());
-    SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
-    SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
-    SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
+  private void updateShuffleBoard() {
+    // SmartDashboard.putNumber("Shooter Flywheel velicity", getFlywheelVelocity());
+    // SmartDashboard.putNumber("Shooter Pivot Position", getPivotPosition());
+    // SmartDashboard.putNumber("Shooter Pivot Velocity", getPivotVelocity());
+    // SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
+    // SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
+    // SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
+
+    m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
+    m_shooterPivotPosition.setDouble(getPivotPosition());
+    m_shooterPivotVelocity.setDouble(getPivotVelocity());
+    m_shooterflywheelPower.setDouble(m_flywheel.get());
+    m_shooterPivotPower.setDouble(m_pivot.get());
+    m_shooterNoteInPosition.setBoolean(isNoteAtPosition());
   }
 
   public void RS232Listen() {
@@ -189,6 +210,7 @@ public class ShooterSub extends SubsystemBase {
     bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
 
     byteArrayCount = 0;
+    arrayNumberWanted = 1;
     loopThroughBufferByte = 0;
 
     while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {

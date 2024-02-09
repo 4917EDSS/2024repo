@@ -34,7 +34,9 @@ void loop() {
   sensors[0]++;
   sensors[1]++;
 
+  unsigned char myBite = 0xA5;
   //while(digitalRead(BUTTON_PIN) == HIGH);
-  Serial.write(packetData, dataLength + 3);
+//  Serial.write(packetData, dataLength + 3);
+Serial.write(&myBite, 1);
   //while(digitalRead(BUTTON_PIN) == LOW);
 }
