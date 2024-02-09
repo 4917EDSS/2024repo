@@ -39,8 +39,8 @@ public class LedSub extends SubsystemBase {
 
     // Normal operation zones
     ALL(0, kLedStripLength - 1, false), // Set all the LEDs
-    GAME_PIECE(0, 16, true), // Indicates cube (purple) or cone (yellow)
-    ARM_BLOCKED(21, 21, true), // Indicates if the arm is blocked from passing through (red) or not (green)
+    GAME_PIECE(0, 16, true), // Indicates if in or not
+    ARM_POSITION(21, 21, true), // Indicates if the arm is in speaker or AMP position from passing through (red) or not (green)
     VISION(20, 20, true), // Indicates if the vision sees a traget (green) or not (red)
 
     // Disabled diagnostic zones
