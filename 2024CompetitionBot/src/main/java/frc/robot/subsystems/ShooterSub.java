@@ -13,6 +13,8 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Parity;
+import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,7 +36,8 @@ public class ShooterSub extends SubsystemBase {
 
 
   //creating an instances of RS_232 port
-  private final SerialPort m_SerialPort = new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kOnboard);
+  private final SerialPort m_SerialPort =
+      new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -189,6 +192,7 @@ public class ShooterSub extends SubsystemBase {
     bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
 
     byteArrayCount = 0;
+    arrayNumberWanted = 1;
     loopThroughBufferByte = 0;
 
     while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
