@@ -34,10 +34,10 @@ public final class Constants {
 
   public final static class DriveConstants {
     // measured percisly on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = -1.891 + 0.027 + 3.141;
-    public static final double kAbsoluteEncoderOffsetFR = 0.449 + 0.037;
-    public static final double kAbsoluteEncoderOffsetBL = 0.581 + 0.252 - 0.336;
-    public static final double kAbsoluteEncoderOffsetBR = 2.600;
+    public static final double kAbsoluteEncoderOffsetFL = -1.856;
+    public static final double kAbsoluteEncoderOffsetFR = -2.439;
+    public static final double kAbsoluteEncoderOffsetBL = -0.451;
+    public static final double kAbsoluteEncoderOffsetBR = -0.643;
   }
 
   public final static class CanIds {

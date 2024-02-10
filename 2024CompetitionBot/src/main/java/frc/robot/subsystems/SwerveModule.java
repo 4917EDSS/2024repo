@@ -113,6 +113,23 @@ public class SwerveModule extends SubsystemBase {
     return position;// - m_turningEncoderOffset;
   }
 
+  public double getTurningEncoder() { // Without any offset
+    double position = (m_steeringEncoder.getAbsolutePosition().getValueAsDouble());// -0.5 to 0.5
+
+    position *= Math.PI * 2.0; // Converts from -0.5 to 0.5 to -PI to PI
+
+    // Calculate offsets
+    if(position < -Math.PI) {
+      double a = -position - Math.PI;
+      position = Math.PI - a;
+    } else if(position > Math.PI) {
+      double a = position - Math.PI;
+      position = -Math.PI + a;
+    }
+
+    return position;
+  }
+
   public SwerveModuleState getState() { // Swerve states are what Kinematics uses for calculations
     return new SwerveModuleState(m_driveEncoder.getVelocity(),
         new Rotation2d(getTurningRotation()));
