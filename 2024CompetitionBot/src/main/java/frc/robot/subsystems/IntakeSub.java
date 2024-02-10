@@ -69,6 +69,7 @@ public class IntakeSub extends SubsystemBase {
     SmartDashboard.putBoolean("Note In", isNoteFullyIn());
   }
 
+  // positive power intakes 
   public void setIntakeMotors(double power) {
     m_intakeRollers.set(power);
   }
