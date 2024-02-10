@@ -2,7 +2,6 @@ unsigned char packetData[8] = {0};
 unsigned int sensors[2] = {0,100};
 int dataLength = 4;
 
-#define BUTTON_PIN 7
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,8 +11,8 @@ void setup() {
   packetData[1] = 0xA5;
   packetData[2] = dataLength + 1;
 
-  pinMode(BUTTON_PIN, INPUT);
-}
+//  pinMode(BUTTON_PIN, INPUT);
+} 
 
 
 void loop() {
@@ -27,10 +26,12 @@ void loop() {
   packetData[6] = (sensors[1] >> 8) & 0xFF;
 
   // Checksum the header, length and data bytes but not the checksum byte
-  for(index = 0; index < dataLength + 3; index++) {
+  // Checksum is 8 bits.
+  for(index = 3; index < dataLength + 3; index++) {
     checksum += packetData[index];
   }
-  packetData[6] = checksum;
+  packetData[7] = checksum;
+  //packetData[7] = 0x00;
 
   // Increment fake data
   sensors[0]++;
