@@ -61,7 +61,7 @@ public class DrivetrainSub extends SubsystemBase {
   private double kPIDd = 0.0;
   private double kThreshold = 0.05;
 
-  private double kRotPIDp = 0.1;
+  private double kRotPIDp = 0.005;
   private double kRotPIDd = 0.0;
   private double kTurnThreshold = 1.0;
 
@@ -170,44 +170,6 @@ public class DrivetrainSub extends SubsystemBase {
     m_frontRight.setState(swerveStates[1]);
     m_backLeft.setState(swerveStates[2]);
     m_backRight.setState(swerveStates[3]);
-
-  }
-
-  public void driveHoldAngle(double xSpeed, double ySpeed, double rotationSpeed,
-      double periodSeconds) { // For driving with a joystick
-    double drivePower = Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
-    xSpeed *= kMaxDriveSpeed;
-    ySpeed *= kMaxDriveSpeed;
-
-    double newRotationSpeed = rotationSpeed;
-
-    //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
-    // X and Y are swapped because it drives sideways for some reason
-    double prevDegrees = MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0);
-    if(rotationSpeed == 0.0) {
-      if((xSpeed != 0.0 || ySpeed != 0.0)) {
-        newRotationSpeed = MathUtil.clamp(
-            m_drivePIDr.calculate(getRotationDegrees(),
-                prevDegrees),
-            -1.0, 1.0);
-      }
-    } else {
-      previousRotation = getRotation();
-    }
-    newRotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
-    SmartDashboard.putNumber("Rotation Speed", newRotationSpeed); // TODO: Remove this
-    var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
-        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, newRotationSpeed, m_gyro.getRotation2d()),
-        periodSeconds)); // Get swerve states
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
-
-    // Drive motors
-    m_frontLeft.setState(swerveStates[0]);
-    m_frontRight.setState(swerveStates[1]);
-    m_backLeft.setState(swerveStates[2]);
-    m_backRight.setState(swerveStates[3]);
-
   }
 
   public void translateOdometry(Translation2d pos) { // Set target position 
@@ -218,16 +180,18 @@ public class DrivetrainSub extends SubsystemBase {
     targetPos = new Pose2d(pos.getTranslation(), pos.getRotation());
   }
 
+  public double getRotationPIDPowerDegrees(double target) {
+    return MathUtil.clamp(
+        m_odometryPIDr.calculate(getRotationDegrees(),
+            MathUtil.inputModulus(target, -180.0, 180.0)),
+        -1, 1);
+  }
+
   public boolean updateOdometryTransform() { // Returns true when at position
     //double rotationDifference = m_odometryPIDr.getPositionError(); // In degrees
-    double rotationClamp = 1.0;
     double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), targetPos.getX()), -0.5, 0.5);
     double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), targetPos.getY()), -0.5, 0.5);
-    double rotationPower =
-        MathUtil.clamp(
-            m_odometryPIDr.calculate(getRotationDegrees(),
-                MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0)),
-            -rotationClamp, rotationClamp);
+    double rotationPower = getRotationPIDPowerDegrees(targetPos.getRotation().getDegrees());
     drive(xPower, yPower, rotationPower, 0.02);
     return ((m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint()) && m_odometryPIDr.atSetpoint());
   }

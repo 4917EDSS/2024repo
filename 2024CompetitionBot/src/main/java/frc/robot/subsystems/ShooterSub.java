@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.FlowControl;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -205,13 +206,15 @@ public class ShooterSub extends SubsystemBase {
   public void RS232Listen() {
     //byte[] m_buffer = m_SerialPort.read(10);
     m_SerialPort.setReadBufferSize(Constants.Climb.kBufferSize);
-    m_SerialPort.setTimeout(Constants.Climb.kTimeOutLangth);
+    m_SerialPort.setTimeout(Constants.Climb.kTimeOutLength);
+    m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
     //getBytesReceived
 
     byte byteArray[] = new byte[Constants.Climb.kByteArrayLength];
 
     byte bufferByte[] = new byte[Constants.Climb.kBufferSize];
 
+    m_SerialPort.reset();
     bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
 
     byteArrayCount = 0;
@@ -219,7 +222,8 @@ public class ShooterSub extends SubsystemBase {
     loopThroughBufferByte = 0;
 
     while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
-      if(bufferByte[loopThroughBufferByte] == 0xA5) { //finds 0xA5, the start of the data sent
+      if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
+
         dataSetLength = bufferByte[loopThroughBufferByte + 1];
 
         loopNumber = 0;

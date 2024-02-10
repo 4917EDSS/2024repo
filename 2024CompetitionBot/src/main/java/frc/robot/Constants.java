@@ -33,10 +33,11 @@ public final class Constants {
   }
 
   public final static class DriveConstants {
-    public static final double kAbsoluteEncoderOffsetFL = -2.292;//-2.224; //-0.358 + 1.892;
-    public static final double kAbsoluteEncoderOffsetFR = 0.586;//0.716; //-0.323 + 2.004;
-    public static final double kAbsoluteEncoderOffsetBL = 0.337;//1.003; //0.345 - 0.835;
-    public static final double kAbsoluteEncoderOffsetBR = 2.787;//3.031; //-0.435 - 3.574;
+    // measured percisly on Feb 10
+    public static final double kAbsoluteEncoderOffsetFL = -1.891 + 0.027 + 3.141;
+    public static final double kAbsoluteEncoderOffsetFR = 0.449 + 0.037;
+    public static final double kAbsoluteEncoderOffsetBL = 0.581 + 0.252 - 0.336;
+    public static final double kAbsoluteEncoderOffsetBR = 2.600;
   }
 
   public final static class CanIds {
@@ -92,9 +93,9 @@ public final class Constants {
     public static final double kHookScoring = 0.25;
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
-    public static final int kBaudRate = 115200;
+    public static final int kBaudRate = 38400;
     public static final int kBufferSize = 21;
-    public static final int kTimeOutLangth = 30;
+    public static final int kTimeOutLength = 30;
     public static final int kReadByteLength = 21;
     public static final int kByteArrayLength = 15;
   }
