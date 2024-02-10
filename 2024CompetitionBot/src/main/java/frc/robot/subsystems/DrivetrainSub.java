@@ -19,13 +19,53 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.AnalogInput;
 
+
 public class DrivetrainSub extends SubsystemBase {
+  public class Point {
+    public Pose2d point;
+    public boolean passthough = false; // Don't slow down at this point
+
+    public Point(Pose2d p, boolean pass) {
+      point = p;
+      passthough = pass;
+    }
+  }
+  public class Path {
+    private ArrayList<Point> points = new ArrayList<Point>();
+    private double pTolerance = kThreshold;
+    private double pMaxspeed = 1.0;
+    public int index = 0;
+
+    public Path(double tolarance, double maxSpeed) {
+      pTolerance = tolarance;
+      pMaxspeed = maxSpeed;
+    }
+
+    void addPoint(Pose2d p) {
+      Point t = new Point(p, false);
+      points.add(t);
+    }
+
+    void addPoint(double x, double y, Rotation2d r) {
+      Pose2d temp = new Pose2d(x, y, r);
+      Point t = new Point(temp, false);
+      points.add(t);
+    }
+
+    void addPoint(double x, double y, Rotation2d r, boolean pass) {
+      Pose2d temp = new Pose2d(x, y, r);
+      Point t = new Point(temp, pass);
+      points.add(t);
+    }
+  }
+
   private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
 
 
@@ -157,7 +197,7 @@ public class DrivetrainSub extends SubsystemBase {
   public void drive(double xSpeed, double ySpeed, double rotationSpeed, double periodSeconds) { // Period should be time period between whenever this is called
     xSpeed *= kMaxDriveSpeed;
     ySpeed *= kMaxDriveSpeed;
-    rotationSpeed *= -kMaxTurnSpeed; // This is negative so it's CCW Positive
+    rotationSpeed *= kMaxTurnSpeed; // This is negative so it's CCW Positive
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
@@ -172,6 +212,53 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight.setState(swerveStates[3]);
   }
 
+  public Path generateTestPath() {
+    Path tesPath = new Path(0.2, 0.2); // 10cm tolerance with 20% speed
+    Rotation2d currentRotation = getRotation();
+    tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
+    tesPath.addPoint(0.0 + getPos().getX(), 0.5 + getPos().getY(), currentRotation, true);
+
+    tesPath.addPoint(0.0 + getPos().getX(), 1.0 + getPos().getY(), currentRotation);
+    tesPath.addPoint(0.5 + getPos().getX(), 1.0 + getPos().getY(), currentRotation, true);
+
+    tesPath.addPoint(1.0 + getPos().getX(), 1.0 + getPos().getY(), currentRotation);
+    tesPath.addPoint(1.0 + getPos().getX(), 0.5 + getPos().getY(), currentRotation, true);
+
+    tesPath.addPoint(1.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
+    tesPath.addPoint(0.5 + getPos().getX(), 0.0 + getPos().getY(), currentRotation, true);
+
+    tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
+    return tesPath;
+  }
+
+  public void startPath(Path p) {
+    p.index = 0;
+    m_odometryPIDx.setTolerance(p.pTolerance);
+    m_odometryPIDy.setTolerance(p.pTolerance);
+    translateOdometry(p.points.get(p.index).point);
+  }
+
+  public boolean runPath(Path p) {
+    if(p.index >= p.points.size()) {
+      return true;
+    }
+    if(p.index == p.points.size() - 1) {
+      m_odometryPIDx.setTolerance(kThreshold);
+      m_odometryPIDy.setTolerance(kThreshold);
+    } else {
+      m_odometryPIDx.setTolerance(p.pTolerance);
+      m_odometryPIDy.setTolerance(p.pTolerance);
+    }
+
+    if(updateOdometryTransform(p.pMaxspeed, p.points.get(p.index).passthough)) {
+      p.index += 1;
+      if(p.index < p.points.size()) {
+        translateOdometry(p.points.get(p.index).point);
+      }
+    }
+    return false;
+  }
+
   public void translateOdometry(Translation2d pos) { // Set target position 
     targetPos = new Pose2d(pos.getX(), pos.getY(), m_gyro.getRotation2d());
   }
@@ -184,7 +271,7 @@ public class DrivetrainSub extends SubsystemBase {
     return MathUtil.clamp(
         m_odometryPIDr.calculate(getRotationDegrees(),
             MathUtil.inputModulus(target, -180.0, 180.0)),
-        -1, 1);
+        -1.0, 1.0);
   }
 
   public boolean updateOdometryTransform() { // Returns true when at position
@@ -194,6 +281,25 @@ public class DrivetrainSub extends SubsystemBase {
     double rotationPower = getRotationPIDPowerDegrees(targetPos.getRotation().getDegrees());
     drive(xPower, yPower, rotationPower, 0.02);
     return ((m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint()) && m_odometryPIDr.atSetpoint());
+  }
+
+  public boolean updateOdometryTransform(double maxPower, boolean passthrough) { // Returns true when at position
+    //double rotationDifference = m_odometryPIDr.getPositionError(); // In degrees
+    double rotationClamp = 1.0;
+    double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), targetPos.getX()), -maxPower, maxPower);
+    double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), targetPos.getY()), -maxPower, maxPower);
+    double rotationPower =
+        MathUtil.clamp(
+            m_odometryPIDr.calculate(getRotationDegrees(),
+                MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0)),
+            -rotationClamp, rotationClamp);
+    drive(xPower, yPower, rotationPower, 0.02);
+    if(passthrough) {
+      return ((m_odometryPIDx.getPositionError() < m_odometryPIDx.getPositionTolerance()
+          && (m_odometryPIDy.getPositionError() < m_odometryPIDy.getPositionTolerance())));
+    } else {
+      return ((m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint()));
+    }
   }
 
   public void updateOdometry() {
@@ -265,10 +371,10 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbRoll.setDouble(m_gyro.getRoll());
     m_sbPitch.setDouble(m_gyro.getPitch());
 
-    m_sbFLEncoder.setDouble(m_frontLeft.getTurningRotation());
-    m_sbFREncoder.setDouble(m_frontRight.getTurningRotation());
-    m_sbBLEncoder.setDouble(m_backLeft.getTurningRotation());
-    m_sbBREncoder.setDouble(m_backRight.getTurningRotation());
+    m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
+    m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
+    m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
+    m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
 
     kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
     kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
