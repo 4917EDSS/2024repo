@@ -40,8 +40,8 @@ public class ClimbSub extends SubsystemBase {
     m_climbMotorRight.setInverted(false);
     m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
     m_climbMotorRight.setIdleMode(IdleMode.kBrake);
-    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.ClimbConstants.kTickCofficient);
-    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.ClimbConstants.kTickCofficient);
+    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.Climb.kTickCofficient);
+    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.Climb.kTickCofficient);
     setClimbPowerLeft(0.0);
     setClimbPowerRight(0.0);
     SmartDashboard.putData("ClimbReset", new InstantCommand(() -> resetEncoders()));
