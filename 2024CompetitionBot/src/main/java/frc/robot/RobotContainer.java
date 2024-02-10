@@ -166,7 +166,8 @@ public class RobotContainer {
         // intialize the sub systems
         // TODO couple initialize need to be done
         public void initSubsystems() {
-                // m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
+                // int sensorArray[] = new int[2];
+                // sensorArray = m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
                 m_ledSub.init();
                 m_climbSub.init();
                 m_drivetrainSub.init();
