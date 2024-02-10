@@ -33,10 +33,11 @@ public final class Constants {
   }
 
   public final static class DriveConstants {
-    public static final double kAbsoluteEncoderOffsetFL = -2.292;//-2.224; //-0.358 + 1.892;
-    public static final double kAbsoluteEncoderOffsetFR = 0.586;//0.716; //-0.323 + 2.004;
-    public static final double kAbsoluteEncoderOffsetBL = 0.337;//1.003; //0.345 - 0.835;
-    public static final double kAbsoluteEncoderOffsetBR = 2.787;//3.031; //-0.435 - 3.574;
+    // measured percisly on Feb 10
+    public static final double kAbsoluteEncoderOffsetFL = -1.891 + 0.027 + 3.141;
+    public static final double kAbsoluteEncoderOffsetFR = 0.449 + 0.037;
+    public static final double kAbsoluteEncoderOffsetBL = 0.581 + 0.252 - 0.336;
+    public static final double kAbsoluteEncoderOffsetBR = 2.600;
   }
 
   public final static class CanIds {
@@ -83,7 +84,7 @@ public final class Constants {
         {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
 
   }
-  public static final class ClimbConstants {
+  public static final class Climb {
     //TODO Change all the hights
     //all meshermintes need to be fixed and are in m
     public static final double kShortHookRaised = 0.40;
@@ -98,6 +99,23 @@ public final class Constants {
     public static final int kReadByteLength = 21;
     public static final int kByteArrayLength = 15;
   }
+
+  public static final class Shooter {
+    public static final double kPositionIntake = 0.0;
+    public static final double kPositionSubwoofer = 0.0; // TODO figure out real value
+    public static final double kPositionAmp = 0.0; // TODO figure out real value
+    public static final double kPositionTrap = 0.0; // TODO figure out real value
+    public static final double kNoteUpperIntakePower = 0.25;
+    public static final double kNoteLowerIntakePower = 0.50;
+
+  }
+
+  public static final class Intake {
+    public static final double kNoteIntakePower = 0.25;
+    public static final double kNoteExpelPower = 0.25;
+
+  }
+
   // public static final class AnalogInIds {
   //   public static final int kFrontDistanceSenor = 0;
   // }
