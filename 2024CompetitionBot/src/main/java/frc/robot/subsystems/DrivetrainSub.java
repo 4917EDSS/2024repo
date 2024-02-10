@@ -6,20 +6,36 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.math.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
@@ -28,6 +44,7 @@ import frc.robot.Constants;
 
 
 public class DrivetrainSub extends SubsystemBase {
+  // TODO: Remove both classes and all relating functions when trajectory is finished
   public class Point {
     public Pose2d point;
     public boolean passthough = false; // Don't slow down at this point
@@ -107,8 +124,8 @@ public class DrivetrainSub extends SubsystemBase {
 
   private Pose2d targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
   private Rotation2d previousRotation;
-  private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
-  private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
+  public PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
+  public PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
   private PIDController m_drivePIDr = new PIDController(0.05, 0.0, 0.0);
 
@@ -129,7 +146,7 @@ public class DrivetrainSub extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Kinematics controls movement, Odemetry tracks position
-  private final SwerveDriveKinematics m_kinematics =
+  public final SwerveDriveKinematics m_kinematics =
       new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
   private final SwerveDriveOdometry m_odometry =
@@ -212,7 +229,14 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight.setState(swerveStates[3]);
   }
 
-  public Path generateTestPath() {
+  public void driveStates(SwerveModuleState[] swerveStates) { // Specifically for trajectories
+    m_frontLeft.setState(swerveStates[0]);
+    m_frontRight.setState(swerveStates[1]);
+    m_backLeft.setState(swerveStates[2]);
+    m_backRight.setState(swerveStates[3]);
+  }
+
+  public Path generateTestPath() { // TODO: Remove after finishing trajectory
     Path tesPath = new Path(0.2, 0.2); // 10cm tolerance with 20% speed
     Rotation2d currentRotation = getRotation();
     tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
@@ -316,6 +340,10 @@ public class DrivetrainSub extends SubsystemBase {
 
   public Translation2d getPos() { // Get position from odometry
     return m_odometry.getPoseMeters().getTranslation();
+  }
+
+  public Pose2d getOdometryPose2d() {
+    return m_odometry.getPoseMeters();
   }
 
   @Override
