@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterUpperFeederCmd extends Command {
@@ -40,6 +41,7 @@ public class ShooterUpperFeederCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_ShooterSub.isNoteAtPosition();
+    //TODO probably need to check more sensors as this only checks one
+    return m_ShooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel);
   }
 }

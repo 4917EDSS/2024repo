@@ -5,11 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ShooterSub;
+import frc.robot.Constants;
+import frc.robot.subsystems.IntakeSub;
+
 
 public class IntakeReverseWhenNoteInCmd extends Command {
+  private final ShooterSub m_shooterSub;
+  private final IntakeSub m_intakeSub;
+
   /** Creates a new IntakeReverseWhenNoteInCmd. */
-  public IntakeReverseWhenNoteInCmd() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public IntakeReverseWhenNoteInCmd(ShooterSub shooterSub, IntakeSub intakeSub) {
+    m_shooterSub = shooterSub;
+    m_intakeSub = intakeSub;
+    addRequirements(shooterSub, intakeSub);
   }
 
   // Called when the command is initially scheduled.
@@ -22,11 +31,14 @@ public class IntakeReverseWhenNoteInCmd extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+
+    return m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel);
   }
 }

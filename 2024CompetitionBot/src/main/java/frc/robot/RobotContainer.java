@@ -36,6 +36,7 @@ import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
+import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
@@ -89,9 +90,10 @@ public class RobotContainer {
                 //m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetRelativePos(), m_drivetrainSub));
                 m_driverController.share()
                                 .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
-                m_driverController.povRight()
-                                .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-                                                new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(90.0))));
+                // m_driverController.povRight()
+                //                 .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
+                //                                 new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(90.0))));
+                m_driverController.povRight().onTrue(new DrivePathCmd(m_drivetrainSub));
                 m_driverController.povLeft()
                                 .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
                                                 new Pose2d(-2.0, 0.0, Rotation2d.fromDegrees(-90.0))));
@@ -166,7 +168,8 @@ public class RobotContainer {
         // intialize the sub systems
         // TODO couple initialize need to be done
         public void initSubsystems() {
-                // m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
+                // int sensorArray[] = new int[2];
+                // sensorArray = m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
                 m_ledSub.init();
                 m_climbSub.init();
                 m_drivetrainSub.init();

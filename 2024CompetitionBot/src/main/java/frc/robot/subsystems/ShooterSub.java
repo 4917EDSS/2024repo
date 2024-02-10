@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
@@ -33,6 +34,10 @@ public class ShooterSub extends SubsystemBase {
   private static int loopThroughBufferByte = 0;
   private static int arrayNumberWanted = 1;
   private static int byteArrayCount = 0;
+  private static int checkSum = 0;
+  private static int checkSumWatchDog = 0;
+
+  private static int m_intakeSensors[] = new int[2];
 
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
@@ -52,12 +57,12 @@ public class ShooterSub extends SubsystemBase {
   // private final CANSparkMax m_transfer =
   //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
-  private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
       m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
   private final LedSub m_ledSub;
 
+  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
 
@@ -127,6 +132,11 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.set(power);
   }
 
+  public void spinBothFeeders(double lowerPower, double upperPower) {
+    spinLowerFeeder(lowerPower);
+    spinUpperFeeder(upperPower);
+  }
+
   public void movePivot(double power) {
     m_pivot.set(power);
   }
@@ -153,8 +163,8 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.getEncoder().getVelocity();
   }
 
-  public boolean isNoteAtPosition() {
-    return m_NotePosition.get();
+  public boolean isNoteAtPosition(int noteSensorId) {
+    return m_noteSwitches[noteSensorId];
   }
 
   public boolean isPivotAtReverseLimit() {
@@ -195,42 +205,67 @@ public class ShooterSub extends SubsystemBase {
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     m_shooterflywheelPower.setDouble(m_flywheel.get());
     m_shooterPivotPower.setDouble(m_pivot.get());
-    m_shooterNoteInPosition.setBoolean(isNoteAtPosition());
+    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
   }
 
-  public void RS232Listen() {
+  public int[] RS232Listen() {
     //byte[] m_buffer = m_SerialPort.read(10);
     m_SerialPort.setReadBufferSize(Constants.Climb.kBufferSize);
     m_SerialPort.setTimeout(Constants.Climb.kTimeOutLength);
-    m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
+    // m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
     //getBytesReceived
 
     byte byteArray[] = new byte[Constants.Climb.kByteArrayLength];
 
     byte bufferByte[] = new byte[Constants.Climb.kBufferSize];
 
-    m_SerialPort.reset();
-    bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
+    checkSumWatchDog = 0;
 
-    byteArrayCount = 0;
-    arrayNumberWanted = 1;
-    loopThroughBufferByte = 0;
-
-    while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
-      if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
-
-        dataSetLength = bufferByte[loopThroughBufferByte + 1];
-
-        loopNumber = 0;
-        while(loopNumber < dataSetLength) {
-          byteArray[byteArrayCount] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
-          byteArrayCount++;
-          arrayNumberWanted++;
-          loopNumber++;
-        }
+    do {
+      Arrays.fill(byteArray, (byte) 0);
+      Arrays.fill(bufferByte, (byte) 0);
+      if(checkSumWatchDog > 5) {
+        System.out.println("========checkSum corrupt 5 times=========");
+        // reset the arduino
+        break;
       }
-      loopThroughBufferByte++;
-    }
+      checkSumWatchDog++;
+      m_SerialPort.reset();
+      if(m_SerialPort.getBytesReceived() != 0) { //shouldn't read if there is no new data, this method doesn't work
+        bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
+      }
+
+      byteArrayCount = 0;
+      loopThroughBufferByte = 0;
+
+      while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
+        if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
+
+          dataSetLength = bufferByte[loopThroughBufferByte + 1];
+          if(dataSetLength > Constants.Climb.kByteArrayLength) {
+            break;
+          }
+
+          loopNumber = 0;
+          arrayNumberWanted = 1;
+          while(loopNumber < dataSetLength) {
+            byteArray[byteArrayCount] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
+            byteArrayCount++;
+            arrayNumberWanted++;
+            loopNumber++;
+          }
+          break;
+        }
+        loopThroughBufferByte++;
+      }
+      for(int i = 0; i < Constants.Climb.kByteArrayLength - 1; i++) {
+        checkSum += byteArray[i];
+      }
+    } while(checkSum != byteArray[4]);
+    checkSum = 0;
+
+    m_intakeSensors[0] = (((byteArray[1] & 0xFF) << 8) | (byteArray[0] & 0xFF));
+    m_intakeSensors[1] = (((byteArray[3] & 0xFF) << 8) | (byteArray[2] & 0xFF));
 
     StringBuilder sb = new StringBuilder(byteArray.length * 2);
     for(byte b : byteArray) {
@@ -241,5 +276,7 @@ public class ShooterSub extends SubsystemBase {
     System.out.println(byteArray);
     System.out.println(bufferByte);
     System.out.println("===========================================================");
+
+    return m_intakeSensors;
   }
 }

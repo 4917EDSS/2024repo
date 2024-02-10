@@ -34,10 +34,10 @@ public final class Constants {
 
   public final static class DriveConstants {
     // measured percisly on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = -1.891 + 0.027 + 3.141;
-    public static final double kAbsoluteEncoderOffsetFR = 0.449 + 0.037;
-    public static final double kAbsoluteEncoderOffsetBL = 0.581 + 0.252 - 0.336;
-    public static final double kAbsoluteEncoderOffsetBR = 2.600;
+    public static final double kAbsoluteEncoderOffsetFL = -1.856;
+    public static final double kAbsoluteEncoderOffsetFR = -2.439;
+    public static final double kAbsoluteEncoderOffsetBL = -0.451;
+    public static final double kAbsoluteEncoderOffsetBR = -0.643;
   }
 
   public final static class CanIds {
@@ -94,17 +94,24 @@ public final class Constants {
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
     public static final int kBaudRate = 38400;
-    public static final int kBufferSize = 21;
+    public static final int kBufferSize = 15; //(2 * bitDataLength) - 1
     public static final int kTimeOutLength = 30;
-    public static final int kReadByteLength = 21;
-    public static final int kByteArrayLength = 15;
+    public static final int kReadByteLength = 15;
+    public static final int kByteArrayLength = 5;
   }
 
   public static final class Shooter {
+    public static final int kNumNoteSensors = 4;
+    public static final int kNoteSensorAtRoller = 0;
+    public static final int kNoteSensorNearRoller = 1;
+    public static final int kNoteSensorNearFlywheel = 2;
+    public static final int kNoteSensorAtFlywheel = 3;
+
     public static final double kPositionIntake = 0.0;
     public static final double kPositionSubwoofer = 0.0; // TODO figure out real value
     public static final double kPositionAmp = 0.0; // TODO figure out real value
     public static final double kPositionTrap = 0.0; // TODO figure out real value
+
     public static final double kNoteUpperIntakePower = 0.25;
     public static final double kNoteLowerIntakePower = 0.50;
 
