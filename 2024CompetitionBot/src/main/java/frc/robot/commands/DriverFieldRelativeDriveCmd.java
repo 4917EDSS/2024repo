@@ -31,17 +31,23 @@ public class DriverFieldRelativeDriveCmd extends Command {
   @Override
   public void execute() {
     double rotationPower = 0;
+    boolean driving =
+        (Math.abs(m_driverController.getLeftX()) >= 0.07 || Math.abs(m_driverController.getLeftY()) >= 0.07);
     if(Math.abs(m_driverController.getRightX()) < 0.07) {
-      rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(m_targetHeading);
+      if(driving) {
+        rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(m_targetHeading);
+      } else {
+        rotationPower = 0.0;
+      }
     } else {
       rotationPower = -m_driverController.getRightX();
       m_targetHeading = m_drivetrainSub.getRotationDegrees();
     }
     m_drivetrainSub.drive(
         (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0
-            : m_driverController.getLeftX()),
+            : -m_driverController.getLeftX()),
         (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0
-            : -m_driverController.getLeftY()),
+            : m_driverController.getLeftY()),
         rotationPower,
         0.02); // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed
   }
