@@ -100,10 +100,17 @@ public final class Constants {
   }
 
   public static final class Shooter {
+    public static final int kNumNoteSensors = 4;
+    public static final int kNoteSensorAtRoller = 0;
+    public static final int kNoteSensorNearRoller = 1;
+    public static final int kNoteSensorNearFlywheel = 2;
+    public static final int kNoteSensorAtFlywheel = 3;
+
     public static final double kPositionIntake = 0.0;
     public static final double kPositionSubwoofer = 0.0; // TODO figure out real value
     public static final double kPositionAmp = 0.0; // TODO figure out real value
     public static final double kPositionTrap = 0.0; // TODO figure out real value
+
     public static final double kNoteUpperIntakePower = 0.25;
     public static final double kNoteLowerIntakePower = 0.50;
 

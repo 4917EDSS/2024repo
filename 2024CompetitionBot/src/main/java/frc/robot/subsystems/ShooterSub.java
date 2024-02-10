@@ -51,12 +51,12 @@ public class ShooterSub extends SubsystemBase {
   // private final CANSparkMax m_transfer =
   //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
-  private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
       m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
   private final LedSub m_ledSub;
 
+  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
 
@@ -126,6 +126,11 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.set(power);
   }
 
+  public void spinBothFeeders(double lowerPower, double upperPower) {
+    spinLowerFeeder(lowerPower);
+    spinUpperFeeder(upperPower);
+  }
+
   public void movePivot(double power) {
     m_pivot.set(power);
   }
@@ -152,8 +157,8 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.getEncoder().getVelocity();
   }
 
-  public boolean isNoteAtPosition() {
-    return m_NotePosition.get();
+  public boolean isNoteAtPosition(int noteSensorId) {
+    return m_noteSwitches[noteSensorId];
   }
 
   public boolean isPivotAtReverseLimit() {
@@ -194,7 +199,7 @@ public class ShooterSub extends SubsystemBase {
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     m_shooterflywheelPower.setDouble(m_flywheel.get());
     m_shooterPivotPower.setDouble(m_pivot.get());
-    m_shooterNoteInPosition.setBoolean(isNoteAtPosition());
+    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
   }
 
   public void RS232Listen() {
