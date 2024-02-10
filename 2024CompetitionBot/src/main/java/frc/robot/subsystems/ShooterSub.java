@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.FlowControl;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,7 +38,7 @@ public class ShooterSub extends SubsystemBase {
 
   //creating an instances of RS_232 port
   private final SerialPort m_SerialPort =
-      new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
+      new SerialPort(Constants.Climb.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -51,12 +52,12 @@ public class ShooterSub extends SubsystemBase {
   // private final CANSparkMax m_transfer =
   //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
-  private final DigitalInput m_NotePosition = new DigitalInput(Constants.DioIds.kShooterNoteLimit);
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
       m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
   private final LedSub m_ledSub;
 
+  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
 
@@ -126,6 +127,11 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.set(power);
   }
 
+  public void spinBothFeeders(double lowerPower, double upperPower) {
+    spinLowerFeeder(lowerPower);
+    spinUpperFeeder(upperPower);
+  }
+
   public void movePivot(double power) {
     m_pivot.set(power);
   }
@@ -152,8 +158,8 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.getEncoder().getVelocity();
   }
 
-  public boolean isNoteAtPosition() {
-    return m_NotePosition.get();
+  public boolean isNoteAtPosition(int noteSensorId) {
+    return m_noteSwitches[noteSensorId];
   }
 
   public boolean isPivotAtReverseLimit() {
@@ -194,27 +200,30 @@ public class ShooterSub extends SubsystemBase {
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     m_shooterflywheelPower.setDouble(m_flywheel.get());
     m_shooterPivotPower.setDouble(m_pivot.get());
-    m_shooterNoteInPosition.setBoolean(isNoteAtPosition());
+    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
   }
 
   public void RS232Listen() {
     //byte[] m_buffer = m_SerialPort.read(10);
-    m_SerialPort.setReadBufferSize(Constants.ClimbConstants.kBufferSize);
-    m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
+    m_SerialPort.setReadBufferSize(Constants.Climb.kBufferSize);
+    m_SerialPort.setTimeout(Constants.Climb.kTimeOutLength);
+    m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
     //getBytesReceived
 
-    byte byteArray[] = new byte[Constants.ClimbConstants.kByteArrayLength];
+    byte byteArray[] = new byte[Constants.Climb.kByteArrayLength];
 
-    byte bufferByte[] = new byte[Constants.ClimbConstants.kBufferSize];
+    byte bufferByte[] = new byte[Constants.Climb.kBufferSize];
 
-    bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
+    m_SerialPort.reset();
+    bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
 
     byteArrayCount = 0;
     arrayNumberWanted = 1;
     loopThroughBufferByte = 0;
 
-    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
-      if(bufferByte[loopThroughBufferByte] == 0xA5) { //finds 0xA5, the start of the data sent
+    while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
+      if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
+
         dataSetLength = bufferByte[loopThroughBufferByte + 1];
 
         loopNumber = 0;
