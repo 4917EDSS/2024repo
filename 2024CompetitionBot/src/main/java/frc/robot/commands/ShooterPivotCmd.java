@@ -19,12 +19,9 @@ public class ShooterPivotCmd extends Command {
 
   private final ShooterSub m_ShooterSub;
   private final double m_targetPivotPosition;
-  private final boolean m_forward;
 
   /** Creates a new PivotCmd. */
-  public ShooterPivotCmd(ShooterSub shooterSub, double targetPivotPosition, boolean forward) {
-
-    m_forward = forward;
+  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
     m_targetPivotPosition = targetPivotPosition;
     // Use addRequirements() here to declare subsystem dependencies.
     m_ShooterSub = shooterSub;
@@ -48,9 +45,7 @@ public class ShooterPivotCmd extends Command {
      * step 5 watch it move
      */
 
-
-    int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
-    final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10 * direction); //10 is a target velocity we don't know what it is
+    final double driveOutput = m_pivotForwardPid.calculate(m_ShooterSub.getPivotVelocity(), 0.10); //0.10 is a target velocity we don't know what it is
     m_ShooterSub.movePivot(driveOutput);
 
 

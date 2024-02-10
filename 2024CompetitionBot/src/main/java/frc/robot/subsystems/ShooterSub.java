@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.FlowControl;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,7 +38,7 @@ public class ShooterSub extends SubsystemBase {
 
   //creating an instances of RS_232 port
   private final SerialPort m_SerialPort =
-      new SerialPort(Constants.ClimbConstants.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
+      new SerialPort(Constants.Climb.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -199,22 +200,25 @@ public class ShooterSub extends SubsystemBase {
 
   public void RS232Listen() {
     //byte[] m_buffer = m_SerialPort.read(10);
-    m_SerialPort.setReadBufferSize(Constants.ClimbConstants.kBufferSize);
-    m_SerialPort.setTimeout(Constants.ClimbConstants.kTimeOutLangth);
+    m_SerialPort.setReadBufferSize(Constants.Climb.kBufferSize);
+    m_SerialPort.setTimeout(Constants.Climb.kTimeOutLength);
+    m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
     //getBytesReceived
 
-    byte byteArray[] = new byte[Constants.ClimbConstants.kByteArrayLength];
+    byte byteArray[] = new byte[Constants.Climb.kByteArrayLength];
 
-    byte bufferByte[] = new byte[Constants.ClimbConstants.kBufferSize];
+    byte bufferByte[] = new byte[Constants.Climb.kBufferSize];
 
-    bufferByte = m_SerialPort.read(Constants.ClimbConstants.kReadByteLength);
+    m_SerialPort.reset();
+    bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
 
     byteArrayCount = 0;
     arrayNumberWanted = 1;
     loopThroughBufferByte = 0;
 
-    while(loopThroughBufferByte <= Constants.ClimbConstants.kBufferSize) {
-      if(bufferByte[loopThroughBufferByte] == 0xA5) { //finds 0xA5, the start of the data sent
+    while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
+      if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
+
         dataSetLength = bufferByte[loopThroughBufferByte + 1];
 
         loopNumber = 0;
