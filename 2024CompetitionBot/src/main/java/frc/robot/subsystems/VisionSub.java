@@ -60,6 +60,11 @@ public class VisionSub extends SubsystemBase {
     setTarget(2);
   }
 
+  public void init() {
+    m_logger.info("Initializing VisionSub");
+    setPipeline(2); // Apriltag vision
+  }
+
   @Override
   public void periodic() {
     m_llresults = LimelightHelpers.getLatestResults("");
@@ -73,15 +78,6 @@ public class VisionSub extends SubsystemBase {
 
     // m_target = m_shuffleboardTab.add("has target", 0).getEntry();
     // m_tagID = m_shuffleboardTab.add("get primary", 0).getEntry();
-
-
-    // SmartDashboard.putNumber("tx", getHorizontalAngle());
-    // SmartDashboard.putNumber("ty", getVerticalAngle());
-    // //SmartDashboard.putNumber("ta", getTargetArea());
-    // SmartDashboard.putBoolean("Target", hasTarget());
-    // SmartDashboard.putNumber("Tag ID", getPrimaryID());
-    // Uncomment later but it's confusing right nowSmartDashboard.putNumber("Distance(m)", getDistance(getPrimaryID()));
-
   }
 
   public double getDistance(int id) { // In meters
@@ -94,12 +90,6 @@ public class VisionSub extends SubsystemBase {
   }
 
   public void updateShuffleBoard() {
-    //SmartDashboard.putNumber("tx", getHorizontalAngle());
-    //SmartDashboard.putNumber("ty", getVerticalAngle());
-    //SmartDashboard.putNumber("ta", getTargetArea());
-    //SmartDashboard.putBoolean("Target", hasTarget());
-    //SmartDashboard.putNumber("Tag ID", getPrimaryID());
-
     // Ref: https://docs.limelightvision.io/docs/docs-limelight/apis/json-dump-specification#apriltagfiducial-results
     // NOTE: (from doc) :  Takes up to 2.5ms on RoboRIO 1.0.
     int fiducial_count = m_llresults.targetingResults.targets_Fiducials.length;
@@ -207,7 +197,4 @@ public class VisionSub extends SubsystemBase {
     m_pipeline.setNumber(line);
   }
 
-  public void init() {
-    setPipeline(2); // Apriltag vision
-  }
 }

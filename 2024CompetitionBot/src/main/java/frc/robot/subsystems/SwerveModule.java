@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -23,7 +23,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
@@ -38,13 +37,11 @@ public class SwerveModule extends SubsystemBase {
 
     // Conversion factors
     public static final double kDriveDistanceFactor = (Math.PI * 0.1016) / (6.0 * 1.2);//Circumference(m) * gear ratio
-
     public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
   }
 
   // Motors and Encoders
-
   private final CANSparkMax m_driveMotor;
   public final TalonFX m_steeringMotor;
   private final RelativeEncoder m_driveEncoder;
@@ -52,7 +49,6 @@ public class SwerveModule extends SubsystemBase {
   private final double m_turningEncoderOffset;
 
   // PID Controllers
-
   private final PIDController m_drivePID = new PIDController(0.0, 0, 0.0); // TODO: Tune the Driving PID
 
   private final ProfiledPIDController m_steeringPID =
@@ -66,7 +62,6 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
-
     // Initialize motors and sensors
     m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     m_steeringMotor = new TalonFX(steeringMotorID);
@@ -78,13 +73,22 @@ public class SwerveModule extends SubsystemBase {
     m_steeringMotor.setNeutralMode(NeutralModeValue.Brake);
     m_steeringPID.enableContinuousInput(-Math.PI, Math.PI);
 
-
     // Set conversion factors
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityFactor);
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveDistanceFactor);
 
     m_turningEncoderOffset = absoluteEncoderOffsetRad;
 
+    init();
+  }
+
+  public void init() {
+    m_logger.info("Initializing a SwerveModule");
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
   }
 
   public double getTurningRotation() { // In radians
@@ -174,8 +178,5 @@ public class SwerveModule extends SubsystemBase {
     m_steeringMotor.set(0);
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+
 }

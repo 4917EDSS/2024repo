@@ -111,12 +111,19 @@ public class LedSub extends SubsystemBase {
 
   /** Creates a new LedSub. */
   public LedSub() {
-    m_logger.info("LED SUB CONSTRUCTOR");
     m_ledStrip.setLength(m_ledBuffer.getLength());
     m_ledStrip.setData(m_ledBuffer);
     m_ledStrip.start();
 
     init();
+  }
+
+  /**
+   * Use this method to reset all of the hardware and states to safe starting values
+   */
+  public void init() {
+    m_logger.info("Initializing LedSub");
+    setZoneColour(LedZones.ALL, LedColour.START_GREEN);
   }
 
   @Override
@@ -125,7 +132,6 @@ public class LedSub extends SubsystemBase {
       m_ledStrip.setData(m_ledBuffer);
       m_newColoursAvailable = false;
     }
-
 
     if(m_isFlashing) {
       long timeSinceIntakeLoaded = RobotController.getFPGATime() - m_time;
@@ -160,30 +166,11 @@ public class LedSub extends SubsystemBase {
      */
   }
 
-
   // This method will be called once per scheduler run
   public void Flash(LedColour colour) {
     m_isFlashing = true;
 
     m_time = RobotController.getFPGATime(); // The time when the flashing will begin
-  }
-
-
-  /**
-   * Use this method to reset all of the hardware and states to safe starting values
-   */
-  public void init() {
-    System.out.println("LED SUB INIT");
-    setZoneColour(LedZones.ALL, LedColour.START_GREEN);
-    // m_shuffleboardTab
-    // .add("Pi", 3.14);
-  }
-
-  /**
-   * This method puts the subsystem in a safe state when all commands are interrupted
-   */
-  public void interrupt() {
-
   }
 
   /**

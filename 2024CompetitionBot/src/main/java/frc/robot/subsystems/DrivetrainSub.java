@@ -198,6 +198,8 @@ public class DrivetrainSub extends SubsystemBase {
     m_logger.info("Initializing DrivetrainSub");
     resetGyro();
     resetOdometry();
+
+    // TODO:  Do we need to call each swerve module's init()?
   }
 
   @Override

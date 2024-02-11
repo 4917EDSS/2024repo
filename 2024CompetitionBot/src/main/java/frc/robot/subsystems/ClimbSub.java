@@ -52,7 +52,7 @@ public class ClimbSub extends SubsystemBase {
   }
 
   public void init() {
-
+    m_logger.info("Initializing ClimbSub");
     setClimbPowerLeft(0.0);
     setClimbPowerRight(0.0);
     resetEncoders();
