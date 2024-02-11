@@ -5,8 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.DrivetrainSub;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 /**
@@ -17,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  DrivetrainSub m_drivetrainSub = new DrivetrainSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -24,6 +28,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_drivetrainSub.setDefaultCommand(
+        new InstantCommand(() -> m_drivetrainSub.setDrivePower(-m_driverController.getLeftY(), 0.05)));
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -38,7 +45,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.square().onTrue(new InstantCommand(() -> m_drivetrainSub.setRotateMode(false)));
 
+    m_driverController.circle().onTrue(new InstantCommand(() -> m_drivetrainSub.setRotateMode(true)));
+
+    m_driverController.povUp().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(1.0, 0),
+        () -> m_drivetrainSub.setDrivePower(1.0, 0), m_drivetrainSub));
+
+    m_driverController.povDown().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(-1.0, 0),
+        () -> m_drivetrainSub.setDrivePower(-1.0, 0), m_drivetrainSub));
+
+    m_driverController.povRight().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(0.5, 0),
+        () -> m_drivetrainSub.setDrivePower(0.5, 0), m_drivetrainSub));
+
+    m_driverController.povLeft().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(-0.5, 0),
+        () -> m_drivetrainSub.setDrivePower(-0.5, 0), m_drivetrainSub));
   }
 
   /**
