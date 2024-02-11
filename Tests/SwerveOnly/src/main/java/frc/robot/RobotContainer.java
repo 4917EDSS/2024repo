@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -30,6 +34,9 @@ public class RobotContainer {
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
 
+  private final SendableChooser<Command> autoChooser;
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_drivetrainSub.setDefaultCommand(
@@ -37,6 +44,12 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    // TODO:  Put the name of the default auto as a parameter.  
+    //        e.g.autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -58,7 +71,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new PrintCommand("No Autos");
+    return autoChooser.getSelected();
   }
 }

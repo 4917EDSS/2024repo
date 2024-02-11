@@ -25,7 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule {
   private static Logger m_logger = Logger.getLogger(SwerveModule.class.getName());
 
   /** Creates a new SwerveModule. */
@@ -86,11 +86,6 @@ public class SwerveModule extends SubsystemBase {
     m_logger.info("Initializing a SwerveModule");
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
   public double getTurningRotation() { // In radians
     double position = (m_steeringEncoder.getAbsolutePosition().getValueAsDouble());// -0.5 to 0.5
 
@@ -112,8 +107,6 @@ public class SwerveModule extends SubsystemBase {
     // } else if(position - m_turningEncoderOffset > Math.PI) {
     //   position -= ((2.0 * Math.PI) - m_turningEncoderOffset);
     // }
-
-
     return position;// - m_turningEncoderOffset;
   }
 
@@ -177,6 +170,4 @@ public class SwerveModule extends SubsystemBase {
     m_driveMotor.set(0);
     m_steeringMotor.set(0);
   }
-
-
 }
