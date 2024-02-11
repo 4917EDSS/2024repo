@@ -38,7 +38,6 @@ public class IntakeReverseWhenNoteInCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
     return m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel);
   }
 }

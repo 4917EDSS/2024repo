@@ -4,19 +4,12 @@
 
 package frc.robot.commands;
 
-import java.util.logging.Logger;
-import javax.swing.plaf.TreeUI;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 
 
 public class ClimbCmdSetHeightCmd extends Command {
-  private static Logger m_logger = Logger.getLogger(ClimbCmdSetHeightCmd.class.getName());
-
-
   private final double kHeightTolerence = 0.01;
   private final double kRollZero = -4.3;
   private final double kRollTolerence = 10;
@@ -31,7 +24,6 @@ public class ClimbCmdSetHeightCmd extends Command {
   private boolean m_leftMotorDone = false;
   private boolean m_rightMotorDone = false;
 
-  //private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new Climb. */
   public ClimbCmdSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
@@ -39,7 +31,6 @@ public class ClimbCmdSetHeightCmd extends Command {
     m_drivetrainSub = drivetrainSub;
     m_targetHeight = heightM;
     m_power = power;
-
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climbSub);
@@ -56,17 +47,13 @@ public class ClimbCmdSetHeightCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    //set power
     double currentLeftHeight = m_climbSub.getLeftHeight();
     double currentRightHeight = m_climbSub.getRightHeight();
     int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
     int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
 
-
     boolean moveLeft = true;
     boolean moveRight = true;
-
     boolean isLeftAtTargetHeight = isLeftAtTargetHeight();
     boolean isRightAtTargetHeight = isRightAtTargetHeight();
     double roll_angle = m_drivetrainSub.getRoll();
@@ -147,6 +134,5 @@ public class ClimbCmdSetHeightCmd extends Command {
   private boolean isRightAtTargetHeight() {
     return (Math.abs(m_climbSub.getRightHeight() - m_targetHeight) < kHeightTolerence);
   }
-
 }
 

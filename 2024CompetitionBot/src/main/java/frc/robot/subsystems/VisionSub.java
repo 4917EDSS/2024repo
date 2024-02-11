@@ -87,7 +87,7 @@ public class VisionSub extends SubsystemBase {
   public double getDistance(int id) { // In meters
     if(id < 1 || id > 16) // Got bad apriltag
       return 0.0;
-    double height = Constants.VisionConstants.kApriltagHeights[id + 1] + Constants.VisionConstants.kApriltagOffset;
+    double height = Constants.Vision.kApriltagHeights[id + 1] + Constants.Vision.kApriltagOffset;
     double distance = calcDistance(height);
 
     return distance;
@@ -208,6 +208,6 @@ public class VisionSub extends SubsystemBase {
   }
 
   public void init() {
-
+    setPipeline(2); // Apriltag vision
   }
 }

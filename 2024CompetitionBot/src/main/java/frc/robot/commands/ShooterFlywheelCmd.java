@@ -6,19 +6,16 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.logging.Logger;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterFlywheelCmd extends Command {
-  private static Logger m_logger = Logger.getLogger(ShooterFlywheelCmd.class.getName());
 
   private final ShooterSub m_ShooterSub;
   private Instant start;
 
   // PID Controllers
-
   private final PIDController m_FlyWheelPID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new FlywheelCmd. */
@@ -35,7 +32,6 @@ public class ShooterFlywheelCmd extends Command {
   @Override
   public void initialize() {
     start = Instant.now();
-    m_ShooterSub.resetFlywheel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,11 +46,8 @@ public class ShooterFlywheelCmd extends Command {
      * 
      * 
      */
-
-
     double driveOutput = m_FlyWheelPID.calculate(m_ShooterSub.getFlywheelVelocity(), 10); //10 is a target velocity we don't know what it is
     m_ShooterSub.spinFlywheel(driveOutput);
-
   }
 
   // Called once the command ends or is interrupted.

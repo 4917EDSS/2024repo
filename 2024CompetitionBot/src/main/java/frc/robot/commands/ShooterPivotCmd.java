@@ -4,14 +4,11 @@
 
 package frc.robot.commands;
 
-import java.util.logging.Logger;
-import org.ejml.equation.IntegerSequence.Range;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterPivotCmd extends Command {
-  private static Logger m_logger = Logger.getLogger(ShooterPivotCmd.class.getName());
 
   // PID Controllers
 
@@ -23,8 +20,9 @@ public class ShooterPivotCmd extends Command {
   /** Creates a new PivotCmd. */
   public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
     m_targetPivotPosition = targetPivotPosition;
-    // Use addRequirements() here to declare subsystem dependencies.
     m_ShooterSub = shooterSub;
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
   }
 
@@ -50,6 +48,6 @@ public class ShooterPivotCmd extends Command {
   public boolean isFinished() {
     double tolerance = 5;
 
-    return Math.abs(m_targetPivotPosition - m_ShooterSub.getPivotPosition()) < tolerance;
+    return Math.abs(m_targetPivotPosition - m_ShooterSub.getPivotAngle()) < tolerance;
   }
 }

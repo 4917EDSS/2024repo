@@ -4,13 +4,11 @@
 
 package frc.robot.commands;
 
-import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterUpperFeederCmd extends Command {
-  private static Logger m_logger = Logger.getLogger(ShooterUpperFeederCmd.class.getName());
 
   private final ShooterSub m_ShooterSub;
   private final boolean m_forward;

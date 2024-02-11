@@ -19,7 +19,7 @@ public class NoteIntakeGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterPivotCmd(Constants.Shooter.kPositionIntake, shooterSub),
+        new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub),
         new InstantCommand(() -> intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower)),
         new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
             Constants.Shooter.kNoteUpperIntakePower)),

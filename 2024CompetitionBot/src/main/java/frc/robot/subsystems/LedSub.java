@@ -10,11 +10,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.PwmIds;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-// import frc.robot.StateOfRobot;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
-/** Add your docs here. */
 
 
 public class LedSub extends SubsystemBase {
@@ -116,13 +111,12 @@ public class LedSub extends SubsystemBase {
 
   /** Creates a new LedSub. */
   public LedSub() {
-    System.out.println("LED SUB CONSTRUCTOR");
+    m_logger.info("LED SUB CONSTRUCTOR");
     m_ledStrip.setLength(m_ledBuffer.getLength());
     m_ledStrip.setData(m_ledBuffer);
     m_ledStrip.start();
 
     init();
-
   }
 
   @Override
@@ -152,8 +146,6 @@ public class LedSub extends SubsystemBase {
         changeColourHome();
       }
     }
-
-
   }
 
   // No state of robot
@@ -252,6 +244,4 @@ public class LedSub extends SubsystemBase {
     }
 
   }
-
-
 }

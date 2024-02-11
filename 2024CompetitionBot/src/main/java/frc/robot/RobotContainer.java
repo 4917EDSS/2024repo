@@ -4,43 +4,31 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ShooterUpperFeederCmd;
-import frc.robot.commands.ShooterFlywheelCmd;
-import frc.robot.commands.ShooterPivotCmd;
+import frc.robot.commands.ClimbCmdSetHeightCmd;
+import frc.robot.commands.DrivePathCmd;
+import frc.robot.commands.DriveToRelativePositionCmd;
+import frc.robot.commands.DriverFieldRelativeDriveCmd;
+import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
-import java.util.Optional;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.subsystems.VisionSub;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.LedSub.LedColour;
-import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.ClimbCmdSetHeightCmd;
-import frc.robot.commands.DrivePathCmd;
-import frc.robot.commands.DriveToRelativePositionCmd;
-import frc.robot.commands.DriverFieldRelativeDriveCmd;
-import frc.robot.commands.KillAllCmd;
-import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.VisionSub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,146 +37,179 @@ import frc.robot.subsystems.SwerveModule;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-        // The robot's subsystems and commands are defined here...
-        private final LedSub m_ledSub = new LedSub();
-        private final IntakeSub m_intakeSub = new IntakeSub(m_ledSub);
-        private final VisionSub m_visionSub = new VisionSub();
-        private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
-        private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
-        private final ClimbSub m_climbSub = new ClimbSub();
+  // The robot's subsystems and commands are defined here...
+  private final LedSub m_ledSub = new LedSub();
+  private final ClimbSub m_climbSub = new ClimbSub();
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
+  private final IntakeSub m_intakeSub = new IntakeSub();
+  private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
+  private final VisionSub m_visionSub = new VisionSub();
 
-        private static boolean m_isRedAlliance = true;
+  private boolean m_isRedAlliance = true;
+
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandPS4Controller m_driverController =
+      new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+  private final CommandPS4Controller m_operatorController =
+      new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
+
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
+    m_drivetrainSub.setDefaultCommand(
+        new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
+
+    // Configure the button bindings
+    configureBindings();
+  }
+
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
+  private void configureBindings() {
+    // Driver controller bindings
+    m_driverController.L3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+    m_driverController.R3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+
+    // m_driverController.square() FREE
+
+    m_driverController.cross()
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightHookLowered, 0.5,
+            m_drivetrainSub,
+            m_climbSub));
+
+    m_driverController.circle()
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 0.5,
+            m_drivetrainSub,
+            m_climbSub));
+
+    m_driverController.triangle()
+        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 0.5,
+            m_drivetrainSub,
+            m_climbSub));
+
+    m_driverController.L1()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
+                () -> m_climbSub.setClimbPowerLeft(0.0)));
+
+    m_driverController.R1()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
+                () -> m_climbSub.setClimbPowerRight(0.0)));
+
+    m_driverController.L2()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
+                () -> m_climbSub.setClimbPowerLeft(0.0)));
+
+    m_driverController.R2()
+        .whileTrue(
+            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
+                () -> m_climbSub.setClimbPowerRight(0.0)));
+
+    m_driverController.share()
+        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+
+    m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+
+    m_driverController.touchpad().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
+
+    m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
+
+    // m_driverController.povRight()
+    //                 .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
+    //                                 new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(90.0))));
+    m_driverController.povRight().onTrue(new DrivePathCmd(m_drivetrainSub));
+
+    m_driverController.povDown()
+        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
+            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0))));
+
+    m_driverController.povLeft()
+        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
+            new Pose2d(-2.0, 0.0, Rotation2d.fromDegrees(-90.0))));
+
+    m_driverController.povUp()
+        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
+            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0))));
 
 
-        // Replace with CommandPS4Controller or CommandJoystick if needed
-        private final CommandPS4Controller m_driverController =
-                        new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
-        private final CommandPS4Controller m_operatorController =
-                        new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
+    // Operator controller bindings
+    m_operatorController.L3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+    m_operatorController.R3()
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
 
-        /** The container for the robot. Contains subsystems, OI devices, and commands. */
-        public RobotContainer() {
-                // Configure the trigger bindings
-                configureBindings();
-                m_visionSub.setPipeline(2); // Apriltag vision
-                m_drivetrainSub.setDefaultCommand(
-                                new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
-        }
+    // m_operatorController.square()
 
-        /**
-         * Use this method to define your trigger->command mappings. Triggers can be created via the
-         * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-         * predicate, or via the named factories in {@link
-         * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-         * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-         * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-         * joysticks}.
-         */
-        private void configureBindings() {
+    // m_operatorController.cross()
 
-                //m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
-                //m_driverController.cross().onTrue(new RunCommand(() -> m_drivetrainSub.resetRelativePos(), m_drivetrainSub));
-                m_driverController.share()
-                                .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
-                // m_driverController.povRight()
-                //                 .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-                //                                 new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(90.0))));
-                m_driverController.povRight().onTrue(new DrivePathCmd(m_drivetrainSub));
-                m_driverController.povLeft()
-                                .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-                                                new Pose2d(-2.0, 0.0, Rotation2d.fromDegrees(-90.0))));
+    // m_operatorController.circle()
 
-                m_driverController.povUp()
-                                .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-                                                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0))));
-                m_driverController.povDown()
-                                .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-                                                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0))));
+    // m_operatorController.triangle()
 
+    // m_operatorController.L1()
 
-                //m_driverController.triangle().onTrue(LedColour.GREEN);
+    // m_operatorController.R1()
 
-                //Change to operator controller
-                m_driverController.touchpad().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE));
-                m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW));
+    // m_operatorController.L2()
 
-                //m_driverController.L2().onTrue(new PrintCommand("focus canning"));
-                // m_driverController.R1().onTrue(new ShooterFlywheelCmd(m_shooterSub));
-                //m_driverController.R2().onTrue(new ShooterPivotCmd(m_shooterSub));
-                //m_driverController.R3().onTrue(new ShooterFeederCmd(m_shooterSub));
+    // m_operatorController.R2()
 
+    // m_operatorController.share()
 
-                //here we are making the climb
-                m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
-                m_driverController.cross()
-                                .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHookLowered, 0.5,
-                                                m_drivetrainSub,
-                                                m_climbSub));
-                m_driverController.circle()
-                                .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kTallHookRaised, 0.5,
-                                                m_drivetrainSub,
-                                                m_climbSub));
-                m_driverController.triangle()
-                                .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kShortHookRaised, 0.5,
-                                                m_drivetrainSub,
-                                                m_climbSub));
-                m_driverController.L3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
-                m_driverController.R3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
-                m_driverController.L2()
-                                .whileTrue(
-                                                new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
-                                                                () -> m_climbSub.setClimbPowerLeft(0.0)));
-                m_driverController.L1()
-                                .whileTrue(
-                                                new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
-                                                                () -> m_climbSub.setClimbPowerLeft(0.0)));
-                m_driverController.R1()
-                                .whileTrue(
-                                                new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
-                                                                () -> m_climbSub.setClimbPowerRight(0.0)));
-                m_driverController.R2()
-                                .whileTrue(
-                                                new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
-                                                                () -> m_climbSub.setClimbPowerRight(0.0)));
+    // m_operatorController.options()
 
-        }
+    // m_operatorController.PS()
 
-        /**
-         * Use this to pass the autonomous command to the main {@link Robot} class.
-         *
-         * @return the command to run in autonomous
-         */
-        public Command getAutonomousCommand() {
-                // An example command will be run in autonomous
-                return new PrintCommand("No auto yet");
-        }
+    // m_operatorController.touchpad()
 
-        // intialize the sub systems
-        // TODO couple initialize need to be done
-        public void initSubsystems() {
-                // int sensorArray[] = new int[2];
-                // sensorArray = m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
-                m_ledSub.init();
-                m_climbSub.init();
-                m_drivetrainSub.init();
-                m_intakeSub.init();
-                m_shooterSub.init();
-                m_visionSub.init();
+    // m_operatorController.povUp()
 
-                if(DriverStation.getAlliance().isPresent()) {
-                        if(DriverStation.getAlliance().get() == Alliance.Red) {
-                                m_isRedAlliance = true;
-                        } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
-                                m_isRedAlliance = false;
-                        }
-                }
-        }
+    // m_operatorController.povRight()
 
-        public void resetGyro() {
-                m_drivetrainSub.resetGyro();
-        }
+    // m_operatorController.povDown()
 
+    // m_operatorController.povLeft()
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return new PrintCommand("No auto yet");
+  }
+
+  // intialize the sub systems
+  // TODO couple initialize need to be done
+  public void initSubsystems() {
+    // int sensorArray[] = new int[2];
+    // sensorArray = m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
+    m_ledSub.init();
+    m_climbSub.init();
+    m_drivetrainSub.init();
+    m_intakeSub.init();
+    m_shooterSub.init();
+    m_visionSub.init();
+
+    if(DriverStation.getAlliance().isPresent()) {
+      if(DriverStation.getAlliance().get() == Alliance.Red) {
+        m_isRedAlliance = true;
+      } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
+        m_isRedAlliance = false;
+      }
+    }
+  }
 }
 

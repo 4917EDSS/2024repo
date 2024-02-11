@@ -132,16 +132,16 @@ public class DrivetrainSub extends SubsystemBase {
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft =
       new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
-          Constants.DriveConstants.kAbsoluteEncoderOffsetFL);
+          Constants.Drivetrain.kAbsoluteEncoderOffsetFL);
   private final SwerveModule m_frontRight =
       new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR,
-          Constants.DriveConstants.kAbsoluteEncoderOffsetFR);
+          Constants.Drivetrain.kAbsoluteEncoderOffsetFR);
   private final SwerveModule m_backLeft =
       new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL,
-          Constants.DriveConstants.kAbsoluteEncoderOffsetBL);
+          Constants.Drivetrain.kAbsoluteEncoderOffsetBL);
   private final SwerveModule m_backRight =
       new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
-          Constants.DriveConstants.kAbsoluteEncoderOffsetBR);
+          Constants.Drivetrain.kAbsoluteEncoderOffsetBR);
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
@@ -192,6 +192,66 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbPathKD = m_shuffleboardTab.add("Path kD", 0.0).getEntry();
     m_sbPathThreshold = m_shuffleboardTab.add("Path Threshold", 0.0).getEntry();
 
+  }
+
+  public void init() {
+    m_logger.info("Initializing DrivetrainSub");
+    resetGyro();
+    resetOdometry();
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
+    double xPos = m_odometry.getPoseMeters().getX();
+    double yPos = m_odometry.getPoseMeters().getY();
+
+    SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
+
+    double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
+    m_sbXPOS.setDouble(xPos);
+    m_sbYPOS.setDouble(yPos);
+    m_sbTargetXPOS.setDouble(targetPos.getX());
+    m_sbTargetYPOS.setDouble(targetPos.getY());
+    m_sbTargetROT.setDouble(rot);
+
+    m_sbGYRO.setDouble(getRotationDegrees());
+    m_sbYaw.setDouble(m_gyro.getAngle() % 360);
+    m_sbRoll.setDouble(m_gyro.getRoll());
+    m_sbPitch.setDouble(m_gyro.getPitch());
+
+    m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
+    m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
+    m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
+    m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
+
+    kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
+    kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
+    kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
+    kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
+    kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
+    kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
+    m_sbRotKP.setDouble(kRotPIDp);
+    m_sbRotKD.setDouble(kRotPIDd);
+    m_sbRotThreshold.setDouble(kTurnThreshold);
+    m_sbPathKP.setDouble(kPIDp);
+    m_sbPathKD.setDouble(kPIDd);
+    m_sbPathThreshold.setDouble(kThreshold);
+
+    // Setting PID constants
+
+    m_odometryPIDx.setP(kPIDp);
+    m_odometryPIDx.setD(kPIDd);
+    m_odometryPIDx.setTolerance(kThreshold);
+
+    m_odometryPIDy.setP(kPIDp);
+    m_odometryPIDy.setD(kPIDd);
+    m_odometryPIDy.setTolerance(kThreshold);
+
+    m_odometryPIDr.setP(kRotPIDp);
+    m_odometryPIDr.setD(kRotPIDd);
+    m_odometryPIDr.setTolerance(kTurnThreshold);
   }
 
   public Rotation2d getRotation() {
@@ -346,91 +406,6 @@ public class DrivetrainSub extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
-    double xPos = m_odometry.getPoseMeters().getX();
-    double yPos = m_odometry.getPoseMeters().getY();
-    /**
-     * SmartDashboard.putNumber("XPOS", xPos);
-     * SmartDashboard.putNumber("YPOS", yPos);
-     * SmartDashboard.putNumber("TARGET XPOS", targetPos.getX());
-     * SmartDashboard.putNumber("TARGET YPOS", targetPos.getY());
-     * SmartDashboard.putNumber("TARGET ROT",
-     * MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0));
-     * 
-     * SmartDashboard.putNumber("GYRO", getRotationDegrees());
-     * SmartDashboard.putNumber("Yaw", m_gyro.getAngle() % 360);
-     * SmartDashboard.putNumber("Roll", m_gyro.getRoll());
-     * SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
-     * 
-     * SmartDashboard.putNumber("FL encoder", m_frontLeft.getTurningRotation());
-     * SmartDashboard.putNumber("FR encoder", m_frontRight.getTurningRotation());
-     * SmartDashboard.putNumber("BL encoder", m_backLeft.getTurningRotation());
-     * SmartDashboard.putNumber("BR encoder", m_backRight.getTurningRotation());
-     * 
-     * kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
-     * kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
-     * kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
-     * kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
-     * kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
-     * kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
-     * SmartDashboard.putNumber("Rot kP", kRotPIDp);
-     * SmartDashboard.putNumber("Rot kD", kRotPIDd);
-     * SmartDashboard.putNumber("Rot Threshold", kTurnThreshold);
-     * SmartDashboard.putNumber("Path kP", kPIDp);
-     * SmartDashboard.putNumber("Path kD", kPIDd);
-     * SmartDashboard.putNumber("Path Threshold", kThreshold);
-     * //SmartDashboard.putNumber("Sensor Distance", getFrontDistance());
-     **/
-
-    SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
-
-    double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
-    m_sbXPOS.setDouble(xPos);
-    m_sbYPOS.setDouble(yPos);
-    m_sbTargetXPOS.setDouble(targetPos.getX());
-    m_sbTargetYPOS.setDouble(targetPos.getY());
-    m_sbTargetROT.setDouble(rot);
-
-    m_sbGYRO.setDouble(getRotationDegrees());
-    m_sbYaw.setDouble(m_gyro.getAngle() % 360);
-    m_sbRoll.setDouble(m_gyro.getRoll());
-    m_sbPitch.setDouble(m_gyro.getPitch());
-
-    m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
-    m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
-    m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
-    m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
-
-    kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
-    kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
-    kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
-    kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
-    kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
-    kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
-    m_sbRotKP.setDouble(kRotPIDp);
-    m_sbRotKD.setDouble(kRotPIDd);
-    m_sbRotThreshold.setDouble(kTurnThreshold);
-    m_sbPathKP.setDouble(kPIDp);
-    m_sbPathKD.setDouble(kPIDd);
-    m_sbPathThreshold.setDouble(kThreshold);
-
-    // Setting PID constants
-
-    m_odometryPIDx.setP(kPIDp);
-    m_odometryPIDx.setD(kPIDd);
-    m_odometryPIDx.setTolerance(kThreshold);
-
-    m_odometryPIDy.setP(kPIDp);
-    m_odometryPIDy.setD(kPIDd);
-    m_odometryPIDy.setTolerance(kThreshold);
-
-    m_odometryPIDr.setP(kRotPIDp);
-    m_odometryPIDr.setD(kRotPIDd);
-    m_odometryPIDr.setTolerance(kTurnThreshold);
-  }
 
   public void fun() {
     if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
@@ -461,12 +436,6 @@ public class DrivetrainSub extends SubsystemBase {
     }
   }
 
-
-  public void init() {
-    resetGyro();
-    resetOdometry();
-
-  }
 
   // public double getFrontDistance() {
   //    //TODO: Convert voltage to distance in meters

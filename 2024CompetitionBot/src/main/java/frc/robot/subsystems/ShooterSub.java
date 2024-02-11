@@ -41,9 +41,9 @@ public class ShooterSub extends SubsystemBase {
 
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-  //creating an instances of RS_232 port
+  // Creating an instances of RS_232 port to communicate with Arduino (sensors)
   private final SerialPort m_SerialPort =
-      new SerialPort(Constants.Climb.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
+      new SerialPort(Constants.Arduino.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   private final CANSparkMax m_flywheel =
@@ -54,28 +54,41 @@ public class ShooterSub extends SubsystemBase {
       new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
-  // private final CANSparkMax m_transfer =
-  //     new CANSparkMax(Constants.CanIds.kTransfer, CANSparkLowLevel.MotorType.kBrushless);
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
       m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
+
   private final LedSub m_ledSub;
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
-
+  private boolean m_noteWasIn = false;
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
-
   ArmFeedforward m_armFeedforward = new ArmFeedforward(0, 0, 0);
 
+
   public ShooterSub(LedSub ledSub) {
-    //When true, positive power will turn motor backwards, negitive forwards.
+    // When true, positive power will turn motor backwards, negitive forwards.
     m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(false);
+
+    m_flywheel.setIdleMode(IdleMode.kCoast);
+    m_upperFeeder.setIdleMode(IdleMode.kBrake);
+    m_lowerFeeder.setIdleMode(IdleMode.kBrake);
+    m_pivot.setIdleMode(IdleMode.kBrake);
+
+    m_flywheel.setSmartCurrentLimit(40);
+    m_upperFeeder.setSmartCurrentLimit(40);
+    m_lowerFeeder.setSmartCurrentLimit(40);
+    m_pivot.setSmartCurrentLimit(40);
+
+    m_flywheel.getEncoder().setVelocityConversionFactor(0.0259);
+    m_pivot.getEncoder().setVelocityConversionFactor(0.0259);
+    m_pivot.getEncoder().setPositionConversionFactor(0.68);
+
     m_ledSub = ledSub;
-    //m_transfer.setInverted(false);
 
     m_shooterFlywheelVelocity = m_shuffleboardTab.add("Shooter Flywheel Velocity", 0).getEntry();
     m_shooterPivotPosition = m_shuffleboardTab.add("Shooter Pivot Position", 0).getEntry();
@@ -83,41 +96,51 @@ public class ShooterSub extends SubsystemBase {
     m_shooterflywheelPower = m_shuffleboardTab.add("ShooterFlywheel power", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Shooter Pivot Power", 0).getEntry();
     m_shooterNoteInPosition = m_shuffleboardTab.add("Shooter Note In Position", 0).getEntry();
+
+    init();
   }
 
   public void init() {
-    setCurrentLimit();
-    setBrake(IdleMode.kBrake);
-    resetFlywheel();
-    resetPivot();
-    m_flywheel.getEncoder().setVelocityConversionFactor(0.0259);
-    m_pivot.getEncoder().setVelocityConversionFactor(0.0259);
-    m_pivot.getEncoder().setPositionConversionFactor(0.68);
+    m_logger.info("Initializing ShooterSub");
+    m_noteWasIn = false;
   }
 
-  public void resetFlywheel() {
-    m_flywheel.getEncoder().setPosition(0);
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    updateShuffleBoard();
+
+    // TODO:  This might be easier to do inside the commands that pivot the shooter
+    if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
+    }
+
+    if(getPivotAngle() == Constants.Shooter.kAngleSubwoofer) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
+    }
+
+    // If note wasn't in last time and note is in now
+    // Flash green
+    // Set orange
+    if(!m_noteWasIn && isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+      m_ledSub.Flash(LedColour.GREEN);
+      m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+      m_noteWasIn = true;
+    } else if(m_noteWasIn && !isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+      // If note was in and it's no longer in
+      // Set green
+      m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
+      m_noteWasIn = false;
+    }
   }
 
-  public void resetPivot() {
-    m_pivot.getEncoder().setPosition(0);
-  }
-
-  private void setBrake(IdleMode mode) {
-    m_flywheel.setIdleMode(mode);
-    m_upperFeeder.setIdleMode(mode);
-    m_lowerFeeder.setIdleMode(mode);
-    m_pivot.setIdleMode(mode);
-    //m_transfer.setIdleMode(mode);
-
-  }
-
-  private void setCurrentLimit() {
-    m_flywheel.setSmartCurrentLimit(40);
-    m_upperFeeder.setSmartCurrentLimit(40);
-    m_lowerFeeder.setSmartCurrentLimit(40);
-    m_pivot.setSmartCurrentLimit(40);
-    //m_transfer.setSmartCurrentLimit(40);
+  private void updateShuffleBoard() {
+    m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
+    m_shooterPivotPosition.setDouble(getPivotAngle());
+    m_shooterPivotVelocity.setDouble(getPivotVelocity());
+    m_shooterflywheelPower.setDouble(m_flywheel.get());
+    m_shooterPivotPower.setDouble(m_pivot.get());
+    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
   }
 
   public void spinFlywheel(double power) {
@@ -141,30 +164,20 @@ public class ShooterSub extends SubsystemBase {
     m_pivot.set(power);
   }
 
-  public void setAngle(double angle) {
-    double pivotPower = m_shooterPivotPID.calculate(0.0, 0.0);
-    double pivotFeedforward = m_armFeedforward.calculate(0.0, 0.0, 0.0);
-    //TODO: Replace these placeholder values
+  public void resetPivot() {
+    m_pivot.getEncoder().setPosition(0);
   }
-
-  //public void spinTransfer(double power) {
-  //m_transfer.set(power);
-  //}
 
   public double getFlywheelVelocity() {
     return m_flywheel.getEncoder().getVelocity();
   }
 
-  public double getPivotPosition() {
+  public double getPivotAngle() {
     return m_pivot.getEncoder().getPosition();
   }
 
   public double getPivotVelocity() {
     return m_pivot.getEncoder().getVelocity();
-  }
-
-  public boolean isNoteAtPosition(int noteSensorId) {
-    return m_noteSwitches[noteSensorId];
   }
 
   public boolean isPivotAtReverseLimit() {
@@ -175,49 +188,20 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    //updatesmartdashboard();
-    updateShuffleBoard();
-
-    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kAmpPosition) {
-      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
-    }
-
-    if(getPivotPosition() == Constants.ShooterPivotPositionConstants.kSpeakerPosition) {
-      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
-    }
-
-
-  }
-
-  private void updateShuffleBoard() {
-    // SmartDashboard.putNumber("Shooter Flywheel velicity", getFlywheelVelocity());
-    // SmartDashboard.putNumber("Shooter Pivot Position", getPivotPosition());
-    // SmartDashboard.putNumber("Shooter Pivot Velocity", getPivotVelocity());
-    // SmartDashboard.putNumber("Shooter Flywheel Power", m_flywheel.get());
-    // SmartDashboard.putNumber("Shooter Pivot Power", m_pivot.get());
-    // SmartDashboard.putBoolean("Shooter Note In Position", isNoteAtPosition());
-
-    m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
-    m_shooterPivotPosition.setDouble(getPivotPosition());
-    m_shooterPivotVelocity.setDouble(getPivotVelocity());
-    m_shooterflywheelPower.setDouble(m_flywheel.get());
-    m_shooterPivotPower.setDouble(m_pivot.get());
-    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
+  public boolean isNoteAtPosition(int noteSensorId) {
+    return m_noteSwitches[noteSensorId];
   }
 
   public int[] RS232Listen() {
     //byte[] m_buffer = m_SerialPort.read(10);
-    m_SerialPort.setReadBufferSize(Constants.Climb.kBufferSize);
-    m_SerialPort.setTimeout(Constants.Climb.kTimeOutLength);
+    m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize);
+    m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength);
     // m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
     //getBytesReceived
 
-    byte byteArray[] = new byte[Constants.Climb.kByteArrayLength];
+    byte byteArray[] = new byte[Constants.Arduino.kByteArrayLength];
 
-    byte bufferByte[] = new byte[Constants.Climb.kBufferSize];
+    byte bufferByte[] = new byte[Constants.Arduino.kBufferSize];
 
     checkSumWatchDog = 0;
 
@@ -232,17 +216,17 @@ public class ShooterSub extends SubsystemBase {
       checkSumWatchDog++;
       m_SerialPort.reset();
       if(m_SerialPort.getBytesReceived() != 0) { //shouldn't read if there is no new data, this method doesn't work
-        bufferByte = m_SerialPort.read(Constants.Climb.kReadByteLength);
+        bufferByte = m_SerialPort.read(Constants.Arduino.kReadByteLength);
       }
 
       byteArrayCount = 0;
       loopThroughBufferByte = 0;
 
-      while(loopThroughBufferByte <= Constants.Climb.kBufferSize) {
+      while(loopThroughBufferByte <= Constants.Arduino.kBufferSize) {
         if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
 
           dataSetLength = bufferByte[loopThroughBufferByte + 1];
-          if(dataSetLength > Constants.Climb.kByteArrayLength) {
+          if(dataSetLength > Constants.Arduino.kByteArrayLength) {
             break;
           }
 
@@ -258,7 +242,7 @@ public class ShooterSub extends SubsystemBase {
         }
         loopThroughBufferByte++;
       }
-      for(int i = 0; i < Constants.Climb.kByteArrayLength - 1; i++) {
+      for(int i = 0; i < Constants.Arduino.kByteArrayLength - 1; i++) {
         checkSum += byteArray[i];
       }
     } while(checkSum != byteArray[4]);

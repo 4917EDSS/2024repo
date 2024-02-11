@@ -19,6 +19,6 @@ public class ShootSpeakerSubwooferGrp extends SequentialCommandGroup {
     addCommands(
         new ShooterPrepGrp(shooterSub),
         //new ShooterFireNote(shooterSub), // TODO Create this command
-        new ShooterPivotCmd(Constants.Shooter.kPositionIntake, shooterSub));
+        new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub));
   }
 }

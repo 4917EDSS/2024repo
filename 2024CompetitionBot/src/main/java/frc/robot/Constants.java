@@ -17,27 +17,14 @@ import java.util.logging.Level;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+  // Max log level to print (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, or FINEST)
+  // e.g. Level.WARNING will only print WARNING and SEVERE log messages
   public static final Level kLogLevel = Level.WARNING;
 
-
-  public final static class ShooterPivotPositionConstants {
-    public static final double kSpeakerPosition = 1;
-    public static final double kTrapPosition = 2;
-    public static final double kAmpPosition = 3;
-  }
-
+  // Hardware constants
   public final static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
-  }
-
-  public final static class DriveConstants {
-    // measured percisly on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = -1.856;
-    public static final double kAbsoluteEncoderOffsetFR = -2.439;
-    public static final double kAbsoluteEncoderOffsetBL = -0.451;
-    public static final double kAbsoluteEncoderOffsetBR = -0.643;
   }
 
   public final static class CanIds {
@@ -63,10 +50,8 @@ public final class Constants {
     public final static int kPivot = 21;
     public final static int kUpperFeeder = 22;
     public final static int kLowerFeeder = 23;
-    //public final static int kTransfer = 28;
     public final static int kClimbMotorL = 24;
     public final static int kClimbMotorR = 25;
-
   }
 
   public final static class DioIds {
@@ -78,26 +63,67 @@ public final class Constants {
     public final static int kLedStripPwmPort = 0;
   }
 
-  public final static class VisionConstants {
-    public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
-    public static final double kApriltagHeights[] =
-        {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
-
-  }
-  public static final class Climb {
-    //TODO Change all the hights
-    //all meshermintes need to be fixed and are in m
-    public static final double kShortHookRaised = 0.40;
-    public static final double kHookLowered = 0.01;
-    public static final double kTallHookRaised = 0.20;
-    public static final double kHookScoring = 0.25;
-    /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kTickCofficient = 0.8 / 769.637939453125;
+  public final static class Arduino {
     public static final int kBaudRate = 38400;
     public static final int kBufferSize = 15; //(2 * bitDataLength) - 1
     public static final int kTimeOutLength = 30;
     public static final int kReadByteLength = 15;
     public static final int kByteArrayLength = 5;
+  }
+
+  // public static final class AnalogInIds {
+  //   public static final int kFrontDistanceSenor = 0;
+  // }
+
+
+  // Subsystem Constants
+  public final static class Vision {
+    public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
+    public static final double kApriltagHeights[] =
+        {1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.32, 1.32, 1.22, 1.22, 1.24, 1.24, 1.24, 1.24, 1.24, 1.24};
+
+    public static final class AprilTagIds {
+      public static final class Blue {
+        public static final int kSourceRight = 1;
+        public static final int kSourceLeft = 2;
+        public static final int kAmp = 6;
+        public static final int kCenterStage = 14;
+        public static final int kStageLeft = 15;
+        public static final int kStageRight = 16;
+        public static final int kSpeakerCenter = 7;
+        public static final int kSpeakerLeft = 8;
+      }
+      public static final class Red {
+        public static final int kSpeakerRight = 3;
+        public static final int kSpeakerCenter = 4;
+        public static final int kAmp = 5;
+        public static final int kSourceRight = 9;
+        public static final int kSourceLeft = 10;
+        public static final int kStageLeft = 11;
+        public static final int kStageRight = 12;
+        public static final int kCenterStage = 13;
+      }
+    }
+  }
+
+  public final static class Drivetrain {
+    // Measured precicely on Feb 10
+    public static final double kAbsoluteEncoderOffsetFL = -1.856;
+    public static final double kAbsoluteEncoderOffsetFR = -2.439;
+    public static final double kAbsoluteEncoderOffsetBL = -0.451;
+    public static final double kAbsoluteEncoderOffsetBR = -0.643;
+  }
+
+  public static final class Climb {
+    //TODO Change all the heights
+    // Heights in meters
+    public static final double kHeightShortHookRaised = 0.40;
+    public static final double kHeightHookLowered = 0.01;
+    public static final double kHeightTallHookRaised = 0.20;
+    public static final double kHeightHookScoring = 0.25;
+
+    /** Convert ticks to meters (Ticks over 80cm) */
+    public static final double kTickCofficient = 0.8 / 769.637939453125;
   }
 
   public static final class Shooter {
@@ -107,45 +133,17 @@ public final class Constants {
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
 
-    public static final double kPositionIntake = 0.0;
-    public static final double kPositionSubwoofer = 0.0; // TODO figure out real value
-    public static final double kPositionAmp = 0.0; // TODO figure out real value
-    public static final double kPositionTrap = 0.0; // TODO figure out real value
+    public static final double kAngleIntake = 0.0;
+    public static final double kAngleSubwoofer = 0.0; // TODO figure out real value
+    public static final double kAngleAmp = 0.0; // TODO figure out real value
+    public static final double kAngleTrap = 0.0; // TODO figure out real value
 
-    public static final double kNoteUpperIntakePower = 0.25;
-    public static final double kNoteLowerIntakePower = 0.50;
-
+    public static final double kNoteUpperIntakePower = 0.12;
+    public static final double kNoteLowerIntakePower = 0.25;
   }
 
   public static final class Intake {
     public static final double kNoteIntakePower = 0.25;
     public static final double kNoteExpelPower = 0.25;
-
-  }
-
-  // public static final class AnalogInIds {
-  //   public static final int kFrontDistanceSenor = 0;
-  // }
-  public static final class AprilTagIds {
-    public static final class Blue {
-      public static final int kSourceRight = 1;
-      public static final int kSourceLeft = 2;
-      public static final int kAmp = 6;
-      public static final int kCenterStage = 14;
-      public static final int kStageLeft = 15;
-      public static final int kStageRight = 16;
-      public static final int kSpeakerCenter = 7;
-      public static final int kSpeakerLeft = 8;
-    }
-    public static final class Red {
-      public static final int kSpeakerRight = 3;
-      public static final int kSpeakerCenter = 4;
-      public static final int kAmp = 5;
-      public static final int kSourceRight = 9;
-      public static final int kSourceLeft = 10;
-      public static final int kStageLeft = 11;
-      public static final int kStageRight = 12;
-      public static final int kCenterStage = 13;
-    }
   }
 }

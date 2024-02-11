@@ -33,16 +33,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
-    m_logger.warning("################# ROBOT INIT START ##############");
+    // Setup the logger
     Logger rootLogger = LogManager.getLogManager().getLogger("");
     rootLogger.setLevel(Constants.kLogLevel);
     for(Handler handler : rootLogger.getHandlers()) {
       handler.setLevel(Constants.kLogLevel);
     }
 
-    m_logger.info(">>>>>>>>>>># ROBOT INFO ##############");
-
+    // Log a message to each level to show which levels are currently enabled
+    m_logger.severe("Severe log level enabled");
+    m_logger.warning("Warning log level enabled");
+    m_logger.info("Info log level enabled");
+    m_logger.config("Config log level enabled");
+    m_logger.fine("Fine log level enabled");
+    m_logger.finer("Finer log level enabled");
+    m_logger.finest("Finest log level enabled");
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -82,6 +87,8 @@ public class Robot extends TimedRobot {
     if(m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
     if(!m_isInitialized) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
@@ -101,6 +108,8 @@ public class Robot extends TimedRobot {
     if(m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
     if(!m_isInitialized) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
@@ -114,8 +123,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    m_robotContainer.resetGyro();
     CommandScheduler.getInstance().cancelAll();
+
+    // Reset most parts of the robot
+    m_logger.warning("Resetting robot subsystems via testInit");
+    m_isInitialized = false;
   }
 
   /** This function is called periodically during test mode. */
