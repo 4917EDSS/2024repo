@@ -5,9 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriverFieldRelativeDriveCmd;
+import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.DummySub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,6 +23,8 @@ import frc.robot.Constants.OperatorConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
+  private final DummySub m_dummySub = new DummySub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -24,6 +32,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_drivetrainSub.setDefaultCommand(
+        new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -38,7 +49,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
+    m_driverController.PS().onTrue(new InstantCommand(() -> m_dummySub.doNothing()));
   }
 
   /**
