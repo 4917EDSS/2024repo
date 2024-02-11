@@ -45,6 +45,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
+    // TODO Add named commands so Autos have access to more than movement during auto (e.g. intake command group)
+    // e.g. NamedCommands.registerCommand("NoteIntakeGrp", new NoteIntakeGrp(m_intakeSub, m_shooterSub));
+
     // Build an auto chooser. This will use Commands.none() as the default option.
     // TODO:  Put the name of the default auto as a parameter.  
     //        e.g.autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");

@@ -48,7 +48,11 @@ public final class Constants {
   public static final class Drivetrain {
     public static final int driveCurrentLimit = 80;
 
-    public static final double kDriveDistanceFactor = (Math.PI * 0.1016) / (6.0 * 1.2); // Circumference(m) * gear ratio
+    // In theory:
+    // TicksPerMotorRotation? * L3GearRation / 4"WheelCircumference
+    // 2048 * 6.12 / (4in * 0.0254m/in * PI) = 39267.94 ticks per m
+    // Actual: 55.548 for 3m
+    public static final double kDriveDistanceFactor = 3.0 / 55.548;
     public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
     public static final double kSteeringKP = 0.01;
@@ -56,10 +60,11 @@ public final class Constants {
     public static final double kSteeringKD = 0.0;
     public static final double kSteeringKFF = 0.0;
 
-    // Measured precicely on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = -1.856;
-    public static final double kAbsoluteEncoderOffsetFR = -2.439;
-    public static final double kAbsoluteEncoderOffsetBL = -0.451;
-    public static final double kAbsoluteEncoderOffsetBR = -0.643;
+    // Measured precicely on Feb 11 - but the modules drift (something loose)
+    // Used aluminum square tube against the non-cog side of the wheels
+    public static final double kAbsoluteEncoderOffsetFL = -2.028;
+    public static final double kAbsoluteEncoderOffsetFR = -2.634;
+    public static final double kAbsoluteEncoderOffsetBL = -0.463;
+    public static final double kAbsoluteEncoderOffsetBR = -0.851;
   }
 }

@@ -29,7 +29,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_drivetrainSub.setDefaultCommand(
-        new InstantCommand(() -> m_drivetrainSub.setDrivePower(-m_driverController.getLeftY(), 0.05)));
+        new InstantCommand(() -> m_drivetrainSub.setDrivePower(-m_driverController.getLeftY(), 0.05), m_drivetrainSub));
 
     // Configure the trigger bindings
     configureBindings();
@@ -45,21 +45,35 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // Hold the wheels forward (if auto-rotate is enabled)
     m_driverController.square().onTrue(new InstantCommand(() -> m_drivetrainSub.setRotateMode(false)));
-
+    // Hold the wheels in a circle so robot can rotate on itself (if auto-rotate is enabled)
     m_driverController.circle().onTrue(new InstantCommand(() -> m_drivetrainSub.setRotateMode(true)));
-
+    // Drive forward full speed
     m_driverController.povUp().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(1.0, 0),
         () -> m_drivetrainSub.setDrivePower(1.0, 0), m_drivetrainSub));
-
+    // Drive backward full speed
     m_driverController.povDown().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(-1.0, 0),
         () -> m_drivetrainSub.setDrivePower(-1.0, 0), m_drivetrainSub));
-
+    // Drive forward at 50% speed
     m_driverController.povRight().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(0.5, 0),
         () -> m_drivetrainSub.setDrivePower(0.5, 0), m_drivetrainSub));
-
+    // Drive backward at 50% speed
     m_driverController.povLeft().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setDrivePower(-0.5, 0),
         () -> m_drivetrainSub.setDrivePower(-0.5, 0), m_drivetrainSub));
+    // Enable auto-rotate
+    m_driverController.touchpad()
+        .onTrue(new InstantCommand(() -> m_drivetrainSub.setAutoRotate(true), m_drivetrainSub));
+    // Disable auto-rotate (so you can use the manual rotates below)
+    m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.setAutoRotate(false), m_drivetrainSub));
+    // Manually rotate all of the wheels forwards/counterclockwise (for testing)
+    m_driverController.L1().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setRotatePower(0.15),
+        () -> m_drivetrainSub.setRotatePower(0.0), m_drivetrainSub));
+    // Manually rotate all of the wheels backwards/clockwise (for testing)
+    m_driverController.R1().whileTrue(new StartEndCommand(() -> m_drivetrainSub.setRotatePower(-0.15),
+        () -> m_drivetrainSub.setRotatePower(0.0), m_drivetrainSub));
+    // Reset the gyro
+    m_driverController.share().onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
   }
 
   /**

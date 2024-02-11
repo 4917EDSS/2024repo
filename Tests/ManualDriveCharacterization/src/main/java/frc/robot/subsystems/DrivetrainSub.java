@@ -43,6 +43,7 @@ public class DrivetrainSub extends SubsystemBase {
   private final AHRS m_gyro;
 
   private boolean m_isRotateMode;
+  private boolean m_autoRotate;
 
   public DrivetrainSub() {
     // Create hardware objects
@@ -94,14 +95,13 @@ public class DrivetrainSub extends SubsystemBase {
     m_driveEncoderBL.setVelocityConversionFactor(Constants.Drivetrain.kDriveVelocityFactor);
     m_driveEncoderBR.setVelocityConversionFactor(Constants.Drivetrain.kDriveVelocityFactor);
 
-    m_gyro.reset();
-    m_gyro.setAngleAdjustment(90);
-
+    // Note:  Resetting the gyro here doesn't work as the NavX is not ready for it
     init();
   }
 
   public void init() {
     m_isRotateMode = false;
+    m_autoRotate = true;
 
     m_driveMotorFL.set(0.0);
     m_driveMotorFR.set(0.0);
@@ -117,8 +117,9 @@ public class DrivetrainSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    final double kP = 0.01;
+    final double kP = 0.4;
     final double kMaxPower = 0.25;
+    final double kTolerance = 0.01;
 
     double currentAngleRad = 0;
     double power = 0;
@@ -129,59 +130,108 @@ public class DrivetrainSub extends SubsystemBase {
     // Encoder returns angle in turns (-0.5 to 0.5) so convert to radians and then subtract offset
     currentAngleRad = (m_steeringAbsoluteEncoderFL.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2))
         - Constants.Drivetrain.kAbsoluteEncoderOffsetFL;
-    targetAngle = m_isRotateMode ? Math.PI / 4 : 0.0;
-    power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
-    m_steeringMotorFL.set(power);
-
+    // Compensate for offset changing rollover point
+    if(currentAngleRad < -Math.PI) {
+      currentAngleRad = Math.PI - (-currentAngleRad - Math.PI);
+    } else if(currentAngleRad > Math.PI) {
+      currentAngleRad = -Math.PI + (currentAngleRad - Math.PI);
+    }
+    targetAngle = m_isRotateMode ? -Math.PI / 4 : 0.0;
     SmartDashboard.putNumber("FL T Ang", targetAngle);
     SmartDashboard.putNumber("FL C Ang", currentAngleRad);
-    SmartDashboard.putNumber("FL Pwr", power);
+    SmartDashboard.putNumber("FL Raw Ang",
+        m_steeringAbsoluteEncoderFL.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2));
+    if(m_autoRotate) {
+      if(Math.abs(targetAngle - currentAngleRad) < kTolerance) {
+        power = 0.0;
+      } else {
+        power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
+      }
+      m_steeringMotorFL.set(power);
+      SmartDashboard.putNumber("FL Pwr", power);
+    }
 
     // FR
     currentAngleRad = (m_steeringAbsoluteEncoderFR.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2))
         - Constants.Drivetrain.kAbsoluteEncoderOffsetFR;
-    targetAngle = m_isRotateMode ? 3 * Math.PI / 4 : 0.0;
-    power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
-    m_steeringMotorFL.set(power);
-
+    // Compensate for offset changing rollover point
+    if(currentAngleRad < -Math.PI) {
+      currentAngleRad = Math.PI - (-currentAngleRad - Math.PI);
+    } else if(currentAngleRad > Math.PI) {
+      currentAngleRad = -Math.PI + (currentAngleRad - Math.PI);
+    }
+    targetAngle = m_isRotateMode ? -3 * Math.PI / 4 : 0.0;
     SmartDashboard.putNumber("FR T Ang", targetAngle);
     SmartDashboard.putNumber("FR C Ang", currentAngleRad);
-    SmartDashboard.putNumber("FR Pwr", power);
+    SmartDashboard.putNumber("FR Raw Ang",
+        m_steeringAbsoluteEncoderFR.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2));
+    if(m_autoRotate) {
+      if(Math.abs(targetAngle - currentAngleRad) < kTolerance) {
+        power = 0.0;
+      } else {
+        power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
+      }
+      m_steeringMotorFR.set(power);
+      SmartDashboard.putNumber("FR Pwr", power);
+    }
 
     // BL
     currentAngleRad = (m_steeringAbsoluteEncoderBL.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2))
         - Constants.Drivetrain.kAbsoluteEncoderOffsetBL;
-    targetAngle = m_isRotateMode ? 5 * Math.PI / 4 : 0.0;
-    power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
-    m_steeringMotorFL.set(power);
-
+    // Compensate for offset changing rollover point
+    if(currentAngleRad < -Math.PI) {
+      currentAngleRad = Math.PI - (-currentAngleRad - Math.PI);
+    } else if(currentAngleRad > Math.PI) {
+      currentAngleRad = -Math.PI + (currentAngleRad - Math.PI);
+    }
+    targetAngle = m_isRotateMode ? Math.PI / 4 : 0.0;
     SmartDashboard.putNumber("BL T Ang", targetAngle);
     SmartDashboard.putNumber("BL C Ang", currentAngleRad);
-    SmartDashboard.putNumber("BL Pwr", power);
+    SmartDashboard.putNumber("BL Raw Ang",
+        m_steeringAbsoluteEncoderBL.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2));
+    if(m_autoRotate) {
+      if(Math.abs(targetAngle - currentAngleRad) < kTolerance) {
+        power = 0.0;
+      } else {
+        power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
+      }
+      m_steeringMotorBL.set(power);
+      SmartDashboard.putNumber("BL Pwr", power);
+    }
 
     // BR
     currentAngleRad = (m_steeringAbsoluteEncoderBR.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2))
         - Constants.Drivetrain.kAbsoluteEncoderOffsetBR;
-    targetAngle = m_isRotateMode ? 7 * Math.PI / 4 : 0.0;
-    power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
-    m_steeringMotorFL.set(power);
-
+    // Compensate for offset changing rollover point
+    if(currentAngleRad < -Math.PI) {
+      currentAngleRad = Math.PI - (-currentAngleRad - Math.PI);
+    } else if(currentAngleRad > Math.PI) {
+      currentAngleRad = -Math.PI + (currentAngleRad - Math.PI);
+    }
+    targetAngle = m_isRotateMode ? 3 * Math.PI / 4 : 0.0;
     SmartDashboard.putNumber("BR T Ang", targetAngle);
     SmartDashboard.putNumber("BR C Ang", currentAngleRad);
-    SmartDashboard.putNumber("BR Pwr", power);
-
+    SmartDashboard.putNumber("BR Raw Ang",
+        m_steeringAbsoluteEncoderBR.getAbsolutePosition().getValueAsDouble() * (Math.PI * 2));
+    if(m_autoRotate) {
+      if(Math.abs(targetAngle - currentAngleRad) < kTolerance) {
+        power = 0.0;
+      } else {
+        power = MathUtil.clamp((targetAngle - currentAngleRad) * kP, -kMaxPower, kMaxPower);
+      }
+      m_steeringMotorBR.set(power);
+      SmartDashboard.putNumber("BR Pwr", power);
+    }
 
     // Display other values
     SmartDashboard.putNumber("FL Dist", m_driveEncoderFL.getPosition());
     SmartDashboard.putNumber("FR Dist", m_driveEncoderFR.getPosition());
     SmartDashboard.putNumber("BL Dist", m_driveEncoderBL.getPosition());
     SmartDashboard.putNumber("BR Dist", m_driveEncoderBR.getPosition());
-
     SmartDashboard.putNumber("FL Vel", m_driveEncoderFL.getVelocity());
     SmartDashboard.putNumber("FR Vel", m_driveEncoderFR.getVelocity());
     SmartDashboard.putNumber("BL Vel", m_driveEncoderBL.getVelocity());
     SmartDashboard.putNumber("BR Vel", m_driveEncoderBR.getVelocity());
-
     SmartDashboard.putNumber("Gyro Ang", m_gyro.getAngle());
     SmartDashboard.putNumber("Gyro Vel", m_gyro.getRate());
   }
@@ -211,5 +261,29 @@ public class DrivetrainSub extends SubsystemBase {
    */
   public void setRotateMode(boolean rotateMode) {
     m_isRotateMode = rotateMode;
+  }
+
+  public void setAutoRotate(boolean autoRotate) {
+    m_autoRotate = autoRotate;
+    if(!autoRotate) {
+      setRotatePower(0.0);
+    }
+    SmartDashboard.putBoolean("Auto-Rotate", autoRotate);
+  }
+
+  public void setRotatePower(double power) {
+    m_steeringMotorFL.set(power);
+    m_steeringMotorFR.set(power);
+    m_steeringMotorBL.set(power);
+    m_steeringMotorBR.set(power);
+
+    SmartDashboard.putNumber("FL Pwr", power);
+    SmartDashboard.putNumber("FR Pwr", power);
+    SmartDashboard.putNumber("BL Pwr", power);
+    SmartDashboard.putNumber("BR Pwr", power);
+  }
+
+  public void resetGyro() {
+    m_gyro.reset();
   }
 }
