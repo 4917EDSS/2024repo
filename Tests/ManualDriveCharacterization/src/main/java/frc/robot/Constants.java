@@ -49,10 +49,12 @@ public final class Constants {
     public static final int driveCurrentLimit = 80;
 
     // In theory:
-    // TicksPerMotorRotation? * L3GearRation / 4"WheelCircumference
-    // 2048 * 6.12 / (4in * 0.0254m/in * PI) = 39267.94 ticks per m
-    // Actual: 55.548 for 3m
-    public static final double kDriveDistanceFactor = 3.0 / 55.548;
+    // Rotation to meters
+    // = L3GearRatio / 4"WheelCircumference
+    // = 6.12 / (4in * 0.0254m/in * PI) 
+    // = 19.1738 rotations per m
+    // Actual measured (roughly): 55.548 for 3m
+    public static final double kDriveDistanceFactor = 19.1738;
     public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
     public static final double kSteeringKP = 0.01;
