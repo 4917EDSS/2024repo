@@ -60,9 +60,11 @@ public class RobotContainer {
     public RobotContainer() {
         m_drivetrainSub.setDefaultCommand(
                 new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
-        m_drivetrainSub.setDefaultCommand(new PivotCmd(m_operatorController, m_shooterSub));
         m_shooterSub.setDefaultCommand(new RunCommand(
                 () -> m_shooterSub.spinFlywheel(m_operatorController.getRightY()),
+                m_shooterSub));
+        m_shooterSub.setDefaultCommand(new RunCommand(
+                () -> m_shooterSub.movePivot(m_operatorController.getLeftY()),
                 m_shooterSub));
 
         // Configure the button bindings
