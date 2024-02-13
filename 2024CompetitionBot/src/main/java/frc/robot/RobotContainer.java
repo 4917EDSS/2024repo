@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Shooter;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
@@ -59,6 +61,9 @@ public class RobotContainer {
         m_drivetrainSub.setDefaultCommand(
                 new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
         m_drivetrainSub.setDefaultCommand(new PivotCmd(m_operatorController, m_shooterSub));
+        m_shooterSub.setDefaultCommand(new RunCommand(
+                () -> m_shooterSub.spinFlywheel(m_operatorController.getRightY()),
+                m_shooterSub));
 
         // Configure the button bindings
         configureBindings();
@@ -141,13 +146,21 @@ public class RobotContainer {
         m_operatorController.R3()
                 .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
 
-        // m_operatorController.square()
+        m_operatorController.square().whileTrue(
+                new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
+                        () -> m_shooterSub.spinUpperFeeder(0.0)));
 
-        // m_operatorController.cross()
+        m_operatorController.cross().whileTrue(
+                new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.50),
+                        () -> m_shooterSub.spinLowerFeeder(0.0)));
 
-        // m_operatorController.circle()
+        m_operatorController.circle().whileTrue(
+                new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(-0.50),
+                        () -> m_shooterSub.spinLowerFeeder(0.0)));
 
-        // m_operatorController.triangle()
+        m_operatorController.triangle().whileTrue(
+                new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
+                        () -> m_shooterSub.spinUpperFeeder(0.0)));
 
         m_operatorController.L1()
                 .whileTrue(
