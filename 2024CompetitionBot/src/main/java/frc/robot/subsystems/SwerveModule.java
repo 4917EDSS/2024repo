@@ -36,7 +36,8 @@ public class SwerveModule extends SubsystemBase {
     public static final double kMaxModuleAngularAcceleration = 100.0 * Math.PI; // In Radians Per Second Squared
 
     // Conversion factors
-    public static final double kDriveDistanceFactor = (Math.PI * 0.1016) / (6.0 * 1.2);//Circumference(m) * gear ratio
+    public static final double kWheelBaseDiameter = 0.1016; // Meters
+    public static final double kDriveDistanceFactor = (Math.PI * kWheelBaseDiameter) / (6.12);// Circumference(m) * gear ratio
     public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
   }

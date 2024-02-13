@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.AnalogInput;
 
@@ -192,6 +193,14 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbPathKD = m_shuffleboardTab.add("Path kD", 0.0).getEntry();
     m_sbPathThreshold = m_shuffleboardTab.add("Path Threshold", 0.0).getEntry();
 
+    boolean flipTeamSide = false; // TODO: Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
+
+    AutoBuilder.configureHolonomic(this::getOdometryPose2d, this::resetOdometry, this::getChassisSpeeds,
+        this::driveChassisSpeeds, Constants.Drivetrain.kPathingConfig,
+        () -> {
+          return flipTeamSide;
+        }, this);
+
   }
 
   public void init() {
@@ -291,6 +300,11 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight.setState(swerveStates[3]);
   }
 
+  public ChassisSpeeds getChassisSpeeds() { // Returns current chassis speeds (for Pathing)
+    return m_kinematics.toChassisSpeeds(new SwerveModuleState[] {m_frontLeft.getState(), m_frontRight.getState(),
+        m_backLeft.getState(), m_backRight.getState()});
+  }
+
   public void driveStates(SwerveModuleState[] swerveStates) { // Specifically for trajectories
     m_frontLeft.setState(swerveStates[0]);
     m_frontRight.setState(swerveStates[1]);
@@ -298,7 +312,13 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight.setState(swerveStates[3]);
   }
 
-  public Path generateTestPath() { // TODO: Remove after finishing trajectory
+  public void driveChassisSpeeds(ChassisSpeeds speeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02); // Everyone uses 0.02 for the period for some reason
+    SwerveModuleState[] targetStates = m_kinematics.toSwerveModuleStates(targetSpeeds);
+    driveStates(targetStates);
+  }
+
+  public Path generateTestPath() { // TODO: Remove after finishing Path Planner
     Path tesPath = new Path(0.2, 0.2); // 10cm tolerance with 20% speed
     Rotation2d currentRotation = getRotation();
     tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
@@ -398,6 +418,12 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
         zero);
+  }
+
+  public void resetOdometry(Pose2d pos) {
+    m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
+        m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
+        pos);
   }
 
   public Translation2d getPos() { // Get position from odometry

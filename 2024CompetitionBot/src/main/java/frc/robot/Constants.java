@@ -5,6 +5,11 @@
 package frc.robot;
 
 import java.util.logging.Level;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.SwerveModule;
 
 
 /**
@@ -112,6 +117,10 @@ public final class Constants {
     public static final double kAbsoluteEncoderOffsetFR = -2.439;
     public static final double kAbsoluteEncoderOffsetBL = -0.451;
     public static final double kAbsoluteEncoderOffsetBR = -0.643;
+    // Translation PID, Rotation PID, Max module speed (m/s), Wheel diameter, default path config
+    public static final HolonomicPathFollowerConfig kPathingConfig =
+        new HolonomicPathFollowerConfig(new PIDConstants(0.1, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
+            0.45, new ReplanningConfig());
   }
 
   public static final class Climb {

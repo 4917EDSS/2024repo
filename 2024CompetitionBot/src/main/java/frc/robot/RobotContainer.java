@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,7 +32,6 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
-import frc.robot.commands.PivotCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
@@ -104,16 +112,25 @@ public class RobotContainer {
                         m_drivetrainSub,
                         m_climbSub));
 
-        //L1 free
-        // m_driverController.L1()
-        //R1 free
-        // m_driverController.R1()
+        m_driverController.L1()
+                .whileTrue(
+                        new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
+                                () -> m_climbSub.setClimbPowerLeft(0.0)));
 
-        //L2 Free
-        //m_driverController.L2()
-        //R2 free
-        // m_driverController.R2()
+        m_driverController.R1()
+                .whileTrue(
+                        new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
+                                () -> m_climbSub.setClimbPowerRight(0.0)));
 
+        m_driverController.L2()
+                .whileTrue(
+                        new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
+                                () -> m_climbSub.setClimbPowerLeft(0.0)));
+
+        m_driverController.R2()
+                .whileTrue(
+                        new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
+                                () -> m_climbSub.setClimbPowerRight(0.0)));
 
         m_driverController.share()
                 .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -148,41 +165,21 @@ public class RobotContainer {
         m_operatorController.R3()
                 .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
 
-        m_operatorController.square().whileTrue(
-                new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
-                        () -> m_shooterSub.spinUpperFeeder(0.0)));
+        // m_operatorController.square()
 
-        m_operatorController.cross().whileTrue(
-                new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.50),
-                        () -> m_shooterSub.spinLowerFeeder(0.0)));
+        // m_operatorController.cross()
 
-        m_operatorController.circle().whileTrue(
-                new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(-0.50),
-                        () -> m_shooterSub.spinLowerFeeder(0.0)));
+        // m_operatorController.circle()
 
-        m_operatorController.triangle().whileTrue(
-                new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
-                        () -> m_shooterSub.spinUpperFeeder(0.0)));
+        // m_operatorController.triangle()
 
-        m_operatorController.L1()
-                .whileTrue(
-                        new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
-                                () -> m_climbSub.setClimbPowerLeft(0.0)));
+        // m_operatorController.L1()
 
-        m_operatorController.R1()
-                .whileTrue(
-                        new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
-                                () -> m_climbSub.setClimbPowerRight(0.0)));
+        // m_operatorController.R1()
 
-        m_operatorController.L2()
-                .whileTrue(
-                        new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
-                                () -> m_climbSub.setClimbPowerLeft(0.0)));
+        // m_operatorController.L2()
 
-        m_operatorController.R2()
-                .whileTrue(
-                        new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
-                                () -> m_climbSub.setClimbPowerRight(0.0)));
+        // m_operatorController.R2()
 
         // m_operatorController.share()
 
@@ -192,13 +189,11 @@ public class RobotContainer {
 
         // m_operatorController.touchpad()
 
-        m_operatorController.povUp().whileTrue(
-                new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25), () -> m_intakeSub.setIntakeMotors(0)));
+        // m_operatorController.povUp()
 
         // m_operatorController.povRight()
 
-        m_operatorController.povDown().whileTrue(
-                new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25), () -> m_intakeSub.setIntakeMotors(0)));
+        // m_operatorController.povDown()
 
         // m_operatorController.povLeft()
     }
@@ -210,8 +205,52 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return new PrintCommand("No auto yet");
+        return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
     }
+    /*
+     * public Command getTrajectoryCommand() { // Using trajectory library
+     * Rotation2d currentRotation = m_drivetrainSub.getRotation();
+     * // Example path (needs to be Pose2ds)
+     * List<Pose2d> points = new ArrayList<Pose2d>();
+     * points
+     * .add(new Pose2d(0.0 + m_drivetrainSub.getPos().getX(), 0.0 + m_drivetrainSub.getPos().getY(),
+     * currentRotation));
+     * points
+     * .add(new Pose2d(0.0 + m_drivetrainSub.getPos().getX(), 1.0 + m_drivetrainSub.getPos().getY(),
+     * currentRotation));
+     * points
+     * .add(new Pose2d(1.0 + m_drivetrainSub.getPos().getX(), 1.0 + m_drivetrainSub.getPos().getY(),
+     * currentRotation));
+     * points
+     * .add(new Pose2d(1.0 + m_drivetrainSub.getPos().getX(), 0.0 + m_drivetrainSub.getPos().getY(),
+     * currentRotation));
+     * points
+     * .add(new Pose2d(0.0 + m_drivetrainSub.getPos().getX(), 0.0 + m_drivetrainSub.getPos().getY(),
+     * currentRotation));
+     * 
+     * 
+     * //SwerveDriveKinematicsConstraint kinematicsConstraint =
+     * // new SwerveDriveKinematicsConstraint(m_kinematics, kMaxDriveSpeed); // Makes sure the trajectory isn't
+     * calculated above max speed
+     * TrajectoryConfig tConfig =
+     * new TrajectoryConfig(DrivetrainSub.kMaxDriveSpeed, 10.0).setKinematics(m_drivetrainSub.m_kinematics);
+     * 
+     * Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(points, tConfig); // In meters
+     * var thetaController =
+     * new ProfiledPIDController(0.1, 0.0, 0.0, new TrapezoidProfile.Constraints(Math.PI, Math.PI)); // TODO: Get real
+     * values for this (max angular speed, max angular acceleration)
+     * thetaController.enableContinuousInput(-Math.PI, Math.PI); // TODO: Find out if this should be continuous
+     * SwerveControllerCommand swerveCommand = new SwerveControllerCommand(testTrajectory,
+     * m_drivetrainSub::getOdometryPose2d,
+     * m_drivetrainSub.m_kinematics, m_drivetrainSub.m_odometryPIDx, m_drivetrainSub.m_odometryPIDy,
+     * thetaController,
+     * m_drivetrainSub::driveStates, m_drivetrainSub);
+     * 
+     * m_drivetrainSub.resetOdometry(testTrajectory.getInitialPose());
+     * 
+     * return swerveCommand.andThen(() -> m_drivetrainSub.drive(0, 0, 0, 0.02));
+     * }
+     */
 
     // intialize the sub systems
     // TODO couple initialize need to be done
