@@ -28,6 +28,7 @@ public class ShooterWithJoystickCmd extends Command {
   @Override
   public void execute() {
     m_shooterSub.spinFlywheel(m_controller.getRightY());
+    m_shooterSub.movePivot(m_controller.getLeftY());
   }
 
   // Called once the command ends or is interrupted.

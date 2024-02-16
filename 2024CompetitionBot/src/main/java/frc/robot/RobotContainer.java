@@ -148,12 +148,24 @@ public class RobotContainer {
             () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
     // m_operatorController.L1()
+    m_operatorController.L1()
+        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(0.25),
+            () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
 
     // m_operatorController.R1()
+    m_operatorController.R1()
+        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(0.25),
+            () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
 
     // m_operatorController.L2()
+    m_operatorController.L2()
+        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-0.25),
+            () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
 
     // m_operatorController.R2()
+    m_operatorController.R2()
+        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-0.25),
+            () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
 
     // m_operatorController.share()
 
@@ -164,10 +176,16 @@ public class RobotContainer {
     // m_operatorController.touchpad()
 
     // m_operatorController.povUp()
+    m_operatorController.povUp()
+        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povRight()
 
     // m_operatorController.povDown()
+    m_operatorController.povDown()
+        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povLeft()
 
