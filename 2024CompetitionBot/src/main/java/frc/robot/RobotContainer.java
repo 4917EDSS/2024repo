@@ -4,35 +4,24 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.Shooter;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
-import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
@@ -69,12 +58,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_drivetrainSub.setDefaultCommand(
         new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
-    m_shooterSub.setDefaultCommand(new RunCommand(
-        () -> m_shooterSub.spinFlywheel(m_operatorController.getRightY()),
-        m_shooterSub));
-    m_shooterSub.setDefaultCommand(new RunCommand(
-        () -> m_shooterSub.movePivot(m_operatorController.getLeftY()),
-        m_shooterSub));
+    m_shooterSub.setDefaultCommand(new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
 
     // Configure the button bindings
     configureBindings();
@@ -144,39 +128,24 @@ public class RobotContainer {
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
     m_operatorController.R3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
-    m_operatorController.povUp()
-        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.1),
-            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
-    m_operatorController.povDown()
-        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.1),
-            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
-    m_operatorController.L1()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
-                () -> m_climbSub.setClimbPowerLeft(0.0)));
 
-    m_operatorController.R1()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
-                () -> m_climbSub.setClimbPowerRight(0.0)));
+    m_operatorController.square()
+        .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
+            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
-    m_operatorController.L2()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
-                () -> m_climbSub.setClimbPowerLeft(0.0)));
-
-    m_operatorController.R2()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
-                () -> m_climbSub.setClimbPowerRight(0.0)));
-
-    // m_operatorController.square()
-
-    // m_operatorController.cross()
+    m_operatorController.cross()
+        .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(-0.25),
+            () -> m_shooterSub.spinLowerFeeder(0.0), m_shooterSub));
 
     // m_operatorController.circle()
+    m_operatorController.circle()
+        .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.25),
+            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
     // m_operatorController.triangle()
+    m_operatorController.triangle()
+        .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
+            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
     // m_operatorController.L1()
 
@@ -201,6 +170,7 @@ public class RobotContainer {
     // m_operatorController.povDown()
 
     // m_operatorController.povLeft()
+
   }
 
   /**
@@ -212,6 +182,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
   }
+
   /*
    * public Command getTrajectoryCommand() { // Using trajectory library
    * Rotation2d currentRotation = m_drivetrainSub.getRotation();
