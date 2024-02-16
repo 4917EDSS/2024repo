@@ -4,29 +4,18 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.Shooter;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
@@ -70,9 +59,6 @@ public class RobotContainer {
     m_drivetrainSub.setDefaultCommand(
         new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
     m_shooterSub.setDefaultCommand(new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
-    // m_shooterSub.setDefaultCommand(new RunCommand(
-    //                 () -> m_shooterSub.movePivot(m_operatorController.getLeftY()),
-    //                 m_shooterSub));
 
     // Configure the button bindings
     configureBindings();
@@ -110,27 +96,6 @@ public class RobotContainer {
         .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 0.5,
             m_drivetrainSub,
             m_climbSub));
-
-    m_driverController.L1()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(1.0),
-                () -> m_climbSub.setClimbPowerLeft(0.0)));
-
-    m_driverController.R1()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(1.0),
-                () -> m_climbSub.setClimbPowerRight(0.0)));
-
-    m_driverController.L2()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-1.0),
-                () -> m_climbSub.setClimbPowerLeft(0.0)));
-
-    m_driverController.R2()
-        .whileTrue(
-            new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-1.0),
-                () -> m_climbSub.setClimbPowerRight(0.0)));
-
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
 
@@ -221,6 +186,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
   }
+
   /*
    * public Command getTrajectoryCommand() { // Using trajectory library
    * Rotation2d currentRotation = m_drivetrainSub.getRotation();
