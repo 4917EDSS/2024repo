@@ -198,11 +198,15 @@ public class RobotContainer {
 
     // m_operatorController.touchpad()
 
-    // m_operatorController.povUp()
+    m_operatorController.povUp()
+        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0)));
 
     // m_operatorController.povRight()
 
-    // m_operatorController.povDown()
+    m_operatorController.povDown()
+        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0)));
 
     // m_operatorController.povLeft()
 
