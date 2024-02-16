@@ -32,6 +32,7 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
@@ -68,12 +69,10 @@ public class RobotContainer {
         public RobotContainer() {
                 m_drivetrainSub.setDefaultCommand(
                                 new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
-                m_shooterSub.setDefaultCommand(new RunCommand(
-                                () -> m_shooterSub.spinFlywheel(m_operatorController.getRightY()),
-                                m_shooterSub));
-                m_shooterSub.setDefaultCommand(new RunCommand(
-                                () -> m_shooterSub.movePivot(m_operatorController.getLeftY()),
-                                m_shooterSub));
+                m_shooterSub.setDefaultCommand(new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
+                // m_shooterSub.setDefaultCommand(new RunCommand(
+                //                 () -> m_shooterSub.movePivot(m_operatorController.getLeftY()),
+                //                 m_shooterSub));
 
                 // Configure the button bindings
                 configureBindings();
@@ -206,6 +205,7 @@ public class RobotContainer {
                 // m_operatorController.povDown()
 
                 // m_operatorController.povLeft()
+
         }
 
         /**
