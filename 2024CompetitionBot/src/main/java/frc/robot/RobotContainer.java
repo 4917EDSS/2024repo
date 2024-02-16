@@ -174,8 +174,14 @@ public class RobotContainer {
                                                 () -> m_shooterSub.spinLowerFeeder(0.0), m_shooterSub));
 
                 // m_operatorController.circle()
+                m_operatorController.circle()
+                                .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.25),
+                                                () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
                 // m_operatorController.triangle()
+                m_operatorController.triangle()
+                                .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
+                                                () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
                 // m_operatorController.L1()
 
