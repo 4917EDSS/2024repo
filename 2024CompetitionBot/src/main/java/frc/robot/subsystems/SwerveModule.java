@@ -37,7 +37,7 @@ public class SwerveModule extends SubsystemBase {
 
     // Conversion factors
     public static final double kWheelBaseDiameter = 0.1016; // Meters
-    public static final double kDriveDistanceFactor = (Math.PI * kWheelBaseDiameter) / (6.12);// Circumference(m) * gear ratio
+    public static final double kDriveDistanceFactor = (Math.PI * kWheelBaseDiameter) / (6.52);// Circumference(m) * gear ratio 
     public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
 
   }

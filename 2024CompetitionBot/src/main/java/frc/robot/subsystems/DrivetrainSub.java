@@ -206,7 +206,6 @@ public class DrivetrainSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing DrivetrainSub");
     resetGyro();
-    resetOdometry();
 
     // TODO:  Do we need to call each swerve module's init()?
   }
@@ -243,6 +242,7 @@ public class DrivetrainSub extends SubsystemBase {
     kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
     kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
     kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
+
     m_sbRotKP.setDouble(kRotPIDp);
     m_sbRotKD.setDouble(kRotPIDd);
     m_sbRotThreshold.setDouble(kTurnThreshold);
@@ -275,6 +275,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   public void resetGyro() {
     m_gyro.reset();
+    resetOdometry();
   }
 
   public float getRoll() {
