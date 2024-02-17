@@ -38,6 +38,7 @@ public class DriverFieldRelativeDriveCmd extends Command {
         rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(m_targetHeading);
       } else {
         rotationPower = 0.0;
+        m_targetHeading = m_drivetrainSub.getRotationDegrees();
       }
     } else {
       rotationPower = -m_driverController.getRightX();

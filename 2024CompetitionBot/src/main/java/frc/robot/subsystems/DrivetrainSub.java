@@ -97,8 +97,8 @@ public class DrivetrainSub extends SubsystemBase {
   private double m_orientationOffsetDegrees = 0;
 
   // Speed multipliers
-  public static final double kMaxDriveSpeed = 100.0; // In m/s
-  public static final double kMaxTurnSpeed = 30.0; // was 50
+  public static final double kMaxDriveSpeed = 4; // In m/s
+  public static final double kMaxTurnSpeed = 9; // was 50
 
   //public static final double kMaxSpeed = 10000.0;// meters per second
 

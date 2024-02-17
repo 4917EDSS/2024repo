@@ -59,7 +59,7 @@ public class SwerveModule extends SubsystemBase {
 
   // These predict PID values which makes it work in real time
   // TODO: Feed forward will probably need tuning as well
-  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.1, 0.01); // Distance, Velocity
+  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.2);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
