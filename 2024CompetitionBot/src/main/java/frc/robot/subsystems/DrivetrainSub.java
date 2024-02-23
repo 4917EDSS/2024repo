@@ -97,8 +97,8 @@ public class DrivetrainSub extends SubsystemBase {
   private double m_orientationOffsetDegrees = 0;
 
   // Speed multipliers
-  public static final double kMaxDriveSpeed = 100.0; // In m/s
-  public static final double kMaxTurnSpeed = 30.0; // was 50
+  public static final double kMaxDriveSpeed = 4; // In m/s
+  public static final double kMaxTurnSpeed = 9; // was 50
 
   //public static final double kMaxSpeed = 10000.0;// meters per second
 
@@ -206,7 +206,6 @@ public class DrivetrainSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing DrivetrainSub");
     resetGyro();
-    resetOdometry();
 
     // TODO:  Do we need to call each swerve module's init()?
   }
@@ -243,6 +242,7 @@ public class DrivetrainSub extends SubsystemBase {
     kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
     kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
     kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
+
     m_sbRotKP.setDouble(kRotPIDp);
     m_sbRotKD.setDouble(kRotPIDd);
     m_sbRotThreshold.setDouble(kTurnThreshold);
@@ -275,6 +275,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   public void resetGyro() {
     m_gyro.reset();
+    resetOdometry();
   }
 
   public float getRoll() {
