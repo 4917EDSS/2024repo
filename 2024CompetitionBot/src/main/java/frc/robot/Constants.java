@@ -143,7 +143,7 @@ public final class Constants {
     public static final int kNoteSensorAtFlywheel = 3;
 
     public static final double kAngleIntake = 0.0;
-    public static final double kAngleSubwoofer = 0.0; // TODO figure out real value
+    public static final double kAngleSubwoofer = 21.66; // TODO figure out real value did it
     public static final double kAngleAmp = 0.0; // TODO figure out real value
     public static final double kAngleTrap = 0.0; // TODO figure out real value
 
