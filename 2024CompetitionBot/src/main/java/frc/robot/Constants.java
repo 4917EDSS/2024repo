@@ -113,10 +113,10 @@ public final class Constants {
 
   public final static class Drivetrain {
     // Measured precicely on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = -1.354;
-    public static final double kAbsoluteEncoderOffsetFR = -2.690;
-    public static final double kAbsoluteEncoderOffsetBL = 2.954;
-    public static final double kAbsoluteEncoderOffsetBR = -0.673;
+    public static final double kAbsoluteEncoderOffsetFL = 1.751;
+    public static final double kAbsoluteEncoderOffsetFR = -2.704;
+    public static final double kAbsoluteEncoderOffsetBL = -0.184;
+    public static final double kAbsoluteEncoderOffsetBR = -0.708;
     // Translation PID, Rotation PID, Max module speed (m/s), Wheel diameter, default path config
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(0.1, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
