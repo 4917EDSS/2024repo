@@ -118,8 +118,9 @@ public final class Constants {
     // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
     public static final String serialNumber = System.getenv("serialnum");
     // Translation PID, Rotation PID, Max module speed (m/s), Wheel diameter, default path config
+    // TODO: These PIDs should be tuned
     public static final HolonomicPathFollowerConfig kPathingConfig =
-        new HolonomicPathFollowerConfig(new PIDConstants(0.1, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
+        new HolonomicPathFollowerConfig(new PIDConstants(0.5, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
             0.45, new ReplanningConfig());
   }
 
