@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import java.util.Map;
 import java.util.logging.Level;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.SwerveModule;
 
@@ -113,15 +115,47 @@ public final class Constants {
   }
 
   public final static class Drivetrain {
-    // Measured precicely on Feb 10
-    public static final double kAbsoluteEncoderOffsetFL = 1.751;
-    public static final double kAbsoluteEncoderOffsetFR = -2.704;
-    public static final double kAbsoluteEncoderOffsetBL = -0.184;
-    public static final double kAbsoluteEncoderOffsetBR = -0.708;
+    // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
+    public static final String serialNumber = System.getenv("serialnum");
     // Translation PID, Rotation PID, Max module speed (m/s), Wheel diameter, default path config
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(0.1, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
             0.45, new ReplanningConfig());
+  }
+
+  public static final class RobotSpecific {
+    public static final String PrototypeSerialNumber = "03178417";
+    public static final String PracticeSerialNumber = "03147322";
+    public static final String CompetitionSerialNumber = "03178417";
+    public static final String serialNumber = System.getenv("serialnum");
+
+    public static final class Prototype {
+      public static final double kAbsoluteEncoderOffsetFL = 1.751;
+      public static final double kAbsoluteEncoderOffsetFR = -2.704;
+      public static final double kAbsoluteEncoderOffsetBL = -0.184;
+      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+    }
+
+    public static final class Practice {
+      public static final double kAbsoluteEncoderOffsetFL = 2.316;
+      public static final double kAbsoluteEncoderOffsetFR = 1.510;
+      public static final double kAbsoluteEncoderOffsetBL = 1.058;
+      public static final double kAbsoluteEncoderOffsetBR = -1.101;
+    }
+
+    public static final class Competition {
+      public static final double kAbsoluteEncoderOffsetFL = 1.751;
+      public static final double kAbsoluteEncoderOffsetFR = -2.704;
+      public static final double kAbsoluteEncoderOffsetBL = -0.184;
+      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+    }
+
+    public static final class Unknown {
+      public static final double kAbsoluteEncoderOffsetFL = 0.0;
+      public static final double kAbsoluteEncoderOffsetFR = 0.0;
+      public static final double kAbsoluteEncoderOffsetBL = 0.0;
+      public static final double kAbsoluteEncoderOffsetBR = 0.0;
+    }
   }
 
   public static final class Climb {
@@ -146,7 +180,7 @@ public final class Constants {
     public static final double kPivotAngleConversion = 180 / 105.53;
 
     public static final double kAngleIntake = 0.0;
-    public static final double kAngleSubwooferSpeaker = 21.66; // TODO figure out real value did it
+    public static final double kAngleSubwooferSpeaker = 90.0; // TODO figure out real value did it
     public static final double kAngleAmp = 0.0; // TODO figure out real value
     public static final double kAngleTrap = 0.0; // TODO figure out real value
     public static final double kAtouSetAngelFromBlueOrBlackLineSpeaker = 35.838;

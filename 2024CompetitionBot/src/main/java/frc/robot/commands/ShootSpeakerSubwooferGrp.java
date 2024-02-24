@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
+
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
@@ -18,7 +19,7 @@ public class ShootSpeakerSubwooferGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPrepGrp(shooterSub),
-        //new ShooterFireNote(shooterSub), // TODO Create this command
+        new ShooterUpperAndLowerFeederCmd(shooterSub, true),
         new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub));
   }
 }

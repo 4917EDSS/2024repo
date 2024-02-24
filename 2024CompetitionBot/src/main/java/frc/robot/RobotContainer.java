@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.RobotSpecific;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
@@ -23,6 +24,7 @@ import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShootSpeakerSubwooferGrp;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
@@ -50,6 +52,7 @@ public class RobotContainer {
   private final IntakeSub m_intakeSub = new IntakeSub();
   private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
   private final VisionSub m_visionSub = new VisionSub();
+
 
   private boolean m_isRedAlliance = true;
 
@@ -137,6 +140,7 @@ public class RobotContainer {
 
     m_operatorController.square().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
     m_operatorController.share().onTrue(new ShooterPivotCmd(90, m_shooterSub));
+    m_operatorController.triangle().onTrue(new ShootSpeakerSubwooferGrp(m_shooterSub));
     /*
      * m_operatorController.square()
      * .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
@@ -194,6 +198,11 @@ public class RobotContainer {
     // m_operatorController.povRight()
     m_operatorController.povRight()
         .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromBlueOrBlackLineSpeaker, m_shooterSub));
+    // m_operatorController.povDown()
+    m_operatorController.povDown()
+        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
+
     // m_operatorController.povDown()
     m_operatorController.povDown()
         .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
