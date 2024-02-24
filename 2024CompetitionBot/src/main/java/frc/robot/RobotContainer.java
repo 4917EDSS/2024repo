@@ -34,6 +34,7 @@ import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 import frc.robot.commands.ShooterPivotCmd;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -190,7 +191,8 @@ public class RobotContainer {
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povRight()
-
+    m_operatorController.povRight()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromBlueOrBlackLineSpeaker, m_shooterSub));
     // m_operatorController.povDown()
     m_operatorController.povDown()
         .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),

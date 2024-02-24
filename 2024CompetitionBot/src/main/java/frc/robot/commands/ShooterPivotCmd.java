@@ -13,7 +13,7 @@ public class ShooterPivotCmd extends Command {
 
   // PID Controllers
 
-  private final PIDController m_pivotForwardPid = new PIDController(0.02, 0, 0); // TODO: Tune the Pivot PID
+  private final PIDController m_pivotForwardPid = new PIDController(0.04, 0, 0); // TODO: Tune the Pivot PID
 
   private final ShooterSub m_ShooterSub;
   private final double m_targetPivotPosition;
@@ -47,7 +47,7 @@ public class ShooterPivotCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double tolerance = 5;
+    double tolerance = 1;
 
     return Math.abs(m_targetPivotPosition - m_ShooterSub.getPivotAngle()) < tolerance;
   }

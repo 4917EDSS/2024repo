@@ -146,9 +146,10 @@ public final class Constants {
     public static final double kPivotAngleConversion = 180 / 105.53;
 
     public static final double kAngleIntake = 0.0;
-    public static final double kAngleSubwoofer = 21.66; // TODO figure out real value did it
+    public static final double kAngleSubwooferSpeaker = 21.66; // TODO figure out real value did it
     public static final double kAngleAmp = 0.0; // TODO figure out real value
     public static final double kAngleTrap = 0.0; // TODO figure out real value
+    public static final double kAtouSetAngelFromBlueOrBlackLineSpeaker = 35.838;
 
     public static final double kNoteUpperIntakePower = 0.12;
     public static final double kNoteLowerIntakePower = 0.25;
