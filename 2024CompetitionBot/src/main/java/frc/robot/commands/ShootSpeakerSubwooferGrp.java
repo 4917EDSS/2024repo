@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
@@ -18,8 +19,10 @@ public class ShootSpeakerSubwooferGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterPrepGrp(shooterSub),
-        new ShooterUpperAndLowerFeederCmd(shooterSub, true),
+        new ShooterPivotCmd(Constants.Shooter.kAngleSubwooferSpeaker, shooterSub),
+        new ShooterFlywheelCmd(shooterSub),
+        new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
+            Constants.Shooter.kNoteUpperIntakePower), shooterSub),
         new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub));
   }
 }

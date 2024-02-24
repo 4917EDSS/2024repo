@@ -10,12 +10,10 @@ import frc.robot.subsystems.ShooterSub;
 
 public class ShooterUpperAndLowerFeederCmd extends Command {
   private final ShooterSub m_shooterSub;
-  private final boolean m_forward;
 
   /** Creates a new ShooterUpperAndLowerFeederCmd. */
-  public ShooterUpperAndLowerFeederCmd(ShooterSub shooterSub, boolean forward) {
+  public ShooterUpperAndLowerFeederCmd(ShooterSub shooterSub) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_forward = forward;
     m_shooterSub = shooterSub;
     addRequirements(shooterSub);
   }
@@ -27,8 +25,7 @@ public class ShooterUpperAndLowerFeederCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
-    m_shooterSub.spinBothFeeders(0.10 * direction, 0.20 * direction);
+    m_shooterSub.spinBothFeeders(0.20, 0.40);
   }
 
   // Called once the command ends or is interrupted.

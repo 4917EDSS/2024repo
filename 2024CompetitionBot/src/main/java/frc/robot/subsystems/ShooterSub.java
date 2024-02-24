@@ -83,8 +83,8 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    m_flywheel.getEncoder().setVelocityConversionFactor(0.0259);
-    m_pivot.getEncoder().setVelocityConversionFactor(0.0259);
+    m_flywheel.getEncoder().setVelocityConversionFactor(1.0);
+    m_pivot.getEncoder().setVelocityConversionFactor(1.0);
     m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); //0.68
 
     m_ledSub = ledSub;
