@@ -24,7 +24,6 @@ public class ShooterFlywheelCmd extends Command {
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_ShooterSub = shooterSub;
-    addRequirements(shooterSub);
   }
 
 
