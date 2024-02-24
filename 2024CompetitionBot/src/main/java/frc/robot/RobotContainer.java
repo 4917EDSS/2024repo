@@ -32,6 +32,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.commands.ShooterPivotCmd;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -133,7 +134,7 @@ public class RobotContainer {
 
 
     m_operatorController.square().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
-
+    m_operatorController.share().onTrue(new ShooterPivotCmd(90, m_shooterSub));
     /*
      * m_operatorController.square()
      * .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
@@ -175,6 +176,7 @@ public class RobotContainer {
      * 
      * // m_operatorController.share()
      * 
+     * 
      * // m_operatorController.options()
      * 
      * // m_operatorController.PS()
@@ -182,6 +184,7 @@ public class RobotContainer {
      * // m_operatorController.touchpad()
      */
     // m_operatorController.povUp()
+
     m_operatorController.povUp()
         .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
