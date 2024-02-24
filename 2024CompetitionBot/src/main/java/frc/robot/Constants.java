@@ -151,12 +151,12 @@ public final class Constants {
     public static final double kAngleTrap = 0.0; // TODO figure out real value
     public static final double kAtouSetAngelFromBlueOrBlackLineSpeaker = 35.838;
 
-    public static final double kNoteUpperIntakePower = 0.12;
-    public static final double kNoteLowerIntakePower = 0.25;
+    public static final double kNoteUpperIntakePower = 0.50;
+    public static final double kNoteLowerIntakePower = 1.0;
   }
 
   public static final class Intake {
-    public static final double kNoteIntakePower = 0.25;
-    public static final double kNoteExpelPower = -0.25;
+    public static final double kNoteIntakePower = 1.0;
+    public static final double kNoteExpelPower = -1.0;
   }
 }
