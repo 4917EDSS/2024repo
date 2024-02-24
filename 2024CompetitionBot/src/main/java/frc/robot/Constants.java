@@ -64,6 +64,7 @@ public final class Constants {
   public final static class DioIds {
     public final static int kShooterNoteLimit = 0;
     public final static int kIntakeLimitPort = 1;
+    public final static int kHackIntakeLimitSwitch = 9;
   }
 
   public final static class PwmIds {
@@ -176,17 +177,20 @@ public final class Constants {
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
 
+    public static final double kPivotAngleConversion = 180 / 105.53;
+
     public static final double kAngleIntake = 0.0;
-    public static final double kAngleSubwoofer = 21.66; // TODO figure out real value did it
+    public static final double kAngleSubwooferSpeaker = 90.0; // TODO figure out real value did it
     public static final double kAngleAmp = 0.0; // TODO figure out real value
     public static final double kAngleTrap = 0.0; // TODO figure out real value
+    public static final double kAtouSetAngelFromBlueOrBlackLineSpeaker = 35.838;
 
-    public static final double kNoteUpperIntakePower = 0.12;
-    public static final double kNoteLowerIntakePower = 0.25;
+    public static final double kNoteUpperIntakePower = 0.50;
+    public static final double kNoteLowerIntakePower = 1.0;
   }
 
   public static final class Intake {
-    public static final double kNoteIntakePower = 0.25;
-    public static final double kNoteExpelPower = 0.25;
+    public static final double kNoteIntakePower = 1.0;
+    public static final double kNoteExpelPower = -1.0;
   }
 }

@@ -22,6 +22,9 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.DriverFieldRelativeDriveCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.commands.ShooterPivotCmd;
+import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShootSpeakerSubwooferGrp;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.subsystems.ClimbSub;
@@ -31,6 +34,8 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.commands.ShooterPivotCmd;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,7 +52,8 @@ public class RobotContainer {
   private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
   private final VisionSub m_visionSub = new VisionSub();
 
-  private boolean m_isRedAlliance = false;//true;
+
+  private boolean m_isRedAlliance = true;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -130,65 +136,79 @@ public class RobotContainer {
     m_operatorController.R3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
 
-    m_operatorController.square()
-        .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
-            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
 
-    m_operatorController.cross()
-        .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(-0.25),
-            () -> m_shooterSub.spinLowerFeeder(0.0), m_shooterSub));
-
-    // m_operatorController.circle()
-    m_operatorController.circle()
-        .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.25),
-            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
-
-    // m_operatorController.triangle()
-    m_operatorController.triangle()
-        .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
-            () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
-
-    // m_operatorController.L1()
-    m_operatorController.L1()
-        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(0.25),
-            () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
-
-    // m_operatorController.R1()
-    m_operatorController.R1()
-        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(0.25),
-            () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
-
-    // m_operatorController.L2()
-    m_operatorController.L2()
-        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-0.25),
-            () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
-
-    // m_operatorController.R2()
-    m_operatorController.R2()
-        .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-0.25),
-            () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
-
-    // m_operatorController.share()
-
-    // m_operatorController.options()
-
-    // m_operatorController.PS()
-
-    // m_operatorController.touchpad()
-
+    m_operatorController.square().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
+    m_operatorController.share().onTrue(new ShooterPivotCmd(90, m_shooterSub));
+    m_operatorController.triangle().onTrue(new ShootSpeakerSubwooferGrp(m_shooterSub));
+    /*
+     * m_operatorController.square()
+     * .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(-0.25),
+     * () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
+     * 
+     * m_operatorController.cross()
+     * .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(-0.25),
+     * () -> m_shooterSub.spinLowerFeeder(0.0), m_shooterSub));
+     * 
+     * // m_operatorController.circle()
+     * m_operatorController.circle()
+     * .onTrue(new StartEndCommand(() -> m_shooterSub.spinLowerFeeder(0.25),
+     * () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
+     * 
+     * // m_operatorController.triangle()
+     * m_operatorController.triangle()
+     * .onTrue(new StartEndCommand(() -> m_shooterSub.spinUpperFeeder(0.25),
+     * () -> m_shooterSub.spinUpperFeeder(0.0), m_shooterSub));
+     * 
+     * // m_operatorController.L1()
+     * m_operatorController.L1()
+     * .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(0.25),
+     * () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
+     * 
+     * // m_operatorController.R1()
+     * m_operatorController.R1()
+     * .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(0.25),
+     * () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
+     * 
+     * // m_operatorController.L2()
+     * m_operatorController.L2()
+     * .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerLeft(-0.25),
+     * () -> m_climbSub.setClimbPowerLeft(0.0), m_climbSub));
+     * 
+     * // m_operatorController.R2()
+     * m_operatorController.R2()
+     * .onTrue(new StartEndCommand(() -> m_climbSub.setClimbPowerRight(-0.25),
+     * () -> m_climbSub.setClimbPowerRight(0.0), m_climbSub));
+     * 
+     * // m_operatorController.share()
+     * 
+     * 
+     * // m_operatorController.options()
+     * 
+     * // m_operatorController.PS()
+     * 
+     * // m_operatorController.touchpad()
+     */
     // m_operatorController.povUp()
+
     m_operatorController.povUp()
-        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
+        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povRight()
+    m_operatorController.povRight()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromBlueOrBlackLineSpeaker, m_shooterSub));
+    // m_operatorController.povDown()
+    m_operatorController.povDown()
+        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
+            () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povDown()
     m_operatorController.povDown()
-        .onTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
+        .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povLeft()
+
 
   }
 
@@ -199,7 +219,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PathPlannerAuto("Note Pickup Auto"); // Takes in Auto file name
+    return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
   }
 
   /*

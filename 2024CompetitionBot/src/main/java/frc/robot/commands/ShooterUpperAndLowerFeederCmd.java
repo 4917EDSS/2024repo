@@ -8,15 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
-public class ShooterUpperFeederCmd extends Command {
-
+public class ShooterUpperAndLowerFeederCmd extends Command {
   private final ShooterSub m_shooterSub;
   private final boolean m_forward;
 
-  /** Creates a new FeederRollersCmd. */
-  public ShooterUpperFeederCmd(ShooterSub shooterSub, boolean forward) {
-    m_forward = forward;
+  /** Creates a new ShooterUpperAndLowerFeederCmd. */
+  public ShooterUpperAndLowerFeederCmd(ShooterSub shooterSub, boolean forward) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_forward = forward;
     m_shooterSub = shooterSub;
     addRequirements(shooterSub);
   }
@@ -29,7 +28,7 @@ public class ShooterUpperFeederCmd extends Command {
   @Override
   public void execute() {
     int direction = (m_forward == true) ? 1 : -1; //if moving forward keep going forward, else multiply direction to -1
-    m_shooterSub.spinUpperFeeder(0.10 * direction);
+    m_shooterSub.spinBothFeeders(0.10 * direction, 0.20 * direction);
   }
 
   // Called once the command ends or is interrupted.
@@ -39,7 +38,6 @@ public class ShooterUpperFeederCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //TODO probably need to check more sensors as this only checks one
     return m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel);
   }
 }
