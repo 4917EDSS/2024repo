@@ -12,7 +12,7 @@ public class ShooterPivotCmd extends Command {
 
   // PID Controllers
 
-  private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
+  private final PIDController m_pivotForwardPid = new PIDController(1.0, 0, 0); // TODO: Tune the pivot PID
 
   private final ShooterSub m_ShooterSub;
   private final double m_targetPivotPosition;

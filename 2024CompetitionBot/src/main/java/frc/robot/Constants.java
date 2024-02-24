@@ -62,6 +62,7 @@ public final class Constants {
   public final static class DioIds {
     public final static int kShooterNoteLimit = 0;
     public final static int kIntakeLimitPort = 1;
+    public final static int kHackIntakeLimitSwitch = 9;
   }
 
   public final static class PwmIds {
@@ -153,6 +154,6 @@ public final class Constants {
 
   public static final class Intake {
     public static final double kNoteIntakePower = 0.25;
-    public static final double kNoteExpelPower = 0.25;
+    public static final double kNoteExpelPower = -0.25;
   }
 }

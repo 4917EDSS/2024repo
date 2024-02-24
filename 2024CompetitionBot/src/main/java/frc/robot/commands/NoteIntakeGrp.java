@@ -20,9 +20,9 @@ public class NoteIntakeGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub),
-        new InstantCommand(() -> intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower)),
+        new InstantCommand(() -> intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower), intakeSub),
         new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-            Constants.Shooter.kNoteUpperIntakePower)),
+            Constants.Shooter.kNoteUpperIntakePower), shooterSub),
         new IntakeReverseWhenNoteInCmd(shooterSub, intakeSub),
         new PivotStopRollersWhenNoteInCmd(shooterSub));
   }
