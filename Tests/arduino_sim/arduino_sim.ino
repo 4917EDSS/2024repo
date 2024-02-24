@@ -1,49 +1,59 @@
-unsigned char packetData[8] = {0};
-unsigned int sensors[2] = {0,100};
-int dataLength = 4;
+unsigned char version = 0x01;
+unsigned char packetData[19] = {0};
+unsigned int sensors[8] = {0,100, 200, 300, 400, 500, 600, 700};  // Sensor data is mocked up as offset by 100 counters
+int dataLength = 16;
 
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(38400);
-  //Serial.begin(9600);
-  packetData[0] = 0xFF;
-  packetData[1] = 0xA5;
-  packetData[2] = dataLength + 1;
-
-//  pinMode(BUTTON_PIN, INPUT);
+  packetData[1] = 0xA5;	// Header byte to know this is the start of the packet
+  packetData[2] = version;
 } 
 
 
 void loop() {
   // put your main code here, to run repeatedly:
   unsigned char checksum = 0;
-  int index = 0;
+  int index = 3;
 
-  packetData[3] = sensors[0] & 0xFF;
-  packetData[4] = (sensors[0] >> 8) & 0xFF;
-  packetData[5] = sensors[1] & 0xFF;
-  packetData[6] = (sensors[1] >> 8) & 0xFF;
+  // Wait until command is received from robotRIO
+  // Serial.Read()?
+  
+  // Now send packet
+  packetData[index++] = sensors[0] & 0xFF;
+  packetData[index++] = (sensors[0] >> 8) & 0xFF;
+  packetData[index++] = sensors[1] & 0xFF;
+  packetData[index++] = (sensors[1] >> 8) & 0xFF;
+  packetData[index++] = sensors[2] & 0xFF;
+  packetData[index++] = (sensors[2] >> 8) & 0xFF;
+  packetData[index++] = sensors[3] & 0xFF;
+  packetData[index++] = (sensors[3] >> 8) & 0xFF;
+  packetData[index++] = sensors[4] & 0xFF;
+  packetData[index++] = (sensors[4] >> 8) & 0xFF;
+  packetData[index++] = sensors[5] & 0xFF;
+  packetData[index++] = (sensors[5] >> 8) & 0xFF;
+  packetData[index++] = sensors[6] & 0xFF;
+  packetData[index++] = (sensors[6] >> 8) & 0xFF;
+  packetData[index++] = sensors[7] & 0xFF;
+  packetData[index++] = (sensors[7] >> 8) & 0xFF;
 
-  // Checksum the header, length and data bytes but not the checksum byte
+  // Checksum the header, version and data bytes but not the checksum byte
   // Checksum is 8 bits.
-  for(index = 3; index < dataLength + 3; index++) {
+  for(index = 0; index < dataLength + 2; index++) {
     checksum += packetData[index];
   }
-  packetData[7] = checksum;
-  //packetData[7] = 0x00;
+  packetData[18] = checksum;
 
   // Increment fake data
   sensors[0]++;
   sensors[1]++;
+  sensors[2]++;
+  sensors[3]++;
+  sensors[4]++;
+  sensors[5]++;
+  sensors[6]++;
+  sensors[7]++;
 
-  //unsigned char myBite = 0xA5;
-  
-  //while(digitalRead(BUTTON_PIN) == HIGH);
-   Serial.write(packetData, dataLength + 4);
-  //Serial.write(&packetData[0],1); //1010110101
-  //Serial.write(&packetData[1],1); //1010110101
-  //Serial.write(&packetData[2],1); //1010110101
-  //delay(1); //would like 260 micro sec  0.000260
-  //while(digitalRead(BUTTON_PIN) == LOW);
+  Serial.write(packetData, dataLength + 3);
 }

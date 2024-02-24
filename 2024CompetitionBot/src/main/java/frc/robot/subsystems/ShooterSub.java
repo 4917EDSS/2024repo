@@ -13,6 +13,7 @@ import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
@@ -51,6 +52,7 @@ public class ShooterSub extends SubsystemBase {
       new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
+  private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch);
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
@@ -101,12 +103,17 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
     m_noteWasIn = false;
     resetPivot();
+    spinFlywheel(0);
+    spinBothFeeders(0, 0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     updateShuffleBoard();
+    // TODO remove this hack when we have proper sensors
+    m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
+    m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
 
     // TODO:  This might be easier to do inside the commands that pivot the shooter
     if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
@@ -120,16 +127,18 @@ public class ShooterSub extends SubsystemBase {
     // If note wasn't in last time and note is in now
     // Flash green
     // Set orange
-    if(!m_noteWasIn && isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
-      m_ledSub.Flash(LedColour.GREEN);
-      m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
-      m_noteWasIn = true;
-    } else if(m_noteWasIn && !isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
-      // If note was in and it's no longer in
-      // Set green
-      m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
-      m_noteWasIn = false;
-    }
+
+    // Index out of bounds in LedSub
+    // if(!m_noteWasIn && isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    //   m_ledSub.Flash(LedColour.GREEN);
+    //   m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+    //   m_noteWasIn = true;
+    // } else if(m_noteWasIn && !isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    //   // If note was in and it's no longer in
+    //   // Set green
+    //   m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
+    //   m_noteWasIn = false;
+    // }
   }
 
   private void updateShuffleBoard() {
