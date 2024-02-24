@@ -150,6 +150,8 @@ public final class Constants {
     public static final double kAngleAmp = 0.0; // TODO figure out real value
     public static final double kAngleTrap = 0.0; // TODO figure out real value
     public static final double kAtouSetAngelFromBlueOrBlackLineSpeaker = 35.838;
+    public static final double kAtouSetAngelFromstageSafeZoneSpeaker = 58.276;
+    public static final double kAtouSetAngelFromLongDistancesSpeaker = 72.522;
 
     public static final double kNoteUpperIntakePower = 0.50;
     public static final double kNoteLowerIntakePower = 1.0;

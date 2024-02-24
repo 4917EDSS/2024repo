@@ -33,6 +33,7 @@ import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 import frc.robot.commands.ShooterPivotCmd;
+import frc.robot.commands.MovingAngleCmd;
 
 
 /**
@@ -199,7 +200,13 @@ public class RobotContainer {
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povLeft()
+    m_operatorController.povLeft()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromstageSafeZoneSpeaker, m_shooterSub));
 
+    m_operatorController.share()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromLongDistancesSpeaker, m_shooterSub));
+
+    //m_operatorController.share().onTrue(new MovingAngle(m_visionSub, m_shooterSub));
 
   }
 
