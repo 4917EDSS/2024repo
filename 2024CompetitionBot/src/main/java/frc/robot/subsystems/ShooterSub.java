@@ -120,7 +120,7 @@ public class ShooterSub extends SubsystemBase {
       m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
     }
 
-    if(getPivotAngle() == Constants.Shooter.kAngleSubwoofer) {
+    if(getPivotAngle() == Constants.Shooter.kAngleSubwooferSpeaker) {
       m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
     }
 

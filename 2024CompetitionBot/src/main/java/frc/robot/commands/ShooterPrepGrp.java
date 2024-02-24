@@ -17,7 +17,7 @@ public class ShooterPrepGrp extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterPivotCmd(Constants.Shooter.kAngleSubwoofer, shooterSub),
+        new ShooterPivotCmd(Constants.Shooter.kAngleSubwooferSpeaker, shooterSub),
         new ShooterFlywheelCmd(shooterSub));
   }
 }
