@@ -69,7 +69,7 @@ public class ShooterSub extends SubsystemBase {
     m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
-    m_pivot.setInverted(false);
+    m_pivot.setInverted(true);
 
     m_flywheel.setIdleMode(IdleMode.kCoast);
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
@@ -83,7 +83,7 @@ public class ShooterSub extends SubsystemBase {
 
     m_flywheel.getEncoder().setVelocityConversionFactor(0.0259);
     m_pivot.getEncoder().setVelocityConversionFactor(0.0259);
-    m_pivot.getEncoder().setPositionConversionFactor(0.68);
+    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); //0.68
 
     m_ledSub = ledSub;
 
@@ -100,6 +100,7 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
     m_noteWasIn = false;
+    resetPivot();
   }
 
   @Override

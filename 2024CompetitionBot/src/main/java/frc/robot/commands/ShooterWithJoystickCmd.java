@@ -27,8 +27,8 @@ public class ShooterWithJoystickCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSub.spinFlywheel(m_controller.getRightY());
-    m_shooterSub.movePivot(m_controller.getLeftY());
+    m_shooterSub.spinFlywheel(-m_controller.getRightY());
+    m_shooterSub.movePivot(-m_controller.getLeftY());
   }
 
   // Called once the command ends or is interrupted.
