@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.RobotSpecific;
 import frc.robot.commands.ClimbCmdSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
@@ -36,7 +37,7 @@ import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 import frc.robot.commands.ShooterPivotCmd;
-import frc.robot.commands.ShooterShootCmd;
+import frc.robot.commands.MovingAngleCmd;
 
 
 /**
@@ -53,6 +54,7 @@ public class RobotContainer {
   private final IntakeSub m_intakeSub = new IntakeSub();
   private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
   private final VisionSub m_visionSub = new VisionSub();
+
 
   private boolean m_isRedAlliance = true;
 
@@ -211,7 +213,13 @@ public class RobotContainer {
             () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
     // m_operatorController.povLeft()
+    m_operatorController.povLeft()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromstageSafeZoneSpeaker, m_shooterSub));
 
+    m_operatorController.share()
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAtouSetAngelFromLongDistancesSpeaker, m_shooterSub));
+
+    //m_operatorController.share().onTrue(new MovingAngle(m_visionSub, m_shooterSub));
 
   }
 

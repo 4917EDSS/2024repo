@@ -45,6 +45,7 @@ import frc.robot.Constants;
 
 
 public class DrivetrainSub extends SubsystemBase {
+
   // TODO: Remove both classes and all relating functions when trajectory is finished
   public class Point {
     public Pose2d point;
@@ -111,7 +112,7 @@ public class DrivetrainSub extends SubsystemBase {
   private final GenericEntry m_sbYPOS, m_sbXPOS, m_sbTargetXPOS, m_sbTargetYPOS, m_sbTargetROT, m_sbGYRO, m_sbYaw,
       m_sbRoll, m_sbPitch, m_sbFLEncoder,
       m_sbFREncoder, m_sbBLEncoder, m_sbBREncoder, m_sbRotKP, m_sbRotKD, m_sbRotThreshold, m_sbPathKP, m_sbPathKD,
-      m_sbPathThreshold;
+      m_sbPathThreshold, m_sbSerialNumber, m_sbRobotName;
 
 
   // PID value setting
@@ -131,32 +132,71 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_drivePIDr = new PIDController(0.05, 0.0, 0.0);
 
   // Swerve Modules that control the motors
-  private final SwerveModule m_frontLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
-          Constants.Drivetrain.kAbsoluteEncoderOffsetFL);
-  private final SwerveModule m_frontRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR,
-          Constants.Drivetrain.kAbsoluteEncoderOffsetFR);
-  private final SwerveModule m_backLeft =
-      new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL,
-          Constants.Drivetrain.kAbsoluteEncoderOffsetBL);
-  private final SwerveModule m_backRight =
-      new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
-          Constants.Drivetrain.kAbsoluteEncoderOffsetBR);
+  private final SwerveModule m_frontLeft;
+  private final SwerveModule m_frontRight;
+  private final SwerveModule m_backLeft;
+  private final SwerveModule m_backRight;
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Kinematics controls movement, Odemetry tracks position
-  public final SwerveDriveKinematics m_kinematics =
-      new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+  public final SwerveDriveKinematics m_kinematics;
 
-  private final SwerveDriveOdometry m_odometry =
-      new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
-          m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()});
+  private final SwerveDriveOdometry m_odometry;
 
 
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
+    String robotName;
+    double AbsoluteEncoderOffsetFL;
+    double AbsoluteEncoderOffsetFR;
+    double AbsoluteEncoderOffsetBL;
+    double AbsoluteEncoderOffsetBR;
+    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PrototypeSerialNumber)) {
+      robotName = "Prototype";
+      AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetFL;
+      AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetFR;
+      AbsoluteEncoderOffsetBL = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetBL;
+      AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetBR;
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+      robotName = "Practice";
+      AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetFL;
+      AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetFR;
+      AbsoluteEncoderOffsetBL = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetBL;
+      AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetBR;
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
+      robotName = "Competition";
+      AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Competition.kAbsoluteEncoderOffsetFL;
+      AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Competition.kAbsoluteEncoderOffsetFR;
+      AbsoluteEncoderOffsetBL = Constants.RobotSpecific.Competition.kAbsoluteEncoderOffsetBL;
+      AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Competition.kAbsoluteEncoderOffsetBR;
+    } else {
+      robotName = "Unknown";
+      AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Unknown.kAbsoluteEncoderOffsetFL;
+      AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Unknown.kAbsoluteEncoderOffsetFR;
+      AbsoluteEncoderOffsetBL = Constants.RobotSpecific.Unknown.kAbsoluteEncoderOffsetBL;
+      AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Unknown.kAbsoluteEncoderOffsetBR;
+    }
+
+    m_frontLeft =
+        new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
+            AbsoluteEncoderOffsetFL);
+    m_frontRight =
+        new SwerveModule(Constants.CanIds.kDriveMotorFR, Constants.CanIds.kSteeringMotorFR, Constants.CanIds.kEncoderFR,
+            AbsoluteEncoderOffsetFR);
+    m_backLeft =
+        new SwerveModule(Constants.CanIds.kDriveMotorBL, Constants.CanIds.kSteeringMotorBL, Constants.CanIds.kEncoderBL,
+            AbsoluteEncoderOffsetBL);
+    m_backRight =
+        new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
+            AbsoluteEncoderOffsetBR);
+    m_kinematics =
+        new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+    m_odometry =
+        new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
+            m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(),
+            m_backRight.getPosition()});
+
     m_gyro.reset();
     m_gyro.setAngleAdjustment(90);
     m_odometryPIDx.setTolerance(kThreshold); // In meters
@@ -192,6 +232,10 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbPathKP = m_shuffleboardTab.add("Path kP", 0.0).getEntry();
     m_sbPathKD = m_shuffleboardTab.add("Path kD", 0.0).getEntry();
     m_sbPathThreshold = m_shuffleboardTab.add("Path Threshold", 0.0).getEntry();
+    m_sbSerialNumber = m_shuffleboardTab.add("Serial Number", "None").getEntry();
+    m_sbRobotName = m_shuffleboardTab.add("Robot Name", "None").getEntry();
+
+    m_sbRobotName.setString(robotName);
 
     boolean flipTeamSide = false; // TODO: Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
 
@@ -235,6 +279,7 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
     m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
     m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
+    m_sbSerialNumber.setString(Constants.Drivetrain.serialNumber);
 
     kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
     kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
