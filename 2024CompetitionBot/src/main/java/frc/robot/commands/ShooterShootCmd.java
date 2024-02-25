@@ -36,9 +36,9 @@ public class ShooterShootCmd extends Command {
   @Override
   public void execute() {
 
-
-    double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    m_shooterSub.spinFlywheel(driveOutput);
+    // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
+    // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
+    // m_shooterSub.spinFlywheel(driveOutput);
     m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
         Constants.Shooter.kNoteUpperIntakePower);
   }

@@ -14,23 +14,28 @@ import frc.robot.subsystems.ShooterSub;
 public class ShooterFlywheelCmd extends Command {
 
   private final ShooterSub m_shooterSub;
+  private final double m_targetShooterVelocity;
   private Instant start;
 
   // PID Controllers
   private final PIDController m_FlyWheelPID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
 
   /** Creates a new FlywheelCmd. */
-  public ShooterFlywheelCmd(ShooterSub shooterSub) {
+  public ShooterFlywheelCmd(double targetShooterVelocity, ShooterSub shooterSub) {
 
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooterSub = shooterSub;
+    m_targetShooterVelocity = targetShooterVelocity;
   }
 
 
   // Called when the command is initially scheduled. 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    start = Instant.now();
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -44,7 +49,7 @@ public class ShooterFlywheelCmd extends Command {
      * 
      * 
      */
-    double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
+    double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), m_targetShooterVelocity); //4200 is a target velocity we don't know what it is
     m_shooterSub.spinFlywheel(driveOutput);
   }
 

@@ -20,7 +20,7 @@ public class ShootSpeakerSubwooferGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleSubwooferSpeaker, shooterSub),
-        new ShooterFlywheelCmd(shooterSub),
+        new ShooterFlywheelCmd(4200, shooterSub),
         new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
             Constants.Shooter.kNoteUpperIntakePower), shooterSub),
         new ShooterPivotCmd(Constants.Shooter.kAngleIntake, shooterSub));
