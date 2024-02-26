@@ -14,13 +14,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterPrepGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
-  public ShooterPrepGrp(ShooterSub shooterSub) {
+  public ShooterPrepGrp(ShooterSub shooterSub, double pivotPosition) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterPivotCmd(Constants.Shooter.kAngleSubwooferSpeaker, shooterSub),
-        new ShooterFlywheelCmd(4200, shooterSub),
-        new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-            Constants.Shooter.kNoteUpperIntakePower), shooterSub));
+        new ShooterPivotCmd(pivotPosition, shooterSub));
+    // new ShooterFlywheelCmd());
   }
 }
