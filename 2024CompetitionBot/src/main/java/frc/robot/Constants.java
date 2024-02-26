@@ -138,10 +138,10 @@ public final class Constants {
     }
 
     public static final class Practice {
-      public static final double kAbsoluteEncoderOffsetFL = 2.316;
-      public static final double kAbsoluteEncoderOffsetFR = 1.510;
-      public static final double kAbsoluteEncoderOffsetBL = 1.058;
-      public static final double kAbsoluteEncoderOffsetBR = -1.101;
+      public static final double kAbsoluteEncoderOffsetFL = 2.359;
+      public static final double kAbsoluteEncoderOffsetFR = 1.472;
+      public static final double kAbsoluteEncoderOffsetBL = 1.056;
+      public static final double kAbsoluteEncoderOffsetBR = -1.072;
     }
 
     public static final class Competition {
