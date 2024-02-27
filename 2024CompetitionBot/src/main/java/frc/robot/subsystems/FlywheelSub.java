@@ -65,6 +65,7 @@ public class FlywheelSub extends SubsystemBase {
     if(Math.abs(getFlywheelVelocityL() - Velocity) < m_FlywheelTolerance) {
       return true;
     }
+    return false;
   }
 
   public double getFlywheelVelocityR() {
