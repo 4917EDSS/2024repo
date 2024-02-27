@@ -196,4 +196,8 @@ public final class Constants {
     public static final double kNoteIntakePower = 1.0;
     public static final double kNoteExpelPower = -1.0;
   }
+
+  public static final class Flywheel {
+    public static final double kFlywheelShootPower = 4200;
+  }
 }
