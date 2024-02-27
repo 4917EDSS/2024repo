@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.time.Duration;
+import java.time.Instant;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
@@ -13,6 +15,7 @@ import frc.robot.subsystems.ShooterSub;
 
 public class ShooterAmpShotCmd extends Command {
   private final ShooterSub m_shooterSub;
+  private Instant start;
 
 
   public ShooterAmpShotCmd(ShooterSub shooterSub) {
@@ -38,6 +41,11 @@ public class ShooterAmpShotCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtRoller)) {
+      start = Instant.now();
+    }
+    Instant end = Instant.now();
+    Duration timeElapsed = Duration.between(start, end);
+    return timeElapsed.toSeconds() > 3.0;
   }
 }
