@@ -1,0 +1,44 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6619978954243629,
+      "y": 4.485794114445372
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "StartPositionToMiddleNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToNoteInfrontOfSpeaker"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToNoteInfrontOfAmp"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
