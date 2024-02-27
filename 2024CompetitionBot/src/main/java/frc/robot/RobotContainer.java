@@ -38,6 +38,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.MovingAngleCmd;
 
@@ -56,6 +57,7 @@ public class RobotContainer {
         private final IntakeSub m_intakeSub = new IntakeSub();
         private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
         private final VisionSub m_visionSub = new VisionSub();
+        private final FlywheelSub m_flywheelSub = new FlywheelSub();
 
 
         private boolean m_isRedAlliance = true;
@@ -70,7 +72,8 @@ public class RobotContainer {
         public RobotContainer() {
                 m_drivetrainSub.setDefaultCommand(
                                 new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
-                m_shooterSub.setDefaultCommand(new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
+                m_shooterSub.setDefaultCommand(
+                                new ShooterWithJoystickCmd(m_operatorController, m_shooterSub, m_intakeSub));
 
                 // Configure the button bindings
                 configureBindings();
@@ -149,10 +152,13 @@ public class RobotContainer {
                 m_operatorController.share().onTrue(new ShooterPivotCmd(90, m_shooterSub));
 
                 m_operatorController.square()
-                                .onTrue(new ShooterPrepGrp(m_shooterSub, Constants.Shooter.kAngleAutoAlign));
-                m_operatorController.povDown().onTrue(new ShooterPrepGrp(m_shooterSub, Constants.Shooter.kAngleAmp));
+                                .onTrue(new ShooterPrepGrp(m_shooterSub, m_flywheelSub,
+                                                Constants.Shooter.kAngleAutoAlign));
+                m_operatorController.povDown()
+                                .onTrue(new ShooterPrepGrp(m_shooterSub, m_flywheelSub, Constants.Shooter.kAngleAmp));
                 m_operatorController.cross()
-                                .onTrue(new ShooterPrepGrp(m_shooterSub, Constants.Shooter.kAngleSubwooferSpeaker));
+                                .onTrue(new ShooterPrepGrp(m_shooterSub, m_flywheelSub,
+                                                Constants.Shooter.kAngleSubwooferSpeaker));
 
                 m_operatorController.circle().onTrue(new ShooterShootCmd(m_shooterSub));
                 /*
