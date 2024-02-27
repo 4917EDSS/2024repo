@@ -190,10 +190,16 @@ public final class Constants {
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.5;
+    public static final double kNoteLowerAmpShotPower = -0.5;
+    public static final double kNoteUpperAmpShotPower = -0.5;
   }
 
   public static final class Intake {
     public static final double kNoteIntakePower = 1.0;
     public static final double kNoteExpelPower = -1.0;
+  }
+
+  public static final class Flywheel {
+    public static final double kFlywheelShootPower = 4200;
   }
 }

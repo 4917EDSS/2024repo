@@ -6,52 +6,46 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 
-public class ShooterShootCmd extends Command {
+public class ShooterAmpShotCmd extends Command {
   private final ShooterSub m_shooterSub;
   private Instant start;
 
-  /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub) {
+  public ShooterAmpShotCmd(ShooterSub shooterSub) {
     m_shooterSub = shooterSub;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    start = Instant.now();
+    m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerAmpShotPower, Constants.Shooter.kNoteUpperAmpShotPower);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-
-
-    // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
-    // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    // m_shooterSub.spinFlywheel(driveOutput);
-    m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-        Constants.Shooter.kNoteUpperIntakePower);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // THIS COMMAND IS PURPOSELY TO BE INTERRUPTED
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtRoller)) {
       start = Instant.now();
     }
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 0.5;
+    return timeElapsed.toSeconds() > 3.0;
   }
 }

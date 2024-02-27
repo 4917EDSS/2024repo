@@ -44,8 +44,8 @@ public class ShooterSub extends SubsystemBase {
       new SerialPort(Constants.Arduino.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
-  private final CANSparkMax m_flywheel =
-      new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
+  // private final CANSparkMax m_flywheel =
+  //new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
       new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_lowerFeeder =
@@ -68,22 +68,22 @@ public class ShooterSub extends SubsystemBase {
 
   public ShooterSub(LedSub ledSub) {
     // When true, positive power will turn motor backwards, negitive forwards.
-    m_flywheel.setInverted(false);
+    // m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(true);
 
-    m_flywheel.setIdleMode(IdleMode.kCoast);
+    //m_flywheel.setIdleMode(IdleMode.kCoast);
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
     m_lowerFeeder.setIdleMode(IdleMode.kBrake);
     m_pivot.setIdleMode(IdleMode.kBrake);
 
-    m_flywheel.setSmartCurrentLimit(40);
+    // m_flywheel.setSmartCurrentLimit(40);
     m_upperFeeder.setSmartCurrentLimit(40);
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    m_flywheel.getEncoder().setVelocityConversionFactor(1.0);
+    // m_flywheel.getEncoder().setVelocityConversionFactor(1.0);
     m_pivot.getEncoder().setVelocityConversionFactor(1.0);
     m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); //0.68
 
@@ -103,7 +103,7 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
     m_noteWasIn = false;
     resetPivot();
-    spinFlywheel(0);
+    //spinFlywheel(0);
     spinBothFeeders(0, 0);
   }
 
@@ -142,17 +142,17 @@ public class ShooterSub extends SubsystemBase {
   }
 
   private void updateShuffleBoard() {
-    m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
+    //m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
     m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
-    m_shooterflywheelPower.setDouble(m_flywheel.get());
+    // m_shooterflywheelPower.setDouble(m_flywheel.get());
     m_shooterPivotPower.setDouble(m_pivot.get());
     m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
   }
 
-  public void spinFlywheel(double power) {
-    m_flywheel.set(power);
-  }
+  // public void spinFlywheel(double power) {
+  // m_flywheel.set(power);
+  // }
 
   public void spinUpperFeeder(double power) {
     m_upperFeeder.set(power);
@@ -175,9 +175,9 @@ public class ShooterSub extends SubsystemBase {
     m_pivot.getEncoder().setPosition(0);
   }
 
-  public double getFlywheelVelocity() {
-    return m_flywheel.getEncoder().getVelocity();
-  }
+  //public double getFlywheelVelocity() {
+  //return m_flywheel.getEncoder().getVelocity();
+  //}
 
   public double getPivotAngle() {
     return m_pivot.getEncoder().getPosition();
