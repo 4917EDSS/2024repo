@@ -6,8 +6,6 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
@@ -15,11 +13,8 @@ import frc.robot.subsystems.ShooterSub;
 public class ShooterShootCmd extends Command {
   private final ShooterSub m_shooterSub;
   private Instant start;
-  private boolean isNotDoneOnce = true;
-  /** Creates a new ShooterShootCmd. */
 
-  // PID Controllers
-  private final PIDController m_FlyWheelPID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
+  /** Creates a new ShooterShootCmd. */
 
   public ShooterShootCmd(ShooterSub shooterSub) {
     m_shooterSub = shooterSub;
@@ -29,12 +24,13 @@ public class ShooterShootCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    start = Instant.now();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
 
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
     // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
@@ -51,12 +47,11 @@ public class ShooterShootCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(!m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel) && isNotDoneOnce) {
+    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
       start = Instant.now();
-      isNotDoneOnce = false;
     }
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 10;
+    return timeElapsed.toSeconds() > 0.5;
   }
 }

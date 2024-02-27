@@ -8,50 +8,28 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.FlywheelSub;
 
 public class ShooterFlywheelCmd extends Command {
 
-  private final ShooterSub m_shooterSub;
-  private final double m_targetShooterVelocity;
-  private Instant start;
-
-  // PID Controllers
-  private final PIDController m_FlyWheelPID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
+  private final FlywheelSub m_flywheelSub;
 
   /** Creates a new FlywheelCmd. */
-  public ShooterFlywheelCmd(double targetShooterVelocity, ShooterSub shooterSub) {
+  public ShooterFlywheelCmd(FlywheelSub flywheelSub) {
+    m_flywheelSub = flywheelSub;
 
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_shooterSub = shooterSub;
-    m_targetShooterVelocity = targetShooterVelocity;
+    addRequirements(flywheelSub);
   }
-
 
   // Called when the command is initially scheduled. 
   @Override
   public void initialize() {
-    start = Instant.now();
-
+    m_flywheelSub.EnableFlywheel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    /*
-     * Step 1: Set target velocity for flywheel speed + inverted or forward
-     * Step 2: Start flywheel
-     * note - Step 1 and 2 might need to be swapped
-     * Step 3: check if note is there (to see if note has left the storage) if it has go step 4, else continue
-     * Step 4: Stop fly wheel
-     * 
-     * 
-     */
-    double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), m_targetShooterVelocity); //4200 is a target velocity we don't know what it is
-    m_shooterSub.spinFlywheel(driveOutput);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -62,8 +40,6 @@ public class ShooterFlywheelCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Instant end = Instant.now();
-    Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 2;
+    return m_flywheelSub.isAtTargetVelocity();
   }
 }
