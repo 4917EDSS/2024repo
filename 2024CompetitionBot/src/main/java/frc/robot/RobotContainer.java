@@ -28,6 +28,7 @@ import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
@@ -205,9 +206,7 @@ public class RobotContainer {
                  */
                 // m_operatorController.povUp()
 
-                m_operatorController.povUp()
-                                .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(0.25),
-                                                () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
+                m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub));
 
                 // m_operatorController.povRight()
                 m_operatorController.povRight()
