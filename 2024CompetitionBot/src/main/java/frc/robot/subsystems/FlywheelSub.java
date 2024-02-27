@@ -23,6 +23,8 @@ public class FlywheelSub extends SubsystemBase {
 
   private final int m_FlywheelTolerance = 5;
 
+  private boolean m_isFlywheelEnabled = false;
+
 
   public FlywheelSub() {
     m_flywheelR.setInverted(false);
@@ -42,27 +44,28 @@ public class FlywheelSub extends SubsystemBase {
 
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed. 
     // only using left Flywheel velocity. Todo add a right velocity
-    double driveOutput = m_FlyWheelPID.calculate(getFlywheelVelocityL(), 4200); //10 is a target velocity we don't know what it is 
-
-    EnableFlywheel(driveOutput);
+    if(m_isFlywheelEnabled) {
+      double driveOutput = m_FlyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootPower); //4200 is a target velocity we don't know what it is 
+      m_flywheelR.set(driveOutput);
+      m_flywheelL.set(driveOutput);
+    } else {
+      m_flywheelR.set(0);
+      m_flywheelL.set(0);
+    }
   }
 
-  public void EnableFlywheel(double power) {
-    m_flywheelR.set(power);
-    m_flywheelL.set(power);
-
+  public void EnableFlywheel() {
+    m_isFlywheelEnabled = true;
   }
 
   public void DisableFlywheel() {
-    m_flywheelR.set(0);
-    m_flywheelL.set(0);
-
+    m_isFlywheelEnabled = false;
   }
 
 
-  public boolean isAtTargetVelocity(double Velocity) {
+  public boolean isAtTargetVelocity() {
 
-    if(Math.abs(getFlywheelVelocityL() - Velocity) < m_FlywheelTolerance) {
+    if(Math.abs(getFlywheelVelocityL() - Constants.Flywheel.kFlywheelShootPower) < m_FlywheelTolerance) {
       return true;
     }
     return false;
