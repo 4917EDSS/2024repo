@@ -200,6 +200,8 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootPower = 4200;
+    public static final double kFlywheelShootVelocity = 4200;
+    public static final double ks = 0.02;
+    public static final double kv = 0.2;
   }
 }

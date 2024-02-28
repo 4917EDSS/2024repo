@@ -42,8 +42,8 @@ public class ShooterWithJoystickCmd extends Command {
       intakePower = 0;
     }
     // square power value to give more control when moving slower
-    pivotPower *= pivotPower;
-    intakePower *= intakePower;
+    pivotPower *= Math.abs(pivotPower);
+    intakePower *= Math.abs(intakePower);
 
     // set movePivot with the new power
     m_shooterSub.movePivot(pivotPower);
