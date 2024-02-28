@@ -180,13 +180,13 @@ public final class Constants {
 
     public static final double kPivotAngleConversion = 180 / 105.53;
 
-    public static final double kAngleIntake = 0.0;
-    public static final double kAngleSubwooferSpeaker = 90.0; // TODO figure out real value did it
-    public static final double kAngleAmp = 0.0; // TODO figure out real value
-    public static final double kAngleTrap = 0.0; // TODO figure out real value
-    public static final double kAngleAutoAlign = 35.838;
-    public static final double kAutoSetAngleFromStageSafeZoneSpeaker = 58.276;
-    public static final double kAutoSetAngleFromLongDistancesSpeaker = 72.522;
+    public static final double kAngleIntake = 135.0;
+    public static final double kAngleSubwooferSpeaker = 45.0; // TODO figure out real value did it
+    public static final double kAngleAmp = 270.0; // TODO figure out real value
+    public static final double kAngleTrap = 270.0; // TODO figure out real value
+    public static final double kAngleAutoLine = 35.838;
+    public static final double kAnglePodium = 58.276;
+    public static final double kAngleWingLine = 72.522;
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.5;
