@@ -117,7 +117,7 @@ public final class Constants {
   public final static class Drivetrain {
     // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
     public static final String serialNumber = System.getenv("serialnum");
-    // Translation PID, Rotation PID, Max module speed (m/s), Wheel diameter, default path config
+    // Translation PID, Rotation PID, Max module speed (m/s), Robot radius, default path config
     // TODO: These PIDs should be tuned
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(0.5, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,

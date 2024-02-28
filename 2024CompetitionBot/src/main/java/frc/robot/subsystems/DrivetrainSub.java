@@ -98,7 +98,7 @@ public class DrivetrainSub extends SubsystemBase {
   private double m_orientationOffsetDegrees = 0;
 
   // Speed multipliers
-  public static final double kMaxDriveSpeed = 4; // In m/s
+  public static final double kMaxDriveSpeed = 2.0;//4.0; // In m/s
   public static final double kMaxTurnSpeed = 9; // was 50
 
   //public static final double kMaxSpeed = 10000.0;// meters per second
@@ -281,6 +281,11 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
     m_sbSerialNumber.setString(Constants.Drivetrain.serialNumber);
 
+    ChassisSpeeds currentSpeeds = getChassisSpeeds();
+    double vx = currentSpeeds.vxMetersPerSecond;
+    double vy = currentSpeeds.vyMetersPerSecond;
+    double currentSpeed = Math.sqrt(vx * vx + vy * vy);
+    SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
     kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
     kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
     kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
