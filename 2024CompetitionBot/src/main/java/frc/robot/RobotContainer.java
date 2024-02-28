@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -81,6 +82,8 @@ public class RobotContainer {
 
                 // TODO: Add autonomous commands here
                 NamedCommands.registerCommand("ExampleAuto", new PrintCommand("RUNNING A PATH COMMAND!"));
+
+                SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
         }
 
         /**
@@ -154,7 +157,7 @@ public class RobotContainer {
 
                 m_operatorController.square()
                                 .onTrue(new ShooterPrepGrp(m_shooterSub, m_flywheelSub,
-                                                Constants.Shooter.kAngleAutoAlign));
+                                                Constants.Shooter.kAngleAutoLine));
                 m_operatorController.povDown()
                                 .onTrue(new ShooterPrepGrp(m_shooterSub, m_flywheelSub, Constants.Shooter.kAngleAmp));
                 m_operatorController.cross()
@@ -216,7 +219,7 @@ public class RobotContainer {
 
                 // m_operatorController.povRight()
                 m_operatorController.povRight()
-                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAutoAlign,
+                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAutoLine,
                                                 m_shooterSub));
                 // m_operatorController.povDown()
                 m_operatorController.povDown()
@@ -230,11 +233,11 @@ public class RobotContainer {
 
                 // m_operatorController.povLeft()
                 m_operatorController.povLeft()
-                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAutoSetAngleFromStageSafeZoneSpeaker,
+                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAnglePodium,
                                                 m_shooterSub));
 
                 m_operatorController.share()
-                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAutoSetAngleFromLongDistancesSpeaker,
+                                .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleWingLine,
                                                 m_shooterSub));
 
                 //m_operatorController.share().onTrue(new MovingAngle(m_visionSub, m_shooterSub));
