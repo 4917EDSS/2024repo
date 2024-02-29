@@ -5,10 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants;
-import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.FlywheelSub;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.ShooterSub;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
