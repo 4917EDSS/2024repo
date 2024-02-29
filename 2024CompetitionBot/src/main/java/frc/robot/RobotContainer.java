@@ -153,6 +153,7 @@ public class RobotContainer {
 
 
                 m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
+                m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
                 m_operatorController.share().onTrue(new ShooterPivotCmd(90, m_shooterSub));
 
                 m_operatorController.square()
@@ -226,10 +227,6 @@ public class RobotContainer {
                                 .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
                                                 () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
-                // m_operatorController.povDown()
-                m_operatorController.povDown()
-                                .whileTrue(new StartEndCommand(() -> m_intakeSub.setIntakeMotors(-0.25),
-                                                () -> m_intakeSub.setIntakeMotors(0.0), m_intakeSub));
 
                 // m_operatorController.povLeft()
                 m_operatorController.povLeft()
@@ -311,6 +308,7 @@ public class RobotContainer {
                 m_intakeSub.init();
                 m_shooterSub.init();
                 m_visionSub.init();
+                m_flywheelSub.init();
 
                 if(DriverStation.getAlliance().isPresent()) {
                         if(DriverStation.getAlliance().get() == Alliance.Red) {
