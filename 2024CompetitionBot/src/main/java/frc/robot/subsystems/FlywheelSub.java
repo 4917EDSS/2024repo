@@ -44,15 +44,17 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelL.setIdleMode(IdleMode.kCoast);
     m_flywheelR.setSmartCurrentLimit(40);
     m_flywheelL.setSmartCurrentLimit(40);
-    m_flywheelR.getEncoder().setVelocityConversionFactor(1.0);
+    //_flywheelR.getEncoder().setVelocityConversionFactor(1.0);
     m_flywheelL.getEncoder().setVelocityConversionFactor(1.0);
-    m_flywheelL.follow(m_flywheelR);
-    m_flywheelR.set(0);
+    m_flywheelR.follow(m_flywheelL);
+    //m_flywheelR.set(0);
     m_flywheelL.set(0);
   }
 
   @Override
   public void periodic() {
+
+    //left is the master right is the follower
     // This method will be called once per scheduler run
 
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed. 
@@ -61,10 +63,10 @@ public class FlywheelSub extends SubsystemBase {
       double driveOutput = m_FlyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity); //4200 is a target velocity we don't know what it is 
       double setPoint = m_FlyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity);
 
-      m_flywheelR.set(setPoint + driveOutput);
+      //m_flywheelR.set(setPoint + driveOutput);
       m_flywheelL.set(setPoint + driveOutput);
     } else {
-      m_flywheelR.set(0);
+      //m_flywheelR.set(0);
       m_flywheelL.set(0);
     }
   }
@@ -87,9 +89,9 @@ public class FlywheelSub extends SubsystemBase {
   }
 
 
-  public double getFlywheelVelocityR() {
-    return m_flywheelR.getEncoder().getVelocity();
-  }
+  // public double getFlywheelVelocityR() {
+  //   return m_flywheelR.getEncoder().getVelocity();
+  // }
 
   public double getFlywheelVelocityL() {
     return m_flywheelL.getEncoder().getVelocity();

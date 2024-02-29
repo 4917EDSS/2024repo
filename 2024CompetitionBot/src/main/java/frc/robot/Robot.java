@@ -8,8 +8,11 @@ import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,6 +23,33 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
 
   private static Logger m_logger = Logger.getLogger(Robot.class.getName());
+  //power distribution board
+  private static final int PDH_CAN_ID = 1;
+  // TODO change to breaker numbers instead of canIDS
+  private static final int PDH_kPivot_CAN_ID = Constants.CanIds.kPivot;
+  private static final int PDH_kClimbMotorL_CAN_ID = Constants.CanIds.kClimbMotorL;
+  private static final int PDH_kClimbMotorR_CAN_ID = Constants.CanIds.kClimbMotorR;
+  private static final int PDH_DriveMotorBL_CAN_ID = Constants.CanIds.kDriveMotorBL;
+  private static final int PDH_DriveMotorBR_CAN_ID = Constants.CanIds.kDriveMotorBR;
+  private static final int PDH_DriveMotorFL_CAN_ID = Constants.CanIds.kDriveMotorFL;
+  private static final int PDH_EncoderBL_CAN_ID = Constants.CanIds.kEncoderBL;
+  private static final int PDH_DriveMotorFR_CAN_ID = Constants.CanIds.kDriveMotorFR;
+  private static final int PDH_EncoderBR_CAN_ID = Constants.CanIds.kEncoderBR;
+  private static final int PDH_EncoderFL_CAN_ID = Constants.CanIds.kEncoderFL;
+  private static final int PDH_EncoderFR_CAN_ID = Constants.CanIds.kEncoderFR;
+  private static final int PDH_kFlywheelL_CAN_ID = Constants.CanIds.kFlywheelL;
+  private static final int PDH_kFlywheelR_CAN_ID = Constants.CanIds.kFlywheelR;
+  private static final int PDH_kIntakeRollers_CAN_ID = Constants.CanIds.kIntakeRollers;
+  private static final int PDH_kLowerFeeder_CAN_ID = Constants.CanIds.kLowerFeeder;
+  private static final int PDH_kSteeringMotorBL_CAN_ID = Constants.CanIds.kSteeringMotorBL;
+  private static final int PDH_kSteeringMotorBR_CAN_ID = Constants.CanIds.kSteeringMotorBR;
+  private static final int PDH_kSteeringMotorFL_CAN_ID = Constants.CanIds.kSteeringMotorFL;
+  private static final int PDH_kSteeringMotorFR_CAN_ID = Constants.CanIds.kSteeringMotorFR;
+  private static final int PDH_kUpperFeeder_CAN_ID = Constants.CanIds.kUpperFeeder;
+
+  // private static final int NUM_PDH_CHANNELS =24;
+
+  PowerDistribution m_pdh = new PowerDistribution(PDH_CAN_ID, ModuleType.kRev);
 
   private Command m_autonomousCommand;
 
@@ -64,6 +94,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Voltage", m_pdh.getCurrent(PDH_CAN_ID));
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -110,7 +141,7 @@ public class Robot extends TimedRobot {
     }
 
     // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
-    if(!m_isInitialized) {
+    if(true /* !m_isInitialized */) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
     }

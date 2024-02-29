@@ -178,15 +178,17 @@ public final class Constants {
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
 
-    public static final double kPivotAngleConversion = 180 / 105.53;
+    public static final double kPivotAngleConversion = 183 / 104.64; // Degrees / ticks measured
 
-    public static final double kAngleIntake = 135.0;
+    public static final double kAngleFloorIntake = 0.0;
+    public static final double kAngleSourceIntake = 135 / 0;
     public static final double kAngleSubwooferSpeaker = 45.0; // TODO figure out real value did it
-    public static final double kAngleAmp = 270.0; // TODO figure out real value
+    public static final double kAngleAmp = 2700; // TODO figure out real value
     public static final double kAngleTrap = 270.0; // TODO figure out real value
-    public static final double kAngleAutoLine = 35.838;
+    public static final double kAngleAutoLine = 45.0;
     public static final double kAnglePodium = 58.276;
     public static final double kAngleWingLine = 72.522;
+
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.5;
