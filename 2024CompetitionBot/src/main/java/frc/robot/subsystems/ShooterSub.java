@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -63,7 +64,7 @@ public class ShooterSub extends SubsystemBase {
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
   private boolean m_noteWasIn = false;
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
-  ArmFeedforward m_armFeedforward = new ArmFeedforward(0, 0, 0);
+  ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.2, 0, 0); // TODO: try setting angle to 90 degrees and tune kg until it makes it 
 
 
   public ShooterSub(LedSub ledSub) {
@@ -169,6 +170,16 @@ public class ShooterSub extends SubsystemBase {
 
   public void movePivot(double power) {
     m_pivot.set(power);
+  }
+
+  public void setPivotAngle(double angle) {
+    double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
+
+    double pidPower = m_shooterPivotPID.calculate(getPivotAngle(), angle);
+    double fedPower = m_pivotFeedforward.calculate(angle + 90.0, 0.0); // Feed forward expects 0 degrees as horizontal
+
+    double pivotPower = pidPower + fedPower;
+    // TODO: Run pivot motor based on power
   }
 
   public void resetPivot() {
