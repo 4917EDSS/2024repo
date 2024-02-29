@@ -71,11 +71,11 @@ public class FlywheelSub extends SubsystemBase {
     }
   }
 
-  public void EnableFlywheel() {
+  public void enableFlywheel() {
     m_isFlywheelEnabled = true;
   }
 
-  public void DisableFlywheel() {
+  public void disableFlywheel() {
     m_isFlywheelEnabled = false;
   }
 

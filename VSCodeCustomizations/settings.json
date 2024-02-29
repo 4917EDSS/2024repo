@@ -16,5 +16,6 @@
   "java.format.settings.profile": "Google4917Style",
   "java.format.settings.url": "C:\\Users\\Public\\wpilib\\2024\\vscode\\data\\user-data\\User\\eclipse-java-google-4917-style.xml",
   "editor.formatOnSave": true,
-  "files.hotExit": "off"
+  "files.hotExit": "off",
+  "editor.detectIndentation": false
 }

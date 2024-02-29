@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterPrepGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
-  public ShooterPrepGrp(ShooterSub shooterSub, FlywheelSub flywheelSub, double pivotPosition) {
+  public ShooterPrepGrp(double pivotPosition, ShooterSub shooterSub, FlywheelSub flywheelSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
