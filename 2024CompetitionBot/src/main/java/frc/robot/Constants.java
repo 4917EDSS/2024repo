@@ -200,6 +200,33 @@ public final class Constants {
     public static final double kNoteExpelPower = -1.0;
   }
 
+  public static final class Breakers {
+    public static final int kDriveMotorFrontRight = 0;
+    public static final int kDriveMotorFrontLeft = 1;
+    public static final int kDriveMotorBackRight = 2;
+    public static final int kDriveMotorBackLeft = 3;
+    public static final int kSteeringMotorFR = 4;
+    public static final int kSteeringMotorFL = 5;
+    public static final int kSteeringMotorBR = 6;
+    public static final int kSteeringMotorBL = 7;
+
+
+    public static final int kClimbMotorL = 8;
+    public static final int kClimbMotorR = 10;
+
+
+    public static final int kLowerFeeder = 9; //
+    public static final int kUpperFeeder = 12; //
+    public static final int kPivot = 17; //
+
+    public static final int kFlywheelL = 11;
+    public static final int kFlywheelR = 13;
+
+
+    public static final int kIntakeRollers = 14;
+
+  }
+
   public static final class Flywheel {
     public static final double kFlywheelShootVelocity = 4200;
     public static final double ks = 0.02;

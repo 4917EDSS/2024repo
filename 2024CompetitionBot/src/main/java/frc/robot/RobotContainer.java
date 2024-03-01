@@ -110,6 +110,7 @@ public class RobotContainer {
 
     //m_driverController.L2()
 
+    //m_driverController.R2()
     m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
 
     m_driverController.share()
