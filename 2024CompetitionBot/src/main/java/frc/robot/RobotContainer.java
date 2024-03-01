@@ -98,9 +98,11 @@ public class RobotContainer {
         private void configureBindings() {
                 // Driver controller bindings
                 m_driverController.L3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+                                                m_flywheelSub));
                 m_driverController.R3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+                                                m_flywheelSub));
 
                 // m_driverController.square() FREE
 
@@ -147,9 +149,11 @@ public class RobotContainer {
 
                 // Operator controller bindings
                 m_operatorController.L3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+                                                m_flywheelSub));
                 m_operatorController.R3()
-                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+                                .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+                                                m_flywheelSub));
 
 
                 m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
