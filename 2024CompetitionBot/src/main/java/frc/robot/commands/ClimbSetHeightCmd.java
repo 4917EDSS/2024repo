@@ -9,7 +9,7 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 
 
-public class ClimbCmdSetHeightCmd extends Command {
+public class ClimbSetHeightCmd extends Command {
   private final double kHeightTolerence = 0.01;
   private final double kRollZero = -4.3;
   private final double kRollTolerence = 10;
@@ -26,7 +26,7 @@ public class ClimbCmdSetHeightCmd extends Command {
 
 
   /** Creates a new Climb. */
-  public ClimbCmdSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
+  public ClimbSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
     m_climbSub = climbSub;
     m_drivetrainSub = drivetrainSub;
     m_targetHeight = heightM;
@@ -41,7 +41,6 @@ public class ClimbCmdSetHeightCmd extends Command {
   public void initialize() {
     m_leftMotorDone = false;
     m_rightMotorDone = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
