@@ -111,6 +111,7 @@ public class RobotContainer {
     //m_driverController.L2()
 
     //m_driverController.R2()
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -180,7 +181,7 @@ public class RobotContainer {
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAmp, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAmp, m_shooterSub));
 
     //m_operatorController.povLeft()
     m_operatorController.povRight().onTrue(new ShooterPivotCmd(90.0, m_shooterSub));
