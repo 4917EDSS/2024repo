@@ -25,27 +25,6 @@ public class Robot extends TimedRobot {
   private static Logger m_logger = Logger.getLogger(Robot.class.getName());
   //power distribution board
   private static final int PDH_CAN_ID = 1;
-  // TODO change to breaker numbers instead of canIDS
-  private static final int PDH_kPivot_CAN_ID = Constants.CanIds.kPivot;
-  private static final int PDH_kClimbMotorL_CAN_ID = Constants.CanIds.kClimbMotorL;
-  private static final int PDH_kClimbMotorR_CAN_ID = Constants.CanIds.kClimbMotorR;
-  private static final int PDH_DriveMotorBL_CAN_ID = Constants.CanIds.kDriveMotorBL;
-  private static final int PDH_DriveMotorBR_CAN_ID = Constants.CanIds.kDriveMotorBR;
-  private static final int PDH_DriveMotorFL_CAN_ID = Constants.CanIds.kDriveMotorFL;
-  private static final int PDH_EncoderBL_CAN_ID = Constants.CanIds.kEncoderBL;
-  private static final int PDH_DriveMotorFR_CAN_ID = Constants.CanIds.kDriveMotorFR;
-  private static final int PDH_EncoderBR_CAN_ID = Constants.CanIds.kEncoderBR;
-  private static final int PDH_EncoderFL_CAN_ID = Constants.CanIds.kEncoderFL;
-  private static final int PDH_EncoderFR_CAN_ID = Constants.CanIds.kEncoderFR;
-  private static final int PDH_kFlywheelL_CAN_ID = Constants.CanIds.kFlywheelL;
-  private static final int PDH_kFlywheelR_CAN_ID = Constants.CanIds.kFlywheelR;
-  private static final int PDH_kIntakeRollers_CAN_ID = Constants.CanIds.kIntakeRollers;
-  private static final int PDH_kLowerFeeder_CAN_ID = Constants.CanIds.kLowerFeeder;
-  private static final int PDH_kSteeringMotorBL_CAN_ID = Constants.CanIds.kSteeringMotorBL;
-  private static final int PDH_kSteeringMotorBR_CAN_ID = Constants.CanIds.kSteeringMotorBR;
-  private static final int PDH_kSteeringMotorFL_CAN_ID = Constants.CanIds.kSteeringMotorFL;
-  private static final int PDH_kSteeringMotorFR_CAN_ID = Constants.CanIds.kSteeringMotorFR;
-  private static final int PDH_kUpperFeeder_CAN_ID = Constants.CanIds.kUpperFeeder;
 
   // private static final int NUM_PDH_CHANNELS =24;
 
@@ -94,7 +73,31 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Voltage", m_pdh.getCurrent(PDH_CAN_ID));
+    SmartDashboard.putNumber("Voltage0", m_pdh.getCurrent(0));
+    SmartDashboard.putNumber("Voltage1", m_pdh.getCurrent(1));
+    SmartDashboard.putNumber("Voltage2", m_pdh.getCurrent(2));
+    SmartDashboard.putNumber("Voltage3", m_pdh.getCurrent(3));
+    SmartDashboard.putNumber("Voltage4", m_pdh.getCurrent(4));
+    SmartDashboard.putNumber("Voltage5", m_pdh.getCurrent(5));
+    SmartDashboard.putNumber("Voltage6", m_pdh.getCurrent(6));
+    SmartDashboard.putNumber("Voltage7", m_pdh.getCurrent(7));
+    SmartDashboard.putNumber("Voltage8", m_pdh.getCurrent(8));
+    SmartDashboard.putNumber("Voltage9", m_pdh.getCurrent(9));
+    SmartDashboard.putNumber("Voltage10", m_pdh.getCurrent(10));
+    SmartDashboard.putNumber("Voltage11", m_pdh.getCurrent(11));
+    SmartDashboard.putNumber("Voltage12", m_pdh.getCurrent(12));
+    SmartDashboard.putNumber("Voltage13", m_pdh.getCurrent(13));
+    SmartDashboard.putNumber("Voltage14", m_pdh.getCurrent(14));
+    SmartDashboard.putNumber("Voltage15", m_pdh.getCurrent(15));
+    SmartDashboard.putNumber("Voltage16", m_pdh.getCurrent(16));
+    SmartDashboard.putNumber("Voltage17", m_pdh.getCurrent(17));
+    SmartDashboard.putNumber("Voltage18", m_pdh.getCurrent(18));
+    SmartDashboard.putNumber("Voltage19", m_pdh.getCurrent(19));
+    SmartDashboard.putNumber("Voltage20", m_pdh.getCurrent(20));
+    SmartDashboard.putNumber("Voltage21", m_pdh.getCurrent(21));
+    SmartDashboard.putNumber("Voltage22", m_pdh.getCurrent(22));
+    SmartDashboard.putNumber("Voltage23", m_pdh.getCurrent(23));
+    SmartDashboard.putNumber("Voltage24", m_pdh.getCurrent(24));
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
