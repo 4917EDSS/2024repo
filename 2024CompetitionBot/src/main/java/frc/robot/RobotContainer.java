@@ -134,10 +134,10 @@ public class RobotContainer {
             new Pose2d(0.0, -1.0, Rotation2d.fromDegrees(0.0))));
 
     m_driverController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
 
     m_driverController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
 
 
     // ======================================== Operator controller bindings ========================================
@@ -177,10 +177,10 @@ public class RobotContainer {
     //m_operatorController.povLeft()
 
     m_operatorController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
 
     m_operatorController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
   }
 
 

@@ -5,17 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Flywheel;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.FlywheelSub;
 
 public class KillAllCmd extends Command {
 
   /** Creates a new KillAllCmd. */
-  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, ShooterSub shooterSub) {
+  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, ShooterSub shooterSub,
+      FlywheelSub flywheelSub) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climbSub, drivetrainSub, intakeSub, shooterSub);
+    addRequirements(climbSub, drivetrainSub, intakeSub, shooterSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.
