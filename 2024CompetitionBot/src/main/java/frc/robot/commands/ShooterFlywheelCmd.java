@@ -4,9 +4,6 @@
 
 package frc.robot.commands;
 
-import java.time.Duration;
-import java.time.Instant;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FlywheelSub;
 
@@ -24,7 +21,7 @@ public class ShooterFlywheelCmd extends Command {
   // Called when the command is initially scheduled. 
   @Override
   public void initialize() {
-    m_flywheelSub.EnableFlywheel();
+    m_flywheelSub.enableFlywheel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

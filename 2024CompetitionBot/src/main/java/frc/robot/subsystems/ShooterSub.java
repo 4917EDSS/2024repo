@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -56,13 +55,13 @@ public class ShooterSub extends SubsystemBase {
   private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch);
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
-  private final GenericEntry m_shooterFlywheelVelocity, m_shooterPivotPosition, m_shooterPivotVelocity,
-      m_shooterflywheelPower, m_shooterPivotPower, m_shooterNoteInPosition;
+  private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
+      m_shooterNoteInPosition;
 
   private final LedSub m_ledSub;
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
-  private boolean m_noteWasIn = false;
+
   PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
   ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.2, 0, 0); // TODO: try setting angle to 90 degrees and tune kg until it makes it 
 
@@ -90,10 +89,8 @@ public class ShooterSub extends SubsystemBase {
 
     m_ledSub = ledSub;
 
-    m_shooterFlywheelVelocity = m_shuffleboardTab.add("Shooter Flywheel Velocity", 0).getEntry();
     m_shooterPivotPosition = m_shuffleboardTab.add("Shooter Pivot Position", 0).getEntry();
     m_shooterPivotVelocity = m_shuffleboardTab.add("Shooter Pivot velocity", 0).getEntry();
-    m_shooterflywheelPower = m_shuffleboardTab.add("ShooterFlywheel power", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Shooter Pivot Power", 0).getEntry();
     m_shooterNoteInPosition = m_shuffleboardTab.add("Shooter Note In Position", 0).getEntry();
 
@@ -102,9 +99,7 @@ public class ShooterSub extends SubsystemBase {
 
   public void init() {
     m_logger.info("Initializing ShooterSub");
-    m_noteWasIn = false;
     resetPivot();
-    //spinFlywheel(0);
     spinBothFeeders(0, 0);
   }
 
@@ -172,23 +167,9 @@ public class ShooterSub extends SubsystemBase {
     m_pivot.set(power);
   }
 
-  public void setPivotAngle(double angle) {
-    double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
-
-    double pidPower = m_shooterPivotPID.calculate(getPivotAngle(), angle);
-    double fedPower = m_pivotFeedforward.calculate(angle + 90.0, 0.0); // Feed forward expects 0 degrees as horizontal
-
-    double pivotPower = pidPower + fedPower;
-    // TODO: Run pivot motor based on power
-  }
-
   public void resetPivot() {
     m_pivot.getEncoder().setPosition(0);
   }
-
-  //public double getFlywheelVelocity() {
-  //return m_flywheel.getEncoder().getVelocity();
-  //}
 
   public double getPivotAngle() {
     return m_pivot.getEncoder().getPosition();

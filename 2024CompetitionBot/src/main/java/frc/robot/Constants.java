@@ -4,14 +4,10 @@
 
 package frc.robot;
 
-import java.util.Map;
 import java.util.logging.Level;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.wpilibj.Preferences;
-import frc.robot.subsystems.DrivetrainSub;
-import frc.robot.subsystems.SwerveModule;
 
 
 /**
@@ -27,6 +23,7 @@ public final class Constants {
   // Max log level to print (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, or FINEST)
   // e.g. Level.WARNING will only print WARNING and SEVERE log messages
   public static final Level kLogLevel = Level.WARNING;
+
 
   // Hardware constants
   public final static class OperatorConstants {
@@ -84,6 +81,43 @@ public final class Constants {
   // }
 
 
+  // Values that are specific to a particular physical robot
+  public static final class RobotSpecific {
+    public static final String PrototypeSerialNumber = "03178417";
+    public static final String PracticeSerialNumber = "03147322";
+    public static final String CompetitionSerialNumber = "03178417";
+    public static final String serialNumber = System.getenv("serialnum");
+
+    public static final class Prototype {
+      public static final double kAbsoluteEncoderOffsetFL = 1.751;
+      public static final double kAbsoluteEncoderOffsetFR = -2.704;
+      public static final double kAbsoluteEncoderOffsetBL = -0.184;
+      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+    }
+
+    public static final class Practice {
+      public static final double kAbsoluteEncoderOffsetFL = 2.359;
+      public static final double kAbsoluteEncoderOffsetFR = 1.472;
+      public static final double kAbsoluteEncoderOffsetBL = 1.056;
+      public static final double kAbsoluteEncoderOffsetBR = -1.072;
+    }
+
+    public static final class Competition {
+      public static final double kAbsoluteEncoderOffsetFL = 1.751;
+      public static final double kAbsoluteEncoderOffsetFR = -2.704;
+      public static final double kAbsoluteEncoderOffsetBL = -0.184;
+      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+    }
+
+    public static final class Unknown {
+      public static final double kAbsoluteEncoderOffsetFL = 0.0;
+      public static final double kAbsoluteEncoderOffsetFR = 0.0;
+      public static final double kAbsoluteEncoderOffsetBL = 0.0;
+      public static final double kAbsoluteEncoderOffsetBR = 0.0;
+    }
+  }
+
+
   // Subsystem Constants
   public final static class Vision {
     public static final double kApriltagOffset = 0.0825; // Apriltag height + bot height (Will need to be changed in the future)
@@ -124,41 +158,6 @@ public final class Constants {
             0.45, new ReplanningConfig());
   }
 
-  public static final class RobotSpecific {
-    public static final String PrototypeSerialNumber = "03178417";
-    public static final String PracticeSerialNumber = "03147322";
-    public static final String CompetitionSerialNumber = "03178417";
-    public static final String serialNumber = System.getenv("serialnum");
-
-    public static final class Prototype {
-      public static final double kAbsoluteEncoderOffsetFL = 1.751;
-      public static final double kAbsoluteEncoderOffsetFR = -2.704;
-      public static final double kAbsoluteEncoderOffsetBL = -0.184;
-      public static final double kAbsoluteEncoderOffsetBR = -0.708;
-    }
-
-    public static final class Practice {
-      public static final double kAbsoluteEncoderOffsetFL = 2.359;
-      public static final double kAbsoluteEncoderOffsetFR = 1.472;
-      public static final double kAbsoluteEncoderOffsetBL = 1.056;
-      public static final double kAbsoluteEncoderOffsetBR = -1.072;
-    }
-
-    public static final class Competition {
-      public static final double kAbsoluteEncoderOffsetFL = 1.751;
-      public static final double kAbsoluteEncoderOffsetFR = -2.704;
-      public static final double kAbsoluteEncoderOffsetBL = -0.184;
-      public static final double kAbsoluteEncoderOffsetBR = -0.708;
-    }
-
-    public static final class Unknown {
-      public static final double kAbsoluteEncoderOffsetFL = 0.0;
-      public static final double kAbsoluteEncoderOffsetFR = 0.0;
-      public static final double kAbsoluteEncoderOffsetBL = 0.0;
-      public static final double kAbsoluteEncoderOffsetBR = 0.0;
-    }
-  }
-
   public static final class Climb {
     //TODO Change all the heights
     // Heights in meters
@@ -181,10 +180,10 @@ public final class Constants {
     public static final double kPivotAngleConversion = 183 / 104.64; // Degrees / ticks measured
 
     public static final double kAngleFloorIntake = 0.0;
-    public static final double kAngleSourceIntake = 135 / 0;
-    public static final double kAngleSubwooferSpeaker = 45.0; // TODO figure out real value did it
-    public static final double kAngleAmp = 2700; // TODO figure out real value
-    public static final double kAngleTrap = 270.0; // TODO figure out real value
+    public static final double kAngleSourceIntake = 135.0;
+    public static final double kAngleSubwooferSpeaker = 45.0;
+    public static final double kAngleAmp = 270.0;
+    public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 45.0;
     public static final double kAnglePodium = 58.276;
     public static final double kAngleWingLine = 72.522;

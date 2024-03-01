@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.Flywheel;
 
 public class FlywheelSub extends SubsystemBase {
   /** Creates a new FlywheelSub. */
@@ -71,11 +70,11 @@ public class FlywheelSub extends SubsystemBase {
     }
   }
 
-  public void EnableFlywheel() {
+  public void enableFlywheel() {
     m_isFlywheelEnabled = true;
   }
 
-  public void DisableFlywheel() {
+  public void disableFlywheel() {
     m_isFlywheelEnabled = false;
   }
 

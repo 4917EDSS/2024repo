@@ -141,6 +141,7 @@ public class Robot extends TimedRobot {
     }
 
     // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
+    // TODO Restore this for competition
     if(true /* !m_isInitialized */) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
