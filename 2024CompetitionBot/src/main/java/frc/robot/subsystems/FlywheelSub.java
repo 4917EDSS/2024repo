@@ -9,8 +9,12 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import java.util.logging.Logger;
 
 public class FlywheelSub extends SubsystemBase {
   /** Creates a new FlywheelSub. */
@@ -29,6 +33,11 @@ public class FlywheelSub extends SubsystemBase {
 
   private boolean m_isFlywheelEnabled = false;
 
+  private static Logger m_logger = Logger.getLogger(FlywheelSub.class.getName());
+
+  // private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
+  // private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
+  //     m_shooterNoteInPosition;
 
   public FlywheelSub() {
 
@@ -37,6 +46,7 @@ public class FlywheelSub extends SubsystemBase {
 
 
   public void init() {
+    m_logger.info("Initializing FlywheelSub");
     m_flywheelR.setInverted(false);
     m_flywheelL.setInverted(true);
     m_flywheelR.setIdleMode(IdleMode.kCoast);
@@ -45,9 +55,10 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelL.setSmartCurrentLimit(40);
     //_flywheelR.getEncoder().setVelocityConversionFactor(1.0);
     m_flywheelL.getEncoder().setVelocityConversionFactor(1.0);
-    m_flywheelR.follow(m_flywheelL);
-    //m_flywheelR.set(0);
+    //m_flywheelR.follow(m_flywheelL);
+    m_flywheelR.set(0);
     m_flywheelL.set(0);
+    disableFlywheel();
   }
 
   @Override
@@ -64,8 +75,10 @@ public class FlywheelSub extends SubsystemBase {
 
       //m_flywheelR.set(setPoint + driveOutput);
       m_flywheelL.set(setPoint + driveOutput);
+      m_flywheelR.set(setPoint + driveOutput);
+      //m_flywheelL.set(setPoint + driveOutput);
     } else {
-      //m_flywheelR.set(0);
+      m_flywheelR.set(0);
       m_flywheelL.set(0);
     }
   }
