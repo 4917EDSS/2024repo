@@ -7,9 +7,11 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LedSub.LedColour;
@@ -62,11 +65,14 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
-  PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
-  ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.2, 0, 0); // TODO: try setting angle to 90 degrees and tune kg until it makes it 
+  PIDController m_shooterPivotPID = new PIDController(0.05, 0.0, 0.001);
+  ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
 
   public ShooterSub(LedSub ledSub) {
+
+    m_shooterPivotPID.setTolerance(1.0);
+
     // When true, positive power will turn motor backwards, negitive forwards.
     // m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
@@ -139,6 +145,8 @@ public class ShooterSub extends SubsystemBase {
 
   private void updateShuffleBoard() {
     //m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
+    SmartDashboard.putBoolean("Forward Limit", isPivotAtForwardLimit());
+    SmartDashboard.putBoolean("Back Limit", isPivotAtReverseLimit());
     m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     // m_shooterflywheelPower.setDouble(m_flywheel.get());
@@ -165,6 +173,23 @@ public class ShooterSub extends SubsystemBase {
 
   public void movePivot(double power) {
     m_pivot.set(power);
+  }
+
+  public double getPivotPower() {
+    return m_pivot.get();
+  }
+
+  public boolean setPivotAngle(double angle) { // Returns true when at position
+    double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
+
+    double pidPower = m_shooterPivotPID.calculate(getPivotAngle(), angle);
+    double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
+
+    double pivotPower = pidPower + fedPower;
+    // TODO: Run pivot motor based on power
+    movePivot(pivotPower);
+
+    return m_shooterPivotPID.atSetpoint();
   }
 
   public void resetPivot() {
@@ -246,7 +271,6 @@ public class ShooterSub extends SubsystemBase {
       }
     } while(checkSum != byteArray[4]);
     checkSum = 0;
-
     m_intakeSensors[0] = (((byteArray[1] & 0xFF) << 8) | (byteArray[0] & 0xFF));
     m_intakeSensors[1] = (((byteArray[3] & 0xFF) << 8) | (byteArray[2] & 0xFF));
 
