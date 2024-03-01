@@ -25,6 +25,7 @@ public class ShooterAmpShotCmd extends Command {
   @Override
   public void initialize() {
     m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerAmpShotPower, Constants.Shooter.kNoteUpperAmpShotPower);
+    start = Instant.now();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
