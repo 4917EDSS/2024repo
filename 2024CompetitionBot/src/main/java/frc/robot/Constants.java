@@ -177,7 +177,7 @@ public final class Constants {
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
 
-    public static final double kPivotAngleConversion = 1.0;//183 / 104.64; // Degrees / ticks measured
+    public static final double kPivotAngleConversion = 54.5 / 32.856;//183 / 104.64; // Degrees / ticks measured
 
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
