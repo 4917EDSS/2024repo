@@ -71,7 +71,7 @@ public class ShooterSub extends SubsystemBase {
 
   public ShooterSub(LedSub ledSub) {
 
-    m_shooterPivotPID.setTolerance(1.0);
+    m_shooterPivotPID.setTolerance(5.0);
 
     // When true, positive power will turn motor backwards, negitive forwards.
     // m_flywheel.setInverted(false);
