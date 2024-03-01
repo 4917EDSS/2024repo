@@ -71,7 +71,7 @@ public class ShooterSub extends SubsystemBase {
 
   public ShooterSub(LedSub ledSub) {
 
-    m_shooterPivotPID.setTolerance(1.0);
+    m_shooterPivotPID.setTolerance(5.0);
 
     // When true, positive power will turn motor backwards, negitive forwards.
     // m_flywheel.setInverted(false);
@@ -116,6 +116,7 @@ public class ShooterSub extends SubsystemBase {
     // TODO remove this hack when we have proper sensors
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
+    m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
 
     // TODO:  This might be easier to do inside the commands that pivot the shooter
     if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
