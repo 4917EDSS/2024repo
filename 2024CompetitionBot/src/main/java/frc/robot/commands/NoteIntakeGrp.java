@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSub;
@@ -20,10 +19,6 @@ public class NoteIntakeGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleFloorIntake, shooterSub),
-        new InstantCommand(() -> intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower), intakeSub),
-        new InstantCommand(() -> shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-            Constants.Shooter.kNoteUpperIntakePower), shooterSub),
-        new IntakeReverseWhenNoteInCmd(shooterSub, intakeSub),
-        new PivotStopRollersWhenNoteInCmd(shooterSub));
+        new IntakeUntilNoteInCmd(intakeSub, shooterSub));
   }
 }

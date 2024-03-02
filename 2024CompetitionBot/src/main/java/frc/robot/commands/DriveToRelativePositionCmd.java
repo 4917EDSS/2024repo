@@ -4,29 +4,33 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.DrivetrainSub;
 
 public class DriveToRelativePositionCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(DriveToRelativePositionCmd.class.getName());
 
-  /** Creates a new DriveToPositionCmd. */
-
-  private final DrivetrainSub m_drivetrainSub;
   private Pose2d m_relativePosition;
+  private final DrivetrainSub m_drivetrainSub;
+
   private boolean atSetpoint = false;
 
-  public DriveToRelativePositionCmd(DrivetrainSub drivetrainSub, Pose2d position) {
+  /** Creates a new DriveToPositionCmd. */
+  public DriveToRelativePositionCmd(Pose2d position, DrivetrainSub drivetrainSub) {
+    m_relativePosition = position;
+    m_drivetrainSub = drivetrainSub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSub);
-    m_drivetrainSub = drivetrainSub;
-    m_relativePosition = position;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_logger.fine("DriveToRelativePositionCmd - Init");
+
     Pose2d m_position = new Pose2d(m_relativePosition.getX() + m_drivetrainSub.getPos().getX(),
         m_relativePosition.getY() + m_drivetrainSub.getPos().getY(),
         m_relativePosition.getRotation().plus(m_drivetrainSub.getRotation())); // Make position relative to robot position
@@ -38,14 +42,15 @@ public class DriveToRelativePositionCmd extends Command {
   @Override
   public void execute() {
     atSetpoint = m_drivetrainSub.updateOdometryTransform();
-    new PrintCommand("MOVING tralsnation");
+    //m_logger.info("Moving translation");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_logger.fine("DriveToRelativePositionCmd - End" + (interrupted ? " (interrupted)" : ""));
+
     m_drivetrainSub.drive(0.0, 0.0, 0.0, 0.02);
-    new PrintCommand("Finished AutoPos");
   }
 
   // Returns true when the command should end.

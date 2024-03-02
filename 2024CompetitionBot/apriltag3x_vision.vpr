@@ -26,7 +26,7 @@ cross_b_a:1
 cross_b_x:0
 cross_b_y:0
 debugpipe:0
-desc:apriltag_vision
+desc:apriltag3x_vision
 desired_contour_region:0
 detector_conf:0.800000
 detector_idfilters:
@@ -57,13 +57,13 @@ image_source:0
 img_to_show:0
 intersection_filter:0
 invert_hue:0
-lcgain:26.3
+lcgain:14.9
 multigroup_max:7
 multigroup_min:1
 multigroup_rejector:0
 pipeline_led_enabled:0
 pipeline_led_power:0
-pipeline_res:0
+pipeline_res:5
 pipeline_type:4
 python_snapscript_name:
 red_balance:1201

@@ -4,44 +4,43 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 
 
-public class ClimbCmdSetHeightCmd extends Command {
-  private final double kHeightTolerence = 0.01;
-  private final double kRollZero = -4.3;
-  private final double kRollTolerence = 10;
-  private final double kMinRollAngle = kRollZero - kRollTolerence;
-  private final double kMaxRollAngle = kRollZero + kRollTolerence;
+public class ClimbSetHeightCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ClimbSetHeightCmd.class.getName());
 
-  private final ClimbSub m_climbSub;
-  private final DrivetrainSub m_drivetrainSub;
   private final double m_targetHeight;
   private final double m_power;
+  private final ClimbSub m_climbSub;
+  private final DrivetrainSub m_drivetrainSub;
 
   private boolean m_leftMotorDone = false;
   private boolean m_rightMotorDone = false;
 
 
   /** Creates a new Climb. */
-  public ClimbCmdSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
+  public ClimbSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
     m_climbSub = climbSub;
     m_drivetrainSub = drivetrainSub;
     m_targetHeight = heightM;
     m_power = power;
 
     // Use addRequirements() here to declare subsystem dependencies.
+    // Don't require drivetrainSub since we only use it to read the 'roll' angle
     addRequirements(climbSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_logger.fine("ClimbSetHeightCmd - Init");
     m_leftMotorDone = false;
     m_rightMotorDone = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,7 +77,7 @@ public class ClimbCmdSetHeightCmd extends Command {
         // Stop right
         moveRight = false;
       }
-    } else if(roll_angle < kMinRollAngle) {
+    } else if(roll_angle < Constants.Climb.kMinRollAngle) {
       // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
       // if direction is positive
       if(leftDirection > 0) {
@@ -90,7 +89,7 @@ public class ClimbCmdSetHeightCmd extends Command {
         moveLeft = false;
       }
       // else if roll angle > maxRoll
-    } else if(roll_angle > kMaxRollAngle) {
+    } else if(roll_angle > Constants.Climb.kMaxRollAngle) {
       // if direction is positive
       if(rightDirection > 0) {
         // Stop left motor
@@ -117,6 +116,7 @@ public class ClimbCmdSetHeightCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_logger.fine("ClimbSetHeightCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_climbSub.setClimbPowerLeft(0.0);
     m_climbSub.setClimbPowerRight(0.0);
   }
@@ -128,11 +128,11 @@ public class ClimbCmdSetHeightCmd extends Command {
   }
 
   private boolean isLeftAtTargetHeight() {
-    return (Math.abs(m_climbSub.getLeftHeight() - m_targetHeight) < kHeightTolerence);
+    return (Math.abs(m_climbSub.getLeftHeight() - m_targetHeight) < Constants.Climb.kHeightTolerence);
   }
 
   private boolean isRightAtTargetHeight() {
-    return (Math.abs(m_climbSub.getRightHeight() - m_targetHeight) < kHeightTolerence);
+    return (Math.abs(m_climbSub.getRightHeight() - m_targetHeight) < Constants.Climb.kHeightTolerence);
   }
 }
 

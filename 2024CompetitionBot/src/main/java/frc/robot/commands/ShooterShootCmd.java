@@ -6,24 +6,34 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterShootCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
+
   private final ShooterSub m_shooterSub;
+  private final FlywheelSub m_flywheelSub;
   private Instant start;
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub) {
+  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub) {
     m_shooterSub = shooterSub;
-    addRequirements(shooterSub);
+    m_flywheelSub = flywheelSub;
+
+    addRequirements(shooterSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_logger.fine("ShooterShootCmd - Init");
+    start = Instant.now();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -40,11 +50,11 @@ public class ShooterShootCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_logger.fine("ShooterShootCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_shooterSub.spinBothFeeders(0, 0);
+    m_flywheelSub.disableFlywheel();
   }
 
-  // THIS COMMAND IS PURPOSELY TO BE INTERRUPTED
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {

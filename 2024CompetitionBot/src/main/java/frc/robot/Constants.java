@@ -22,7 +22,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public final class Constants {
   // Max log level to print (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, or FINEST)
   // e.g. Level.WARNING will only print WARNING and SEVERE log messages
-  public static final Level kLogLevel = Level.WARNING;
+  public static final Level kLogLevel = Level.FINE;
 
 
   // Hardware constants
@@ -168,6 +168,13 @@ public final class Constants {
 
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.8 / 769.637939453125;
+
+    // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
+    public static final double kHeightTolerence = 0.01; // In meters
+    public static final double kRollZero = -4.3; // In degrees
+    public static final double kRollTolerence = 10; // In degrees
+    public static final double kMinRollAngle = kRollZero - kRollTolerence;
+    public static final double kMaxRollAngle = kRollZero + kRollTolerence;
   }
 
   public static final class Shooter {
@@ -177,12 +184,13 @@ public final class Constants {
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
 
-    public static final double kPivotAngleConversion = 183 / 104.64; // Degrees / ticks measured
+    public static final double kPivotAngleConversion = 54.5 / 32.856; // Degrees / ticks measured
+    public static final double kPivotAngleTolerance = 1.0;
 
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
-    public static final double kAngleSubwooferSpeaker = 45.0;
-    public static final double kAngleAmp = 270.0;
+    public static final double kAngleSubwooferSpeaker = 24.0;
+    public static final double kAngleAmp = 135.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 45.0;
     public static final double kAnglePodium = 58.276;
@@ -192,12 +200,39 @@ public final class Constants {
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
     public static final double kNoteLowerAmpShotPower = -0.5;
-    public static final double kNoteUpperAmpShotPower = -0.5;
+    public static final double kNoteUpperAmpShotPower = -1.0;
   }
 
   public static final class Intake {
     public static final double kNoteIntakePower = 1.0;
     public static final double kNoteExpelPower = -1.0;
+  }
+
+  public static final class Breakers {
+    public static final int kDriveMotorFrontRight = 0;
+    public static final int kDriveMotorFrontLeft = 1;
+    public static final int kDriveMotorBackRight = 2;
+    public static final int kDriveMotorBackLeft = 3;
+    public static final int kSteeringMotorFR = 4;
+    public static final int kSteeringMotorFL = 5;
+    public static final int kSteeringMotorBR = 6;
+    public static final int kSteeringMotorBL = 7;
+
+
+    public static final int kClimbMotorL = 8;
+    public static final int kClimbMotorR = 10;
+
+
+    public static final int kLowerFeeder = 9; //
+    public static final int kUpperFeeder = 12; //
+    public static final int kPivot = 17; //
+
+    public static final int kFlywheelL = 11;
+    public static final int kFlywheelR = 13;
+
+
+    public static final int kIntakeRollers = 14;
+
   }
 
   public static final class Flywheel {

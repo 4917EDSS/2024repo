@@ -14,15 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ClimbCmdSetHeightCmd;
+import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
-import frc.robot.commands.DriverFieldRelativeDriveCmd;
+import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteIntakeGrp;
 import frc.robot.commands.ShooterAmpShotCmd;
+import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
@@ -35,6 +37,7 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.commands.ShooterFlywheelCmd;
 
 
 /**
@@ -65,7 +68,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Subsystem default commands
     m_drivetrainSub.setDefaultCommand(
-        new DriverFieldRelativeDriveCmd(m_drivetrainSub, m_driverController));
+        new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     m_shooterSub.setDefaultCommand(
         new ShooterWithJoystickCmd(m_operatorController, m_shooterSub, m_intakeSub));
 
@@ -88,17 +91,17 @@ public class RobotContainer {
     //m_driverController.square()
 
     m_driverController.cross()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightHookLowered, 0.5,
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 0.5,
             m_drivetrainSub,
             m_climbSub));
 
     m_driverController.circle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 0.5,
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 0.5,
             m_drivetrainSub,
             m_climbSub));
 
     m_driverController.triangle()
-        .onTrue(new ClimbCmdSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 0.5,
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 0.5,
             m_drivetrainSub,
             m_climbSub));
 
@@ -108,7 +111,7 @@ public class RobotContainer {
 
     //m_driverController.L2()
 
-    //m_driverController.R2()
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -122,50 +125,59 @@ public class RobotContainer {
     m_driverController.povRight().onTrue(new DrivePathCmd(m_drivetrainSub));
 
     m_driverController.povUp()
-        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0))));
+        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0)), m_drivetrainSub));
 
     m_driverController.povDown()
-        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0))));
+        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0)), m_drivetrainSub));
 
     m_driverController.povLeft()
-        .onTrue(new DriveToRelativePositionCmd(m_drivetrainSub,
-            new Pose2d(0.0, -1.0, Rotation2d.fromDegrees(0.0))));
+        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, -1.0, Rotation2d.fromDegrees(0.0)), m_drivetrainSub));
 
     m_driverController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+            m_flywheelSub));
 
     m_driverController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+            m_flywheelSub));
 
 
     // ======================================== Operator controller bindings ========================================
 
 
     m_operatorController.square()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub,
+            m_flywheelSub));
 
     m_operatorController.cross()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub,
+            m_flywheelSub));
 
     m_operatorController.circle()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePodium, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePodium, m_shooterSub,
+            m_flywheelSub));
 
-    //m_operatorController.triangle()
+    m_operatorController.triangle().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
 
-    //m_operatorController.L1()
+    m_operatorController.L1().onTrue(new ClimbSetHeightCmd(0, -0.2, m_drivetrainSub, m_climbSub));
 
-    //m_operatorController.R1()
+    m_operatorController.R1().onTrue(new ClimbSetHeightCmd(533.4, 0.2, m_drivetrainSub, m_climbSub));
 
     m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
 
-    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
+    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 
-    //m_operatorController.share()
+    m_operatorController.share().onTrue(new ClimbSetHeightCmd(228.6, 0.2, m_drivetrainSub, m_climbSub));
 
     m_operatorController.options()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleWingLine, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleWingLine, m_shooterSub,
+            m_flywheelSub));
+
+    m_operatorController.PS().whileTrue(
+        new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
+
+    m_operatorController.touchpad().whileTrue(
+        new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
     m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub));
 
@@ -175,12 +187,16 @@ public class RobotContainer {
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAmp, m_shooterSub, m_flywheelSub));
 
     //m_operatorController.povLeft()
+    m_operatorController.povRight().onTrue(new ShooterPivotCmd(90.0, m_shooterSub));
+    m_operatorController.povLeft().onTrue(new ShooterPivotCmd(180.0, m_shooterSub));
 
     m_operatorController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+            m_flywheelSub));
 
     m_operatorController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
+            m_flywheelSub));
   }
 
 
@@ -213,6 +229,7 @@ public class RobotContainer {
       } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
         m_isRedAlliance = false;
       }
+      m_visionSub.setAlliance(m_isRedAlliance);
     }
   }
 }

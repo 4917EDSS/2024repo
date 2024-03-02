@@ -6,17 +6,20 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterAmpShotCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ShooterAmpShotCmd.class.getName());
+
   private final ShooterSub m_shooterSub;
   private Instant start;
 
-
   public ShooterAmpShotCmd(ShooterSub shooterSub) {
     m_shooterSub = shooterSub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
   }
@@ -24,7 +27,9 @@ public class ShooterAmpShotCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_logger.fine("ShooterAmpShotCmd - Init");
     m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerAmpShotPower, Constants.Shooter.kNoteUpperAmpShotPower);
+    start = Instant.now();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,6 +39,7 @@ public class ShooterAmpShotCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_logger.fine("ShooterAmpShotCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_shooterSub.spinBothFeeders(0, 0);
   }
 

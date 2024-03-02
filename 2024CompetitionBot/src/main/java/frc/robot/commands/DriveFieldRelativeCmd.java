@@ -8,17 +8,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
 
-public class DriverFieldRelativeDriveCmd extends Command {
+public class DriveFieldRelativeCmd extends Command {
   private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
+
+  private final double m_deadband = 0.07;
+
   private double m_targetHeading;
 
   /** Creates a new DriverFeildRelativeDriveCmd. */
-  public DriverFieldRelativeDriveCmd(DrivetrainSub drivetrainSub, CommandPS4Controller commandPS4Controller) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrainSub);
+  public DriveFieldRelativeCmd(CommandPS4Controller commandPS4Controller, DrivetrainSub drivetrainSub) {
     m_drivetrainSub = drivetrainSub;
     m_driverController = commandPS4Controller;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drivetrainSub);
   }
 
   // Called when the command is initially scheduled.
@@ -32,8 +36,9 @@ public class DriverFieldRelativeDriveCmd extends Command {
   public void execute() {
     double rotationPower = 0;
     boolean driving =
-        (Math.abs(m_driverController.getLeftX()) >= 0.07 || Math.abs(m_driverController.getLeftY()) >= 0.07);
-    if(Math.abs(m_driverController.getRightX()) < 0.07) {
+        (Math.abs(m_driverController.getLeftX()) >= m_deadband
+            || Math.abs(m_driverController.getLeftY()) >= m_deadband);
+    if(Math.abs(m_driverController.getRightX()) < m_deadband) {
       if(driving) {
         rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(m_targetHeading);
       } else {
@@ -45,12 +50,12 @@ public class DriverFieldRelativeDriveCmd extends Command {
       m_targetHeading = m_drivetrainSub.getRotationDegrees();
     }
     m_drivetrainSub.drive(
-        (Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0
+        (Math.abs(m_driverController.getLeftX()) < m_deadband ? 0.0
             : -m_driverController.getLeftX()),
-        (Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0
+        (Math.abs(m_driverController.getLeftY()) < m_deadband ? 0.0
             : m_driverController.getLeftY()),
         rotationPower,
-        0.02); // this is the duration fo thh timestep the speeds should be applied to. Should probably be changed
+        0.02); // this is the duration fo the timestep the speeds should be applied to. Should probably be changed
   }
 
   // Called once the command ends or is interrupted.

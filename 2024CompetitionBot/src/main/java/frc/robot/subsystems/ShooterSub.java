@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LedSub.LedColour;
@@ -62,13 +63,15 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
-  PIDController m_shooterPivotPID = new PIDController(0.01, 0.0, 0.0);
-  ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.2, 0, 0); // TODO: try setting angle to 90 degrees and tune kg until it makes it 
+  private PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
+  private ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
 
   public ShooterSub(LedSub ledSub) {
+
+    m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
+
     // When true, positive power will turn motor backwards, negitive forwards.
-    // m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(true);
@@ -78,14 +81,12 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setIdleMode(IdleMode.kBrake);
     m_pivot.setIdleMode(IdleMode.kBrake);
 
-    // m_flywheel.setSmartCurrentLimit(40);
     m_upperFeeder.setSmartCurrentLimit(40);
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    // m_flywheel.getEncoder().setVelocityConversionFactor(1.0);
     m_pivot.getEncoder().setVelocityConversionFactor(1.0);
-    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); //0.68
+    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
 
     m_ledSub = ledSub;
 
@@ -110,6 +111,7 @@ public class ShooterSub extends SubsystemBase {
     // TODO remove this hack when we have proper sensors
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
+    m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
 
     // TODO:  This might be easier to do inside the commands that pivot the shooter
     if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
@@ -139,6 +141,8 @@ public class ShooterSub extends SubsystemBase {
 
   private void updateShuffleBoard() {
     //m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
+    SmartDashboard.putBoolean("Forward Limit", isPivotAtForwardLimit());
+    SmartDashboard.putBoolean("Back Limit", isPivotAtReverseLimit());
     m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     // m_shooterflywheelPower.setDouble(m_flywheel.get());
@@ -165,6 +169,25 @@ public class ShooterSub extends SubsystemBase {
 
   public void movePivot(double power) {
     m_pivot.set(power);
+  }
+
+  public double getPivotPower() {
+    return m_pivot.get();
+  }
+
+  public void runPivotControl(double targetAngle) { // Returns true when at position
+    //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
+
+    double pidPower = m_pivotPID.calculate(getPivotAngle(), targetAngle);
+    double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
+
+    double pivotPower = pidPower + fedPower;
+    // TODO: Run pivot motor based on power
+    movePivot(pivotPower);
+  }
+
+  public boolean isAtPivotAngle() {
+    return m_pivotPID.atSetpoint();
   }
 
   public void resetPivot() {
@@ -246,7 +269,6 @@ public class ShooterSub extends SubsystemBase {
       }
     } while(checkSum != byteArray[4]);
     checkSum = 0;
-
     m_intakeSensors[0] = (((byteArray[1] & 0xFF) << 8) | (byteArray[0] & 0xFF));
     m_intakeSensors[1] = (((byteArray[3] & 0xFF) << 8) | (byteArray[2] & 0xFF));
 

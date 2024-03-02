@@ -287,6 +287,7 @@ public class DrivetrainSub extends SubsystemBase {
 
     // Setting PID constants
 
+
     m_odometryPIDx.setP(kPIDp);
     m_odometryPIDx.setD(kPIDd);
     m_odometryPIDx.setTolerance(kThreshold);
@@ -309,8 +310,13 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void resetGyro() {
+    m_gyro.setAngleAdjustment(0.0);
     m_gyro.reset();
     resetOdometry();
+  }
+
+  public void setYawAngleOffset(double angle) {
+    m_gyro.setAngleAdjustment(angle);
   }
 
   public float getRoll() {

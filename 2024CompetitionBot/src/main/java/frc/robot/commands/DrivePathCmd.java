@@ -15,9 +15,10 @@ public class DrivePathCmd extends Command {
   private boolean pathStatus = false;
 
   public DrivePathCmd(DrivetrainSub drivetrainSub) {
+    m_drivetrainSub = drivetrainSub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSub);
-    m_drivetrainSub = drivetrainSub;
   }
 
   // Called when the command is initially scheduled.

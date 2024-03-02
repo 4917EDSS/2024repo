@@ -4,26 +4,34 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Flywheel;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.subsystems.FlywheelSub;
 
 public class KillAllCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(KillAllCmd.class.getName());
+
+  private final FlywheelSub m_flywheelSub;
 
   /** Creates a new KillAllCmd. */
   public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, ShooterSub shooterSub,
       FlywheelSub flywheelSub) {
+    m_flywheelSub = flywheelSub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climbSub, drivetrainSub, intakeSub, shooterSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_logger.fine("KillAllCmd - Init");
+    m_flywheelSub.disableFlywheel();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,11 +39,13 @@ public class KillAllCmd extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_logger.fine("KillAllCmd - End" + (interrupted ? " (interrupted)" : ""));
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

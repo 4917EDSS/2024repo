@@ -35,12 +35,15 @@ public class FlywheelSub extends SubsystemBase {
 
   private static Logger m_logger = Logger.getLogger(FlywheelSub.class.getName());
 
-  // private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
-  // private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
-  //     m_shooterNoteInPosition;
+  private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
+  private final GenericEntry m_shooterFlywheelVelocityL, m_shooterFlywheelVelocityR, m_shooterflywheelPowerL,
+      m_shooterflywheelPowerR;
 
   public FlywheelSub() {
-
+    m_shooterFlywheelVelocityL = m_shuffleboardTab.add("Left Shooter Flywheel Velocity", 0).getEntry();
+    m_shooterFlywheelVelocityR = m_shuffleboardTab.add("Right Shooter Flywheel Velocity", 0).getEntry();
+    m_shooterflywheelPowerL = m_shuffleboardTab.add("Left ShooterFlywheel power", 0).getEntry();
+    m_shooterflywheelPowerR = m_shuffleboardTab.add("Right ShooterFlywheel power", 0).getEntry();
     init();
   }
 
@@ -63,7 +66,7 @@ public class FlywheelSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    updateShuffleBoard();
     //left is the master right is the follower
     // This method will be called once per scheduler run
 
@@ -101,11 +104,19 @@ public class FlywheelSub extends SubsystemBase {
   }
 
 
-  // public double getFlywheelVelocityR() {
-  //   return m_flywheelR.getEncoder().getVelocity();
-  // }
+  public double getFlywheelVelocityR() {
+    return m_flywheelR.getEncoder().getVelocity();
+  }
 
   public double getFlywheelVelocityL() {
     return m_flywheelL.getEncoder().getVelocity();
   }
+
+  private void updateShuffleBoard() {
+    m_shooterFlywheelVelocityL.setDouble(getFlywheelVelocityL());
+    m_shooterFlywheelVelocityR.setDouble(getFlywheelVelocityR());
+    m_shooterflywheelPowerL.setDouble(m_flywheelL.get());
+    m_shooterflywheelPowerR.setDouble(m_flywheelR.get());
+  }
 }
+

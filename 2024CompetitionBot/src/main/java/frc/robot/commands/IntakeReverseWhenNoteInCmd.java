@@ -18,6 +18,7 @@ public class IntakeReverseWhenNoteInCmd extends Command {
   public IntakeReverseWhenNoteInCmd(ShooterSub shooterSub, IntakeSub intakeSub) {
     m_shooterSub = shooterSub;
     m_intakeSub = intakeSub;
+
     addRequirements(shooterSub, intakeSub);
   }
 
