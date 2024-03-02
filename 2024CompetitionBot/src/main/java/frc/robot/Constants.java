@@ -167,10 +167,10 @@ public final class Constants {
     public static final double kHeightHookScoring = 0.25;
 
     /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kTickCofficient = 0.8 / 769.637939453125;
+    public static final double kTickCofficient = 0.4 / 361.945; //0.8 / 769.637939453125
 
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
-    public static final double kHeightTolerence = 0.01; // In meters
+    public static final double kHeightTolerence = 0.005; // In meters
     public static final double kRollZero = -4.3; // In degrees
     public static final double kRollTolerence = 10; // In degrees
     public static final double kMinRollAngle = kRollZero - kRollTolerence;
