@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.DriveFieldRelativeCmd;
 
 public class TrapShotCmd extends SequentialCommandGroup {
   public TrapShotCmd(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,

@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.DriveFieldRelativeCmd;
 
 public class TrapShotStepTwoGrp extends SequentialCommandGroup {
   public TrapShotStepTwoGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,
