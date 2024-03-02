@@ -24,6 +24,7 @@ public class TestLedsCmd extends Command {
   public TestLedsCmd(LedSub LedSub, LedColour colour) {
     m_ledSub = LedSub;
     m_LedColour = colour;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(LedSub);
   }

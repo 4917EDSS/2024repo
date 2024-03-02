@@ -4,15 +4,16 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterPivotCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ShooterPivotCmd.class.getName());
 
   // PID Controllers
-
   private final PIDController m_pivotForwardPid = new PIDController(0.04, 0, 0); // TODO: Tune the Pivot PID
 
   private final ShooterSub m_ShooterSub;
@@ -30,7 +31,9 @@ public class ShooterPivotCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_logger.fine("ShooterPivotCmd - Init");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,6 +48,7 @@ public class ShooterPivotCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_logger.fine("ShooterPivotCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_ShooterSub.movePivot(0.0);
   }
 

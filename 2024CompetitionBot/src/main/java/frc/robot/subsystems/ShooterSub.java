@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;

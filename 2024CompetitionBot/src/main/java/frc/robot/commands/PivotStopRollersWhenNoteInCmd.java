@@ -14,6 +14,7 @@ public class PivotStopRollersWhenNoteInCmd extends Command {
   /** Creates a new PivotStopRollersWhenNoteInCmd. */
   public PivotStopRollersWhenNoteInCmd(ShooterSub shooterSub) {
     m_shooterSub = shooterSub;
+
     addRequirements(shooterSub);
   }
 

@@ -81,8 +81,8 @@ public class ClimbSub extends SubsystemBase {
   }
 
   public void setClimbPower(double leftPower, double rightPower) {
-    m_climbMotorLeft.set(leftPower);
-    m_climbMotorRight.set(rightPower);
+    setClimbPowerLeft(leftPower);
+    setClimbPowerRight(rightPower);
   }
 
   public double getLeftHeight() {
