@@ -110,7 +110,7 @@ public class RobotContainer {
 
     //m_driverController.L2()
 
-    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -164,7 +164,7 @@ public class RobotContainer {
 
     m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
 
-    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub));
+    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 
     m_operatorController.share().onTrue(new ClimbSetHeightCmd(0.2286, 0.2, m_drivetrainSub, m_climbSub)); //228.6
 

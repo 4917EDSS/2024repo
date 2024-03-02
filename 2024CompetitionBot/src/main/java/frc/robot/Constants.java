@@ -22,7 +22,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public final class Constants {
   // Max log level to print (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, or FINEST)
   // e.g. Level.WARNING will only print WARNING and SEVERE log messages
-  public static final Level kLogLevel = Level.WARNING;
+  public static final Level kLogLevel = Level.FINE;
 
 
   // Hardware constants
@@ -188,11 +188,11 @@ public final class Constants {
     public static final int kNoteSensorAtFlywheel = 3;
 
     public static final double kPivotAngleConversion = 54.5 / 32.856; // Degrees / ticks measured
-    public static final double kPivotAngleTolerance = 5.0;
+    public static final double kPivotAngleTolerance = 1.0;
 
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
-    public static final double kAngleSubwooferSpeaker = 45.0;
+    public static final double kAngleSubwooferSpeaker = 24.0;
     public static final double kAngleAmp = 135.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 45.0;
