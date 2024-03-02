@@ -83,16 +83,16 @@ public final class Constants {
 
   // Values that are specific to a particular physical robot
   public static final class RobotSpecific {
-    public static final String PrototypeSerialNumber = "03178417";
+    public static final String PrototypeSerialNumber = "03264244";//"03178417";
     public static final String PracticeSerialNumber = "03147322";
-    public static final String CompetitionSerialNumber = "03178417";
+    public static final String CompetitionSerialNumber = "03264244";//"03178417";
     public static final String serialNumber = System.getenv("serialnum");
 
     public static final class Prototype {
-      public static final double kAbsoluteEncoderOffsetFL = 1.751;
-      public static final double kAbsoluteEncoderOffsetFR = -2.704;
-      public static final double kAbsoluteEncoderOffsetBL = -0.184;
-      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+      public static final double kAbsoluteEncoderOffsetFL = 1.881;
+      public static final double kAbsoluteEncoderOffsetFR = -2.628;
+      public static final double kAbsoluteEncoderOffsetBL = 0.836;
+      public static final double kAbsoluteEncoderOffsetBR = -1.715;
     }
 
     public static final class Practice {
@@ -103,10 +103,10 @@ public final class Constants {
     }
 
     public static final class Competition {
-      public static final double kAbsoluteEncoderOffsetFL = 1.751;
-      public static final double kAbsoluteEncoderOffsetFR = -2.704;
-      public static final double kAbsoluteEncoderOffsetBL = -0.184;
-      public static final double kAbsoluteEncoderOffsetBR = -0.708;
+      public static final double kAbsoluteEncoderOffsetFL = 1.881;
+      public static final double kAbsoluteEncoderOffsetFR = -2.628;
+      public static final double kAbsoluteEncoderOffsetBL = 0.836;
+      public static final double kAbsoluteEncoderOffsetBR = -1.715;
     }
 
     public static final class Unknown {

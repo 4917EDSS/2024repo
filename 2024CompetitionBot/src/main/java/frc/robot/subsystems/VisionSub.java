@@ -5,12 +5,16 @@
 package frc.robot.subsystems;
 
 import java.util.logging.Logger;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -30,7 +34,8 @@ public class VisionSub extends SubsystemBase {
   // private NetworkTableEntry m_ty;
   // private NetworkTableEntry m_ta;
   // private NetworkTableEntry m_tv;
-  // private NetworkTableEntry m_tid;
+  private NetworkTableEntry m_tid;
+  private NetworkTableEntry m_botpose_target;
   private NetworkTableEntry m_getpipe;
   private NetworkTableEntry m_pipeline; // Use constants for pipeline
   private boolean m_isRedAlliance = true;
@@ -45,7 +50,8 @@ public class VisionSub extends SubsystemBase {
     // m_ty = m_limelight.getEntry("ty");
     // m_ta = m_limelight.getEntry("ta");
     // m_tv = m_limelight.getEntry("tv");
-    // m_tid = m_limelight.getEntry("tid");
+    m_tid = m_limelight.getEntry("tid");
+    m_botpose_target = m_limelight.getEntry("botpose_targetspace");
     m_getpipe = m_limelight.getEntry("getpipe");
     m_pipeline = m_limelight.getEntry("pipeline");
 
@@ -112,7 +118,15 @@ public class VisionSub extends SubsystemBase {
     // m_ta = m_limelight.getEntry("ta");
     // m_tv = m_limelight.getEntry("tv");
     // m_tid = m_limelight.getEntry("tid");
-
+    double zero[] = {0.0};
+    double pos[] = m_botpose_target.getDoubleArray(zero);
+    SmartDashboard.putNumber("Apriltag ID", getPrimaryID());
+    SmartDashboard.putNumber("Apriltag X", pos[0]);
+    SmartDashboard.putNumber("Apriltag Y", pos[1]);
+    SmartDashboard.putNumber("Apriltag Z", pos[2]);
+    SmartDashboard.putNumber("Apriltag RX", pos[0]);
+    SmartDashboard.putNumber("Apriltag RY", pos[1]);
+    SmartDashboard.putNumber("Apriltag RZ", pos[2]);
     m_shuffleboardtx.setDouble(getHorizontalAngle());
     m_shuffleboardty.setDouble(getVerticalAngle());
     m_shuffleboardta.setDouble(getTargetArea());
@@ -158,9 +172,17 @@ public class VisionSub extends SubsystemBase {
     return distance;
   }
 
+  public Pose3d getTarget3D() {
+    double zero[] = {0.0};
+    double pos[] = m_botpose_target.getDoubleArray(zero);
+    Translation3d position = new Translation3d(pos[0], pos[1], pos[2]);
+    Rotation3d rotation = new Rotation3d(pos[3], pos[4], pos[5]);
+    return new Pose3d(position, rotation);
+  }
+
   public double getHorizontalAngle() { // Horizontal offset between -27 to 27 degrees or -29.8 to 29.8 degrees
     if(hasTarget() == false) {
-      return -1;
+      return 0.0;
     }
     LimelightTarget_Fiducial tag = getDetailsForTagId(m_targetApriltagID);
     return tag.tx;
@@ -193,10 +215,10 @@ public class VisionSub extends SubsystemBase {
     return (int) val;
   }
 
-  // public int getPrimaryID() { // Get primary apriltag ID (-1 means nothing)
-  //   Long val = m_tid.getInteger(-1);
-  //   return val.intValue();
-  // }
+  public int getPrimaryID() { // Get primary apriltag ID (-1 means nothing)
+    Long val = m_tid.getInteger(-1);
+    return val.intValue();
+  }
 
   public void setPipeline(int line) { // Set the currect pipeline (NO_VISION, LIMELIGHT, or APRILTAG)
     m_pipeline.setNumber(line);

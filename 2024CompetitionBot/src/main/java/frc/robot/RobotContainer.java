@@ -29,6 +29,7 @@ import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
+import frc.robot.commands.VisionAlignDriveCmd;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -87,7 +88,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // ======================================== Driver controller bindings ========================================
-    //m_driverController.square()
+
+    m_driverController.square().whileTrue(new VisionAlignDriveCmd(m_drivetrainSub, m_visionSub, m_driverController));
 
     m_driverController.cross()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 0.5,
