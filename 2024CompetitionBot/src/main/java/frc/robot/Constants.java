@@ -22,7 +22,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public final class Constants {
   // Max log level to print (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, or FINEST)
   // e.g. Level.WARNING will only print WARNING and SEVERE log messages
-  public static final Level kLogLevel = Level.WARNING;
+  public static final Level kLogLevel = Level.FINE;
 
 
   // Hardware constants
@@ -165,12 +165,15 @@ public final class Constants {
     public static final double kHeightHookLowered = 0.01;
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
+    public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
+
+    public static final double kPower = 1.0;
 
     /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kTickCofficient = 0.8 / 769.637939453125;
+    public static final double kTickCofficient = 0.4 / 361.945; //0.8 / 769.637939453125
 
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
-    public static final double kHeightTolerence = 0.01; // In meters
+    public static final double kHeightTolerence = 0.005; // In meters
     public static final double kRollZero = -4.3; // In degrees
     public static final double kRollTolerence = 10; // In degrees
     public static final double kMinRollAngle = kRollZero - kRollTolerence;
@@ -185,11 +188,11 @@ public final class Constants {
     public static final int kNoteSensorAtFlywheel = 3;
 
     public static final double kPivotAngleConversion = 54.5 / 32.856; // Degrees / ticks measured
-    public static final double kPivotAngleTolerance = 5.0;
+    public static final double kPivotAngleTolerance = 1.0;
 
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
-    public static final double kAngleSubwooferSpeaker = 45.0;
+    public static final double kAngleSubwooferSpeaker = 24.0;
     public static final double kAngleAmp = 190.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 45.0;

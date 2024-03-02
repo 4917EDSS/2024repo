@@ -103,11 +103,20 @@ public class ClimbSetHeightCmd extends Command {
 
     if(moveLeft && !m_leftMotorDone) {
       m_climbSub.setClimbPowerLeft(m_power * leftDirection);
+
+      //m_logger.fine(" move left " + moveLeft);
+      //m_logger.fine("left motor done " + m_leftMotorDone);
+
     } else {
       m_climbSub.setClimbPowerLeft(0.0);
+
+
     }
     if(moveRight && !m_rightMotorDone) {
       m_climbSub.setClimbPowerRight(m_power * rightDirection);
+      //m_logger.fine(" move right " + moveRight);
+      // m_logger.fine("right motor done " + m_rightMotorDone);
+
     } else {
       m_climbSub.setClimbPowerRight(0.0);
     }
