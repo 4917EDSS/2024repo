@@ -165,6 +165,9 @@ public final class Constants {
     public static final double kHeightHookLowered = 0.01;
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
+    public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
+
+    public static final double kPower = 1.0;
 
     /** Convert ticks to meters (Ticks over 80cm) */
     public static final double kTickCofficient = 0.4 / 361.945; //0.8 / 769.637939453125
