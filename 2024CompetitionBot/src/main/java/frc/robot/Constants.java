@@ -190,7 +190,7 @@ public final class Constants {
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
     public static final double kAngleSubwooferSpeaker = 45.0;
-    public static final double kAngleAmp = 135.0;
+    public static final double kAngleAmp = 190.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 45.0;
     public static final double kAnglePodium = 58.276;
@@ -199,7 +199,7 @@ public final class Constants {
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
-    public static final double kNoteLowerAmpShotPower = -0.5;
+    public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
   }
 
