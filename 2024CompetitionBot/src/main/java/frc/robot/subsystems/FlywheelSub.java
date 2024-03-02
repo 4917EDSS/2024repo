@@ -29,8 +29,6 @@ public class FlywheelSub extends SubsystemBase {
   private final SimpleMotorFeedforward m_FlyWheelFeedforward =
       new SimpleMotorFeedforward(Constants.Flywheel.ks, Constants.Flywheel.kv);
 
-  private final int m_FlywheelTolerance = 5;
-
   private boolean m_isFlywheelEnabled = false;
 
   private static Logger m_logger = Logger.getLogger(FlywheelSub.class.getName());
@@ -38,6 +36,8 @@ public class FlywheelSub extends SubsystemBase {
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
   private final GenericEntry m_shooterFlywheelVelocityL, m_shooterFlywheelVelocityR, m_shooterflywheelPowerL,
       m_shooterflywheelPowerR;
+
+  private double m_setFeedForwardPoint = 0.0;
 
   public FlywheelSub() {
     m_shooterFlywheelVelocityL = m_shuffleboardTab.add("Left Shooter Flywheel Velocity", 0).getEntry();
@@ -61,6 +61,8 @@ public class FlywheelSub extends SubsystemBase {
     //m_flywheelR.follow(m_flywheelL);
     m_flywheelR.set(0);
     m_flywheelL.set(0);
+
+
     disableFlywheel();
   }
 
@@ -73,12 +75,22 @@ public class FlywheelSub extends SubsystemBase {
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed. 
     // only using left Flywheel velocity. Todo add a right velocity
     if(m_isFlywheelEnabled) {
-      double driveOutput = m_FlyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity); //4200 is a target velocity we don't know what it is 
-      double setPoint = m_FlyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity);
+      double driveOutput =
+          m_FlyWheelPID.calculate(getFlywheelVelocityL(),
+              Constants.Flywheel.kFlywheelShootVelocity); //4200 is a target velocity we don't know what it is 
+      m_setFeedForwardPoint = m_FlyWheelFeedforward.calculate(driveOutput / 2, 0.1);
+      //m_flywheelR.set(setPoint + driveOutput);      // m_flywheelL.set(m_setFeedForwardPoint);
+      // m_flywheelR.set(m_setFeedForwardPoint);
 
-      //m_flywheelR.set(setPoint + driveOutput);
-      m_flywheelL.set(setPoint + driveOutput);
-      m_flywheelR.set(setPoint + driveOutput);
+      // double driveOutput =
+      //     m_FlyWheelPID.calculate(getFlywheelVelocityL() - m_setFeedForwardPoint,
+      //         Constants.Flywheel.kFlywheelShootVelocity); //4200 is a target velocity we don't know what it is 
+
+      // //m_flywheelR.set(setPoint + driveOutput);
+      // m_flywheelL.set(m_setFeedForwardPoint);
+      // m_flywheelR.set(m_setFeedForwardPoint);
+      m_flywheelL.set(m_setFeedForwardPoint);
+      m_flywheelR.set(m_setFeedForwardPoint);
       //m_flywheelL.set(setPoint + driveOutput);
     } else {
       m_flywheelR.set(0);
@@ -97,7 +109,8 @@ public class FlywheelSub extends SubsystemBase {
 
   public boolean isAtTargetVelocity() {
 
-    if(Math.abs(getFlywheelVelocityL() - Constants.Flywheel.kFlywheelShootVelocity) < m_FlywheelTolerance) {
+    if(Math.abs(
+        getFlywheelVelocityL() - Constants.Flywheel.kFlywheelShootVelocity) < Constants.Flywheel.kFlywheelTolerance) {
       return true;
     }
     return false;
