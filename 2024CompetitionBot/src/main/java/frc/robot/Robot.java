@@ -97,7 +97,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Voltage21", m_pdh.getCurrent(21));
     SmartDashboard.putNumber("Voltage22", m_pdh.getCurrent(22));
     SmartDashboard.putNumber("Voltage23", m_pdh.getCurrent(23));
-    SmartDashboard.putNumber("Voltage24", m_pdh.getCurrent(24));
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
