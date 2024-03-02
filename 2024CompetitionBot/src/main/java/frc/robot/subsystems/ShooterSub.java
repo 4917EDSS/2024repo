@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -64,16 +63,15 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
-  PIDController m_shooterPivotPID = new PIDController(0.05, 0.0, 0.001);
-  ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
+  private PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
+  private ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
 
   public ShooterSub(LedSub ledSub) {
 
-    m_shooterPivotPID.setTolerance(5.0);
+    m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
     // When true, positive power will turn motor backwards, negitive forwards.
-    // m_flywheel.setInverted(false);
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(true);
@@ -83,14 +81,12 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setIdleMode(IdleMode.kBrake);
     m_pivot.setIdleMode(IdleMode.kBrake);
 
-    // m_flywheel.setSmartCurrentLimit(40);
     m_upperFeeder.setSmartCurrentLimit(40);
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    // m_flywheel.getEncoder().setVelocityConversionFactor(1.0);
     m_pivot.getEncoder().setVelocityConversionFactor(1.0);
-    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); //0.68
+    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
 
     m_ledSub = ledSub;
 
@@ -179,17 +175,19 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.get();
   }
 
-  public boolean setPivotAngle(double angle) { // Returns true when at position
-    double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
+  public void runPivotControl(double targetAngle) { // Returns true when at position
+    //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
 
-    double pidPower = m_shooterPivotPID.calculate(getPivotAngle(), angle);
+    double pidPower = m_pivotPID.calculate(getPivotAngle(), targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
     double pivotPower = pidPower + fedPower;
     // TODO: Run pivot motor based on power
     movePivot(pivotPower);
+  }
 
-    return m_shooterPivotPID.atSetpoint();
+  public boolean isAtPivotAngle() {
+    return m_pivotPID.atSetpoint();
   }
 
   public void resetPivot() {

@@ -33,6 +33,7 @@ public class VisionSub extends SubsystemBase {
   // private NetworkTableEntry m_tid;
   private NetworkTableEntry m_getpipe;
   private NetworkTableEntry m_pipeline; // Use constants for pipeline
+  private boolean m_isRedAlliance = true;
   private int m_targetApriltagID = 99; // randome default value
 
   private LimelightHelpers.LimelightResults m_llresults;
@@ -78,6 +79,10 @@ public class VisionSub extends SubsystemBase {
 
     // m_target = m_shuffleboardTab.add("has target", 0).getEntry();
     // m_tagID = m_shuffleboardTab.add("get primary", 0).getEntry();
+  }
+
+  public void setAlliance(boolean isRedAlliance) {
+    m_isRedAlliance = isRedAlliance;
   }
 
   public double getDistance(int id) { // In meters

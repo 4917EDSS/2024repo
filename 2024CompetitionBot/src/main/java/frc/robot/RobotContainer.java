@@ -228,6 +228,7 @@ public class RobotContainer {
 			} else if(DriverStation.getAlliance().get() == Alliance.Blue) {
 				m_isRedAlliance = false;
 			}
+			m_visionSub.setAlliance(m_isRedAlliance);
 		}
 	}
 }
