@@ -166,6 +166,7 @@ public final class Constants {
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
     public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
+    public static final double kGoToTrapShot = 0.00; //needs to be found for trapshot
 
     public static final double kPower = 1.0;
 
@@ -198,6 +199,7 @@ public final class Constants {
     public static final double kAngleAutoLine = 45.0;
     public static final double kAnglePodium = 58.276;
     public static final double kAngleWingLine = 72.522;
+    public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
 
 
     public static final double kNoteLowerIntakePower = 1.0;

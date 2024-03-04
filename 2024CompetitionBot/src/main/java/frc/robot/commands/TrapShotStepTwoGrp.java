@@ -17,10 +17,12 @@ public class TrapShotStepTwoGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ClimbSetHeightCmd(Constants.Climb.kHeightGrabChain, Constants.Climb.kPower, drivetrainSub, climbSub));
-    // new DriveFieldRelativeCmd());  drive back a amount
-    //move pivot to corect angle
+    // new DriveFieldRelativeCmd());  drive back a amount 
+    //move pivot to corect angle 
+    //new ShooterPivotCmd(Constants.Shooter.kAngleTrapShot, shooterSub),
     //drive forward amount driven back
-    //climb to trap height
+    //climb to trap height n
+    //new ClimbSetHeightCmd(Constants.Climb.kGoToTrapShot, Constants.Climb.kPower, drivetrainSub, climbSub));
 
   }
 }
