@@ -40,4 +40,8 @@ public final class Constants {
     public final static int kClimbMotorL = 24;
     public final static int kClimbMotorR = 25;
   }
+
+  public final static class Flywheel {
+    public final static double kEncoderConversionFactor = 1.0;
+  }
 }

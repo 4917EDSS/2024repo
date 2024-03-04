@@ -5,9 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoFlywheelSysIdGrp;
 import frc.robot.subsystems.FlywheelSub;
 
 /**
@@ -44,7 +44,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new PrintCommand("No auto");
+    return new AutoFlywheelSysIdGrp(m_flywheelSub);
   }
 }
