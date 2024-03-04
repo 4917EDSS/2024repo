@@ -30,10 +30,10 @@ public class VisionSub extends SubsystemBase {
       m_target, m_tagID,
       m_apriltagCount, m_targetApriltag_sf;
 
-  // private NetworkTableEntry m_tx;
-  // private NetworkTableEntry m_ty;
+  private NetworkTableEntry m_tx;
+  //private NetworkTableEntry m_ty;
   // private NetworkTableEntry m_ta;
-  // private NetworkTableEntry m_tv;
+  private NetworkTableEntry m_tv;
   private NetworkTableEntry m_tid;
   private NetworkTableEntry m_botpose_target;
   private NetworkTableEntry m_getpipe;
@@ -46,10 +46,10 @@ public class VisionSub extends SubsystemBase {
   /** Creates a new VisionSub. */
   public VisionSub() {
     m_limelight = NetworkTableInstance.getDefault().getTable("limelight");
-    // m_tx = m_limelight.getEntry("tx");
-    // m_ty = m_limelight.getEntry("ty");
+    m_tx = m_limelight.getEntry("tx");
+    //m_ty = m_limelight.getEntry("ty");
     // m_ta = m_limelight.getEntry("ta");
-    // m_tv = m_limelight.getEntry("tv");
+    m_tv = m_limelight.getEntry("tv");
     m_tid = m_limelight.getEntry("tid");
     m_botpose_target = m_limelight.getEntry("botpose_targetspace");
     m_getpipe = m_limelight.getEntry("getpipe");
@@ -69,7 +69,7 @@ public class VisionSub extends SubsystemBase {
 
   public void init() {
     m_logger.info("Initializing VisionSub");
-    setPipeline(2); // Apriltag vision
+    setPipeline(1); // Apriltag vision
   }
 
   @Override
@@ -80,7 +80,7 @@ public class VisionSub extends SubsystemBase {
     updateShuffleBoard();
     //m_sbPivotPosition = m_shuffleboardTab.add("Pivot Position", 0).getEntry();
     // m_tx = m_shuffleboardTab.add("tx", 0).getEntry();
-    // m_ty = m_shuffleboardTab.add("ty", 0).getEntry();
+    //m_ty = m_shuffleboardTab.add("ty", 0).getEntry();
     // m_ta = m_shuffleboardTab.add("ta", 0).getEntry();
 
     // m_target = m_shuffleboardTab.add("has target", 0).getEntry();
@@ -174,6 +174,10 @@ public class VisionSub extends SubsystemBase {
 
   }
 
+  public double getSimpleHorizontalAngle() {
+    return m_tx.getDouble(0.0);
+  }
+
   public double getVerticalAngle() { // Horizontal offset between -20.5 to 20.5 degrees or -24.85 to 24.85 degrees
     if(hasTarget() == false) {
       return -1;
@@ -193,6 +197,10 @@ public class VisionSub extends SubsystemBase {
   public boolean hasTarget() { // Returns true if any valid targets exist
     return isTagInVision(m_targetApriltagID);
     // return (m_tv.getDouble(0.0) == 0.0) ? false : true;
+  }
+
+  public boolean simpleHasTarget() {
+    return (m_tv.getDouble(0.0) == 0.0) ? false : true;
   }
 
   public int getVisionMode() { // Gets current vision pipeline number
