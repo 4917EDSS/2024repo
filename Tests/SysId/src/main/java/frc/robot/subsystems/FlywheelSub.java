@@ -73,12 +73,12 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelR.setInverted(false);
     m_flywheelL.setIdleMode(IdleMode.kCoast);
     m_flywheelR.setIdleMode(IdleMode.kCoast);
-    m_flywheelL.setSmartCurrentLimit(40);
-    m_flywheelR.setSmartCurrentLimit(40);
+    m_flywheelL.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
+    m_flywheelR.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
     m_flywheelL.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
     m_flywheelR.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
-    m_flywheelL.set(0);
-    m_flywheelR.set(0);
+    m_flywheelL.set(0.0);
+    m_flywheelR.set(0.0);
   }
 
   @Override
