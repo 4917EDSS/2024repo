@@ -225,7 +225,6 @@ public final class Constants {
     public static final int kClimbMotorL = 8;
     public static final int kClimbMotorR = 10;
 
-
     public static final int kLowerFeeder = 9; //
     public static final int kUpperFeeder = 12; //
     public static final int kPivot = 17; //

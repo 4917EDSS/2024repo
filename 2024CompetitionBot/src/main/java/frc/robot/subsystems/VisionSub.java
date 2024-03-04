@@ -118,21 +118,6 @@ public class VisionSub extends SubsystemBase {
     // m_ta = m_limelight.getEntry("ta");
     // m_tv = m_limelight.getEntry("tv");
     // m_tid = m_limelight.getEntry("tid");
-    double zero[] = {0.0};
-    double pos[] = m_botpose_target.getDoubleArray(zero);
-    SmartDashboard.putNumber("Apriltag ID", getPrimaryID());
-    SmartDashboard.putNumber("Apriltag X", pos[0]);
-    SmartDashboard.putNumber("Apriltag Y", pos[1]);
-    SmartDashboard.putNumber("Apriltag Z", pos[2]);
-    SmartDashboard.putNumber("Apriltag RX", pos[0]);
-    SmartDashboard.putNumber("Apriltag RY", pos[1]);
-    SmartDashboard.putNumber("Apriltag RZ", pos[2]);
-    m_shuffleboardtx.setDouble(getHorizontalAngle());
-    m_shuffleboardty.setDouble(getVerticalAngle());
-    m_shuffleboardta.setDouble(getTargetArea());
-    m_target.setBoolean(hasTarget());
-    // m_tagID.setDouble(getPrimaryID());
-    m_targetApriltag_sf.setInteger(m_targetApriltagID);
   }
 
   public void setTarget(int apriltagID) {
