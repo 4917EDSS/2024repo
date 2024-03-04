@@ -310,7 +310,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void resetGyro() {
-    m_gyro.setAngleAdjustment(0.0);
+    m_gyro.setAngleAdjustment(90.0);
     m_gyro.reset();
     resetOdometry();
   }
