@@ -28,6 +28,8 @@ import frc.robot.subsystems.LedSub.LedZones;
 
 public class ShooterSub extends SubsystemBase {
 
+  private static byte[] m_LEDBuffer = new byte[75];
+  private static boolean m_LEDBufferCheckSumCalculated = false;
   private static int loopNumber = 0;
   private static int dataSetLength = 0;
   private static int loopThroughBufferByte = 0;
@@ -102,6 +104,12 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
     resetPivot();
     spinBothFeeders(0, 0);
+    m_SerialPort.setReadBufferSize(m_LEDBuffer.length);
+    m_LEDBuffer[0] = (byte) 0xA5;
+    m_LEDBuffer[73] = (byte) 0xFF;
+    for(int i = 0; i < 24; i++) {
+      updateLED(i, 0, 255, 0);
+    }
   }
 
   @Override
@@ -112,6 +120,8 @@ public class ShooterSub extends SubsystemBase {
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
+
+    writeToSerial();
 
     // TODO:  This might be easier to do inside the commands that pivot the shooter
     if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
@@ -212,6 +222,25 @@ public class ShooterSub extends SubsystemBase {
 
   public boolean isNoteAtPosition(int noteSensorId) {
     return m_noteSwitches[noteSensorId];
+  }
+
+  private void writeToSerial() {
+    if(!m_LEDBufferCheckSumCalculated) {
+      m_LEDBuffer[74] = 0;
+      for(int i = 0; i < 74; i++) {
+        m_LEDBuffer[74] += m_LEDBuffer[i];
+      }
+    }
+    m_SerialPort.write(m_LEDBuffer, m_LEDBuffer.length);
+    m_SerialPort.flush();
+    m_LEDBufferCheckSumCalculated = true;
+  }
+
+  public void updateLED(int LEDIndex, int r, int g, int b) {
+    m_LEDBuffer[LEDIndex * 3 + 1] = (byte) r;
+    m_LEDBuffer[LEDIndex * 3 + 2] = (byte) g;
+    m_LEDBuffer[LEDIndex * 3 + 3] = (byte) b;
+    m_LEDBufferCheckSumCalculated = false;
   }
 
   public int[] RS232Listen() {

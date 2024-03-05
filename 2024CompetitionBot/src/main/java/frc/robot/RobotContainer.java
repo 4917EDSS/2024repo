@@ -106,11 +106,11 @@ public class RobotContainer {
             m_drivetrainSub,
             m_climbSub));
 
-    //m_driverController.L1()
+    m_driverController.L1().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 255, 0, 0)));
 
-    //m_driverController.R1()
+    m_driverController.R1().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 0, 255, 0)));
 
-    //m_driverController.L2()
+    m_driverController.L2().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 0, 0, 255)));
 
     m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 

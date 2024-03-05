@@ -70,10 +70,10 @@ public final class Constants {
 
   public final static class Arduino {
     public static final int kBaudRate = 38400;
-    public static final int kBufferSize = 15; //(2 * bitDataLength) - 1
+    public static final int kBufferSize = 37; //(2 * bitDataLength) - 1
     public static final int kTimeOutLength = 30;
-    public static final int kReadByteLength = 15;
-    public static final int kByteArrayLength = 5;
+    public static final int kReadByteLength = 37;
+    public static final int kByteArrayLength = 17;
   }
 
   // public static final class AnalogInIds {
