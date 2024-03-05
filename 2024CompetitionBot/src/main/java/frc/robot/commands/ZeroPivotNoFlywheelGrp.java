@@ -4,21 +4,19 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
-import frc.robot.subsystems.IntakeSub;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.ShooterSub;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class NoteIntakeGrp extends SequentialCommandGroup {
-  /** Creates a new NoteIntakeGrp. */
-  public NoteIntakeGrp(IntakeSub intakeSub, ShooterSub shooterSub) {
+public class ZeroPivotNoFlywheelGrp extends ParallelCommandGroup {
+  /** Creates a new ShooterPrepGrp. */
+  public ZeroPivotNoFlywheelGrp(double pivotPosition, ShooterSub shooterSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        //new ShooterPivotCmd(Constants.Shooter.kAngleFloorIntake, shooterSub),
-        new IntakeUntilNoteInCmd(intakeSub, shooterSub));
+        new ShooterPivotCmd(pivotPosition, shooterSub));
+
   }
 }

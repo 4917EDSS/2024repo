@@ -196,10 +196,11 @@ public final class Constants {
     public static final double kAngleSubwooferSpeaker = 24.0;
     public static final double kAngleAmp = 190.0;
     public static final double kAngleTrap = 270.0;
-    public static final double kAngleAutoLine = 45.0;
+    public static final double kAngleAutoLine = 65.0;
     public static final double kAnglePodium = 58.276;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
+    public static final double kAngleZero = 0.0;
 
 
     public static final double kNoteLowerIntakePower = 1.0;

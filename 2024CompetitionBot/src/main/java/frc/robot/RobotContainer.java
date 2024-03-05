@@ -30,6 +30,7 @@ import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.commands.VisionAlignDriveCmd;
+import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -157,6 +158,9 @@ public class RobotContainer {
     m_operatorController.circle()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePodium, m_shooterSub,
             m_flywheelSub));
+
+    m_operatorController.triangle()
+        .onTrue(new ZeroPivotNoFlywheelGrp(Constants.Shooter.kAngleZero, m_shooterSub));
 
     //m_operatorController.triangle()
 
