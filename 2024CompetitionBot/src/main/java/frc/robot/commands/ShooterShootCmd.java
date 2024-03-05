@@ -11,19 +11,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.commands.ShooterFlywheelCmd;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
   private final ShooterSub m_shooterSub;
   private final FlywheelSub m_flywheelSub;
+  //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
   private Instant start;
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub) {
+  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
     m_shooterSub = shooterSub;
     m_flywheelSub = flywheelSub;
+    //m_shooterFlywheelCmd = shooterFlywheelCmd;
 
     addRequirements(shooterSub, flywheelSub);
   }
@@ -33,6 +36,7 @@ public class ShooterShootCmd extends Command {
   public void initialize() {
     m_logger.fine("ShooterShootCmd - Init");
     start = Instant.now();
+    m_flywheelSub.enableFlywheel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,7 +46,6 @@ public class ShooterShootCmd extends Command {
 
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
     // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    // m_shooterSub.spinFlywheel(driveOutput);
     m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
         Constants.Shooter.kNoteUpperIntakePower);
   }

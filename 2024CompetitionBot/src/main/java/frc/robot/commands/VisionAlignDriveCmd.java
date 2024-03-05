@@ -17,13 +17,20 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.VisionSub;
 
 public class VisionAlignDriveCmd extends Command {
-  /** Creates a new VisionAlignDriveCmd. */
+  /**
+   * This command is specifically for automatically lining up infront of an apriltag and moving forwards and backwards
+   * from it
+   */
 
   private final VisionSub m_visionSub;
   private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
 
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
+  private final PIDController m_alignTagPID = new PIDController(0.01, 0, 0); // For aligning infront of apriltag
+
+  private double angleSnapshot = 0.0;
+  private boolean hasAngleSnapshot = false;
 
   public VisionAlignDriveCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, CommandPS4Controller driverController) {
 
@@ -37,54 +44,68 @@ public class VisionAlignDriveCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_lookatPID.setTolerance(1.0);
+    m_alignTagPID.setTolerance(1.0);
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Stage 1: Look at apriltag
-    double horizontalOffset = m_visionSub.getHorizontalAngle();
-    double rotationalPower = MathUtil.clamp(m_lookatPID.calculate(horizontalOffset, 0.0), -0.5, 0.5); // TODO: Can we just remove the second parameter?
+    double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
+    double rotationalPower = MathUtil.clamp(m_lookatPID.calculate(horizontalOffset), -0.5, 0.5); // TODO: Can we just remove the second parameter?
 
-    // m_drivetrainSub.drive(Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0
-    //     : -m_driverController.getLeftX(),
-    //     (Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0
-    //         : m_driverController.getLeftY()),
-    //     rotationalPower, 0.02);
-
-    // Stage 2: Drive relative to apriltag
-    Pose3d apriltagInfo = m_visionSub.getTarget3D();
+    // Stage 2: Align with center of april tag
 
     // Get apriltag angle relative to gyro in radians and constrain it
-    // TODO: Make the angle and vector actually point towards the apriltag. It doesn't do that right now
-    double fieldApriltagAngle = MathUtil.inputModulus(
-        -apriltagInfo.getRotation().getY() + m_drivetrainSub.getRotation().getRadians(), 0.0, 2.0 * Math.PI);
+    double fieldApriltagAngle = m_drivetrainSub.getRotation().getDegrees() + horizontalOffset;
 
-    // Get apriltag angle as a vector. Setting drive x and y power to this would make it drive directly towards it
-    double apriltagX = Math.cos(fieldApriltagAngle);
-    double apriltagY = Math.sin(fieldApriltagAngle);
+    // Get apriltag angle as a vector. Setting drive x and y power to this would make it drive directly towards the apriltag
+    double apriltagX = Math.cos(Math.toRadians(fieldApriltagAngle));
+    double apriltagY = Math.sin(Math.toRadians(fieldApriltagAngle));
 
-    // Print vector
-    SmartDashboard.putNumber("ApriltagAX", apriltagX);
-    SmartDashboard.putNumber("ApriltagAY", apriltagY);
 
-    // Power towards and away from apriltag
+    // Power vectors in the direction of the apriltag
     double forwardPowerX =
-        apriltagX * Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY();
+        apriltagX * (Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY());
     double forwardPowerY =
-        apriltagY * Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY();
+        apriltagY * (Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY());
 
-    // Power from side to side around apriltag
+
+    // Get a snapshot of the apriltag angle so we can just update based on the gyroscope
+
+    // Apriltag snapshot calculations - makes sure it only ever updates the offset if the data is invalidated (apriltag disappears)
+    if(!m_visionSub.simpleHasTarget()) { // No targets? No snapshot
+      hasAngleSnapshot = false;
+    } else if(!hasAngleSnapshot) { // Set snapshot if there isn't currently any valid one (does once)
+      angleSnapshot = MathUtil.inputModulus(
+          m_drivetrainSub.getRotation().getDegrees() + m_visionSub.getTargetRotation().getY(), -180.0, 180.0);
+      hasAngleSnapshot = true;
+    }
+
+    double calculatedSnapshot = angleSnapshot - m_drivetrainSub.getRotation().getDegrees();
+    double powerApriltagAlign =
+        MathUtil.clamp(m_alignTagPID.calculate(-calculatedSnapshot), -0.75,
+            0.75);
+    if(!m_visionSub.simpleHasTarget() || forwardPowerX * forwardPowerY != 0.0) { // Stop aligning if driving  TODO: Check if this code is needed or not
+      powerApriltagAlign = 0.0;
+    }
+
+    // Power vectors from side to side around apriltag which will move the robot to align with the front of the tag
     double sidePowerX =
-        -apriltagY * Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX();
+        -apriltagY * powerApriltagAlign;//(Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX());
     double sidePowerY =
-        apriltagX * Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX();
+        apriltagX * powerApriltagAlign;//(Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX());
 
     // Vector Math may not be vectoring so make sure the value is clamped
     double xPower = MathUtil.clamp(forwardPowerX + sidePowerX, -1.0, 1.0);
     double yPower = MathUtil.clamp(forwardPowerY + sidePowerY, -1.0, 1.0);
 
-    m_drivetrainSub.drive(xPower, yPower, rotationalPower, 0.02);
+    //SmartDashboard.putNumber("Apriltag SnapY", angleSnapshot - m_drivetrainSub.getRotation().getDegrees());
+
+    m_drivetrainSub.drive(-xPower, -yPower, rotationalPower, 0.02);
   }
 
   // Called once the command ends or is interrupted.
@@ -96,8 +117,9 @@ public class VisionAlignDriveCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(!m_visionSub.hasTarget() || m_driverController.square().getAsBoolean() == false)
+    if(/* !m_visionSub.simpleHasTarget() || */ m_driverController.square().getAsBoolean() == false) { // Command stops when button is released
       return true;
+    }
     return false;
   }
 }

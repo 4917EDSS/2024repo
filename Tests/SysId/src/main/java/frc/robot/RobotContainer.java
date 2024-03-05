@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoFlywheelSysIdGrp;
@@ -24,6 +26,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    SmartDashboard.putData(new AutoFlywheelSysIdGrp(m_flywheelSub));
+    SmartDashboard.putData(new InstantCommand(() -> m_flywheelSub.increaseVoltage(true)));
+    SmartDashboard.putData(new InstantCommand(() -> m_flywheelSub.increaseVoltage(false)));
     configureBindings();
   }
 

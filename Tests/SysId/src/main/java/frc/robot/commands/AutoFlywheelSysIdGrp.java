@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.FlywheelSub;
 
@@ -18,8 +19,11 @@ public class AutoFlywheelSysIdGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         flywheelSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward),
+        new WaitCommand(3.0),
         flywheelSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse),
+        new WaitCommand(3.0),
         flywheelSub.sysIdDynamic(SysIdRoutine.Direction.kForward),
+        new WaitCommand(3.0),
         flywheelSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
 }

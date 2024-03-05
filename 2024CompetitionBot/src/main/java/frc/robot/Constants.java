@@ -204,6 +204,8 @@ public final class Constants {
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
+
+    public static final double kFlyWheelSpeed = 0.5;
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
   }
@@ -240,9 +242,11 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 1700;
-    public static final double ks = 0.01;
-    public static final double kv = 0.01;
+    public static final double kFlywheelShootVelocity = 60;
+    public static final double ks = 0.25;
+    public static final double kv = 0.125;
     public static final double kFlywheelTolerance = 0.1;
+    public static final double kEncoderConversionFactor = 10.0 / 16.5;
+    public static final double kVelocityConversionFactor = 1.0 / 60.0;
   }
 }

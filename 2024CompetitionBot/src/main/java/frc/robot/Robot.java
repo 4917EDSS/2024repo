@@ -73,30 +73,31 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Voltage0", m_pdh.getCurrent(0));
-    SmartDashboard.putNumber("Voltage1", m_pdh.getCurrent(1));
-    SmartDashboard.putNumber("Voltage2", m_pdh.getCurrent(2));
-    SmartDashboard.putNumber("Voltage3", m_pdh.getCurrent(3));
-    SmartDashboard.putNumber("Voltage4", m_pdh.getCurrent(4));
-    SmartDashboard.putNumber("Voltage5", m_pdh.getCurrent(5));
-    SmartDashboard.putNumber("Voltage6", m_pdh.getCurrent(6));
-    SmartDashboard.putNumber("Voltage7", m_pdh.getCurrent(7));
-    SmartDashboard.putNumber("Voltage8", m_pdh.getCurrent(8));
-    SmartDashboard.putNumber("Voltage9", m_pdh.getCurrent(9));
-    SmartDashboard.putNumber("Voltage10", m_pdh.getCurrent(10));
-    SmartDashboard.putNumber("Voltage11", m_pdh.getCurrent(11));
-    SmartDashboard.putNumber("Voltage12", m_pdh.getCurrent(12));
-    SmartDashboard.putNumber("Voltage13", m_pdh.getCurrent(13));
-    SmartDashboard.putNumber("Voltage14", m_pdh.getCurrent(14));
-    SmartDashboard.putNumber("Voltage15", m_pdh.getCurrent(15));
-    SmartDashboard.putNumber("Voltage16", m_pdh.getCurrent(16));
-    SmartDashboard.putNumber("Voltage17", m_pdh.getCurrent(17));
-    SmartDashboard.putNumber("Voltage18", m_pdh.getCurrent(18));
-    SmartDashboard.putNumber("Voltage19", m_pdh.getCurrent(19));
-    SmartDashboard.putNumber("Voltage20", m_pdh.getCurrent(20));
-    SmartDashboard.putNumber("Voltage21", m_pdh.getCurrent(21));
-    SmartDashboard.putNumber("Voltage22", m_pdh.getCurrent(22));
-    SmartDashboard.putNumber("Voltage23", m_pdh.getCurrent(23));
+    //TODO: Remove this
+    // SmartDashboard.putNumber("Voltage0", m_pdh.getCurrent(0));
+    // SmartDashboard.putNumber("Voltage1", m_pdh.getCurrent(1));
+    // SmartDashboard.putNumber("Voltage2", m_pdh.getCurrent(2));
+    // SmartDashboard.putNumber("Voltage3", m_pdh.getCurrent(3));
+    // SmartDashboard.putNumber("Voltage4", m_pdh.getCurrent(4));
+    // SmartDashboard.putNumber("Voltage5", m_pdh.getCurrent(5));
+    // SmartDashboard.putNumber("Voltage6", m_pdh.getCurrent(6));
+    // SmartDashboard.putNumber("Voltage7", m_pdh.getCurrent(7));
+    // SmartDashboard.putNumber("Voltage8", m_pdh.getCurrent(8));
+    // SmartDashboard.putNumber("Voltage9", m_pdh.getCurrent(9));
+    // SmartDashboard.putNumber("Voltage10", m_pdh.getCurrent(10));
+    // SmartDashboard.putNumber("Voltage11", m_pdh.getCurrent(11));
+    // SmartDashboard.putNumber("Voltage12", m_pdh.getCurrent(12));
+    // SmartDashboard.putNumber("Voltage13", m_pdh.getCurrent(13));
+    // SmartDashboard.putNumber("Voltage14", m_pdh.getCurrent(14));
+    // SmartDashboard.putNumber("Voltage15", m_pdh.getCurrent(15));
+    // SmartDashboard.putNumber("Voltage16", m_pdh.getCurrent(16));
+    // SmartDashboard.putNumber("Voltage17", m_pdh.getCurrent(17));
+    // SmartDashboard.putNumber("Voltage18", m_pdh.getCurrent(18));
+    // SmartDashboard.putNumber("Voltage19", m_pdh.getCurrent(19));
+    // SmartDashboard.putNumber("Voltage20", m_pdh.getCurrent(20));
+    // SmartDashboard.putNumber("Voltage21", m_pdh.getCurrent(21));
+    // SmartDashboard.putNumber("Voltage22", m_pdh.getCurrent(22));
+    // SmartDashboard.putNumber("Voltage23", m_pdh.getCurrent(23));
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

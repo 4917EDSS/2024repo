@@ -24,7 +24,7 @@ public class FlywheelSub extends SubsystemBase {
   private final CANSparkMax m_flywheelR =
       new CANSparkMax(Constants.CanIds.kFlywheelR, CANSparkLowLevel.MotorType.kBrushless);
   // PID Controllers
-  private final PIDController m_FlyWheelPID = new PIDController(1.0, 0, 0); // TODO: Tune the Driving PID
+  private final PIDController m_FlyWheelPID = new PIDController(0, 0, 0); // TODO: Tune the Driving PID
 
   private final SimpleMotorFeedforward m_FlyWheelFeedforward =
       new SimpleMotorFeedforward(Constants.Flywheel.ks, Constants.Flywheel.kv);
@@ -56,8 +56,10 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelL.setIdleMode(IdleMode.kCoast);
     m_flywheelR.setSmartCurrentLimit(40);
     m_flywheelL.setSmartCurrentLimit(40);
-    //_flywheelR.getEncoder().setVelocityConversionFactor(1.0);
-    m_flywheelL.getEncoder().setVelocityConversionFactor(1.0);
+    m_flywheelL.getEncoder().setPositionConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
+    m_flywheelR.getEncoder().setPositionConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
+    m_flywheelL.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kVelocityConversionFactor);
+    m_flywheelR.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kVelocityConversionFactor);
     //m_flywheelR.follow(m_flywheelL);
     m_flywheelR.set(0);
     m_flywheelL.set(0);
@@ -78,7 +80,8 @@ public class FlywheelSub extends SubsystemBase {
       double driveOutput =
           m_FlyWheelPID.calculate(getFlywheelVelocityL(),
               Constants.Flywheel.kFlywheelShootVelocity); //4200 is a target velocity we don't know what it is 
-      m_setFeedForwardPoint = m_FlyWheelFeedforward.calculate(driveOutput / 2, 0.1);
+      m_setFeedForwardPoint = m_FlyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
+      System.out.println(m_setFeedForwardPoint);
       //m_flywheelR.set(setPoint + driveOutput);      // m_flywheelL.set(m_setFeedForwardPoint);
       // m_flywheelR.set(m_setFeedForwardPoint);
 
@@ -100,10 +103,12 @@ public class FlywheelSub extends SubsystemBase {
 
   public void enableFlywheel() {
     m_isFlywheelEnabled = true;
+    System.out.println("En Flywheel");
   }
 
   public void disableFlywheel() {
     m_isFlywheelEnabled = false;
+    System.out.println("Dis Flywheel");
   }
 
 
