@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.util.logging.Logger;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -112,7 +113,7 @@ public class VisionSub extends SubsystemBase {
       april_tag_ids += tag.fiducialID + " , ";
     }
     m_apriltagIDs.setString(april_tag_ids);
-
+    //SmartDashboard.putNumber("Apriltag RY", Math.floor(getTargetRotation().getY()));
     // m_tx = m_limelight.getEntry("tx");
     // m_ty = m_limelight.getEntry("ty");
     // m_ta = m_limelight.getEntry("ta");
@@ -158,11 +159,16 @@ public class VisionSub extends SubsystemBase {
   }
 
   public Pose3d getTarget3D() {
-    double zero[] = {0.0};
-    double pos[] = m_botpose_target.getDoubleArray(zero);
+    double pos[] = m_botpose_target.getDoubleArray(new double[6]);
     Translation3d position = new Translation3d(pos[0], pos[1], pos[2]);
     Rotation3d rotation = new Rotation3d(pos[3], pos[4], pos[5]);
     return new Pose3d(position, rotation);
+  }
+
+  public Translation3d getTargetRotation() {
+    double pos[] = m_botpose_target.getDoubleArray(new double[6]);
+    Translation3d rotation = new Translation3d(pos[3], pos[4], pos[5]);
+    return rotation;
   }
 
   public double getHorizontalAngle() { // Horizontal offset between -27 to 27 degrees or -29.8 to 29.8 degrees
@@ -213,7 +219,7 @@ public class VisionSub extends SubsystemBase {
     return val.intValue();
   }
 
-  public void setPipeline(int line) { // Set the currect pipeline (NO_VISION, LIMELIGHT, or APRILTAG)
+  public void setPipeline(int line) { // Set the currect pipeline (NO_VISION, APRILTAG, or APRILTAG 3x)
     m_pipeline.setNumber(line);
   }
 
