@@ -29,6 +29,8 @@ public class FlywheelSub extends SubsystemBase {
   private final CANSparkMax m_flywheelR =
       new CANSparkMax(Constants.CanIds.kFlywheelR, CANSparkLowLevel.MotorType.kBrushless);
 
+  private double m_currentVoltage = 0.0;
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
@@ -73,12 +75,16 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelR.setInverted(false);
     m_flywheelL.setIdleMode(IdleMode.kCoast);
     m_flywheelR.setIdleMode(IdleMode.kCoast);
-    m_flywheelL.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
-    m_flywheelR.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
-    m_flywheelL.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
-    m_flywheelR.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
+    //m_flywheelL.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
+    //m_flywheelR.setSmartCurrentLimit(Constants.Flywheel.kCurrentLimit);
+    m_flywheelL.getEncoder().setPositionConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
+    m_flywheelR.getEncoder().setPositionConversionFactor(Constants.Flywheel.kEncoderConversionFactor);
+    m_flywheelL.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kVelocityConversionFactor);
+    m_flywheelR.getEncoder().setVelocityConversionFactor(Constants.Flywheel.kVelocityConversionFactor);
     m_flywheelL.set(0.0);
     m_flywheelR.set(0.0);
+    m_flywheelL.getEncoder().setPosition(0.0);
+    m_flywheelR.getEncoder().setPosition(0.0);
   }
 
   @Override
@@ -111,6 +117,17 @@ public class FlywheelSub extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
+  }
+
+  public void increaseVoltage(boolean increase) {
+    if(increase) {
+      m_currentVoltage += 0.05;
+    } else {
+      m_currentVoltage -= 0.05;
+    }
+    m_flywheelL.setVoltage(m_currentVoltage);
+    m_flywheelR.setVoltage(m_currentVoltage);
+    SmartDashboard.putNumber("Voltage", m_currentVoltage);
   }
 }
 

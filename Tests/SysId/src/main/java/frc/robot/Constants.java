@@ -42,7 +42,8 @@ public final class Constants {
   }
 
   public final static class Flywheel {
-    public final static double kEncoderConversionFactor = 1.0;
+    public final static double kEncoderConversionFactor = 10.0 / 16.5;
+    public final static double kVelocityConversionFactor = 1.0 / 60.0;
     public final static int kCurrentLimit = 40;
   }
 }
