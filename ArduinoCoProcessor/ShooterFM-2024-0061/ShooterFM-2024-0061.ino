@@ -84,7 +84,7 @@ void setLedArray(uint8_t * colours) {
   // For each byte of colour data fetch the elements 
   for (int i = 0; i < NUMPIXELS; i ++) {
     // Set each LED with its data
-    setLeds(ledMapping[i], colours[3*i], colours[3*i + 1], colours[3*i + 2]);
+    setLeds(ledMapping[i], colours[3*i+1], colours[3*i + 2], colours[3*i + 3]);
     //setLeds(i, colours[3*i], colours[3*i + 1], colours[3*i + 2]);
   }
   
@@ -153,6 +153,7 @@ void loop() {
         
         index ++;
       }
+      
 
       // If we are at the end of the packet 
       if (index == COLOUR_SIZE) {
