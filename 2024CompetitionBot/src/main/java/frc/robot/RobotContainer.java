@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignVisionCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DrivePathCmd;
@@ -24,6 +25,7 @@ import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteIntakeGrp;
 import frc.robot.commands.ShooterAmpShotGrp;
+import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
@@ -90,7 +92,10 @@ public class RobotContainer {
   private void configureBindings() {
     // ======================================== Driver controller bindings ========================================
 
-    m_driverController.square().whileTrue(new VisionAlignDriveCmd(m_drivetrainSub, m_visionSub, m_driverController));
+    // This basically takes over the robot right now
+    m_driverController.square()
+        .whileTrue(new AlignVisionCmd(m_drivetrainSub, m_visionSub, m_shooterSub, m_flywheelSub, m_driverController,
+            m_operatorController));
 
     m_driverController.cross()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 0.5,
@@ -174,9 +179,10 @@ public class RobotContainer {
 
     m_operatorController.share().onTrue(new ClimbSetHeightCmd(0.2286, 0.2, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleWingLine, m_shooterSub,
-            m_flywheelSub));
+    // m_operatorController.options()
+    //     .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleWingLine, m_shooterSub,
+    //         m_flywheelSub));
+    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));

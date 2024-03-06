@@ -32,7 +32,7 @@ public class VisionSub extends SubsystemBase {
       m_apriltagCount, m_targetApriltag_sf;
 
   private NetworkTableEntry m_tx;
-  //private NetworkTableEntry m_ty;
+  private NetworkTableEntry m_ty;
   // private NetworkTableEntry m_ta;
   private NetworkTableEntry m_tv;
   private NetworkTableEntry m_tid;
@@ -48,7 +48,7 @@ public class VisionSub extends SubsystemBase {
   public VisionSub() {
     m_limelight = NetworkTableInstance.getDefault().getTable("limelight");
     m_tx = m_limelight.getEntry("tx");
-    //m_ty = m_limelight.getEntry("ty");
+    m_ty = m_limelight.getEntry("ty");
     // m_ta = m_limelight.getEntry("ta");
     m_tv = m_limelight.getEntry("tv");
     m_tid = m_limelight.getEntry("tid");
@@ -182,6 +182,10 @@ public class VisionSub extends SubsystemBase {
 
   public double getSimpleHorizontalAngle() {
     return m_tx.getDouble(0.0);
+  }
+
+  public double getSimpleVerticalAngle() {
+    return m_ty.getDouble(0.0);
   }
 
   public double getVerticalAngle() { // Horizontal offset between -20.5 to 20.5 degrees or -24.85 to 24.85 degrees

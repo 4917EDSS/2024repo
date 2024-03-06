@@ -75,7 +75,7 @@ public class ShooterSub extends SubsystemBase {
 
     // When true, positive power will turn motor backwards, negitive forwards.
     m_upperFeeder.setInverted(false);
-    m_lowerFeeder.setInverted(false);
+    m_lowerFeeder.setInverted(true);
     m_pivot.setInverted(true);
 
     //m_flywheel.setIdleMode(IdleMode.kCoast);
