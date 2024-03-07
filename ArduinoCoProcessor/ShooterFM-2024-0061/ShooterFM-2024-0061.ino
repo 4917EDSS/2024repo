@@ -8,7 +8,7 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 #define DELAYVAL 500
 
 #define PACKET_SIZE 19
-#define COLOUR_SIZE 75
+#define COLOUR_SIZE 8
 
 unsigned char version = 0x02;
 unsigned char packetData[PACKET_SIZE] = {0};
@@ -84,8 +84,13 @@ void setLedArray(uint8_t * colours) {
   // For each byte of colour data fetch the elements 
   for (int i = 0; i < NUMPIXELS; i ++) {
     // Set each LED with its data
-    setLeds(ledMapping[i], colours[3*i], colours[3*i + 1], colours[3*i + 2]);
-    //setLeds(i, colours[3*i], colours[3*i + 1], colours[3*i + 2]);
+    if(i < 12){
+      setLeds(ledMapping[i], colours[0], colours[1], colours[2]);
+      //setLeds(i, colours[3*i], colours[3*i + 1], colours[3*i + 2]);
+    } else {
+      setLeds(ledMapping[i], colours[3], colours[4], colours[5]);
+    }
+    
   }
   
   // Activate the pixel
@@ -175,7 +180,7 @@ void loop() {
   // Set the leds 
   // TODO:  Change this to start at index 1 and drop one byte on the packet (74 instead of 75)
   //        Right now we have to send a dummy byte as the second byte to get things to align.
-  setLedArray(&colourData[2]);
+  setLedArray(&colourData[2]); //?
 
   // Adding sensor data to the packet array starting at element 2
   getSensorData(&packetData[2]);

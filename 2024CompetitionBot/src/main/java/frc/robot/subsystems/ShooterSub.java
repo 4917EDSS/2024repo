@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
@@ -14,9 +13,6 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.SerialPort.Parity;
-import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,23 +24,8 @@ import frc.robot.subsystems.LedSub.LedZones;
 
 public class ShooterSub extends SubsystemBase {
 
-  private static byte[] m_LEDBuffer = new byte[75];
-  private static boolean m_LEDBufferCheckSumCalculated = false;
-  private static int loopNumber = 0;
-  private static int dataSetLength = 0;
-  private static int loopThroughBufferByte = 0;
-  private static int arrayNumberWanted = 1;
-  private static int byteArrayCount = 0;
-  private static int checkSum = 0;
-  private static int checkSumWatchDog = 0;
-
-  private static int m_intakeSensors[] = new int[2];
-
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-  // Creating an instances of RS_232 port to communicate with Arduino (sensors)
-  private final SerialPort m_SerialPort =
-      new SerialPort(Constants.Arduino.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   /** Creates a new Shooter. */
   // private final CANSparkMax m_flywheel =
@@ -104,12 +85,6 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
     resetPivot();
     spinBothFeeders(0, 0);
-    m_SerialPort.setReadBufferSize(m_LEDBuffer.length);
-    m_LEDBuffer[0] = (byte) 0xA5;
-    m_LEDBuffer[73] = (byte) 0xFF;
-    for(int i = 0; i < 24; i++) {
-      updateLED(i, 0, 255, 0);
-    }
   }
 
   @Override
@@ -121,7 +96,6 @@ public class ShooterSub extends SubsystemBase {
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
 
-    writeToSerial();
 
     // TODO:  This might be easier to do inside the commands that pivot the shooter
     if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
@@ -222,95 +196,5 @@ public class ShooterSub extends SubsystemBase {
 
   public boolean isNoteAtPosition(int noteSensorId) {
     return m_noteSwitches[noteSensorId];
-  }
-
-  private void writeToSerial() {
-    if(!m_LEDBufferCheckSumCalculated) {
-      m_LEDBuffer[74] = 0;
-      for(int i = 0; i < 74; i++) {
-        m_LEDBuffer[74] += m_LEDBuffer[i];
-      }
-    }
-    m_SerialPort.write(m_LEDBuffer, m_LEDBuffer.length);
-    m_SerialPort.flush();
-    m_LEDBufferCheckSumCalculated = true;
-  }
-
-  public void updateLED(int LEDIndex, int r, int g, int b) {
-    m_LEDBuffer[LEDIndex * 3 + 1] = (byte) r;
-    m_LEDBuffer[LEDIndex * 3 + 2] = (byte) g;
-    m_LEDBuffer[LEDIndex * 3 + 3] = (byte) b;
-    m_LEDBufferCheckSumCalculated = false;
-  }
-
-  public int[] RS232Listen() {
-    //byte[] m_buffer = m_SerialPort.read(10);
-    m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize);
-    m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength);
-    // m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
-    //getBytesReceived
-
-    byte byteArray[] = new byte[Constants.Arduino.kByteArrayLength];
-
-    byte bufferByte[] = new byte[Constants.Arduino.kBufferSize];
-
-    checkSumWatchDog = 0;
-
-    do {
-      Arrays.fill(byteArray, (byte) 0);
-      Arrays.fill(bufferByte, (byte) 0);
-      if(checkSumWatchDog > 5) {
-        System.out.println("========checkSum corrupt 5 times=========");
-        // reset the arduino
-        break;
-      }
-      checkSumWatchDog++;
-      m_SerialPort.reset();
-      if(m_SerialPort.getBytesReceived() != 0) { //shouldn't read if there is no new data, this method doesn't work
-        bufferByte = m_SerialPort.read(Constants.Arduino.kReadByteLength);
-      }
-
-      byteArrayCount = 0;
-      loopThroughBufferByte = 0;
-
-      while(loopThroughBufferByte <= Constants.Arduino.kBufferSize) {
-        if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
-
-          dataSetLength = bufferByte[loopThroughBufferByte + 1];
-          if(dataSetLength > Constants.Arduino.kByteArrayLength) {
-            break;
-          }
-
-          loopNumber = 0;
-          arrayNumberWanted = 1;
-          while(loopNumber < dataSetLength) {
-            byteArray[byteArrayCount] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
-            byteArrayCount++;
-            arrayNumberWanted++;
-            loopNumber++;
-          }
-          break;
-        }
-        loopThroughBufferByte++;
-      }
-      for(int i = 0; i < Constants.Arduino.kByteArrayLength - 1; i++) {
-        checkSum += byteArray[i];
-      }
-    } while(checkSum != byteArray[4]);
-    checkSum = 0;
-    m_intakeSensors[0] = (((byteArray[1] & 0xFF) << 8) | (byteArray[0] & 0xFF));
-    m_intakeSensors[1] = (((byteArray[3] & 0xFF) << 8) | (byteArray[2] & 0xFF));
-
-    StringBuilder sb = new StringBuilder(byteArray.length * 2);
-    for(byte b : byteArray) {
-      sb.append(String.format("%02x", b));
-    }
-    System.out.println("===========================================================");
-    System.out.println(sb);
-    System.out.println(byteArray);
-    System.out.println(bufferByte);
-    System.out.println("===========================================================");
-
-    return m_intakeSensors;
   }
 }

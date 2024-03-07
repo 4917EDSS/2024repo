@@ -31,6 +31,7 @@ import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
 import frc.robot.commands.VisionAlignDriveCmd;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
+import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -56,6 +57,7 @@ public class RobotContainer {
   private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
   private final VisionSub m_visionSub = new VisionSub();
   private final FlywheelSub m_flywheelSub = new FlywheelSub();
+  private final ArduinoSub m_arduinoSub = new ArduinoSub();
 
   private boolean m_isRedAlliance = true;
 
@@ -107,11 +109,11 @@ public class RobotContainer {
             m_drivetrainSub,
             m_climbSub));
 
-    m_driverController.L1().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 255, 0, 0)));
+    m_driverController.L1().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 255, 0, 0)));
 
-    m_driverController.R1().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 0, 255, 0)));
+    m_driverController.R1().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 255, 0)));
 
-    m_driverController.L2().onTrue(new InstantCommand(() -> m_shooterSub.updateLED(9, 0, 0, 255)));
+    m_driverController.L2().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 0, 255)));
 
     m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
 
@@ -219,7 +221,7 @@ public class RobotContainer {
   // Intialize the sub systems
   public void initSubsystems() {
     // int sensorArray[] = new int[2];
-    // sensorArray = m_shooterSub.RS232Listen(); ////////////////////////TODO Remove
+    // /* sensorArray = */ m_arduinoSub.RS232Listen(); ////////////////////////TODO Remove
     m_ledSub.init();
     m_climbSub.init();
     m_drivetrainSub.init();
@@ -227,6 +229,7 @@ public class RobotContainer {
     m_shooterSub.init();
     m_visionSub.init();
     m_flywheelSub.init();
+    m_arduinoSub.init();
 
     if(DriverStation.getAlliance().isPresent()) {
       if(DriverStation.getAlliance().get() == Alliance.Red) {
