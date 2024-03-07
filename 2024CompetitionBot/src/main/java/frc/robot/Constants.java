@@ -52,8 +52,8 @@ public final class Constants {
     public final static int kFlywheelL = 19;
     public final static int kFlywheelR = 20;
     public final static int kPivot = 21;
-    public final static int kUpperFeeder = 22;
-    public final static int kLowerFeeder = 23;
+    public final static int kUpperFeeder = 23;
+    public final static int kLowerFeeder = 22;
     public final static int kClimbMotorL = 24;
     public final static int kClimbMotorR = 25;
   }

@@ -60,7 +60,7 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
 
     m_upperFeeder.setInverted(false);
-    m_lowerFeeder.setInverted(true);
+    m_lowerFeeder.setInverted(false);
     m_pivot.setInverted(true);
 
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
