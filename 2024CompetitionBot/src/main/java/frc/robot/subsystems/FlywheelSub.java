@@ -92,8 +92,8 @@ public class FlywheelSub extends SubsystemBase {
       // //m_flywheelR.set(setPoint + driveOutput);
       // m_flywheelL.set(m_setFeedForwardPoint);
       // m_flywheelR.set(m_setFeedForwardPoint);
-      m_flywheelL.set(m_setFeedForwardPoint);
-      m_flywheelR.set(m_setFeedForwardPoint);
+      m_flywheelL.set(1.0);//m_setFeedForwardPoint);
+      m_flywheelR.set(1.0);//m_setFeedForwardPoint);
       //m_flywheelL.set(setPoint + driveOutput);
     } else {
       m_flywheelR.set(0);
