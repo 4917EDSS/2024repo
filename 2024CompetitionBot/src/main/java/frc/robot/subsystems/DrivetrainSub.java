@@ -137,13 +137,7 @@ public class DrivetrainSub extends SubsystemBase {
     double AbsoluteEncoderOffsetFR;
     double AbsoluteEncoderOffsetBL;
     double AbsoluteEncoderOffsetBR;
-    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PrototypeSerialNumber)) {
-      robotName = "Prototype";
-      AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetFL;
-      AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetFR;
-      AbsoluteEncoderOffsetBL = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetBL;
-      AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Prototype.kAbsoluteEncoderOffsetBR;
-    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
       robotName = "Practice";
       AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetFL;
       AbsoluteEncoderOffsetFR = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetFR;

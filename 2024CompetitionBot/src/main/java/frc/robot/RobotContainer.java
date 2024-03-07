@@ -31,7 +31,6 @@ import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
-import frc.robot.commands.VisionAlignDriveCmd;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
@@ -56,7 +55,7 @@ public class RobotContainer {
   private final ClimbSub m_climbSub = new ClimbSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final IntakeSub m_intakeSub = new IntakeSub();
-  private final ShooterSub m_shooterSub = new ShooterSub(m_ledSub);
+  private final ShooterSub m_shooterSub = new ShooterSub();
   private final VisionSub m_visionSub = new VisionSub();
   private final FlywheelSub m_flywheelSub = new FlywheelSub();
   private final ArduinoSub m_arduinoSub = new ArduinoSub();

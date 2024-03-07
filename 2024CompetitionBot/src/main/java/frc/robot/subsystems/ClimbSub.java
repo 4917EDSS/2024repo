@@ -12,8 +12,6 @@ import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -33,14 +31,6 @@ public class ClimbSub extends SubsystemBase {
 
   /** Creates a new ClimbSub. */
   public ClimbSub() {
-    m_climbMotorLeft.setInverted(true);
-    m_climbMotorRight.setInverted(false);
-    m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
-    m_climbMotorRight.setIdleMode(IdleMode.kBrake);
-    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.Climb.kTickCofficient);
-    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.Climb.kTickCofficient);
-
-    SmartDashboard.putData("ClimbReset", new InstantCommand(() -> resetEncoders()));
     m_sbClimbLeftpower = m_shuffleboardTab.add("Climb Left Power", 0).getEntry();
     m_sbClimbRightpower = m_shuffleboardTab.add("Climb Right Power", 0).getEntry();
     m_sbClimbLeftheight = m_shuffleboardTab.add("Climb Left Height", 0).getEntry();
@@ -53,14 +43,34 @@ public class ClimbSub extends SubsystemBase {
 
   public void init() {
     m_logger.info("Initializing ClimbSub");
+
+    m_climbMotorLeft.setInverted(true);
+    m_climbMotorRight.setInverted(false);
+
+    m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
+    m_climbMotorRight.setIdleMode(IdleMode.kBrake);
+
+    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactor);
+    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactor);
+
     setClimbPowerLeft(0.0);
     setClimbPowerRight(0.0);
-    resetEncoders();
+    resetLeftEncoder();
+    resetRightEncoder();
   }
 
   @Override
   public void periodic() {
     updateShuffleBoard();
+
+    // TOOD:  Enable the following resets after the limit switches are added and tested
+    // If the climb hook hit the limit switch and isn't reading a height of close to 0, reset it
+    if(isLeftAtLimit() && (Math.abs(getLeftHeight()) > Constants.Climb.kResetHeightTolerence)) {
+      //resetLeftEncoder();
+    }
+    if(isRightAtLimit() && (Math.abs(getRightHeight()) > Constants.Climb.kResetHeightTolerence)) {
+      //resetLeftEncoder();
+    }
   }
 
   private void updateShuffleBoard() {
@@ -109,9 +119,13 @@ public class ClimbSub extends SubsystemBase {
     return m_climbMotorRight.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
   }
 
-  public void resetEncoders() {
-    m_logger.warning("Reseting Encoders");
+  public void resetLeftEncoder() {
+    m_logger.warning("Resetting left encoder");
     m_climbMotorLeft.getEncoder().setPosition(0.0);
+  }
+
+  public void resetRightEncoder() {
+    m_logger.warning("Resetting right encoder");
     m_climbMotorRight.getEncoder().setPosition(0.0);
   }
 }

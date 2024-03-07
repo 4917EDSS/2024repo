@@ -17,7 +17,9 @@ import frc.robot.Constants;
 public class ArduinoSub extends SubsystemBase {
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Arduino");
-  private final GenericEntry m_sensor0, m_sensor1, m_sensor2, m_sensor3, m_sensor4, m_sensor5, m_sensor6, m_sensor7;
+  private final GenericEntry m_sensorFlywheelNear, m_sensorFlywheelMid, m_sensorFlywheelFar, m_sensorCentreFlywheelSide,
+      m_sensorCentreIntakeSide, m_sensorIntakeFar,
+      m_sensorIntakeMid, m_sensorIntakeNear;
 
   /** Creates a new ArduinoSub. */
   private static byte[] m_LEDBuffer = new byte[8];
@@ -38,14 +40,26 @@ public class ArduinoSub extends SubsystemBase {
       new SerialPort(Constants.Arduino.kBaudRate, SerialPort.Port.kMXP, 8, Parity.kNone, StopBits.kOne);
 
   public ArduinoSub() {
-    m_sensor0 = m_shuffleboardTab.add("Sensor 0", 0).getEntry();
-    m_sensor1 = m_shuffleboardTab.add("Sensor 1", 0).getEntry();
-    m_sensor2 = m_shuffleboardTab.add("Sensor 2", 0).getEntry();
-    m_sensor3 = m_shuffleboardTab.add("Sensor 3", 0).getEntry();
-    m_sensor4 = m_shuffleboardTab.add("Sensor 4", 0).getEntry();
-    m_sensor5 = m_shuffleboardTab.add("Sensor 5", 0).getEntry();
-    m_sensor6 = m_shuffleboardTab.add("Sensor 6", 0).getEntry();
-    m_sensor7 = m_shuffleboardTab.add("Sensor 7", 0).getEntry();
+    m_sensorFlywheelNear = m_shuffleboardTab.add("S FW Near", 0).getEntry();
+    m_sensorFlywheelMid = m_shuffleboardTab.add("S FW Mid", 0).getEntry();
+    m_sensorFlywheelFar = m_shuffleboardTab.add("S FW Far", 0).getEntry();
+    m_sensorCentreFlywheelSide = m_shuffleboardTab.add("S Centre FW", 0).getEntry();
+    m_sensorCentreIntakeSide = m_shuffleboardTab.add("S Centre Intake", 0).getEntry();
+    m_sensorIntakeFar = m_shuffleboardTab.add("S Intk Far", 0).getEntry();
+    m_sensorIntakeMid = m_shuffleboardTab.add("Se Intk Mid", 0).getEntry();
+    m_sensorIntakeNear = m_shuffleboardTab.add("S Intk Near", 0).getEntry();
+
+    init();
+  }
+
+  public void init() {
+    // TODO:  Power cycle the arduino?
+
+    m_SerialPort.setReadBufferSize(m_LEDBuffer.length);
+    m_LEDBuffer[0] = (byte) 0xA5;
+    for(int i = 0; i < 2; i++) {
+      updateLED(i, 0, 255, 0);
+    }
   }
 
   @Override
@@ -57,22 +71,14 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   private void updateShuffleBoard() {
-    m_sensor0.setDouble(m_intakeSensors[0]);
-    m_sensor1.setDouble(m_intakeSensors[1]);
-    m_sensor2.setDouble(m_intakeSensors[2]);
-    m_sensor3.setDouble(m_intakeSensors[3]);
-    m_sensor4.setDouble(m_intakeSensors[4]);
-    m_sensor5.setDouble(m_intakeSensors[5]);
-    m_sensor6.setDouble(m_intakeSensors[6]);
-    m_sensor7.setDouble(m_intakeSensors[7]);
-  }
-
-  public void init() {
-    m_SerialPort.setReadBufferSize(m_LEDBuffer.length);
-    m_LEDBuffer[0] = (byte) 0xA5;
-    for(int i = 0; i < 2; i++) {
-      updateLED(i, 0, 255, 0);
-    }
+    m_sensorFlywheelNear.setDouble(m_intakeSensors[0]);
+    m_sensorFlywheelMid.setDouble(m_intakeSensors[1]);
+    m_sensorFlywheelFar.setDouble(m_intakeSensors[2]);
+    m_sensorCentreFlywheelSide.setDouble(m_intakeSensors[3]);
+    m_sensorCentreIntakeSide.setDouble(m_intakeSensors[4]);
+    m_sensorIntakeFar.setDouble(m_intakeSensors[5]);
+    m_sensorIntakeMid.setDouble(m_intakeSensors[6]);
+    m_sensorIntakeNear.setDouble(m_intakeSensors[7]);
   }
 
   private void writeToSerial() {
@@ -166,10 +172,10 @@ public class ArduinoSub extends SubsystemBase {
       m_intakeSensors[i] = (((byteArray[i + 1] & 0xFF) << 8) | (byteArray[i] & 0xFF));
     }
 
-    StringBuilder sb = new StringBuilder(byteArray.length * 2);
-    for(byte b : byteArray) {
-      sb.append(String.format("%02x", b));
-    }
+    // StringBuilder sb = new StringBuilder(byteArray.length * 2);
+    // for(byte b : byteArray) {
+    //   sb.append(String.format("%02x", b));
+    // }
     // System.out.println("===========================================================");
     // System.out.println(m_intakeSensors[0]);
     // System.out.println(sb);

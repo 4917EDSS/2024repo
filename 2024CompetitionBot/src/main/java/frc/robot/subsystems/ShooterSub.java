@@ -18,48 +18,51 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.LedSub.LedColour;
-import frc.robot.subsystems.LedSub.LedZones;
 
 
+// TODO PE# - These are the steps to selectively include the changes made on Wednesday (when we didn't know how the
+// encoder worked)
 public class ShooterSub extends SubsystemBase {
-
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-
-  /** Creates a new Shooter. */
-  // private final CANSparkMax m_flywheel =
-  //new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
       new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_lowerFeeder =
       new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
-  private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch);
+  private final SparkLimitSwitch m_reverseLimit = m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+  private final SparkLimitSwitch m_forwardLimit = m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+
+  // TODO PE1 - Create new absolute encoder:  private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
+  private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
+
+  private final PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
+  private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
       m_shooterNoteInPosition;
 
-  private final LedSub m_ledSub;
-
-  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
-
-  private PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
-  private ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
+  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
 
 
-  public ShooterSub(LedSub ledSub) {
+  public ShooterSub() {
+    m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
+    m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
+    m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
+    m_shooterNoteInPosition = m_shuffleboardTab.add("Note In", 0).getEntry();
 
-    m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
+    init();
+  }
 
-    // When true, positive power will turn motor backwards, negitive forwards.
+  public void init() {
+    m_logger.info("Initializing ShooterSub");
+
     m_upperFeeder.setInverted(false);
     m_lowerFeeder.setInverted(true);
     m_pivot.setInverted(true);
 
-    //m_flywheel.setIdleMode(IdleMode.kCoast);
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
     m_lowerFeeder.setIdleMode(IdleMode.kBrake);
     m_pivot.setIdleMode(IdleMode.kBrake);
@@ -68,75 +71,45 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    m_pivot.getEncoder().setVelocityConversionFactor(1.0);
-    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
+    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); // TODO PE2 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
+    m_pivot.getEncoder().setVelocityConversionFactor(1.0); // TODO PE3 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
 
-    m_ledSub = ledSub;
+    m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
-    m_shooterPivotPosition = m_shuffleboardTab.add("Shooter Pivot Position", 0).getEntry();
-    m_shooterPivotVelocity = m_shuffleboardTab.add("Shooter Pivot velocity", 0).getEntry();
-    m_shooterPivotPower = m_shuffleboardTab.add("Shooter Pivot Power", 0).getEntry();
-    m_shooterNoteInPosition = m_shuffleboardTab.add("Shooter Note In Position", 0).getEntry();
-
-    init();
-  }
-
-  public void init() {
-    m_logger.info("Initializing ShooterSub");
-    resetPivot();
+    resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
     spinBothFeeders(0, 0);
   }
 
   @Override
   public void periodic() {
+    // Reset the pivot encoder if needed - we're at the reverse limit (angle 0) and the encoder
+    // is off by more than 1 degree
+    // TODO PE8 
+    // - Enable the following code after the encoder is set to read in degrees
+    // - Test to make sure it doesn't break anything (moving pivot up and down)
+    // if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.0)) {
+    //   resetPivot();
+    // }
+
     // This method will be called once per scheduler run
     updateShuffleBoard();
+
     // TODO remove this hack when we have proper sensors
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
-
-
-    // TODO:  This might be easier to do inside the commands that pivot the shooter
-    if(getPivotAngle() == Constants.Shooter.kAngleAmp) {
-      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.PURPLE);
-    }
-
-    if(getPivotAngle() == Constants.Shooter.kAngleSubwooferSpeaker) {
-      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTER_POSITION, LedColour.WHITE);
-    }
-
-    // If note wasn't in last time and note is in now
-    // Flash green
-    // Set orange
-
-    // Index out of bounds in LedSub
-    // if(!m_noteWasIn && isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
-    //   m_ledSub.Flash(LedColour.GREEN);
-    //   m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
-    //   m_noteWasIn = true;
-    // } else if(m_noteWasIn && !isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
-    //   // If note was in and it's no longer in
-    //   // Set green
-    //   m_ledSub.setZoneColour(LedZones.GAME_PIECE, LedColour.GREEN);
-    //   m_noteWasIn = false;
-    // }
   }
 
   private void updateShuffleBoard() {
-    //m_shooterFlywheelVelocity.setDouble(getFlywheelVelocity());
-    SmartDashboard.putBoolean("Forward Limit", isPivotAtForwardLimit());
-    SmartDashboard.putBoolean("Back Limit", isPivotAtReverseLimit());
     m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
-    // m_shooterflywheelPower.setDouble(m_flywheel.get());
     m_shooterPivotPower.setDouble(m_pivot.get());
     m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
-  }
 
-  // public void spinFlywheel(double power) {
-  // m_flywheel.set(power);
-  // }
+    // We want this easily accessible to the drivers so put on SmartDashboard tab
+    SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
+    SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
+  }
 
   public void spinUpperFeeder(double power) {
     m_upperFeeder.set(power);
@@ -159,6 +132,47 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.get();
   }
 
+  public void resetPivot() {
+    m_logger.warning("Zeroing pivot encoder");
+
+    // TODO PE5 - Replace the code below with:  
+    //m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
+    m_pivot.getEncoder().setPosition(0);
+  }
+
+  public double getPivotAngle() {
+    // TODO PE6
+    // - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
+    // - In Constants.java, set kPivotAngleConversion to 1.0 so we can figure out the conversion factor for this new encoder
+    return m_pivot.getEncoder().getPosition();
+  }
+
+  public double getPivotVelocity() {
+    // TODO PE7 
+    // - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder. in the code below
+    // - Move the shooter to the 0 position.
+    // - Connect using the Rev Hardware software and zero the encoder (save the zero to flash)
+    // - Deploy this code
+    // - Move the pivot to around 180 degrees
+    // - Update kPivotAngleConversion using the degrees you measured divided by the 'Pivot Pos' value in Shuffleboard > Shooter
+    // - Deploy the updated code 
+    // - Move the pivot and check that 'Pivot Pos' now shows degrees (if not, try inverting the math for kPivotAngleConversion)
+    // - Go to TODO PE8
+    return m_pivot.getEncoder().getVelocity();
+  }
+
+  public boolean isPivotAtReverseLimit() {
+    return m_reverseLimit.isPressed();
+  }
+
+  public boolean isPivotAtForwardLimit() {
+    return m_forwardLimit.isPressed();
+  }
+
+  public boolean isAtPivotAngle() {
+    return m_pivotPID.atSetpoint();
+  }
+
   public void runPivotControl(double targetAngle) { // Returns true when at position
     //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
 
@@ -170,30 +184,7 @@ public class ShooterSub extends SubsystemBase {
     movePivot(pivotPower);
   }
 
-  public boolean isAtPivotAngle() {
-    return m_pivotPID.atSetpoint();
-  }
-
-  public void resetPivot() {
-    m_pivot.getEncoder().setPosition(0);
-  }
-
-  public double getPivotAngle() {
-    return m_pivot.getEncoder().getPosition();
-  }
-
-  public double getPivotVelocity() {
-    return m_pivot.getEncoder().getVelocity();
-  }
-
-  public boolean isPivotAtReverseLimit() {
-    return m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
-  }
-
-  public boolean isPivotAtForwardLimit() {
-    return m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
-  }
-
+  // TODO:  Remove when Arduino board is working
   public boolean isNoteAtPosition(int noteSensorId) {
     return m_noteSwitches[noteSensorId];
   }

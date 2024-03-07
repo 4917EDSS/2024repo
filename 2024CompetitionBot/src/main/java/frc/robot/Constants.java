@@ -80,20 +80,35 @@ public final class Constants {
   //   public static final int kFrontDistanceSenor = 0;
   // }
 
+  public static final class Breakers {
+    public static final int kDriveMotorFrontRight = 0;
+    public static final int kDriveMotorFrontLeft = 1;
+    public static final int kDriveMotorBackRight = 2;
+    public static final int kDriveMotorBackLeft = 3;
+    public static final int kSteeringMotorFR = 4;
+    public static final int kSteeringMotorFL = 5;
+    public static final int kSteeringMotorBR = 6;
+    public static final int kSteeringMotorBL = 7;
+
+    public static final int kClimbMotorL = 8;
+    public static final int kClimbMotorR = 10;
+
+    public static final int kLowerFeeder = 9; //
+    public static final int kUpperFeeder = 12; //
+    public static final int kPivot = 17; //
+
+    public static final int kFlywheelL = 11;
+    public static final int kFlywheelR = 13;
+
+    public static final int kIntakeRollers = 14;
+  }
+
 
   // Values that are specific to a particular physical robot
   public static final class RobotSpecific {
-    public static final String PrototypeSerialNumber = "03264244";//"03178417";
     public static final String PracticeSerialNumber = "03147322";
-    public static final String CompetitionSerialNumber = "03264244";//"03178417";
+    public static final String CompetitionSerialNumber = "03264244";
     public static final String serialNumber = System.getenv("serialnum");
-
-    public static final class Prototype {
-      public static final double kAbsoluteEncoderOffsetFL = 1.881;
-      public static final double kAbsoluteEncoderOffsetFR = -2.628;
-      public static final double kAbsoluteEncoderOffsetBL = 0.836;
-      public static final double kAbsoluteEncoderOffsetBR = -1.715;
-    }
 
     public static final class Practice {
       public static final double kAbsoluteEncoderOffsetFL = 2.359;
@@ -159,23 +174,23 @@ public final class Constants {
   }
 
   public static final class Climb {
-    //TODO Change all the heights
     // Heights in meters
     public static final double kHeightShortHookRaised = 0.40;
     public static final double kHeightHookLowered = 0.01;
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
     public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
-    public static final double kGoToTrapShot = 0.00; //needs to be found for trapshot
+    public static final double kHeightTrap = 0.00; // TODO: needs to be found for trapshot
 
     public static final double kPower = 1.0;
 
     /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kTickCofficient = 0.4 / 361.945; //0.8 / 769.637939453125
+    public static final double kPositionConversionFactor = 0.4 / 361.945;
 
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
     public static final double kHeightTolerence = 0.005; // In meters
-    public static final double kRollZero = -4.3; // In degrees
+    public static final double kResetHeightTolerence = 0.005; // In meters
+    public static final double kRollZero = -4.3; // In degrees  // TODO:  Check zero on practice and good bot
     public static final double kRollTolerence = 10; // In degrees
     public static final double kMinRollAngle = kRollZero - kRollTolerence;
     public static final double kMaxRollAngle = kRollZero + kRollTolerence;
@@ -202,7 +217,6 @@ public final class Constants {
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;
 
-
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
 
@@ -216,38 +230,12 @@ public final class Constants {
     public static final double kNoteExpelPower = -1.0;
   }
 
-  public static final class Breakers {
-    public static final int kDriveMotorFrontRight = 0;
-    public static final int kDriveMotorFrontLeft = 1;
-    public static final int kDriveMotorBackRight = 2;
-    public static final int kDriveMotorBackLeft = 3;
-    public static final int kSteeringMotorFR = 4;
-    public static final int kSteeringMotorFL = 5;
-    public static final int kSteeringMotorBR = 6;
-    public static final int kSteeringMotorBL = 7;
-
-
-    public static final int kClimbMotorL = 8;
-    public static final int kClimbMotorR = 10;
-
-    public static final int kLowerFeeder = 9; //
-    public static final int kUpperFeeder = 12; //
-    public static final int kPivot = 17; //
-
-    public static final int kFlywheelL = 11;
-    public static final int kFlywheelR = 13;
-
-
-    public static final int kIntakeRollers = 14;
-
-  }
-
   public static final class Flywheel {
     public static final double kFlywheelShootVelocity = 60;
     public static final double ks = 0.25;
     public static final double kv = 0.125;
     public static final double kFlywheelTolerance = 0.1;
-    public static final double kEncoderConversionFactor = 10.0 / 16.5;
+    public static final double kPositionConversionFactor = 10.0 / 16.5;
     public static final double kVelocityConversionFactor = 1.0 / 60.0;
   }
 }
