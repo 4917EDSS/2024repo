@@ -115,6 +115,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 1.472;
       public static final double kAbsoluteEncoderOffsetBL = 1.056;
       public static final double kAbsoluteEncoderOffsetBR = -1.072;
+      public static final boolean kInvertLowerFeeder = false;
     }
 
     public static final class Competition {
@@ -122,6 +123,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = -2.628;
       public static final double kAbsoluteEncoderOffsetBL = 0.836;
       public static final double kAbsoluteEncoderOffsetBR = -1.715;
+      public static final boolean kInvertLowerFeeder = true;
     }
 
     public static final class Unknown {
@@ -129,6 +131,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 0.0;
       public static final double kAbsoluteEncoderOffsetBL = 0.0;
       public static final double kAbsoluteEncoderOffsetBR = 0.0;
+      public static final boolean kInvertLowerFeeder = true;
     }
   }
 
