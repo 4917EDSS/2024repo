@@ -46,6 +46,9 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
 
+  private double m_lastPivotAngle = 0.0;
+  private double m_currentRolloverAngleOffset = 0.0;
+
 
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
@@ -90,6 +93,22 @@ public class ShooterSub extends SubsystemBase {
     // if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.0)) {
     //   resetPivot();
     // }
+
+    // If the angle since last time has changed by more than 10 degrees, it's because the encoder rolled over
+    // TODO PE9
+    // - Measure the angle at which the encoder rolls over back to 0 and update kPivotRolloverAngle to match
+    // - Keep track of rollovers of the absolute encoder by adding code like this
+    double currentAngle = getPivotAngle();
+    if(Math.abs(currentAngle - m_lastPivotAngle) > 10.0) {
+      if(m_lastPivotAngle < currentAngle) {
+      }
+      // Rolled over from larger angle to 0, add offset
+      m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
+    } else {
+      // Rolled over from smaller to larger angle, remove offset
+      m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
+    }
+
 
     // This method will be called once per scheduler run
     updateShuffleBoard();
@@ -144,6 +163,9 @@ public class ShooterSub extends SubsystemBase {
     // TODO PE6
     // - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
     // - In Constants.java, set kPivotAngleConversion to 1.0 so we can figure out the conversion factor for this new encoder
+
+    // TODO PE10
+    // - Add + m_currentRolloverAngleOffset after getPosition() to account for absolute encoder rollovers
     return m_pivot.getEncoder().getPosition();
   }
 
