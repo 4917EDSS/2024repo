@@ -88,11 +88,12 @@ public final class Constants {
     public static final String CompetitionSerialNumber = "03264244";//"03178417";
     public static final String serialNumber = System.getenv("serialnum");
 
-    public static final class Prototype {
+    public static final class Prototype { //Don't think this is needed
       public static final double kAbsoluteEncoderOffsetFL = 1.881;
       public static final double kAbsoluteEncoderOffsetFR = -2.628;
       public static final double kAbsoluteEncoderOffsetBL = 0.836;
       public static final double kAbsoluteEncoderOffsetBR = -1.715;
+      public static final double kAbsolutePivotEncoderOffset = 0.0;
     }
 
     public static final class Practice {
@@ -100,6 +101,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 1.472;
       public static final double kAbsoluteEncoderOffsetBL = 1.056;
       public static final double kAbsoluteEncoderOffsetBR = -1.072;
+      public static final double kAbsolutePivotEncoderOffset = 0.0;
     }
 
     public static final class Competition {
@@ -107,6 +109,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = -2.628;
       public static final double kAbsoluteEncoderOffsetBL = 0.836;
       public static final double kAbsoluteEncoderOffsetBR = -1.715;
+      public static final double kAbsolutePivotEncoderOffset = 0.0;
     }
 
     public static final class Unknown {
@@ -114,6 +117,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 0.0;
       public static final double kAbsoluteEncoderOffsetBL = 0.0;
       public static final double kAbsoluteEncoderOffsetBR = 0.0;
+      public static final double kAbsolutePivotEncoderOffset = 0.0;
     }
   }
 

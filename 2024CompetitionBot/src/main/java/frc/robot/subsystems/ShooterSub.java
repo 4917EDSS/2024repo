@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -24,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 
 public class ShooterSub extends SubsystemBase {
@@ -62,6 +65,9 @@ public class ShooterSub extends SubsystemBase {
       m_shooterNoteInPosition;
 
   private final LedSub m_ledSub;
+  private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
+  private double m_absolutePivotEncoderOffset;
+
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors];
 
@@ -70,6 +76,15 @@ public class ShooterSub extends SubsystemBase {
 
 
   public ShooterSub(LedSub ledSub) {
+    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PrototypeSerialNumber)) {
+      m_absolutePivotEncoderOffset = Constants.RobotSpecific.Prototype.kAbsolutePivotEncoderOffset;
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+      m_absolutePivotEncoderOffset = Constants.RobotSpecific.Practice.kAbsolutePivotEncoderOffset;
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
+      m_absolutePivotEncoderOffset = Constants.RobotSpecific.Competition.kAbsolutePivotEncoderOffset;
+    } else {
+      m_absolutePivotEncoderOffset = Constants.RobotSpecific.Unknown.kAbsolutePivotEncoderOffset;
+    }
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
@@ -87,8 +102,9 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    m_pivot.getEncoder().setVelocityConversionFactor(1.0);
-    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
+    m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0);
+    m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
+
 
     m_ledSub = ledSub;
 
@@ -201,15 +217,24 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void resetPivot() {
-    m_pivot.getEncoder().setPosition(0);
+    // m_pivot.getEncoder().setPosition(0);
+    //m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle());
+    if(1.0 == 1.0) {
+      m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
+      System.out.println("Reset pivot position");
+    }
   }
 
+  // public void setOffSetForAbsoloteEncoders() {
+  //   //m_pivotEncoder -= m_AbsolutePivotEncoderOffset;
+  // }
+
   public double getPivotAngle() {
-    return m_pivot.getEncoder().getPosition();
+    return m_pivotAbsoluteEncoder.getPosition();
   }
 
   public double getPivotVelocity() {
-    return m_pivot.getEncoder().getVelocity();
+    return m_pivotAbsoluteEncoder.getVelocity();
   }
 
   public boolean isPivotAtReverseLimit() {
