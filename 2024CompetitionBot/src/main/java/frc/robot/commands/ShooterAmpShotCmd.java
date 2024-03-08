@@ -9,16 +9,19 @@ import java.time.Instant;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterAmpShotCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterAmpShotCmd.class.getName());
 
   private final ShooterSub m_shooterSub;
+  private final FeederSub m_feederSub;
   private Instant start;
 
-  public ShooterAmpShotCmd(ShooterSub shooterSub) {
+  public ShooterAmpShotCmd(ShooterSub shooterSub, FeederSub feederSub) {
     m_shooterSub = shooterSub;
+    m_feederSub = feederSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
@@ -28,7 +31,7 @@ public class ShooterAmpShotCmd extends Command {
   @Override
   public void initialize() {
     m_logger.fine("ShooterAmpShotCmd - Init");
-    m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerAmpShotPower, Constants.Shooter.kNoteUpperAmpShotPower);
+    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerAmpShotPower, Constants.Shooter.kNoteUpperAmpShotPower);
     start = Instant.now();
   }
 
@@ -40,7 +43,7 @@ public class ShooterAmpShotCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterAmpShotCmd - End" + (interrupted ? " (interrupted)" : ""));
-    m_shooterSub.spinBothFeeders(0, 0);
+    m_feederSub.spinBothFeeders(0, 0);
   }
 
   // Returns true when the command should end.

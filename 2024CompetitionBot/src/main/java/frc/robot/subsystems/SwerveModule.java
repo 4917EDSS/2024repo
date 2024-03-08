@@ -58,7 +58,7 @@ public class SwerveModule extends SubsystemBase {
           ModuleConstants.kMaxModuleAngularAcceleration)); // TODO: Also tune the Steering PID
 
   // These predict PID values which makes it work in real time
-  // TODO: Feed forward will probably need tuning as well
+  // TODO: Resolved - Feed forward will probably need tuning as well
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.43);//0.2);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 

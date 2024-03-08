@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.commands.ShooterFlywheelCmd;
@@ -18,17 +19,19 @@ public class ShooterShootCmd extends Command {
 
   private final ShooterSub m_shooterSub;
   private final FlywheelSub m_flywheelSub;
+  private final FeederSub m_feederSub;
   //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
   private Instant start;
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
+  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub, FeederSub feederSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
     m_shooterSub = shooterSub;
     m_flywheelSub = flywheelSub;
+    m_feederSub = feederSub;
     //m_shooterFlywheelCmd = shooterFlywheelCmd;
 
-    addRequirements(shooterSub, flywheelSub);
+    addRequirements(shooterSub, flywheelSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
@@ -46,7 +49,7 @@ public class ShooterShootCmd extends Command {
 
     // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
     // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
+    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
         Constants.Shooter.kNoteUpperIntakePower);
   }
 
@@ -54,7 +57,7 @@ public class ShooterShootCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterShootCmd - End" + (interrupted ? " (interrupted)" : ""));
-    m_shooterSub.spinBothFeeders(0, 0);
+    m_feederSub.spinBothFeeders(0, 0);
     m_flywheelSub.disableFlywheel();
   }
 

@@ -6,16 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class PivotStopRollersWhenNoteInCmd extends Command {
   private final ShooterSub m_shooterSub;
+  private final FeederSub m_feederSub;
 
   /** Creates a new PivotStopRollersWhenNoteInCmd. */
-  public PivotStopRollersWhenNoteInCmd(ShooterSub shooterSub) {
+  public PivotStopRollersWhenNoteInCmd(ShooterSub shooterSub, FeederSub feederSub) {
     m_shooterSub = shooterSub;
+    m_feederSub = feederSub;
 
-    addRequirements(shooterSub);
+    addRequirements(shooterSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +32,7 @@ public class PivotStopRollersWhenNoteInCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterSub.spinBothFeeders(0, 0);
+    m_feederSub.spinBothFeeders(0, 0);
   }
 
   // Returns true when the command should end.

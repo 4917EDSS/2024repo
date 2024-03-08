@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    //TODO: Remove this
+    //TODO: Resolved - Remove this
     // SmartDashboard.putNumber("Voltage0", m_pdh.getCurrent(0));
     // SmartDashboard.putNumber("Voltage1", m_pdh.getCurrent(1));
     // SmartDashboard.putNumber("Voltage2", m_pdh.getCurrent(2));
