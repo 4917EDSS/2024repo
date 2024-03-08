@@ -68,8 +68,6 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelR.set(0);
     m_flywheelL.set(0);
 
-    SmartDashboard.putNumber("Flywheel P", m_flywheelP);
-
     disableFlywheel();
   }
 
