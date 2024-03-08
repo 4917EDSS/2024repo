@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -27,10 +27,7 @@ import frc.robot.Constants;
 public class ShooterSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-  private final CANSparkMax m_upperFeeder =
-      new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax m_lowerFeeder =
-      new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
+
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
   private final SparkLimitSwitch m_reverseLimit = m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -65,23 +62,12 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-    m_upperFeeder.setInverted(false);
-    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
-    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Competition.kInvertLowerFeeder);
-    } else {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Unknown.kInvertLowerFeeder);
-    }
 
     m_pivot.setInverted(true);
 
-    m_upperFeeder.setIdleMode(IdleMode.kBrake);
-    m_lowerFeeder.setIdleMode(IdleMode.kBrake);
+
     m_pivot.setIdleMode(IdleMode.kBrake);
 
-    m_upperFeeder.setSmartCurrentLimit(40);
-    m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
     m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); // TODO PE2 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
@@ -90,7 +76,7 @@ public class ShooterSub extends SubsystemBase {
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
     //resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
-    spinBothFeeders(0, 0);
+
   }
 
   boolean m_forwardDirection = false;
@@ -137,7 +123,8 @@ public class ShooterSub extends SubsystemBase {
       // m_forwardDirection ensures it is going forward direction or backwards direction.
       // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 0 -> 243 degree range
       if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0)
+          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)
+          && (m_currentRolloverAngleOffset > 0.0)
           && (m_forwardDirection == true)) {
         // if(m_lastPivotAngle < currentAngle) {
         //}
@@ -151,12 +138,15 @@ public class ShooterSub extends SubsystemBase {
         // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
         // m_forwardDirection ensures it is going forward direction or backwards direction.
         // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 243 -> 360 degree range
-      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) && (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset < 360.0)
+      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
+          && (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
+          && (m_currentRolloverAngleOffset < 360.0)
           && (m_forwardDirection == false)) {
 
         System.out
-            .println("<<<<< currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-                + m_currentRolloverAngleOffset);
+            .println(
+                "<<<<< currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+                    + m_currentRolloverAngleOffset);
         //   // Rolled over from smaller to larger angle, remove offset
         m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
 
@@ -188,19 +178,6 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
     SmartDashboard.putNumber("last pivot angle", m_lastPivotAngle);
-  }
-
-  public void spinUpperFeeder(double power) {
-    m_upperFeeder.set(power);
-  }
-
-  public void spinLowerFeeder(double power) {
-    m_lowerFeeder.set(power);
-  }
-
-  public void spinBothFeeders(double lowerPower, double upperPower) {
-    spinLowerFeeder(lowerPower);
-    spinUpperFeeder(upperPower);
   }
 
   public void movePivot(double power) {

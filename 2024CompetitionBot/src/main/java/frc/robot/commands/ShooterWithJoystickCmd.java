@@ -7,20 +7,24 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 
 public class ShooterWithJoystickCmd extends Command {
   private CommandPS4Controller m_controller;
   private ShooterSub m_shooterSub;
   private IntakeSub m_intakeSub;
+  private FeederSub m_feederSub;
 
   /** Creates a new ShooterWithJoystickCmd. */
-  public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub, IntakeSub intakeSub) {
+  public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub, FeederSub feederSub,
+      IntakeSub intakeSub) {
     m_shooterSub = shooterSub;
     m_controller = controller;
     m_intakeSub = intakeSub;
+    m_feederSub = feederSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSub, intakeSub);
+    addRequirements(shooterSub, intakeSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
@@ -47,7 +51,7 @@ public class ShooterWithJoystickCmd extends Command {
 
     // set movePivot with the new power
     m_shooterSub.movePivot(pivotPower);
-    m_shooterSub.spinBothFeeders(intakePower, intakePower / 2);
+    m_feederSub.spinBothFeeders(intakePower, intakePower / 2);
     m_intakeSub.setIntakeMotors(intakePower);
   }
 
