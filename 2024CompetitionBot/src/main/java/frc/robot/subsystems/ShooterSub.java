@@ -9,6 +9,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -35,6 +37,7 @@ public class ShooterSub extends SubsystemBase {
   private final SparkLimitSwitch m_forwardLimit = m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
   // TODO PE1 - Create new absolute encoder:  private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
+  private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
   private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
 
   private final PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
@@ -74,14 +77,17 @@ public class ShooterSub extends SubsystemBase {
     m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
-    m_pivot.getEncoder().setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); // TODO PE2 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
-    m_pivot.getEncoder().setVelocityConversionFactor(1.0); // TODO PE3 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
+    m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); // TODO PE2 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
+    m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0); // TODO PE3 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
-    resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
+    //resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
     spinBothFeeders(0, 0);
   }
+
+  boolean m_forwardDirection = false;
+  boolean m_backwardDirection = false;
 
   @Override
   public void periodic() {
@@ -90,24 +96,72 @@ public class ShooterSub extends SubsystemBase {
     // TODO PE8 
     // - Enable the following code after the encoder is set to read in degrees
     // - Test to make sure it doesn't break anything (moving pivot up and down)
-    // if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.0)) {
-    //   resetPivot();
-    // }
+    if(isPivotAtReverseLimit()) { //&& (Math.abs(getPivotAngle()) > 1.0)) {
+
+      resetPivot();
+    }
 
     // If the angle since last time has changed by more than 10 degrees, it's because the encoder rolled over
     // TODO PE9
     // - Measure the angle at which the encoder rolls over back to 0 and update kPivotRolloverAngle to match
     // - Keep track of rollovers of the absolute encoder by adding code like this
     double currentAngle = getPivotAngle();
-    if(Math.abs(currentAngle - m_lastPivotAngle) > 10.0) {
-      if(m_lastPivotAngle < currentAngle) {
+    //System.out.println("curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+    //   + m_currentRolloverAngleOffset);
+
+    if(currentAngle != m_lastPivotAngle) {
+
+      System.out.println(" ++++ " +
+          (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) + " | " +
+          m_forwardDirection + " | " +
+          m_backwardDirection + " | " +
+          (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
+
+
+      );
+
+      if((currentAngle - m_lastPivotAngle) > 10) {
+        m_forwardDirection = true;
+        m_backwardDirection = false;
+      } else if((m_lastPivotAngle - currentAngle) > 10) {
+
+        m_forwardDirection = false;
+        m_backwardDirection = true;
       }
-      // Rolled over from larger angle to 0, add offset
-      m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
-    } else {
-      // Rolled over from smaller to larger angle, remove offset
-      m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
+
+
+      if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
+          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)
+          && (m_forwardDirection == true)) {
+        // if(m_lastPivotAngle < currentAngle) {
+        //}
+        // Rolled over from larger angle to 0, add offset
+        m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
+        System.out.println(
+            ">>>>>> curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+                + m_currentRolloverAngleOffset);
+
+
+        // } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
+        //     && (m_angleOffsetCalculated == true)
+        //     && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)) {
+
+      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
+          && (m_backwardDirection == true)) {
+
+
+        System.out
+            .println("<<<<< curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+                + m_currentRolloverAngleOffset);
+        //   // Rolled over from smaller to larger angle, remove offset
+        m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
+
+      }
+
     }
+
+    //   //update only if the angle is different
+    m_lastPivotAngle = currentAngle;
 
 
     // This method will be called once per scheduler run
@@ -117,6 +171,7 @@ public class ShooterSub extends SubsystemBase {
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
+
   }
 
   private void updateShuffleBoard() {
@@ -128,6 +183,7 @@ public class ShooterSub extends SubsystemBase {
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
+    SmartDashboard.putNumber("last pivot angle", m_lastPivotAngle);
   }
 
   public void spinUpperFeeder(double power) {
@@ -156,7 +212,8 @@ public class ShooterSub extends SubsystemBase {
 
     // TODO PE5 - Replace the code below with:  
     //m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
-    m_pivot.getEncoder().setPosition(0);
+    m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
+    m_lastPivotAngle = getPivotAngle();
   }
 
   public double getPivotAngle() {
@@ -166,7 +223,7 @@ public class ShooterSub extends SubsystemBase {
 
     // TODO PE10
     // - Add + m_currentRolloverAngleOffset after getPosition() to account for absolute encoder rollovers
-    return m_pivot.getEncoder().getPosition();
+    return m_pivotAbsoluteEncoder.getPosition() + m_currentRolloverAngleOffset;
   }
 
   public double getPivotVelocity() {
@@ -180,7 +237,7 @@ public class ShooterSub extends SubsystemBase {
     // - Deploy the updated code 
     // - Move the pivot and check that 'Pivot Pos' now shows degrees (if not, try inverting the math for kPivotAngleConversion)
     // - Go to TODO PE8
-    return m_pivot.getEncoder().getVelocity();
+    return m_pivotAbsoluteEncoder.getVelocity();
   }
 
   public boolean isPivotAtReverseLimit() {

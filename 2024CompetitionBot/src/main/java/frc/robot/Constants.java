@@ -204,9 +204,9 @@ public final class Constants {
     public static final int kNoteSensorAtFlywheel = 3;
 
     // Angles are in degrees
-    public static final double kPivotAngleConversion = 54.5 / 32.856; // Degrees / ticks measured
+    public static final double kPivotAngleConversion = (180 / 0.739 + 90 / 0.37) / 2;//1.0; //54.5 / 32.856; // Degrees / ticks measured
     public static final double kPivotAngleTolerance = 1.0;
-    public static final double kPivotRolloverAngle = 0.0;
+    public static final double kPivotRolloverAngle = 243.4;
 
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 135.0;
