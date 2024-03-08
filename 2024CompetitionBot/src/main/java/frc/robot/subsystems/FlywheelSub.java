@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.logging.Logger;
@@ -24,7 +25,7 @@ public class FlywheelSub extends SubsystemBase {
   private final CANSparkMax m_flywheelR =
       new CANSparkMax(Constants.CanIds.kFlywheelR, CANSparkLowLevel.MotorType.kBrushless);
 
-  private final PIDController m_flyWheelPID = new PIDController(0, 0, 0); // TODO: Tune PID
+  //private final PIDController m_flyWheelPID = new PIDController(0, 0, 0); // We've found that we don't need this
   private final SimpleMotorFeedforward m_flyWheelFeedforward =
       new SimpleMotorFeedforward(Constants.Flywheel.ks, Constants.Flywheel.kv);
 
@@ -33,6 +34,9 @@ public class FlywheelSub extends SubsystemBase {
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
   private final GenericEntry m_shooterFlywheelVelocityL, m_shooterFlywheelVelocityR, m_shooterflywheelPowerL,
       m_shooterflywheelPowerR;
+
+  // Only needed if we decide we need a PID controller
+  //private double m_flywheelP = 0.001;
 
 
   public FlywheelSub() {
@@ -74,9 +78,10 @@ public class FlywheelSub extends SubsystemBase {
     // Flywheel needs to spin at set velocity prior to m_shooterSub.spinBothFeeders being executed. 
     if(m_isFlywheelEnabled) {
       double feedForwardVoltage = m_flyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
-      double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity);
+      // So far, we don't need the PID control.  Feedforward is doing well on its own
+      //double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity);
 
-      setFlywheelVoltage(feedForwardVoltage + pidVoltage);
+      setFlywheelVoltage(feedForwardVoltage /* + pidVoltage */);
     } else {
       setFlywheelVoltage(0.0);
     }
@@ -119,6 +124,9 @@ public class FlywheelSub extends SubsystemBase {
     m_shooterFlywheelVelocityR.setDouble(getFlywheelVelocityR());
     m_shooterflywheelPowerL.setDouble(m_flywheelL.get());
     m_shooterflywheelPowerR.setDouble(m_flywheelR.get());
+
+    // Uncomment if need to add PID controller
+    //m_flyWheelPID.setP(SmartDashboard.getNumber("Flywheel P", m_flywheelP));
   }
 }
 
