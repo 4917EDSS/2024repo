@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
 
@@ -15,11 +16,13 @@ public class IntakeUntilNoteInCmd extends Command {
 
   private final IntakeSub m_intakeSub;
   private final ShooterSub m_shooterSub;
+  private final FeederSub m_feederSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeUntilNoteInCmd(IntakeSub intakeSub, ShooterSub shooterSub) {
+  public IntakeUntilNoteInCmd(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub) {
     m_intakeSub = intakeSub;
     m_shooterSub = shooterSub;
+    m_feederSub = feederSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSub, shooterSub);
@@ -31,7 +34,7 @@ public class IntakeUntilNoteInCmd extends Command {
     m_logger.fine("IntakeUntilNoteInCmd - Init");
 
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
-    m_shooterSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
+    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,7 +53,7 @@ public class IntakeUntilNoteInCmd extends Command {
 
     // Make sure we're running the intake rollers in reverse and the feed rollers are off
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
-    m_shooterSub.spinBothFeeders(0, 0);
+    m_feederSub.spinBothFeeders(0, 0);
   }
 
   // Returns true when the command should end.

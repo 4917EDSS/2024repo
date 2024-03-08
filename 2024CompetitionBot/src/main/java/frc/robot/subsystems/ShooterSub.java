@@ -25,10 +25,7 @@ import frc.robot.Constants;
 public class ShooterSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
-  private final CANSparkMax m_upperFeeder =
-      new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax m_lowerFeeder =
-      new CANSparkMax(Constants.CanIds.kLowerFeeder, CANSparkLowLevel.MotorType.kBrushless);
+
   private final CANSparkMax m_pivot =
       new CANSparkMax(Constants.CanIds.kPivot, CANSparkLowLevel.MotorType.kBrushless);
   private final SparkLimitSwitch m_reverseLimit = m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -62,23 +59,12 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-    m_upperFeeder.setInverted(false);
-    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
-    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Competition.kInvertLowerFeeder);
-    } else {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Unknown.kInvertLowerFeeder);
-    }
 
     m_pivot.setInverted(true);
 
-    m_upperFeeder.setIdleMode(IdleMode.kBrake);
-    m_lowerFeeder.setIdleMode(IdleMode.kBrake);
+
     m_pivot.setIdleMode(IdleMode.kBrake);
 
-    m_upperFeeder.setSmartCurrentLimit(40);
-    m_lowerFeeder.setSmartCurrentLimit(40);
     m_pivot.setSmartCurrentLimit(40);
 
     m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
@@ -86,7 +72,8 @@ public class ShooterSub extends SubsystemBase {
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
-    spinBothFeeders(0, 0);
+    //resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
+
   }
 
   boolean m_forwardDirection = false;
@@ -179,19 +166,6 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
     SmartDashboard.putNumber("last pivot angle", m_lastPivotAngle);
-  }
-
-  public void spinUpperFeeder(double power) {
-    m_upperFeeder.set(power);
-  }
-
-  public void spinLowerFeeder(double power) {
-    m_lowerFeeder.set(power);
-  }
-
-  public void spinBothFeeders(double lowerPower, double upperPower) {
-    spinLowerFeeder(lowerPower);
-    spinUpperFeeder(upperPower);
   }
 
   public void movePivot(double power) {

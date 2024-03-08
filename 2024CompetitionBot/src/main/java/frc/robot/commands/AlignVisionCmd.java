@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
@@ -21,6 +22,7 @@ public class AlignVisionCmd extends Command {
   private final CommandPS4Controller m_driverController;
   private final CommandPS4Controller m_operatorController;
   private final ShooterSub m_shooterSub;
+  private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
 
   private static final double kA = -0.86166;
@@ -28,18 +30,19 @@ public class AlignVisionCmd extends Command {
 
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
 
-  public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub,
+  public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
       FlywheelSub flywheelSub,
       CommandPS4Controller driverController, CommandPS4Controller operatorController) {
     m_visionSub = visionSub;
     m_drivetrainSub = drivetrainSub;
     m_shooterSub = shooterSub;
     m_flywheelSub = flywheelSub;
+    m_feederSub = feederSub;
 
     m_driverController = driverController;
     m_operatorController = operatorController;
 
-    addRequirements(visionSub, drivetrainSub, shooterSub, flywheelSub);
+    addRequirements(visionSub, drivetrainSub, shooterSub, feederSub, flywheelSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -67,11 +70,11 @@ public class AlignVisionCmd extends Command {
       m_flywheelSub.enableFlywheel();
 
       if(m_operatorController.R2().getAsBoolean()) {
-        m_shooterSub.spinBothFeeders(1.0, 1.0);
+        m_feederSub.spinBothFeeders(1.0, 1.0);
       } else {
         double feederPower =
             Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
-        m_shooterSub.spinBothFeeders(feederPower, 0.5 * feederPower);
+        m_feederSub.spinBothFeeders(feederPower, 0.5 * feederPower);
       }
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : m_driverController.getRightX();

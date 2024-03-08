@@ -35,6 +35,7 @@ import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final ShooterSub m_shooterSub = new ShooterSub();
   private final VisionSub m_visionSub = new VisionSub();
   private final FlywheelSub m_flywheelSub = new FlywheelSub();
+  private final FeederSub m_feederSub = new FeederSub();
   private final ArduinoSub m_arduinoSub = new ArduinoSub();
 
   private boolean m_isRedAlliance = true;
@@ -74,7 +76,7 @@ public class RobotContainer {
     m_drivetrainSub.setDefaultCommand(
         new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     m_shooterSub.setDefaultCommand(
-        new ShooterWithJoystickCmd(m_operatorController, m_shooterSub, m_intakeSub));
+        new ShooterWithJoystickCmd(m_operatorController, m_shooterSub, m_feederSub, m_intakeSub));
 
     // Configure the button bindings
     configureBindings();
@@ -95,7 +97,8 @@ public class RobotContainer {
 
     // This basically takes over the robot right now
     m_driverController.square()
-        .whileTrue(new AlignVisionCmd(m_drivetrainSub, m_visionSub, m_shooterSub, m_flywheelSub, m_driverController,
+        .whileTrue(new AlignVisionCmd(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub,
+            m_driverController,
             m_operatorController));
 
     m_driverController.cross()
@@ -119,7 +122,7 @@ public class RobotContainer {
 
     m_driverController.L2().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 0, 255)));
 
-    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -174,9 +177,9 @@ public class RobotContainer {
 
     m_operatorController.R1().onTrue(new ClimbSetHeightCmd(0.5334, 0.2, m_drivetrainSub, m_climbSub));
 
-    m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub));
+    m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub, m_feederSub));
 
-    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub));
+    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub));
 
     m_operatorController.share().onTrue(new ClimbSetHeightCmd(0.2286, 0.2, m_drivetrainSub, m_climbSub)); //228.6
 
@@ -191,7 +194,7 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub));
+    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub));
 
     //m_operatorController.povRight()
 
