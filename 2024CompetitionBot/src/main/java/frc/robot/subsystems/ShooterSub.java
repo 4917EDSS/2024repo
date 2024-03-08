@@ -124,41 +124,38 @@ public class ShooterSub extends SubsystemBase {
           m_backwardDirection + " | " +
           (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
 
-
       );
 
       if((currentAngle - m_lastPivotAngle) > 10) {
         m_forwardDirection = true;
-        m_backwardDirection = false;
       } else if((m_lastPivotAngle - currentAngle) > 10) {
-
         m_forwardDirection = false;
-        m_backwardDirection = true;
       }
 
-
+      // Forward Direction Rollover Correction
+      // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
+      // m_forwardDirection ensures it is going forward direction or backwards direction.
+      // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 0 -> 243 degree range
       if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)
+          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0)
           && (m_forwardDirection == true)) {
         // if(m_lastPivotAngle < currentAngle) {
         //}
         // Rolled over from larger angle to 0, add offset
         m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
         System.out.println(
-            ">>>>>> curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+            ">>>>>> currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
                 + m_currentRolloverAngleOffset);
 
-
-        // } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-        //     && (m_angleOffsetCalculated == true)
-        //     && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)) {
-
-      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_backwardDirection == true)) {
-
+        // Backward Direction Rollover Correction
+        // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
+        // m_forwardDirection ensures it is going forward direction or backwards direction.
+        // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 243 -> 360 degree range
+      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) && (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset < 360.0)
+          && (m_forwardDirection == false)) {
 
         System.out
-            .println("<<<<< curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
+            .println("<<<<< currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
                 + m_currentRolloverAngleOffset);
         //   // Rolled over from smaller to larger angle, remove offset
         m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
