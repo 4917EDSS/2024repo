@@ -115,6 +115,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 1.472;
       public static final double kAbsoluteEncoderOffsetBL = 1.056;
       public static final double kAbsoluteEncoderOffsetBR = -1.072;
+      public static final boolean kInvertLowerFeeder = false;
     }
 
     public static final class Competition {
@@ -122,6 +123,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = -2.628;
       public static final double kAbsoluteEncoderOffsetBL = 0.836;
       public static final double kAbsoluteEncoderOffsetBR = -1.715;
+      public static final boolean kInvertLowerFeeder = true;
     }
 
     public static final class Unknown {
@@ -129,6 +131,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 0.0;
       public static final double kAbsoluteEncoderOffsetBL = 0.0;
       public static final double kAbsoluteEncoderOffsetBR = 0.0;
+      public static final boolean kInvertLowerFeeder = true;
     }
   }
 
@@ -222,7 +225,6 @@ public final class Constants {
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
 
-    public static final double kFlyWheelSpeed = 0.5;
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
   }
@@ -233,7 +235,7 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 60;
+    public static final double kFlywheelShootVelocity = 80; //84 RPS is MAX speed
     public static final double ks = 0.25;
     public static final double kv = 0.125;
     public static final double kFlywheelTolerance = 0.1;

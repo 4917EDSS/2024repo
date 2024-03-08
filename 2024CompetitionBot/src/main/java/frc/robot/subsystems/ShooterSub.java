@@ -66,7 +66,14 @@ public class ShooterSub extends SubsystemBase {
     m_logger.info("Initializing ShooterSub");
 
     m_upperFeeder.setInverted(false);
-    m_lowerFeeder.setInverted(false);
+    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+      m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
+      m_lowerFeeder.setInverted(Constants.RobotSpecific.Competition.kInvertLowerFeeder);
+    } else {
+      m_lowerFeeder.setInverted(Constants.RobotSpecific.Unknown.kInvertLowerFeeder);
+    }
+
     m_pivot.setInverted(true);
 
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
