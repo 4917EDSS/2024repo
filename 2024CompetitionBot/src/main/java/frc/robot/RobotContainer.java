@@ -226,7 +226,7 @@ public class RobotContainer {
   // Intialize the sub systems
   public void initSubsystems() {
     // int sensorArray[] = new int[2];
-    // /* sensorArray = */ m_arduinoSub.RS232Listen(); ////////////////////////TODO Remove
+    // /* sensorArray = */ m_arduinoSub.RS232Listen(); ////////////////////////TODO: Unknown? Remove
     m_ledSub.init();
     m_climbSub.init();
     m_drivetrainSub.init();
