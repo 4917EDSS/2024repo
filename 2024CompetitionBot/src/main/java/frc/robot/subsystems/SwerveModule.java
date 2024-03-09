@@ -71,6 +71,7 @@ public class SwerveModule extends SubsystemBase {
 
     // Make it loop from -PI to PI
     m_driveMotor.setIdleMode(IdleMode.kBrake);
+    m_driveMotor.setSmartCurrentLimit(40);
     m_steeringMotor.setNeutralMode(NeutralModeValue.Brake);
     m_steeringPID.enableContinuousInput(-Math.PI, Math.PI);
 

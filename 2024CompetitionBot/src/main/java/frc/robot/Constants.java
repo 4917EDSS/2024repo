@@ -82,26 +82,36 @@ public final class Constants {
   // }
 
   public static final class Breakers {
-    public static final int kDriveMotorFrontRight = 0;
-    public static final int kDriveMotorFrontLeft = 1;
-    public static final int kDriveMotorBackRight = 2;
-    public static final int kDriveMotorBackLeft = 3;
-    public static final int kSteeringMotorFR = 4;
-    public static final int kSteeringMotorFL = 5;
-    public static final int kSteeringMotorBR = 6;
-    public static final int kSteeringMotorBL = 7;
+    public static final int kDriveMotorFrontRight = 6; //
+    public static final int kDriveMotorFrontLeft = 19; //
+    public static final int kDriveMotorBackRight = 4; //
+    public static final int kDriveMotorBackLeft = 0; //
+    public static final int kSteeringMotorFR = 5; //
+    public static final int kSteeringMotorFL = 10; //
+    public static final int kSteeringMotorBR = 3; // 
+    public static final int kSteeringMotorBL = 18; //
 
-    public static final int kClimbMotorL = 8;
-    public static final int kClimbMotorR = 10;
+    public static final int kClimbMotorL = 1; //
+    public static final int kClimbMotorR = 2; //
 
-    public static final int kLowerFeeder = 9; //
-    public static final int kUpperFeeder = 12; //
+    public static final int kLowerFeeder = 12; //
+    public static final int kUpperFeeder = 11; //
     public static final int kPivot = 17; //
 
-    public static final int kFlywheelL = 11;
-    public static final int kFlywheelR = 13;
+    public static final int kFlywheelL = 8; //
+    public static final int kFlywheelR = 7; //
 
-    public static final int kIntakeRollers = 14;
+    public static final int kIntakeRollers = 9; //
+
+    public static final int kLimelightUp = 16; // Not on practice bot
+    public static final int kLimelightDown = 18; // Not on practice bot
+    public static final int kCancoders = 19; // Not on practice bot
+    public static final int kVRM = 20; //
+    public static final int kRoboRio = 21; //
+    public static final int kArduino = 23; // 
+    public static final int kRadio = 22; //
+
+
   }
 
 
@@ -216,12 +226,12 @@ public final class Constants {
     public static final double kPivotRolloverAngle = 243.4;
 
     public static final double kAngleFloorIntake = 0.0;
-    public static final double kAngleSourceIntake = 135.0;
+    public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 37.95;
-    public static final double kAngleAmp = 190.0;
+    public static final double kAngleAmp = 230.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
-    public static final double kAnglePodium = 58.276;
+    public static final double kAnglePassing = 57.0;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;
