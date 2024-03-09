@@ -166,9 +166,7 @@ public class RobotContainer {
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub,
             m_flywheelSub));
 
-    m_operatorController.circle()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePodium, m_shooterSub,
-            m_flywheelSub));
+    //m_operatorController.circle()
 
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
@@ -185,10 +183,8 @@ public class RobotContainer {
 
     m_operatorController.share().onTrue(new ClimbSetHeightCmd(0.2286, 0.2, m_drivetrainSub, m_climbSub)); //228.6
 
-    // m_operatorController.options()
-    //     .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleWingLine, m_shooterSub,
-    //         m_flywheelSub));
-    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
+    m_operatorController.options().onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
+        m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
@@ -203,9 +199,7 @@ public class RobotContainer {
     m_operatorController.povDown()
         .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAmp, m_shooterSub));
 
-    //m_operatorController.povLeft()
-    m_operatorController.povRight().onTrue(new ShooterPivotCmd(90.0, m_shooterSub));
-    m_operatorController.povLeft().onTrue(new ShooterPivotCmd(180.0, m_shooterSub));
+    m_operatorController.povLeft().onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleSourceIntake, m_shooterSub));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_shooterSub,
