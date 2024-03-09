@@ -68,8 +68,8 @@ public class ArduinoSub extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // RS232Listen();
-    writeToSerial();
-    updateShuffleBoard();
+    //writeToSerial();
+    //updateShuffleBoard();
   }
 
   private void updateShuffleBoard() {
