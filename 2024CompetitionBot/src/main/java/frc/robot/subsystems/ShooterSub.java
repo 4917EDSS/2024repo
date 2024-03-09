@@ -43,9 +43,6 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
 
-  private double m_lastPivotAngle = 0.0;
-  private double m_currentRolloverAngleOffset = 0.0;
-
 
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
@@ -81,69 +78,14 @@ public class ShooterSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(isPivotAtReverseLimit()) { //&& (Math.abs(getPivotAngle()) > 1.0)) {
+    if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1)) {
 
       resetPivot();
     }
 
-    double currentAngle = getPivotAngle();
+
     //System.out.println("curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
     //   + m_currentRolloverAngleOffset);
-
-    if(currentAngle != m_lastPivotAngle) {
-
-      System.out.println(" ++++ " +
-          (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) + " | " +
-          m_forwardDirection + " | " +
-          m_backwardDirection + " | " +
-          (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
-
-      );
-
-      if((currentAngle - m_lastPivotAngle) > 10) {
-        m_forwardDirection = true;
-      } else if((m_lastPivotAngle - currentAngle) > 10) {
-        m_forwardDirection = false;
-      }
-
-      // Forward Direction Rollover Correction
-      // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
-      // m_forwardDirection ensures it is going forward direction or backwards direction.
-      // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 0 -> 243 degree range
-      if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)
-          && (m_currentRolloverAngleOffset > 0.0)
-          && (m_forwardDirection == true)) {
-        // if(m_lastPivotAngle < currentAngle) {
-        //}
-        // Rolled over from larger angle to 0, add offset
-        m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
-        System.out.println(
-            ">>>>>> currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-                + m_currentRolloverAngleOffset);
-
-        // Backward Direction Rollover Correction
-        // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
-        // m_forwardDirection ensures it is going forward direction or backwards direction.
-        // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 243 -> 360 degree range
-      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
-          && (m_currentRolloverAngleOffset < 360.0)
-          && (m_forwardDirection == false)) {
-
-        System.out
-            .println(
-                "<<<<< currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-                    + m_currentRolloverAngleOffset);
-        //   // Rolled over from smaller to larger angle, remove offset
-        m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
-
-      }
-
-    }
-
-    //   //update only if the angle is different
-    m_lastPivotAngle = currentAngle;
 
 
     // This method will be called once per scheduler run
@@ -165,7 +107,6 @@ public class ShooterSub extends SubsystemBase {
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
-    SmartDashboard.putNumber("last pivot angle", m_lastPivotAngle);
   }
 
   public void movePivot(double power) {
@@ -179,11 +120,10 @@ public class ShooterSub extends SubsystemBase {
   public void resetPivot() {
     m_logger.warning("Zeroing pivot encoder");
     m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
-    m_lastPivotAngle = getPivotAngle();
   }
 
   public double getPivotAngle() {
-    return m_pivotAbsoluteEncoder.getPosition() + m_currentRolloverAngleOffset;
+    return m_pivotAbsoluteEncoder.getPosition();
   }
 
   public double getPivotVelocity() {
