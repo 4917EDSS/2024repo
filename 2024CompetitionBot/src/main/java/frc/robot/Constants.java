@@ -70,7 +70,7 @@ public final class Constants {
 
   public final static class Arduino {
     public static final int kBaudRate = 38400;
-    public static final int kTimeOutLength = 30;
+    public static final double kTimeOutLength = 0.0;
     public static final int kReadMessageLength = 19;
     public static final int kBufferSize = kReadMessageLength * 2;
     public static final int kSensorDataLength = 16;
