@@ -25,7 +25,6 @@ import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteIntakeGrp;
 import frc.robot.commands.ShooterAmpShotCmd;
-import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
@@ -42,6 +41,7 @@ import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import frc.robot.subsystems.PowerSub;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 
@@ -63,6 +63,7 @@ public class RobotContainer {
   private final FlywheelSub m_flywheelSub = new FlywheelSub();
   private final FeederSub m_feederSub = new FeederSub();
   private final ArduinoSub m_arduinoSub = new ArduinoSub();
+  private final PowerSub m_powerSub = new PowerSub();
 
   private boolean m_isRedAlliance = true;
 
