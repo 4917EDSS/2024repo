@@ -213,7 +213,7 @@ public final class Constants {
     public static final double kPivotRolloverAngle = 243.4;
 
     public static final double kAngleFloorIntake = 0.0;
-    public static final double kAngleSourceIntake = 135.0;
+    public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 24.0;
     public static final double kAngleAmp = 190.0;
     public static final double kAngleTrap = 270.0;
