@@ -169,7 +169,7 @@ public class RobotContainer {
             m_flywheelSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(Constants.Shooter.kAngleZero, m_shooterSub));
+        .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
 
     //m_operatorController.triangle()
 
