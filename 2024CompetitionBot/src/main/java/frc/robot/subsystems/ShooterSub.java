@@ -34,7 +34,7 @@ public class ShooterSub extends SubsystemBase {
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
   private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
 
-  private final PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
+  private final PIDController m_pivotPID = new PIDController(0.017, 0.0, 0.0);
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
@@ -56,9 +56,7 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-
     m_pivot.setInverted(true);
-
 
     m_pivot.setIdleMode(IdleMode.kBrake);
 
@@ -78,15 +76,9 @@ public class ShooterSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1)) {
-
+    if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
       resetPivot();
     }
-
-
-    //System.out.println("curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-    //   + m_currentRolloverAngleOffset);
-
 
     // This method will be called once per scheduler run
     updateShuffleBoard();
@@ -95,7 +87,6 @@ public class ShooterSub extends SubsystemBase {
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
-
   }
 
   private void updateShuffleBoard() {
@@ -117,10 +108,21 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.get();
   }
 
+  int resetDelay = 0;
+
   public void resetPivot() {
-    m_logger.warning("Zeroing pivot encoder");
-    m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
+    if(resetDelay == 0) {
+      // Don't update the zero more than every half second
+      resetDelay = 25;
+      m_logger.warning(
+          "Zeroing pivot encoder. Cur Ticks=" + getPivotAngle() + " CurZero=" + m_pivotAbsoluteEncoder.getZeroOffset()
+              + " New=" + (getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+      m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+      m_logger.warning("New zero offset =" + m_pivotAbsoluteEncoder.getZeroOffset());
+    }
+    resetDelay--;
   }
+
 
   public double getPivotAngle() {
     return m_pivotAbsoluteEncoder.getPosition();

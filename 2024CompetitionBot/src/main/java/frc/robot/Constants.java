@@ -70,7 +70,7 @@ public final class Constants {
 
   public final static class Arduino {
     public static final int kBaudRate = 38400;
-    public static final int kTimeOutLength = 30;
+    public static final double kTimeOutLength = 0.0;
     public static final int kReadMessageLength = 19;
     public static final int kBufferSize = kReadMessageLength * 2;
     public static final int kSensorDataLength = 16;
@@ -218,16 +218,16 @@ public final class Constants {
     public static final int kNoteSensorAtFlywheel = 3;
 
     // Angles are in degrees
-    public static final double kPivotAngleConversion = 287 / 0.791; // Degrees / ticks measured
-    public static final double kPivotAngleTolerance = 1.0;
+    public static final double kPivotAngleConversion = 360; // Radians to Degrees
+    public static final double kPivotAngleTolerance = 0.25;
     public static final double kPivotRolloverAngle = 243.4;
 
     public static final double kAngleFloorIntake = 0.0;
-    public static final double kAngleSourceIntake = 135.0;
-    public static final double kAngleSubwooferSpeaker = 24.0;
+    public static final double kAngleSourceIntake = 217.0;
+    public static final double kAngleSubwooferSpeaker = 37.95;
     public static final double kAngleAmp = 190.0;
     public static final double kAngleTrap = 270.0;
-    public static final double kAngleAutoLine = 65.0;
+    public static final double kAngleAutoLine = 57.0;
     public static final double kAnglePodium = 58.276;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot

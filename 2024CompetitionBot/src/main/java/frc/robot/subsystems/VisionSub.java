@@ -78,7 +78,7 @@ public class VisionSub extends SubsystemBase {
     m_llresults = LimelightHelpers.getLatestResults("");
 
     // This method will be called once per scheduler run
-    updateShuffleBoard();
+    //updateShuffleBoard();
     //m_sbPivotPosition = m_shuffleboardTab.add("Pivot Position", 0).getEntry();
     // m_tx = m_shuffleboardTab.add("tx", 0).getEntry();
     //m_ty = m_shuffleboardTab.add("ty", 0).getEntry();
