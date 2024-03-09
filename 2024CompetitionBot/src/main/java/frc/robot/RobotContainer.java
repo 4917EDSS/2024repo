@@ -157,8 +157,6 @@ public class RobotContainer {
 
 
     // ======================================== Operator controller bindings ========================================
-
-
     m_operatorController.square()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub,
             m_flywheelSub));
