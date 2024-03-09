@@ -70,7 +70,7 @@ public final class Constants {
 
   public final static class Arduino {
     public static final int kBaudRate = 38400;
-    public static final double kTimeOutLength = 0.0;
+    public static final int kTimeOutLength = 30;
     public static final int kReadMessageLength = 19;
     public static final int kBufferSize = kReadMessageLength * 2;
     public static final int kSensorDataLength = 16;
@@ -189,7 +189,7 @@ public final class Constants {
 
   public static final class Climb {
     // Heights in meters
-    public static final double kHeightShortHookRaised = 0.40;
+    public static final double kHeightShortHookRaised = 0.55;
     public static final double kHeightHookLowered = 0.01;
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
@@ -199,10 +199,15 @@ public final class Constants {
     public static final double kPower = 1.0;
 
     /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kPositionConversionFactor = 0.4 / 361.945;
+    public static final double kPositionConversionFactorL =
+        (Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) ? 0.40 / 271.9804 // for competition robot
+            : 0.4 / 361.945; // for any other ones;
+    public static final double kPositionConversionFactorR =
+        (Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) ? 0.40 / 262.7435 // for competition robot
+            : 0.4 / 361.945; // for any other ones;
 
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
-    public static final double kHeightTolerence = 0.005; // In meters
+    public static final double kHeightTolerence = 0.01; // In meters
     public static final double kResetHeightTolerence = 0.005; // In meters
     public static final double kRollZero = -4.3; // In degrees  // TODO:  Check zero on practice and good bot
     public static final double kRollTolerence = 10; // In degrees
@@ -221,6 +226,9 @@ public final class Constants {
     public static final int kNoteSensorIntakeMid = 6;
     public static final int kNoteSensorIntakeNear = 7;
 
+    public static final double ks = 0.037;
+    public static final double kg = 0.011;
+
     // Angles are in degrees
     public static final double kPivotAngleConversion = 360; // Radians to Degrees
     public static final double kPivotAngleTolerance = 0.25;
@@ -229,10 +237,10 @@ public final class Constants {
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 37.95;
-    public static final double kAngleAmp = 190.0;
+    public static final double kAngleAmp = 230.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
-    public static final double kAnglePodium = 58.276;
+    public static final double kAnglePassing = 57.0;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;

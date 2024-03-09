@@ -39,14 +39,14 @@ public class ShooterWithJoystickCmd extends Command {
     double intakePower = -m_controller.getRightY();
 
     // create deadband if power is less than 5%
-    if(Math.abs(pivotPower) < 0.05) {
-      pivotPower = 0;
-    }
+    // if(Math.abs(pivotPower) < 0.05) {
+    //   pivotPower = 0;
+    // }
     if(Math.abs(intakePower) < 0.05) {
       intakePower = 0;
     }
     // square power value to give more control when moving slower
-    pivotPower *= Math.abs(pivotPower);
+    //pivotPower *= Math.abs(pivotPower);
     intakePower *= Math.abs(intakePower);
 
     // set movePivot with the new power

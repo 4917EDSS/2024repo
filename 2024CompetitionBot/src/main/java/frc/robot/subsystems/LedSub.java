@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.logging.Logger;
+import edu.wpi.first.math.MathUtil;
+import org.ejml.dense.row.decompose.UtilDecompositons_CDRM;
+import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.PwmIds;
@@ -40,8 +43,8 @@ public class LedSub extends SubsystemBase {
 
     // Disabled diagnostic zones
     //DIAG_DRIVE_ENC(14, 14, false), //
-    DIAG_CLIMBR_LIMIT(1, 1, false), //
-    DIAG_CLIMBL_LIMIT(2, 2, false), //
+    DIAG_CLIMBL_LIMIT(1, 1, false), //
+    DIAG_CLIMBR_LIMIT(2, 2, false), //
     DIAG_SHOOTERFWD_LIMIT(3, 3, false), //
     DIAG_SHOOTERREV_LIMIT(4, 4, false), //
     DIAG_SHOOTER_ENC(5, 5, false); //this can still be assigned
@@ -185,7 +188,7 @@ public class LedSub extends SubsystemBase {
         && m_ledColourBuffer[position][2] == b) {
       return;
     }
-    m_ledBuffer.setRGB(position, r, b, g);
+    m_ledBuffer.setRGB(position, r, b, g); // String takes values in this order
     m_ledColourBuffer[position][0] = r;
     m_ledColourBuffer[position][1] = g;
     m_ledColourBuffer[position][2] = b;
@@ -196,24 +199,9 @@ public class LedSub extends SubsystemBase {
    * Set all the LEDs in the specified zone to the specified RGB value. Recomment that you use setZoneColour instead.
    */
   public void setZoneRGB(LedZones zone, int r, int g, int b) {
-    if(r < 0) {
-      r = 0;
-    }
-    if(r > 255) {
-      r = 255;
-    }
-    if(g < 0) {
-      g = 0;
-    }
-    if(g > 255) {
-      g = 255;
-    }
-    if(b < 0) {
-      b = 0;
-    }
-    if(b > 255) {
-      b = 255;
-    }
+    r = MathUtil.clamp(r, 0, 255);
+    g = MathUtil.clamp(g, 0, 255);
+    b = MathUtil.clamp(b, 0, 255);
 
     m_newColoursAvailable = false;
 

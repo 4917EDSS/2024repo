@@ -25,6 +25,7 @@ public class IntakeSub extends SubsystemBase {
 
   public void init() {
     m_logger.info("Initializing IntakeSub");
+    m_intakeRollers.setSmartCurrentLimit(40);
     setIntakeMotors(0.0);
   }
 

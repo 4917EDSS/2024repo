@@ -36,7 +36,7 @@ public class ShooterSub extends SubsystemBase {
   private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
 
   private final PIDController m_pivotPID = new PIDController(0.017, 0.0, 0.0);
-  private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
+  private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
@@ -44,6 +44,9 @@ public class ShooterSub extends SubsystemBase {
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
 
+
+  private double pivotKS = 0.023;
+  private double pivotKG = 0.016;
 
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
@@ -95,6 +98,7 @@ public class ShooterSub extends SubsystemBase {
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
+
   }
 
   public void movePivot(double power) {
