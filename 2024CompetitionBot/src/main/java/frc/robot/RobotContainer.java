@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
@@ -156,7 +157,6 @@ public class RobotContainer {
 
     // ======================================== Operator controller bindings ========================================
 
-
     m_operatorController.square()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub,
             m_flywheelSub));
@@ -168,6 +168,7 @@ public class RobotContainer {
     m_operatorController.circle()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePodium, m_shooterSub,
             m_flywheelSub));
+
 
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
@@ -240,25 +241,25 @@ public class RobotContainer {
       m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.RED);
     }
 
-    if(m_climbSub.isRightAtLimit()) {
-      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.GREEN);
-    } else {
-      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
-    }
-
     if(m_climbSub.isLeftAtLimit()) {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.GREEN);
     } else {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.RED);
     }
 
-    if(m_shooterSub.getPivotAngle() > 0) {
-      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 24000.0 * 255.0), 0);
-    } else if(m_shooterSub.getPivotAngle() < 0) {
-      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, (int) (m_shooterSub.getPivotAngle() / -20000.0 * 255.0), 0, 0);
+    if(m_climbSub.isRightAtLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.GREEN);
     } else {
-      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, 0, 0);
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
     }
+
+    // if(m_shooterSub.getPivotAngle() > 0) {
+    //   m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 24000.0 * 255.0), 0);
+    // } else if(m_shooterSub.getPivotAngle() < 0) {
+    //   m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, (int) (m_shooterSub.getPivotAngle() / -20000.0 * 255.0), 0, 0);
+    // } else {
+    //   m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, 0, 0);
+    // }
 
   }
 

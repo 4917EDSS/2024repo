@@ -70,7 +70,7 @@ public final class Constants {
 
   public final static class Arduino {
     public static final int kBaudRate = 38400;
-    public static final double kTimeOutLength = 0.0;
+    public static final int kTimeOutLength = 30;
     public static final int kReadMessageLength = 19;
     public static final int kBufferSize = kReadMessageLength * 2;
     public static final int kSensorDataLength = 16;
@@ -206,6 +206,9 @@ public final class Constants {
     public static final int kNoteSensorNearRoller = 1;
     public static final int kNoteSensorNearFlywheel = 2;
     public static final int kNoteSensorAtFlywheel = 3;
+
+    public static final double ks = 0.037;
+    public static final double kg = 0.011;
 
     // Angles are in degrees
     public static final double kPivotAngleConversion = 360; // Radians to Degrees
