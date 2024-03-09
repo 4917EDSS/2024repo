@@ -189,10 +189,15 @@ public final class Constants {
     public static final double kPower = 1.0;
 
     /** Convert ticks to meters (Ticks over 80cm) */
-    public static final double kPositionConversionFactor = 0.4 / 361.945;
+    public static final double kPositionConversionFactorL =
+        (Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) ? 0.40 / 271.9804 // for competition robot
+            : 0.4 / 361.945; // for any other ones;
+    public static final double kPositionConversionFactorR =
+        (Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) ? 0.40 / 262.7435 // for competition robot
+            : 0.4 / 361.945; // for any other ones;
 
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
-    public static final double kHeightTolerence = 0.005; // In meters
+    public static final double kHeightTolerence = 0.01; // In meters
     public static final double kResetHeightTolerence = 0.005; // In meters
     public static final double kRollZero = -4.3; // In degrees  // TODO:  Check zero on practice and good bot
     public static final double kRollTolerence = 10; // In degrees

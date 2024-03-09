@@ -12,6 +12,7 @@ import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,6 +24,10 @@ public class ClimbSub extends SubsystemBase {
       new CANSparkMax(Constants.CanIds.kClimbMotorL, CANSparkLowLevel.MotorType.kBrushless);
   private final static CANSparkMax m_climbMotorRight =
       new CANSparkMax(Constants.CanIds.kClimbMotorR, CANSparkLowLevel.MotorType.kBrushless);
+  private final SparkLimitSwitch m_climbLimitLeftSwitch =
+      m_climbMotorLeft.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+  private final SparkLimitSwitch m_climbLimitRightSwitch =
+      m_climbMotorRight.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Climb");
   private final GenericEntry m_sbClimbLeftpower, m_sbClimbRightpower, m_sbClimbLeftheight, m_sbClimbRightheight,
@@ -35,8 +40,8 @@ public class ClimbSub extends SubsystemBase {
     m_sbClimbRightpower = m_shuffleboardTab.add("Climb Right Power", 0).getEntry();
     m_sbClimbLeftheight = m_shuffleboardTab.add("Climb Left Height", 0).getEntry();
     m_sbClimbRightheight = m_shuffleboardTab.add("Climb Right Height", 0).getEntry();
-    m_sbClimbLeftLimit = m_shuffleboardTab.add("Climb Left Limit", 0).getEntry();
-    m_sbClimbRightLimit = m_shuffleboardTab.add("Climb Right Limit", 0).getEntry();
+    m_sbClimbLeftLimit = m_shuffleboardTab.add("Climb Left Limit", isLeftAtLimit()).getEntry();
+    m_sbClimbRightLimit = m_shuffleboardTab.add("Climb Right Limit", isRightAtLimit()).getEntry();
 
     init();
   }
@@ -50,8 +55,8 @@ public class ClimbSub extends SubsystemBase {
     m_climbMotorLeft.setIdleMode(IdleMode.kBrake);
     m_climbMotorRight.setIdleMode(IdleMode.kBrake);
 
-    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactor);
-    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactor);
+    m_climbMotorLeft.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactorL);
+    m_climbMotorRight.getEncoder().setPositionConversionFactor(Constants.Climb.kPositionConversionFactorR);
 
     setClimbPowerLeft(0.0);
     setClimbPowerRight(0.0);
@@ -63,13 +68,20 @@ public class ClimbSub extends SubsystemBase {
   public void periodic() {
     updateShuffleBoard();
 
+    System.out.println("Encoder reset due to 5cm and limit "
+        + (Math.abs(getLeftHeight()) > Constants.Climb.kResetHeightTolerence)
+        + " | "
+        + (Math.abs(getRightHeight()) > Constants.Climb.kResetHeightTolerence));
+
     // TOOD:  Enable the following resets after the limit switches are added and tested
     // If the climb hook hit the limit switch and isn't reading a height of close to 0, reset it
     if(isLeftAtLimit() && (Math.abs(getLeftHeight()) > Constants.Climb.kResetHeightTolerence)) {
-      //resetLeftEncoder();
+      resetLeftEncoder();
+      System.out.println("Left Encoder reset due to 5cm and limit");
     }
     if(isRightAtLimit() && (Math.abs(getRightHeight()) > Constants.Climb.kResetHeightTolerence)) {
-      //resetLeftEncoder();
+      resetRightEncoder();
+      System.out.println("Right Encoder reset due to 5cm and limit");
     }
   }
 
@@ -112,11 +124,16 @@ public class ClimbSub extends SubsystemBase {
   }
 
   public boolean isLeftAtLimit() {
-    return m_climbMotorLeft.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+    // System.out.println("limit left checked "
+    //     + m_climbLimitLeftSwitch.isPressed());
+
+    return m_climbLimitLeftSwitch.isPressed();
   }
 
   public boolean isRightAtLimit() {
-    return m_climbMotorRight.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+    // System.out.println("limit right checked "
+    //     + m_climbLimitRightSwitch.isPressed());
+    return m_climbLimitRightSwitch.isPressed();
   }
 
   public void resetLeftEncoder() {
