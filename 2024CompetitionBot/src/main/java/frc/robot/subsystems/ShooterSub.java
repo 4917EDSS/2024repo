@@ -22,8 +22,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-// TODO PE# - These are the steps to selectively include the changes made on Wednesday (when we didn't know how the
-// encoder worked)
 public class ShooterSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
 
@@ -33,11 +31,10 @@ public class ShooterSub extends SubsystemBase {
   private final SparkLimitSwitch m_reverseLimit = m_pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
   private final SparkLimitSwitch m_forwardLimit = m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
-  // TODO PE1 - Create new absolute encoder:  private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
   private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
 
-  private final PIDController m_pivotPID = new PIDController(0.05, 0.0, 0.001);
+  private final PIDController m_pivotPID = new PIDController(0.017, 0.0, 0.0);
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(0.053, 0.02, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
@@ -45,9 +42,6 @@ public class ShooterSub extends SubsystemBase {
       m_shooterNoteInPosition;
 
   private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
-
-  private double m_lastPivotAngle = 0.0;
-  private double m_currentRolloverAngleOffset = 0.0;
 
 
   public ShooterSub() {
@@ -62,16 +56,14 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-
     m_pivot.setInverted(true);
-
 
     m_pivot.setIdleMode(IdleMode.kBrake);
 
     m_pivot.setSmartCurrentLimit(40);
 
-    m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion); // TODO PE2 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
-    m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0); // TODO PE3 - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
+    m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
+    m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0);
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
 
@@ -84,79 +76,9 @@ public class ShooterSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Reset the pivot encoder if needed - we're at the reverse limit (angle 0) and the encoder
-    // is off by more than 1 degree
-    // TODO PE8 
-    // - Enable the following code after the encoder is set to read in degrees
-    // - Test to make sure it doesn't break anything (moving pivot up and down)
-    if(isPivotAtReverseLimit()) { //&& (Math.abs(getPivotAngle()) > 1.0)) {
-
+    if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
       resetPivot();
     }
-
-    // If the angle since last time has changed by more than 10 degrees, it's because the encoder rolled over
-    // TODO PE9
-    // - Measure the angle at which the encoder rolls over back to 0 and update kPivotRolloverAngle to match
-    // - Keep track of rollovers of the absolute encoder by adding code like this
-    double currentAngle = getPivotAngle();
-    //System.out.println("curentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-    //   + m_currentRolloverAngleOffset);
-
-    if(currentAngle != m_lastPivotAngle) {
-
-      System.out.println(" ++++ " +
-          (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) + " | " +
-          m_forwardDirection + " | " +
-          m_backwardDirection + " | " +
-          (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
-
-      );
-
-      if((currentAngle - m_lastPivotAngle) > 10) {
-        m_forwardDirection = true;
-      } else if((m_lastPivotAngle - currentAngle) > 10) {
-        m_forwardDirection = false;
-      }
-
-      // Forward Direction Rollover Correction
-      // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
-      // m_forwardDirection ensures it is going forward direction or backwards direction.
-      // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 0 -> 243 degree range
-      if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle)
-          && (m_currentRolloverAngleOffset > 0.0)
-          && (m_forwardDirection == true)) {
-        // if(m_lastPivotAngle < currentAngle) {
-        //}
-        // Rolled over from larger angle to 0, add offset
-        m_currentRolloverAngleOffset += Constants.Shooter.kPivotRolloverAngle;
-        System.out.println(
-            ">>>>>> currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-                + m_currentRolloverAngleOffset);
-
-        // Backward Direction Rollover Correction
-        // (Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10) checks if close to rollover point
-        // m_forwardDirection ensures it is going forward direction or backwards direction.
-        // m_currentRolloverAngleOffset < Constants.Shooter.kPivotRolloverAngle) && (m_currentRolloverAngleOffset > 0.0 ensures offset correction is 243 -> 360 degree range
-      } else if((Math.abs(currentAngle - Constants.Shooter.kPivotRolloverAngle) < 10)
-          && (m_currentRolloverAngleOffset > Constants.Shooter.kPivotRolloverAngle)
-          && (m_currentRolloverAngleOffset < 360.0)
-          && (m_forwardDirection == false)) {
-
-        System.out
-            .println(
-                "<<<<< currentangle " + currentAngle + " last pivot angle " + m_lastPivotAngle + " roolover offset "
-                    + m_currentRolloverAngleOffset);
-        //   // Rolled over from smaller to larger angle, remove offset
-        m_currentRolloverAngleOffset -= Constants.Shooter.kPivotRolloverAngle;
-
-      }
-
-    }
-
-    //   //update only if the angle is different
-    m_lastPivotAngle = currentAngle;
-
 
     // This method will be called once per scheduler run
     updateShuffleBoard();
@@ -165,7 +87,6 @@ public class ShooterSub extends SubsystemBase {
     m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
     m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
-
   }
 
   private void updateShuffleBoard() {
@@ -177,7 +98,6 @@ public class ShooterSub extends SubsystemBase {
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
-    SmartDashboard.putNumber("last pivot angle", m_lastPivotAngle);
   }
 
   public void movePivot(double power) {
@@ -188,36 +108,27 @@ public class ShooterSub extends SubsystemBase {
     return m_pivot.get();
   }
 
-  public void resetPivot() {
-    m_logger.warning("Zeroing pivot encoder");
+  int resetDelay = 0;
 
-    // TODO PE5 - Replace the code below with:  
-    //m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
-    m_pivotAbsoluteEncoder.setZeroOffset(getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset());
-    m_lastPivotAngle = getPivotAngle();
+  public void resetPivot() {
+    if(resetDelay == 0) {
+      // Don't update the zero more than every half second
+      resetDelay = 25;
+      m_logger.warning(
+          "Zeroing pivot encoder. Cur Ticks=" + getPivotAngle() + " CurZero=" + m_pivotAbsoluteEncoder.getZeroOffset()
+              + " New=" + (getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+      m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+      m_logger.warning("New zero offset =" + m_pivotAbsoluteEncoder.getZeroOffset());
+    }
+    resetDelay--;
   }
 
-  public double getPivotAngle() {
-    // TODO PE6
-    // - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder.
-    // - In Constants.java, set kPivotAngleConversion to 1.0 so we can figure out the conversion factor for this new encoder
 
-    // TODO PE10
-    // - Add + m_currentRolloverAngleOffset after getPosition() to account for absolute encoder rollovers
-    return m_pivotAbsoluteEncoder.getPosition() + m_currentRolloverAngleOffset;
+  public double getPivotAngle() {
+    return m_pivotAbsoluteEncoder.getPosition();
   }
 
   public double getPivotVelocity() {
-    // TODO PE7 
-    // - Replace m_pivot.getEncoder(). with m_pivotAbsoluteEncoder. in the code below
-    // - Move the shooter to the 0 position.
-    // - Connect using the Rev Hardware software and zero the encoder (save the zero to flash)
-    // - Deploy this code
-    // - Move the pivot to around 180 degrees
-    // - Update kPivotAngleConversion using the degrees you measured divided by the 'Pivot Pos' value in Shuffleboard > Shooter
-    // - Deploy the updated code 
-    // - Move the pivot and check that 'Pivot Pos' now shows degrees (if not, try inverting the math for kPivotAngleConversion)
-    // - Go to TODO PE8
     return m_pivotAbsoluteEncoder.getVelocity();
   }
 
@@ -240,7 +151,7 @@ public class ShooterSub extends SubsystemBase {
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
     double pivotPower = pidPower + fedPower;
-    // TODO: Run pivot motor based on power
+    // TODO: Resolved - Run pivot motor based on power
     movePivot(pivotPower);
   }
 

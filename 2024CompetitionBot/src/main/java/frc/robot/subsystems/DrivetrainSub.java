@@ -216,7 +216,7 @@ public class DrivetrainSub extends SubsystemBase {
 
     m_sbRobotName.setString(robotName);
 
-    boolean flipTeamSide = false; // TODO: Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
+    boolean flipTeamSide = false; // TODO: Resolved (creating two pathes) - Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
 
     AutoBuilder.configureHolonomic(this::getOdometryPose2d, this::resetOdometry, this::getChassisSpeeds,
         this::driveChassisSpeeds, Constants.Drivetrain.kPathingConfig,
@@ -230,13 +230,13 @@ public class DrivetrainSub extends SubsystemBase {
     m_logger.info("Initializing DrivetrainSub");
     resetGyro();
 
-    // TODO:  Do we need to call each swerve module's init()?
+    // TODO: Resolved -  Do we need to call each swerve module's init()?
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
+    updateOdometry(); // TODO: Resolved? - Move this to an autonomous periodic so it isn't running during teleop
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
 
@@ -501,8 +501,4 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
 
-  // public double getFrontDistance() {
-  //    //TODO: Convert voltage to distance in meters
-  //   return m_frontDistanceSensor.getAverageVoltage();
-  // }
 }

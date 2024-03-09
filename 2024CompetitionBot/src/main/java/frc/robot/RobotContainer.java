@@ -41,6 +41,7 @@ import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 
@@ -170,7 +171,7 @@ public class RobotContainer {
             m_flywheelSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(Constants.Shooter.kAngleZero, m_shooterSub));
+        .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
 
     //m_operatorController.triangle()
 
@@ -226,11 +227,47 @@ public class RobotContainer {
     return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
   }
 
+  public void disabledPeriodic() {
+
+    if(m_shooterSub.isPivotAtForwardLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERFWD_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERFWD_LIMIT, LedColour.RED);
+    }
+
+    if(m_shooterSub.isPivotAtReverseLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.RED);
+    }
+
+    if(m_climbSub.isRightAtLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
+    }
+
+    if(m_climbSub.isLeftAtLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.RED);
+    }
+
+    if(m_shooterSub.getPivotAngle() > 0) {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 24000.0 * 255.0), 0);
+    } else if(m_shooterSub.getPivotAngle() < 0) {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, (int) (m_shooterSub.getPivotAngle() / -20000.0 * 255.0), 0, 0);
+    } else {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, 0, 0);
+    }
+
+  }
+
 
   // Intialize the sub systems
   public void initSubsystems() {
     // int sensorArray[] = new int[2];
-    // /* sensorArray = */ m_arduinoSub.RS232Listen(); ////////////////////////TODO Remove
+    // /* sensorArray = */ m_arduinoSub.RS232Listen(); ////////////////////////TODO: Unknown? Remove
     m_ledSub.init();
     m_climbSub.init();
     m_drivetrainSub.init();

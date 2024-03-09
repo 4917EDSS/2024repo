@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,12 +23,13 @@ public class ArduinoSub extends SubsystemBase {
       m_sensorIntakeMid, m_sensorIntakeNear;
 
   /** Creates a new ArduinoSub. */
-  private static byte[] m_LEDBuffer = new byte[8];
-  private static boolean m_LEDBufferCheckSumCalculated = false;
+  private static byte[] m_LEDUpdateMessage = new byte[75];
+  private static byte[] m_getMessage = {(byte) Constants.Arduino.kMessageHeader, (byte) 0x01, (byte) 0xA6}; // header, command 1 to get sensor info, checksum
+  private static boolean m_LEDHasChanged = true;
 
   private static int loopNumber = 0;
   private static int dataSetLength = 0;
-  private static int loopThroughBufferByte = 0;
+
   private static int arrayNumberWanted = 1;
   private static int byteArrayCount = 0;
   private static int checkSum = 0;
@@ -55,18 +57,25 @@ public class ArduinoSub extends SubsystemBase {
   public void init() {
     // TODO:  Power cycle the arduino?
 
-    m_SerialPort.setReadBufferSize(m_LEDBuffer.length);
-    m_LEDBuffer[0] = (byte) 0xA5;
+    //Set top and bottom led sections to green
+    m_SerialPort.setReadBufferSize(m_LEDUpdateMessage.length);
+    m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;
+    m_LEDUpdateMessage[1] = (byte) 0x02; //command byte for updating LEDs
     for(int i = 0; i < 2; i++) {
       updateLED(i, 0, 255, 0);
     }
+
+    m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize); // John cthis should only be called once during initialization
+    m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength); // John c: consider setting this to zero to only read the available bytes
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // RS232Listen();
-    // writeToSerial();
+
+    RS232Listen();
+    writeToSerial();
     updateShuffleBoard();
   }
 
@@ -82,23 +91,28 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   private void writeToSerial() {
-    if(!m_LEDBufferCheckSumCalculated) {
-      m_LEDBuffer[8] = 0;
-      for(int i = 0; i < 8; i++) {
-        m_LEDBuffer[8] += m_LEDBuffer[i];
-      }
-      m_LEDBufferCheckSumCalculated = true;
+    // Get intake sensor data
+    if(!m_LEDHasChanged) {
+      m_SerialPort.write(m_getMessage, m_getMessage.length);
     }
-    m_SerialPort.write(m_LEDBuffer, m_LEDBuffer.length);
-    m_SerialPort.flush();
+    // Update LED panel colors when the update request is true
+    else {
+      m_LEDUpdateMessage[8] = 0;
+      for(int i = 0; i < 8; i++) {
+        m_LEDUpdateMessage[8] += m_LEDUpdateMessage[i];
+      }
+      m_SerialPort.write(m_LEDUpdateMessage, m_LEDUpdateMessage.length);
+      m_LEDHasChanged = false;
+    }
+    //m_SerialPort.flush();
 
   }
 
   public void updateLED(int LEDIndex, int r, int g, int b) {
-    m_LEDBuffer[LEDIndex * 3 + 1] = (byte) r;
-    m_LEDBuffer[LEDIndex * 3 + 2] = (byte) g;
-    m_LEDBuffer[LEDIndex * 3 + 3] = (byte) b;
-    m_LEDBufferCheckSumCalculated = false;
+    m_LEDUpdateMessage[LEDIndex * 3 + 2] = (byte) r;
+    m_LEDUpdateMessage[LEDIndex * 3 + 3] = (byte) g;
+    m_LEDUpdateMessage[LEDIndex * 3 + 4] = (byte) b;
+    m_LEDHasChanged = true;
   }
 
   public boolean isSensorTripped(int sensorIndex) {
@@ -108,81 +122,75 @@ public class ArduinoSub extends SubsystemBase {
     return false;
   }
 
-  public int[] RS232Listen() {
-    //byte[] m_buffer = m_SerialPort.read(10);
-    m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize);
-    m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength);
-    // m_SerialPort.setFlowControl(SerialPort.FlowControl.kXonXoff);
-    //getBytesReceived
+  public void RS232Listen() {
 
-    byte byteArray[] = new byte[Constants.Arduino.kByteArrayLength];
+    byte receiveBuffer[] = new byte[Constants.Arduino.kBufferSize];
+    byte byteArray[] = new byte[Constants.Arduino.kSensorDataLength];
 
-    byte bufferByte[] = new byte[Constants.Arduino.kBufferSize];
+    int bytesInBuffer = m_SerialPort.getBytesReceived();
+    SmartDashboard.putBoolean("Got Bytes", false);
+    if(bytesInBuffer < Constants.Arduino.kReadMessageLength) {
+      //wait for complete message
+      return;
+    }
+    SmartDashboard.putBoolean("Got Bytes", true);
+    receiveBuffer = m_SerialPort.read(bytesInBuffer);
 
-    checkSumWatchDog = 0;
+    int bufferIndex = 0;
+    byte checksum = 0;
+    byte version = 0;
 
-    do {
-      Arrays.fill(byteArray, (byte) 0);
-      Arrays.fill(bufferByte, (byte) 0);
-      if(checkSumWatchDog > 5) {
-        System.out.println("========checkSum corrupt 5 times=========");
-        // reset the arduino
+    // Checksum check
+    SmartDashboard.putBoolean("Valid Arduino Data", false);
+    SmartDashboard.putBoolean("Not enough bytes", false);
+    SmartDashboard.putBoolean("Found header", false);
+
+    while(bufferIndex < receiveBuffer.length) {
+
+      // Loop until header found
+      if((receiveBuffer[bufferIndex++]) != Constants.Arduino.kMessageHeader) {
+        // Haven't found the header yet
+
+        continue;
+      }
+      // Start at the header
+      bufferIndex -= 1;
+      SmartDashboard.putBoolean("Found header", true);
+      // Don't go over max amount of bytes recieved
+      if((bytesInBuffer - bufferIndex) < Constants.Arduino.kReadMessageLength) {
+        SmartDashboard.putBoolean("Not enough bytes", true);
         break;
       }
-      checkSumWatchDog++;
-      m_SerialPort.reset();
 
-      if(m_SerialPort.getBytesReceived() != 0) { //shouldn't read if there is no new data, this method doesn't work
-        bufferByte = m_SerialPort.read(Constants.Arduino.kReadByteLength);
+      // Get checksum of data after header
+
+      for(int i = bufferIndex; i < bufferIndex + Constants.Arduino.kReadMessageLength - 1; i++) {
+        checksum += receiveBuffer[i];
       }
-      bufferByte = m_SerialPort.read(Constants.Arduino.kReadByteLength);
-      // System.out.println("===============================");
-      // System.out.println(bufferByte.length);
-
-      byteArrayCount = 0;
-      loopThroughBufferByte = 0;
-
-      while(loopThroughBufferByte < bufferByte.length) {
-        if((bufferByte[loopThroughBufferByte] & 0xFF) == 0xA5) { //finds 0xA5, the start of the data sent
-
-          dataSetLength = bufferByte[loopThroughBufferByte + 1];
-          if(dataSetLength > Constants.Arduino.kByteArrayLength) {
-            break;
-          }
-
-          loopNumber = 0;
-          arrayNumberWanted = 1;
-          while(loopNumber < dataSetLength) {
-            byteArray[byteArrayCount] = bufferByte[loopThroughBufferByte + 1 + arrayNumberWanted];
-            byteArrayCount++;
-            arrayNumberWanted++;
-            loopNumber++;
-          }
-          break;
-        }
-        loopThroughBufferByte++;
+      // Is the checksum wrong?
+      if(checksum != receiveBuffer[bufferIndex + Constants.Arduino.kReadMessageLength - 1]) {
+        // Keep going in case that it was just a random 0xA5 (misinput)
+        continue;
       }
-      for(int i = 0; i < Constants.Arduino.kByteArrayLength - 1; i++) {
-        checkSum += byteArray[i];
-      }
-    } while(checkSum != byteArray[4]);
-    checkSum = 0;
 
-    for(int i = 0; i < m_intakeSensors.length; i++) {
-      m_intakeSensors[i] = (((byteArray[i + 1] & 0xFF) << 8) | (byteArray[i] & 0xFF));
+      // Checksum was valid 
+      // John C - increment the buffer index to point to the version
+      // We should check that this is a known version but we'll implement that only if we need to
+      version = receiveBuffer[++bufferIndex];
+      bufferIndex++;
+      // Parse sensor data
+      // John C - bufferIndex should be pointing at the data
+      SmartDashboard.putBoolean("Valid Arduino Data", true);
+      for(int s = 0; s < 8; s++) {
+        // John C : need to convert signed byte to unsigned values before doing the math!!!
+
+        int sensorValLow = (int) receiveBuffer[bufferIndex + s * 2];
+        int sensorValHigh = (int) receiveBuffer[bufferIndex + s * 2 + 1];
+        // Force value to be under 1023
+        m_intakeSensors[s] = (sensorValLow | (sensorValHigh << 8)) & 0x3ff;
+      }
+      // Done
     }
-
-    // StringBuilder sb = new StringBuilder(byteArray.length * 2);
-    // for(byte b : byteArray) {
-    //   sb.append(String.format("%02x", b));
-    // }
-    // System.out.println("===========================================================");
-    // System.out.println(m_intakeSensors[0]);
-    // System.out.println(sb);
-    // System.out.println(byteArray);
-    // System.out.println(bufferByte);
-    // System.out.println("===========================================================");
-
-    return m_intakeSensors;
   }
+
 }

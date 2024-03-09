@@ -16,7 +16,7 @@ public class LedSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(LedSub.class.getName());
 
   // Constants
-  private final static int kLedStripLength = 8;
+  private final static int kLedStripLength = 33;
   //private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("LedSubTab");
 
   private static int[][] m_ledColourBuffer = new int[kLedStripLength][3];
@@ -39,15 +39,15 @@ public class LedSub extends SubsystemBase {
     VISION(20, 20, true), // Indicates if the vision sees a traget (green) or not (red)
 
     // Disabled diagnostic zones
-    DIAG_DRIVE_ENC(14, 14, false), //
-    DIAG_MAST_LIMIT(15, 15, false), //
-    DIAG_MAST_ENC(16, 16, false), //
-    DIAG_ARM_LIMIT(17, 17, false), //
-    DIAG_ARM_ENC(18, 18, false), //
-    DIAG_INTAKE_LIMIT(19, 19, false), //
-    DIAG_INTAKE_ENC(20, 20, false), //
-    DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
-    DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
+    //DIAG_DRIVE_ENC(14, 14, false), //
+    DIAG_CLIMBR_LIMIT(1, 1, false), //
+    DIAG_CLIMBL_LIMIT(2, 2, false), //
+    DIAG_SHOOTERFWD_LIMIT(3, 3, false), //
+    DIAG_SHOOTERREV_LIMIT(4, 4, false), //
+    DIAG_SHOOTER_ENC(5, 5, false); //this can still be assigned
+    //DIAG_INTAKE_ENC(20, 20, false), //
+    //DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
+    //DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
 
 
     public final int start;
