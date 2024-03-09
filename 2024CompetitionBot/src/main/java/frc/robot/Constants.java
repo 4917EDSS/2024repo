@@ -179,7 +179,7 @@ public final class Constants {
 
   public static final class Climb {
     // Heights in meters
-    public static final double kHeightShortHookRaised = 0.40;
+    public static final double kHeightShortHookRaised = 0.55;
     public static final double kHeightHookLowered = 0.01;
     public static final double kHeightTallHookRaised = 0.20;
     public static final double kHeightHookScoring = 0.25;
