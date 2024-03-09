@@ -9,10 +9,10 @@ import java.time.Instant;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
-import frc.robot.commands.ShooterFlywheelCmd;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
@@ -20,15 +20,17 @@ public class ShooterShootCmd extends Command {
   private final ShooterSub m_shooterSub;
   private final FlywheelSub m_flywheelSub;
   private final FeederSub m_feederSub;
+  private final ArduinoSub m_arduinoSub;
   //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
   private Instant start;
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub, FeederSub feederSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
+  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
     m_shooterSub = shooterSub;
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
+    m_arduinoSub = arduinoSub;
     //m_shooterFlywheelCmd = shooterFlywheelCmd;
 
     addRequirements(shooterSub, flywheelSub, feederSub);
@@ -63,7 +65,7 @@ public class ShooterShootCmd extends Command {
 
   @Override
   public boolean isFinished() {
-    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
       start = Instant.now();
     }
     Instant end = Instant.now();

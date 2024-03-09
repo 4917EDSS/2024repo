@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
@@ -17,12 +18,14 @@ public class IntakeUntilNoteInCmd extends Command {
   private final IntakeSub m_intakeSub;
   private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
+  private final ArduinoSub m_arduinoSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeUntilNoteInCmd(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub) {
+  public IntakeUntilNoteInCmd(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     m_intakeSub = intakeSub;
     m_shooterSub = shooterSub;
     m_feederSub = feederSub;
+    m_arduinoSub = arduinoSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSub, shooterSub);
@@ -35,13 +38,17 @@ public class IntakeUntilNoteInCmd extends Command {
 
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Once the note has cleared the intake rollers, run those rollers in reverse to avoid controlling two notes
-    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
+    // if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
+    //   m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
+    // }
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
       m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     }
   }
@@ -60,7 +67,10 @@ public class IntakeUntilNoteInCmd extends Command {
   @Override
   public boolean isFinished() {
     // Once we hit the last sensor, stop the feed rollers
-    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    // if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorAtFlywheel)) {
+    //   return true;
+    // }
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
       return true;
     }
     return false;

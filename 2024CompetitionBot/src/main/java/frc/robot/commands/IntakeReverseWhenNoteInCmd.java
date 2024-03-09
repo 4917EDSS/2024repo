@@ -8,16 +8,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSub;
-
+import frc.robot.subsystems.ArduinoSub;
 
 public class IntakeReverseWhenNoteInCmd extends Command {
   private final ShooterSub m_shooterSub;
   private final IntakeSub m_intakeSub;
+  private final ArduinoSub m_arduinoSub;
 
   /** Creates a new IntakeReverseWhenNoteInCmd. */
-  public IntakeReverseWhenNoteInCmd(ShooterSub shooterSub, IntakeSub intakeSub) {
+  public IntakeReverseWhenNoteInCmd(ShooterSub shooterSub, IntakeSub intakeSub, ArduinoSub arduinoSub) {
     m_shooterSub = shooterSub;
     m_intakeSub = intakeSub;
+    m_arduinoSub = arduinoSub;
 
     addRequirements(shooterSub, intakeSub);
   }
@@ -39,6 +41,6 @@ public class IntakeReverseWhenNoteInCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel);
+    return m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar);
   }
 }

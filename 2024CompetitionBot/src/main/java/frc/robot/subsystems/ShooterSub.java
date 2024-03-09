@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ArduinoSub;
 
 
 public class ShooterSub extends SubsystemBase {
@@ -82,18 +83,14 @@ public class ShooterSub extends SubsystemBase {
 
     // This method will be called once per scheduler run
     updateShuffleBoard();
-
-    // TODO remove this hack when we have proper sensors
-    m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel] = !m_hackLimitSwitch.get(); // kSensorAtFlyWheel being used for temperary limit switch
-    m_noteSwitches[Constants.Shooter.kNoteSensorNearFlywheel] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
-    m_noteSwitches[Constants.Shooter.kNoteSensorAtRoller] = m_noteSwitches[Constants.Shooter.kNoteSensorAtFlywheel]; // kNoteSensorNearFlywheel being used for temperary limit switch
   }
+
 
   private void updateShuffleBoard() {
     m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     m_shooterPivotPower.setDouble(m_pivot.get());
-    m_shooterNoteInPosition.setBoolean(isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel));
+
 
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
@@ -155,8 +152,4 @@ public class ShooterSub extends SubsystemBase {
     movePivot(pivotPower);
   }
 
-  // TODO:  Remove when Arduino board is working
-  public boolean isNoteAtPosition(int noteSensorId) {
-    return m_noteSwitches[noteSensorId];
-  }
 }

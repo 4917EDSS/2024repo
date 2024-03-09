@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
+import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
@@ -15,11 +15,11 @@ import frc.robot.subsystems.ShooterSub;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class NoteIntakeGrp extends SequentialCommandGroup {
   /** Creates a new NoteIntakeGrp. */
-  public NoteIntakeGrp(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub) {
+  public NoteIntakeGrp(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         //new ShooterPivotCmd(Constants.Shooter.kAngleFloorIntake, shooterSub),
-        new IntakeUntilNoteInCmd(intakeSub, shooterSub, feederSub));
+        new IntakeUntilNoteInCmd(intakeSub, shooterSub, feederSub, arduinoSub));
   }
 }

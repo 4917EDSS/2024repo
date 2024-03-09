@@ -116,7 +116,7 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   public boolean isSensorTripped(int sensorIndex) {
-    if(m_intakeSensors[sensorIndex] < 0) { //need to measure distance to note to replace 0
+    if(m_intakeSensors[sensorIndex] < 511) { //need to measure distance to note to replace 0
       return true;
     }
     return false;

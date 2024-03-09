@@ -8,15 +8,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.ArduinoSub;
 
 public class PivotStopRollersWhenNoteInCmd extends Command {
   private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
+  private final ArduinoSub m_arduinoSub;
 
   /** Creates a new PivotStopRollersWhenNoteInCmd. */
-  public PivotStopRollersWhenNoteInCmd(ShooterSub shooterSub, FeederSub feederSub) {
+  public PivotStopRollersWhenNoteInCmd(ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     m_shooterSub = shooterSub;
     m_feederSub = feederSub;
+    m_arduinoSub = arduinoSub;
 
     addRequirements(shooterSub, feederSub);
   }
@@ -38,6 +41,6 @@ public class PivotStopRollersWhenNoteInCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtFlywheel);
+    return m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar);
   }
 }

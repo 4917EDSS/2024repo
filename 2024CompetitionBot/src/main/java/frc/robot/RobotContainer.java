@@ -125,7 +125,7 @@ public class RobotContainer {
 
     m_driverController.L2().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 0, 255)));
 
-    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub));
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -180,9 +180,9 @@ public class RobotContainer {
 
     m_operatorController.R1().onTrue(new ClimbSetHeightCmd(0.5334, 0.2, m_drivetrainSub, m_climbSub));
 
-    m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub, m_feederSub));
+    m_operatorController.L2().onTrue(new NoteIntakeGrp(m_intakeSub, m_shooterSub, m_feederSub, m_arduinoSub));
 
-    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub));
+    m_operatorController.R2().onTrue(new ShooterShootCmd(m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
 
     m_operatorController.share().onTrue(new ClimbSetHeightCmd(0.2286, 0.2, m_drivetrainSub, m_climbSub)); //228.6
 
@@ -197,7 +197,7 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub, m_feederSub));
+    m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub, m_feederSub, m_arduinoSub));
 
     //m_operatorController.povRight()
 

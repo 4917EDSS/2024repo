@@ -11,17 +11,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.ArduinoSub;
 
 public class ShooterAmpShotCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterAmpShotCmd.class.getName());
 
   private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
+  private final ArduinoSub m_arduinoSub;
   private Instant start;
 
-  public ShooterAmpShotCmd(ShooterSub shooterSub, FeederSub feederSub) {
+  public ShooterAmpShotCmd(ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     m_shooterSub = shooterSub;
     m_feederSub = feederSub;
+    m_arduinoSub = arduinoSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub, feederSub);
@@ -49,7 +52,7 @@ public class ShooterAmpShotCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorAtRoller)) {
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
       start = Instant.now();
     }
     Instant end = Instant.now();

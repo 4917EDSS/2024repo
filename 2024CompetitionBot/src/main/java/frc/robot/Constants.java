@@ -211,11 +211,15 @@ public final class Constants {
   }
 
   public static final class Shooter {
-    public static final int kNumNoteSensors = 4;
-    public static final int kNoteSensorAtRoller = 0;
-    public static final int kNoteSensorNearRoller = 1;
-    public static final int kNoteSensorNearFlywheel = 2;
-    public static final int kNoteSensorAtFlywheel = 3;
+    public static final int kNumNoteSensors = 8;
+    public static final int kNoteSensorFwNear = 0;
+    public static final int kNoteSensorFwMid = 1;
+    public static final int kNoteSensorFwFar = 2;
+    public static final int kNoteSensorCentreFW = 3;
+    public static final int kNoteSensorCentreIntake = 4;
+    public static final int kNoteSensorIntakeFar = 5;
+    public static final int kNoteSensorIntakeMid = 6;
+    public static final int kNoteSensorIntakeNear = 7;
 
     // Angles are in degrees
     public static final double kPivotAngleConversion = 360; // Radians to Degrees
