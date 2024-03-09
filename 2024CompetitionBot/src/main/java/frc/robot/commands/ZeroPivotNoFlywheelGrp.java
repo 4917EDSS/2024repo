@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
@@ -12,11 +14,12 @@ import frc.robot.subsystems.ShooterSub;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ZeroPivotNoFlywheelGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
-  public ZeroPivotNoFlywheelGrp(double pivotPosition, ShooterSub shooterSub) {
+  public ZeroPivotNoFlywheelGrp(ShooterSub shooterSub, FlywheelSub flywheelSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterPivotCmd(pivotPosition, shooterSub));
+        new ShooterPivotCmd(0, shooterSub),
+        new InstantCommand(() -> flywheelSub.disableFlywheel()));
 
   }
 }
