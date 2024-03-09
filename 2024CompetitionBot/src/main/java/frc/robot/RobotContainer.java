@@ -24,6 +24,7 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 
@@ -169,7 +171,7 @@ public class RobotContainer {
             m_flywheelSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(Constants.Shooter.kAngleZero, m_shooterSub));
+        .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
 
     //m_operatorController.triangle()
 
@@ -194,12 +196,12 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub));
+    m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub, m_feederSub));
 
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAmp, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAmp, m_shooterSub));
 
     //m_operatorController.povLeft()
     m_operatorController.povRight().onTrue(new ShooterPivotCmd(90.0, m_shooterSub));
@@ -223,6 +225,42 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
+  }
+
+  public void disabledPeriodic() {
+
+    if(m_shooterSub.isPivotAtForwardLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERFWD_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERFWD_LIMIT, LedColour.RED);
+    }
+
+    if(m_shooterSub.isPivotAtReverseLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.RED);
+    }
+
+    if(m_climbSub.isRightAtLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
+    }
+
+    if(m_climbSub.isLeftAtLimit()) {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.GREEN);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.RED);
+    }
+
+    if(m_shooterSub.getPivotAngle() > 0) {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 24000.0 * 255.0), 0);
+    } else if(m_shooterSub.getPivotAngle() < 0) {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, (int) (m_shooterSub.getPivotAngle() / -20000.0 * 255.0), 0, 0);
+    } else {
+      m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, 0, 0);
+    }
+
   }
 
 

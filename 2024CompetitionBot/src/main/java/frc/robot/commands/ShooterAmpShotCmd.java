@@ -24,7 +24,7 @@ public class ShooterAmpShotCmd extends Command {
     m_feederSub = feederSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSub);
+    addRequirements(shooterSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
