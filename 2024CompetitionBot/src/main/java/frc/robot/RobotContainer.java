@@ -24,6 +24,7 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteIntakeGrp;
+import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
@@ -194,12 +195,12 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub));
+    m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_shooterSub, m_feederSub));
 
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAmp, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAmp, m_shooterSub));
 
     //m_operatorController.povLeft()
     m_operatorController.povRight().onTrue(new ShooterPivotCmd(90.0, m_shooterSub));
