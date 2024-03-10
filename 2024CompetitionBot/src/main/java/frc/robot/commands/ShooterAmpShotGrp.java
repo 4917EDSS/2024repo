@@ -21,7 +21,7 @@ public class ShooterAmpShotGrp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleAmp, shooterSub),
-        new ShooterAmpShotCmd(shooterSub, feederSub, arduinoSub)
+        new ShooterAmpShotCmd(feederSub, arduinoSub)
 
     );
   }

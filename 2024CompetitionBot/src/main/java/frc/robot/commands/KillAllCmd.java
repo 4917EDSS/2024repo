@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
@@ -18,12 +19,12 @@ public class KillAllCmd extends Command {
   private final FlywheelSub m_flywheelSub;
 
   /** Creates a new KillAllCmd. */
-  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, ShooterSub shooterSub,
-      FlywheelSub flywheelSub) {
+  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, FeederSub feederSub,
+      ShooterSub shooterSub, FlywheelSub flywheelSub) {
     m_flywheelSub = flywheelSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climbSub, drivetrainSub, intakeSub, shooterSub, flywheelSub);
+    addRequirements(climbSub, drivetrainSub, intakeSub, feederSub, shooterSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.

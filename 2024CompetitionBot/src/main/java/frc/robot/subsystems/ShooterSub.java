@@ -8,19 +8,17 @@ import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArduinoSub;
 
 
 public class ShooterSub extends SubsystemBase {
@@ -33,26 +31,18 @@ public class ShooterSub extends SubsystemBase {
   private final SparkLimitSwitch m_forwardLimit = m_pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
-  private final DigitalInput m_hackLimitSwitch = new DigitalInput(Constants.DioIds.kHackIntakeLimitSwitch); // TODO: Remove when Arduino board works
 
   private final PIDController m_pivotPID = new PIDController(0.017, 0.0, 0.0);
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
-  private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower,
-      m_shooterNoteInPosition;
+  private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower;
 
-  private boolean[] m_noteSwitches = new boolean[Constants.Shooter.kNumNoteSensors]; // TODO: Remove when Arduino board works
-
-
-  private double pivotKS = 0.023;
-  private double pivotKG = 0.016;
 
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
-    m_shooterNoteInPosition = m_shuffleboardTab.add("Note In", 0).getEntry();
 
     init();
   }
@@ -70,9 +60,6 @@ public class ShooterSub extends SubsystemBase {
     m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0);
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
-
-    //resetPivot(); // TODO PE4 - Remove this line.  We'll reset the encoder only when we hit the lower limit switch (and if necessary)
-
   }
 
   boolean m_forwardDirection = false;
@@ -152,8 +139,7 @@ public class ShooterSub extends SubsystemBase {
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
     double pivotPower = pidPower + fedPower;
-    // TODO: Resolved - Run pivot motor based on power
+
     movePivot(pivotPower);
   }
-
 }

@@ -10,24 +10,21 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.ArduinoSub;
 
 public class ShooterAmpShotCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterAmpShotCmd.class.getName());
 
-  private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
   private Instant start;
 
-  public ShooterAmpShotCmd(ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
-    m_shooterSub = shooterSub;
+  public ShooterAmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub) {
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSub, feederSub);
+    addRequirements(feederSub);
   }
 
   // Called when the command is initially scheduled.

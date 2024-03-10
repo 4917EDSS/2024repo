@@ -12,12 +12,10 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.ShooterSub;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
-  private final ShooterSub m_shooterSub;
   private final FlywheelSub m_flywheelSub;
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
@@ -26,14 +24,12 @@ public class ShooterShootCmd extends Command {
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(ShooterSub shooterSub, FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub) {//, ShooterFlywheelCmd shooterFlywheelCmd) {
-    m_shooterSub = shooterSub;
+  public ShooterShootCmd(FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
-    //m_shooterFlywheelCmd = shooterFlywheelCmd;
 
-    addRequirements(shooterSub, flywheelSub, feederSub);
+    addRequirements(flywheelSub, feederSub);
   }
 
   // Called when the command is initially scheduled.

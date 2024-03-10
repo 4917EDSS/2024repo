@@ -189,12 +189,11 @@ public final class Constants {
 
   public static final class Climb {
     // Heights in meters
-    public static final double kHeightShortHookRaised = 0.55;
-    public static final double kHeightHookLowered = 0.01;
-    public static final double kHeightTallHookRaised = 0.20;
-    public static final double kHeightHookScoring = 0.25;
+    public static final double kHeightHookLowered = 0.00; // Retracted hooks height
+    public static final double kHeightTallHookRaised = 0.20; // Minimum hook height, climb in centre
+    public static final double kHeightShortHookRaised = 0.55; // Maximum hook height, short trap hooks or tall hooks with a side climb
     public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
-    public static final double kHeightTrap = 0.00; // TODO: needs to be found for trapshot
+    public static final double kHeightTrap = 0.00; // For trap shot when expelling note
 
     public static final double kPower = 1.0;
 

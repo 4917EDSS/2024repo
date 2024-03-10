@@ -10,25 +10,22 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
-import frc.robot.subsystems.ShooterSub;
 
 public class IntakeUntilNoteInCmd extends Command {
   private static Logger m_logger = Logger.getLogger(IntakeUntilNoteInCmd.class.getName());
 
   private final IntakeSub m_intakeSub;
-  private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeUntilNoteInCmd(IntakeSub intakeSub, ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
+  public IntakeUntilNoteInCmd(IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub) {
     m_intakeSub = intakeSub;
-    m_shooterSub = shooterSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSub, shooterSub);
+    addRequirements(intakeSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
@@ -38,7 +35,6 @@ public class IntakeUntilNoteInCmd extends Command {
 
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.

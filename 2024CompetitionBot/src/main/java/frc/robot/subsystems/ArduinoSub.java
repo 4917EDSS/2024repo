@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Arrays;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
@@ -26,15 +25,6 @@ public class ArduinoSub extends SubsystemBase {
   private static byte[] m_LEDUpdateMessage = new byte[75];
   private static byte[] m_getMessage = {(byte) Constants.Arduino.kMessageHeader, (byte) 0x01, (byte) 0xA6}; // header, command 1 to get sensor info, checksum
   private static boolean m_LEDHasChanged = true;
-
-  private static int loopNumber = 0;
-  private static int dataSetLength = 0;
-
-  private static int arrayNumberWanted = 1;
-  private static int byteArrayCount = 0;
-  private static int checkSum = 0;
-  private static int checkSumWatchDog = 0;
-
   private static int m_intakeSensors[] = new int[8];
 
   // Creating an instances of RS_232 port to communicate with Arduino (sensors)
@@ -125,7 +115,6 @@ public class ArduinoSub extends SubsystemBase {
   public void RS232Listen() {
 
     byte receiveBuffer[] = new byte[Constants.Arduino.kBufferSize];
-    byte byteArray[] = new byte[Constants.Arduino.kSensorDataLength];
 
     int bytesInBuffer = m_SerialPort.getBytesReceived();
     SmartDashboard.putBoolean("Got Bytes", false);
@@ -175,8 +164,11 @@ public class ArduinoSub extends SubsystemBase {
 
       // Checksum was valid 
       // John C - increment the buffer index to point to the version
-      // We should check that this is a known version but we'll implement that only if we need to
       version = receiveBuffer[++bufferIndex];
+      if(version != 0x03) {
+        // We should check that this is a known version but we'll implement that only if we need to
+        // For now, assume we're getting the right message
+      }
       bufferIndex++;
       // Parse sensor data
       // John C - bufferIndex should be pointing at the data

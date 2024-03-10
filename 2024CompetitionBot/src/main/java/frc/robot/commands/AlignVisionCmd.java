@@ -31,8 +31,7 @@ public class AlignVisionCmd extends Command {
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
 
   public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
-      FlywheelSub flywheelSub,
-      CommandPS4Controller driverController, CommandPS4Controller operatorController) {
+      FlywheelSub flywheelSub, CommandPS4Controller driverController, CommandPS4Controller operatorController) {
     m_visionSub = visionSub;
     m_drivetrainSub = drivetrainSub;
     m_shooterSub = shooterSub;
@@ -42,8 +41,8 @@ public class AlignVisionCmd extends Command {
     m_driverController = driverController;
     m_operatorController = operatorController;
 
-    addRequirements(visionSub, drivetrainSub, shooterSub, feederSub, flywheelSub);
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(visionSub, drivetrainSub, shooterSub, feederSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.
