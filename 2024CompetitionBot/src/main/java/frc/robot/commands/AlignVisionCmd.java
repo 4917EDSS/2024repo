@@ -65,7 +65,7 @@ public class AlignVisionCmd extends Command {
     double pivotAngle = kA * verticalAngle + kB; // Simple linear conversion from apriltag angle to shooter angle
 
     if(m_visionSub.simpleHasTarget()) {
-      m_shooterSub.runPivotControl(pivotAngle);
+      m_shooterSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
       if(m_operatorController.R2().getAsBoolean()) {

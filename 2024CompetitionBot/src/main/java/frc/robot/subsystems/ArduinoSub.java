@@ -138,7 +138,6 @@ public class ArduinoSub extends SubsystemBase {
     SmartDashboard.putBoolean("Valid Arduino Data", false);
     SmartDashboard.putBoolean("Not enough bytes", false);
     SmartDashboard.putBoolean("Found header", false);
-    System.out.println("****** Recived valid data, Entering loop *****");
     while(bufferIndex < receiveBuffer.length) {
 
       // Loop until header found

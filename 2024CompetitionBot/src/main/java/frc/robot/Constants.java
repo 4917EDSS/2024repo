@@ -225,7 +225,7 @@ public final class Constants {
     public static final int kNoteSensorIntakeMid = 6;
     public static final int kNoteSensorIntakeNear = 7;
 
-    public static final double ks = 0.037;
+    public static final double ks = 0;//0.037;
     public static final double kg = 0.011;
 
     // Angles are in degrees
