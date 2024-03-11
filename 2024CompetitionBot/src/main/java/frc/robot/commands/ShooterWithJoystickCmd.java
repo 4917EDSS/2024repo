@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ShooterSub;
@@ -11,6 +12,8 @@ import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 
 public class ShooterWithJoystickCmd extends Command {
+  private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
+
   private CommandPS4Controller m_controller;
   private ShooterSub m_shooterSub;
   private IntakeSub m_intakeSub;
@@ -30,7 +33,9 @@ public class ShooterWithJoystickCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_logger.fine("ShooterWithJoystick - Init");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

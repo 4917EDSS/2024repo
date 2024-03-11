@@ -92,11 +92,13 @@ public class RobotContainer {
     // TODO: Add autonomous commands here
     NamedCommands.registerCommand("IntakeUntilNoteInCmd",
         new IntakeUntilNoteInCmd(m_intakeSub, m_feederSub, m_arduinoSub));
-    NamedCommands.registerCommand("ShooterShootCmd", new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterShootCmd",
+        new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrp",
         new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
-    NamedCommands.registerCommand("ShooterFlywheelCmd", new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterFlywheelCmd",
+        new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
 
     // Put manual robot initialize button on SmartDashboard
     SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
@@ -126,7 +128,7 @@ public class RobotContainer {
 
     m_driverController.L2().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 0, 255))); // TODO: Remove this test code
 
-    m_driverController.R2().onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
+    m_driverController.R2().onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
@@ -178,7 +180,7 @@ public class RobotContainer {
 
     m_operatorController.L2().onTrue(new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub));
 
-    m_operatorController.R2().onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
+    m_operatorController.R2().onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
 
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
@@ -215,7 +217,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
     return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
   }
 

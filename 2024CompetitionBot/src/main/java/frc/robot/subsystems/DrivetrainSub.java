@@ -460,6 +460,8 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pos) {
+    m_gyro.setAngleAdjustment(pos.getRotation().getDegrees());
+    m_gyro.reset();
     m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
         pos);

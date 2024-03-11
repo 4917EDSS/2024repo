@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -34,7 +35,7 @@ public class FlywheelSub extends SubsystemBase {
       m_shooterflywheelPowerR;
 
   // Only needed if we decide we need a PID controller
-  //private double m_flywheelP = 0.001;
+  private final PIDController m_flyWheelPID = new PIDController(0.012, 0.0, 0.0);
 
 
   public FlywheelSub() {
@@ -77,9 +78,9 @@ public class FlywheelSub extends SubsystemBase {
     if(m_isFlywheelEnabled) {
       double feedForwardVoltage = m_flyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
       // So far, we don't need the PID control.  Feedforward is doing well on its own
-      //double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity);
+      double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity);
 
-      setFlywheelVoltage(feedForwardVoltage /* + pidVoltage */);
+      setFlywheelVoltage(feedForwardVoltage + pidVoltage);
     } else {
       setFlywheelVoltage(0.0);
     }
