@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.time.Duration;
+import java.time.Instant;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ArduinoSub extends SubsystemBase {
 
@@ -51,9 +54,10 @@ public class ArduinoSub extends SubsystemBase {
     m_SerialPort.setReadBufferSize(m_LEDUpdateMessage.length);
     m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;
     m_LEDUpdateMessage[1] = (byte) 0x02; //command byte for updating LEDs
-    for(int i = 0; i < 2; i++) {
-      updateLED(i, 0, 255, 0);
-    }
+
+    // Set top and bottom LEDs
+    updateLED(0, 0, 255, 0);
+    updateLED(1, 0, 255, 0);
 
     m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize); // John cthis should only be called once during initialization
     m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength); // John c: consider setting this to zero to only read the available bytes
@@ -67,6 +71,7 @@ public class ArduinoSub extends SubsystemBase {
     RS232Listen();
     writeToSerial();
     updateShuffleBoard();
+
   }
 
   private void updateShuffleBoard() {
@@ -91,7 +96,7 @@ public class ArduinoSub extends SubsystemBase {
       for(int i = 0; i < 8; i++) {
         m_LEDUpdateMessage[8] += m_LEDUpdateMessage[i];
       }
-      m_SerialPort.write(m_LEDUpdateMessage, m_LEDUpdateMessage.length);
+      m_SerialPort.write(m_LEDUpdateMessage, 9);
       m_LEDHasChanged = false;
     }
     //m_SerialPort.flush();
@@ -102,7 +107,7 @@ public class ArduinoSub extends SubsystemBase {
     m_LEDUpdateMessage[LEDIndex * 3 + 2] = (byte) r;
     m_LEDUpdateMessage[LEDIndex * 3 + 3] = (byte) g;
     m_LEDUpdateMessage[LEDIndex * 3 + 4] = (byte) b;
-    m_LEDHasChanged = true;
+    m_LEDHasChanged = false;
   }
 
   public boolean isSensorTripped(int sensorIndex) {
@@ -133,38 +138,34 @@ public class ArduinoSub extends SubsystemBase {
     SmartDashboard.putBoolean("Valid Arduino Data", false);
     SmartDashboard.putBoolean("Not enough bytes", false);
     SmartDashboard.putBoolean("Found header", false);
-
+    System.out.println("****** Recived valid data, Entering loop *****");
     while(bufferIndex < receiveBuffer.length) {
 
       // Loop until header found
       if((receiveBuffer[bufferIndex++]) != Constants.Arduino.kMessageHeader) {
         // Haven't found the header yet
-
         continue;
       }
       // Start at the header
-      bufferIndex -= 1;
       SmartDashboard.putBoolean("Found header", true);
       // Don't go over max amount of bytes recieved
-      if((bytesInBuffer - bufferIndex) < Constants.Arduino.kReadMessageLength) {
+      if((bytesInBuffer - (bufferIndex - 1)) < Constants.Arduino.kReadMessageLength) {
         SmartDashboard.putBoolean("Not enough bytes", true);
         break;
       }
 
       // Get checksum of data after header
-
-      for(int i = bufferIndex; i < bufferIndex + Constants.Arduino.kReadMessageLength - 1; i++) {
+      for(int i = bufferIndex - 1; i < (bufferIndex - 1) + Constants.Arduino.kReadMessageLength - 1; i++) {
         checksum += receiveBuffer[i];
       }
       // Is the checksum wrong?
-      if(checksum != receiveBuffer[bufferIndex + Constants.Arduino.kReadMessageLength - 1]) {
+      if(checksum != receiveBuffer[(bufferIndex - 1) + Constants.Arduino.kReadMessageLength - 1]) {
         // Keep going in case that it was just a random 0xA5 (misinput)
         continue;
       }
-
       // Checksum was valid 
       // John C - increment the buffer index to point to the version
-      version = receiveBuffer[++bufferIndex];
+      version = receiveBuffer[bufferIndex];
       if(version != 0x03) {
         // We should check that this is a known version but we'll implement that only if we need to
         // For now, assume we're getting the right message

@@ -67,6 +67,10 @@ public class RobotContainer {
 
   private boolean m_isRedAlliance = true;
 
+  // Disables large amount of prints from DrivetrainSub, ShooterSub, PowerSub, and VisionSub
+  // Fixes a lot of CommandLoop overruns from prints
+  public static boolean disableShuffleboardPrint = false;
+
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
   private final CommandPS4Controller m_operatorController =
