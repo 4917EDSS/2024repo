@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 
 public class VisionSub extends SubsystemBase {
@@ -73,10 +74,13 @@ public class VisionSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_llresults = LimelightHelpers.getLatestResults("");
 
-    // This method will be called once per scheduler run
-    updateShuffleBoard();
+    if(!RobotContainer.disableShuffleboardPrint) {
+      m_llresults = LimelightHelpers.getLatestResults("");
+
+      // This method will be called once per scheduler run
+      updateShuffleBoard();
+    }
     //m_sbPivotPosition = m_shuffleboardTab.add("Pivot Position", 0).getEntry();
     // m_tx = m_shuffleboardTab.add("tx", 0).getEntry();
     //m_ty = m_shuffleboardTab.add("ty", 0).getEntry();

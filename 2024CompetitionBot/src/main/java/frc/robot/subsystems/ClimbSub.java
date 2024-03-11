@@ -72,11 +72,11 @@ public class ClimbSub extends SubsystemBase {
     // If the climb hook hit the limit switch and isn't reading a height of close to 0, reset it
     if(isLeftAtLimit() && (Math.abs(getLeftHeight()) > Constants.Climb.kResetHeightTolerence)) {
       resetLeftEncoder();
-      System.out.println("Left Encoder reset due to 5cm and limit");
+      //System.out.println("Left Encoder reset due to 5cm and limit");
     }
     if(isRightAtLimit() && (Math.abs(getRightHeight()) > Constants.Climb.kResetHeightTolerence)) {
       resetRightEncoder();
-      System.out.println("Right Encoder reset due to 5cm and limit");
+      //System.out.println("Right Encoder reset due to 5cm and limit");
     }
   }
 
