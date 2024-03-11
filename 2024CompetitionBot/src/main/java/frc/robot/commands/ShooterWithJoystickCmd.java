@@ -15,6 +15,7 @@ public class ShooterWithJoystickCmd extends Command {
   private ShooterSub m_shooterSub;
   private IntakeSub m_intakeSub;
   private FeederSub m_feederSub;
+  private boolean m_wasInDeadZone;
 
   /** Creates a new ShooterWithJoystickCmd. */
   public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub, FeederSub feederSub,
@@ -40,7 +41,15 @@ public class ShooterWithJoystickCmd extends Command {
 
     // create deadband if power is less than 5%
     if(Math.abs(pivotPower) < 0.05) {
-      pivotPower = 0;
+      if(!m_wasInDeadZone) {
+        System.out.println("is this workingn" + m_shooterSub.getPivotAngle());
+        m_shooterSub.setTargetAngle(m_shooterSub.getPivotAngle());
+      }
+      m_wasInDeadZone = true;
+    } else {
+      m_wasInDeadZone = false;
+      m_shooterSub.disableTargetAngle();
+      m_shooterSub.movePivot(pivotPower);
     }
     if(Math.abs(intakePower) < 0.05) {
       intakePower = 0;
@@ -50,7 +59,6 @@ public class ShooterWithJoystickCmd extends Command {
     intakePower *= Math.abs(intakePower);
 
     // set movePivot with the new power
-    m_shooterSub.movePivot(pivotPower);
     m_feederSub.spinBothFeeders(intakePower, intakePower / 2);
     m_intakeSub.setIntakeMotors(intakePower);
   }

@@ -33,6 +33,8 @@ public class ShooterSub extends SubsystemBase {
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
 
   private final PIDController m_pivotPID = new PIDController(0.02, 0.0, 0.0);
+  private double m_targetAngle;
+  private boolean m_areWeTryingToHold = false;
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
@@ -62,11 +64,21 @@ public class ShooterSub extends SubsystemBase {
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
   }
 
-  boolean m_forwardDirection = false;
-  boolean m_backwardDirection = false;
+  public void setTargetAngle(double position) {
+    m_targetAngle = position;
+    m_areWeTryingToHold = true;
+  }
+
+  public void disableTargetAngle() {
+    m_areWeTryingToHold = false;
+  }
+
 
   @Override
   public void periodic() {
+    if(m_areWeTryingToHold) {
+      runPivotControl();
+    }
     if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
       resetPivot();
     }
@@ -97,6 +109,7 @@ public class ShooterSub extends SubsystemBase {
   }
 
   int resetDelay = 0;
+
 
   public void resetPivot() {
     if(resetDelay == 0) {
@@ -132,14 +145,13 @@ public class ShooterSub extends SubsystemBase {
     return m_pivotPID.atSetpoint();
   }
 
-  public void runPivotControl(double targetAngle) { // Returns true when at position
+  private void runPivotControl() { // Returns true when at position
     //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
 
-    double pidPower = m_pivotPID.calculate(getPivotAngle(), targetAngle);
+    double pidPower = m_pivotPID.calculate(getPivotAngle(), m_targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
     double pivotPower = pidPower + fedPower;
-
     movePivot(pivotPower);
   }
 }
