@@ -67,10 +67,6 @@ public class ClimbSub extends SubsystemBase {
   public void periodic() {
     updateShuffleBoard();
 
-    System.out.println("Encoder reset due to 5cm and limit "
-        + (Math.abs(getLeftHeight()) > Constants.Climb.kResetHeightTolerence)
-        + " | "
-        + (Math.abs(getRightHeight()) > Constants.Climb.kResetHeightTolerence));
 
     // TOOD:  Enable the following resets after the limit switches are added and tested
     // If the climb hook hit the limit switch and isn't reading a height of close to 0, reset it
