@@ -230,7 +230,7 @@ public final class Constants {
 
     // Angles are in degrees
     public static final double kPivotAngleConversion = 360; // Radians to Degrees
-    public static final double kPivotAngleTolerance = 0.25;
+    public static final double kPivotAngleTolerance = 0.75;
     public static final double kPivotRolloverAngle = 243.4;
 
     public static final double kAngleFloorIntake = 0.0;
@@ -246,6 +246,9 @@ public final class Constants {
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
+
+    public static final double kNoteLowerExpellPower = -0.3;
+    public static final double kNoteUpperExpellPower = kNoteLowerExpellPower * 0.9;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;

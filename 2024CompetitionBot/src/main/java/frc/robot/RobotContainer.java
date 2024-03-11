@@ -22,6 +22,7 @@ import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
+import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.IntakeUntilNoteInCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
@@ -175,7 +176,7 @@ public class RobotContainer {
     m_operatorController.R1()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 1.0, m_drivetrainSub, m_climbSub));
 
-    m_operatorController.L2().onTrue(new IntakeUntilNoteInCmd(m_intakeSub, m_feederSub, m_arduinoSub));
+    m_operatorController.L2().onTrue(new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub));
 
     m_operatorController.R2().onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
 
