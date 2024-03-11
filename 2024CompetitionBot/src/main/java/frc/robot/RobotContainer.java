@@ -24,6 +24,7 @@ import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.IntakeUntilNoteInCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
@@ -84,7 +85,13 @@ public class RobotContainer {
     configureBindings();
 
     // TODO: Add autonomous commands here
-    NamedCommands.registerCommand("ExampleAuto", new PrintCommand("RUNNING A PATH COMMAND!"));
+    NamedCommands.registerCommand("IntakeUntilNoteInCmd",
+        new IntakeUntilNoteInCmd(m_intakeSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterShootCmd", new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrp",
+        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub));
+    NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
+    NamedCommands.registerCommand("ShooterFlywheelCmd", new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub));
 
     // Put manual robot initialize button on SmartDashboard
     SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
@@ -203,7 +210,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Test Auto"); // Takes in Auto file name
+
+    return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
   }
 
   public void disabledPeriodic() {
