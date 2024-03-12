@@ -198,7 +198,8 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options().whileTrue(new BackSpinIntakeCmd(m_intakeSub));
+    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));//ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
+    //m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
