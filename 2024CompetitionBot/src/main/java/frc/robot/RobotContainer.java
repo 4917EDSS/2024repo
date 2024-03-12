@@ -95,7 +95,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrp",
-        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub));
+        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub));
@@ -159,10 +159,12 @@ public class RobotContainer {
 
     // ======================================== Operator controller bindings ========================================
     m_operatorController.square()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
 
     m_operatorController.cross()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
 
     //m_operatorController.circle()
 
@@ -186,7 +188,7 @@ public class RobotContainer {
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
     m_operatorController.options().onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
-        m_flywheelSub));
+        m_flywheelSub, m_feederSub, m_arduinoSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));

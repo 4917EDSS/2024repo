@@ -48,7 +48,7 @@ public class ExpellNoteABitCmd extends Command {
     // if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorAtFlywheel)) {
     //   return true;
     // }
-    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwMid)) {
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
       return true;
     }
     return false;

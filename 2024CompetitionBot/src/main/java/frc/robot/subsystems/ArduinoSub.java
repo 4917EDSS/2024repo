@@ -111,7 +111,7 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   public boolean isSensorTripped(int sensorIndex) {
-    if(m_intakeSensors[sensorIndex] < 900) {
+    if(m_intakeSensors[sensorIndex] < 1000) {
       return true;
     }
     return false;

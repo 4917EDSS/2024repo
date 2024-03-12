@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.ArduinoSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.ShooterSub;
 
@@ -13,12 +15,14 @@ import frc.robot.subsystems.ShooterSub;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterPrepGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
-  public ShooterPrepGrp(double pivotPosition, ShooterSub shooterSub, FlywheelSub flywheelSub) {
+  public ShooterPrepGrp(double pivotPosition, ShooterSub shooterSub, FlywheelSub flywheelSub, FeederSub feederSub,
+      ArduinoSub arduinoSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterFlywheelCmd(flywheelSub)//,
-    /* new ShooterPivotCmd(pivotPosition, shooterSub) */);
+        new ShooterFlywheelCmd(flywheelSub),
+        new ShooterPivotCmd(pivotPosition, shooterSub),
+        new ExpellNoteABitCmd(feederSub, arduinoSub));
 
   }
 }
