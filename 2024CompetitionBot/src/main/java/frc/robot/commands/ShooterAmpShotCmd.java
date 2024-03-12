@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
+import frc.robot.subsystems.LedSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.ArduinoSub;
 
 public class ShooterAmpShotCmd extends Command {
@@ -17,14 +20,16 @@ public class ShooterAmpShotCmd extends Command {
 
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final LedSub m_ledSub;
   private Instant start;
 
-  public ShooterAmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub) {
+  public ShooterAmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
+    m_ledSub = ledSub;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(feederSub);
+    addRequirements(feederSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
@@ -44,6 +49,7 @@ public class ShooterAmpShotCmd extends Command {
   public void end(boolean interrupted) {
     m_logger.fine("ShooterAmpShotCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_feederSub.spinBothFeeders(0, 0);
+    m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
   }
 
   // Returns true when the command should end.

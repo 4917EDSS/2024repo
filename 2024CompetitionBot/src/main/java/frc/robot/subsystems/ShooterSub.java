@@ -52,6 +52,8 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
+    disableTargetAngle();
+
     m_pivot.setInverted(true);
 
     m_pivot.setIdleMode(IdleMode.kBrake);
@@ -65,6 +67,9 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void setTargetAngle(double position) {
+    if(position >= Constants.Shooter.kImpossibleZone) {
+      position = 0;
+    }
     m_targetAngle = position;
     m_areWeTryingToHold = true;
   }
@@ -77,7 +82,7 @@ public class ShooterSub extends SubsystemBase {
   @Override
   public void periodic() {
     if(m_areWeTryingToHold) {
-      runPivotControl();
+      runPivotControl(false);
     }
     if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
       resetPivot();
@@ -101,6 +106,23 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void movePivot(double power) {
+    if((getPivotAngle() <= 20 || getPivotAngle() >= Constants.Shooter.kImpossibleZone) && power < 0) {
+      if(power < -Constants.Shooter.kArmPivotSlowSpeed) {
+        power = -Constants.Shooter.kArmPivotSlowSpeed;
+      }
+    } else if((getPivotAngle() <= 60) && power < 0) {
+      if(power < -Constants.Shooter.kArmPivotSlowSpeedPrep) {
+        power = -Constants.Shooter.kArmPivotSlowSpeedPrep;
+      }
+    } else if(getPivotAngle() >= 250 && power > 0) {
+      if(power > Constants.Shooter.kArmPivotSlowSpeed) {
+        power = Constants.Shooter.kArmPivotSlowSpeed;
+      }
+    } else if(getPivotAngle() >= 220 && power > 0) {
+      if(power > Constants.Shooter.kArmPivotSlowSpeedPrep) {
+        power = Constants.Shooter.kArmPivotSlowSpeedPrep;
+      }
+    }
     m_pivot.set(power);
   }
 
@@ -145,13 +167,14 @@ public class ShooterSub extends SubsystemBase {
     return m_pivotPID.atSetpoint();
   }
 
-  private void runPivotControl() { // Returns true when at position
+  public void runPivotControl(boolean justCalculate) { // Returns true when at position
     //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
-
     double pidPower = m_pivotPID.calculate(getPivotAngle(), m_targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
-    double pivotPower = pidPower + fedPower;
-    movePivot(pivotPower);
+    if(!justCalculate) {
+      double pivotPower = pidPower + fedPower;
+      movePivot(pivotPower);
+    }
   }
 }

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
 
@@ -48,21 +49,19 @@ public class ShooterWithJoystickCmd extends Command {
     if(Math.abs(pivotPower) < 0.05) {
       if(!m_wasInDeadZone) {
         System.out.println("is this workingn" + m_shooterSub.getPivotAngle());
-        if(m_shooterSub.getPivotAngle() < 280.0) {
-          m_shooterSub.setTargetAngle(m_shooterSub.getPivotAngle());
-        }
+        m_shooterSub.setTargetAngle((m_shooterSub.getPivotAngle()
+            + m_shooterSub.getPivotVelocity() * Constants.Shooter.kMovingCoifficant));
       }
       m_wasInDeadZone = true;
     } else {
       m_wasInDeadZone = false;
       m_shooterSub.disableTargetAngle();
-      m_shooterSub.movePivot(pivotPower);
+      m_shooterSub.movePivot(pivotPower / 2);
     }
     if(Math.abs(intakePower) < 0.05) {
       intakePower = 0;
     }
     // square power value to give more control when moving slower
-    //pivotPower *= Math.abs(pivotPower);
     intakePower *= Math.abs(intakePower);
 
     // set movePivot with the new power
@@ -72,7 +71,9 @@ public class ShooterWithJoystickCmd extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override

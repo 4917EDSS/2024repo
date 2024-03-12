@@ -236,7 +236,8 @@ public final class Constants {
     public static final double kAngleFloorIntake = 0.0;
     public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 37.95;
-    public static final double kAngleAmp = 230.0;
+    public static final double kAngleAmp = 215.0;
+    public static final double kAnglePreAmp = 200.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
     public static final double kAnglePassing = 57.0;
@@ -247,11 +248,20 @@ public final class Constants {
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
 
+
     public static final double kNoteLowerExpellPower = -0.3;
     public static final double kNoteUpperExpellPower = kNoteLowerExpellPower * 0.9;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
+
+    //limits speed for a soft stop
+    public static final double kArmPivotSlowSpeed = 0.1;
+    public static final double kArmPivotSlowSpeedPrep = 0.3;
+    public static final double kImpossibleZone = 300;
+
+    //for joystick movment
+    public static final double kMovingCoifficant = 7 / 0.2;
   }
 
   public static final class Intake {
@@ -260,10 +270,10 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 80; //84 RPS is MAX speed
+    public static final double kFlywheelShootVelocity = 86.0;//80; //84 RPS is MAX speed
     public static final double ks = 0.25;
     public static final double kv = 0.128;
-    public static final double kFlywheelTolerance = 0.1;
+    public static final double kFlywheelTolerance = 5;
     public static final double kPositionConversionFactor = 10.0 / 16.5;
     public static final double kVelocityConversionFactor = 1.0 / 60.0;
   }
