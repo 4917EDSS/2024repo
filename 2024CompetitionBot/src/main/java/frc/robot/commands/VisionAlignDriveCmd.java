@@ -55,7 +55,7 @@ public class VisionAlignDriveCmd extends Command {
     // Stage 2: Align with center of april tag
 
     // Get apriltag angle relative to gyro in radians and constrain it
-    double fieldApriltagAngle = m_drivetrainSub.getRotation().getDegrees() + horizontalOffset;
+    double fieldApriltagAngle = m_drivetrainSub.getYawRotation2d().getDegrees() + horizontalOffset;
 
     // Get apriltag angle as a vector. Setting drive x and y power to this would make it drive directly towards the apriltag
     double apriltagX = Math.cos(Math.toRadians(fieldApriltagAngle));
@@ -76,11 +76,11 @@ public class VisionAlignDriveCmd extends Command {
       hasAngleSnapshot = false;
     } else if(!hasAngleSnapshot) { // Set snapshot if there isn't currently any valid one (does once)
       angleSnapshot = MathUtil.inputModulus(
-          m_drivetrainSub.getRotation().getDegrees() + m_visionSub.getTargetRotation().getY(), -180.0, 180.0);
+          m_drivetrainSub.getYawRotation2d().getDegrees() + m_visionSub.getTargetRotation().getY(), -180.0, 180.0);
       hasAngleSnapshot = true;
     }
 
-    double calculatedSnapshot = angleSnapshot - m_drivetrainSub.getRotation().getDegrees();
+    double calculatedSnapshot = angleSnapshot - m_drivetrainSub.getYawRotation2d().getDegrees();
     double powerApriltagAlign =
         MathUtil.clamp(m_alignTagPID.calculate(-calculatedSnapshot), -0.75,
             0.75);

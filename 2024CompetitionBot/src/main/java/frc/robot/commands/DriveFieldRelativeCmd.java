@@ -28,7 +28,7 @@ public class DriveFieldRelativeCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_targetHeading = m_drivetrainSub.getRotationDegrees();
+    m_targetHeading = m_drivetrainSub.getYawRotationDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,11 +43,11 @@ public class DriveFieldRelativeCmd extends Command {
         rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(m_targetHeading);
       } else {
         rotationPower = 0.0;
-        m_targetHeading = m_drivetrainSub.getRotationDegrees();
+        m_targetHeading = m_drivetrainSub.getYawRotationDegrees();
       }
     } else {
       rotationPower = -m_driverController.getRightX();
-      m_targetHeading = m_drivetrainSub.getRotationDegrees();
+      m_targetHeading = m_drivetrainSub.getYawRotationDegrees();
     }
     m_drivetrainSub.drive(
         (Math.abs(m_driverController.getLeftX()) < m_deadband ? 0.0

@@ -81,7 +81,6 @@ public class DrivetrainSub extends SubsystemBase {
   private final Orchestra orca2 = new Orchestra();
   private final Orchestra orca3 = new Orchestra();
   private final Orchestra orca4 = new Orchestra();
-  private double m_orientationOffsetDegrees = 0;
 
   // Speed multipliers
   public static final double kMaxDriveSpeed = 2.0;//4.0; // In m/s
@@ -173,12 +172,11 @@ public class DrivetrainSub extends SubsystemBase {
     m_kinematics =
         new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
     m_odometry =
-        new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
+        new SwerveDriveOdometry(m_kinematics, getYawRotation2d(), new SwerveModulePosition[] {
             m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(),
             m_backRight.getPosition()});
 
-    m_gyro.reset();
-    m_gyro.setAngleAdjustment(90);
+    resetGyroYaw(0);
     m_odometryPIDx.setTolerance(kThreshold); // In meters
     m_odometryPIDy.setTolerance(kThreshold); // In meters
 
@@ -188,7 +186,7 @@ public class DrivetrainSub extends SubsystemBase {
     m_drivePIDr.setTolerance(1.0);
     m_drivePIDr.enableContinuousInput(-180.0, 180.0);
 
-    previousRotation = getRotation();
+    previousRotation = getYawRotation2d();
 
     m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
     m_sbYPOS = m_shuffleboardTab.add("YPOS", 0.0).getEntry();
@@ -229,7 +227,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   public void init() {
     m_logger.info("Initializing DrivetrainSub");
-    resetGyro();
+    resetGyroYaw(0);
 
     // TODO: Resolved -  Do we need to call each swerve module's init()?
   }
@@ -251,8 +249,8 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbTargetYPOS.setDouble(targetPos.getY());
       m_sbTargetROT.setDouble(rot);
 
-      m_sbGYRO.setDouble(getRotationDegrees());
-      m_sbYaw.setDouble(m_gyro.getAngle() % 360);
+      m_sbGYRO.setDouble(getYawRotationDegrees());
+      m_sbYaw.setDouble(m_gyro.getAngle());
       m_sbRoll.setDouble(m_gyro.getRoll());
       m_sbPitch.setDouble(m_gyro.getPitch());
 
@@ -298,25 +296,21 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setTolerance(kTurnThreshold);
   }
 
-  public Rotation2d getRotation() {
+  public Rotation2d getYawRotation2d() {
     return m_gyro.getRotation2d();
   }
 
-  public double getRotationDegrees() {
-    return MathUtil.inputModulus(getRotation().getDegrees() + m_orientationOffsetDegrees, -180.0, 180.0);
+  public double getYawRotationDegrees() {
+    return MathUtil.inputModulus(getYawRotation2d().getDegrees(), -180.0, 180.0);
   }
 
-  public void resetGyro() {
-    m_gyro.setAngleAdjustment(90.0);
+  public void resetGyroYaw(double angle) { // TODO: incorporate angle for non-zero cases (modulo 360 or 180?)
+    m_gyro.setAngleAdjustment(-angle); // NavX is oriented 90deg off of front
     m_gyro.reset();
-    resetOdometry();
+    resetOdometry(); // Feed in rotation here too
   }
 
-  public void setYawAngleOffset(double angle) {
-    m_gyro.setAngleAdjustment(angle);
-  }
-
-  public float getRoll() {
+  public float getRollRotationDegrees() {
     // proto type bot roll is navx pitch
     return m_gyro.getPitch();
   }
@@ -328,7 +322,7 @@ public class DrivetrainSub extends SubsystemBase {
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
-        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, m_gyro.getRotation2d()), periodSeconds)); // Get swerve states
+        ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, getYawRotation2d()), periodSeconds)); // Get swerve states
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
 
@@ -359,7 +353,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   public Path generateTestPath() { // TODO: Remove after finishing Path Planner
     Path tesPath = new Path(0.2, 0.2); // 10cm tolerance with 20% speed
-    Rotation2d currentRotation = getRotation();
+    Rotation2d currentRotation = getYawRotation2d();
     tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
     tesPath.addPoint(0.0 + getPos().getX(), 0.5 + getPos().getY(), currentRotation, true);
 
@@ -405,7 +399,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void translateOdometry(Translation2d pos) { // Set target position 
-    targetPos = new Pose2d(pos.getX(), pos.getY(), m_gyro.getRotation2d());
+    targetPos = new Pose2d(pos.getX(), pos.getY(), getYawRotation2d());
   }
 
   public void translateOdometry(Pose2d pos) { // Set target position and rotation (degrees)
@@ -414,7 +408,7 @@ public class DrivetrainSub extends SubsystemBase {
 
   public double getRotationPIDPowerDegrees(double target) {
     return MathUtil.clamp(
-        m_odometryPIDr.calculate(getRotationDegrees(),
+        m_odometryPIDr.calculate(getYawRotationDegrees(),
             MathUtil.inputModulus(target, -180.0, 180.0)),
         -1.0, 1.0);
   }
@@ -435,7 +429,7 @@ public class DrivetrainSub extends SubsystemBase {
     double yPower = MathUtil.clamp(m_odometryPIDy.calculate(getPos().getY(), targetPos.getY()), -maxPower, maxPower);
     double rotationPower =
         MathUtil.clamp(
-            m_odometryPIDr.calculate(getRotationDegrees(),
+            m_odometryPIDr.calculate(getYawRotationDegrees(),
                 MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0)),
             -rotationClamp, rotationClamp);
     drive(xPower, yPower, rotationPower, 0.02);
@@ -448,21 +442,20 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void updateOdometry() {
-    m_odometry.update(m_gyro.getRotation2d(), new SwerveModulePosition[] {
+    m_odometry.update(getYawRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()});
   }
 
   public void resetOdometry() {
-    Pose2d zero = new Pose2d(new Translation2d(0.0, 0.0), m_gyro.getRotation2d());
-    m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
+    Pose2d zero = new Pose2d(new Translation2d(0.0, 0.0), getYawRotation2d());
+    m_odometry.resetPosition(getYawRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
         zero);
   }
 
   public void resetOdometry(Pose2d pos) {
-    m_gyro.setAngleAdjustment(pos.getRotation().getDegrees());
-    m_gyro.reset();
-    m_odometry.resetPosition(m_gyro.getRotation2d(), new SwerveModulePosition[] {
+    resetGyroYaw(pos.getRotation().getDegrees());
+    m_odometry.resetPosition(getYawRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()},
         pos);
   }
