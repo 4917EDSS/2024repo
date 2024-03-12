@@ -208,7 +208,7 @@ public final class Constants {
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
     public static final double kHeightTolerence = 0.01; // In meters
     public static final double kResetHeightTolerence = 0.005; // In meters
-    public static final double kRollZero = -4.3; // In degrees  // TODO:  Check zero on practice and good bot
+    public static final double kRollZero = 0.0;//-4.3; // In degrees  // TODO:  Check zero on practice and good bot
     public static final double kRollTolerence = 10; // In degrees
     public static final double kMinRollAngle = kRollZero - kRollTolerence;
     public static final double kMaxRollAngle = kRollZero + kRollTolerence;
@@ -244,6 +244,7 @@ public final class Constants {
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;
+    public static final double kHighPickUp = 212.0;
 
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;

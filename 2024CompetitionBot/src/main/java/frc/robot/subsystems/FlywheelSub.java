@@ -101,12 +101,12 @@ public class FlywheelSub extends SubsystemBase {
 
   public void enableFlywheel() {
     m_isFlywheelEnabled = true;
-    System.out.println("En Flywheel");
+    //System.out.println("En Flywheel");
   }
 
   public void disableFlywheel() {
     m_isFlywheelEnabled = false;
-    System.out.println("Dis Flywheel");
+    //System.out.println("Dis Flywheel");
   }
 
   public boolean isAtTargetVelocity() {

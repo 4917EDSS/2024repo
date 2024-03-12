@@ -28,20 +28,27 @@ public class ShooterPivotCmd extends Command {
   @Override
   public void initialize() {
     m_logger.fine("ShooterPivotCmd - Init");
-    m_shooterSub.setTargetAngle(m_targetPivotPosition);
-    m_shooterSub.runPivotControl(true);
+    if(m_targetPivotPosition != 0) {
+      m_shooterSub.setTargetAngle(m_targetPivotPosition);
+      m_shooterSub.runPivotControl(true);
+    } else {
+      m_shooterSub.disableTargetAngle();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if(m_targetPivotPosition == 0) {
+      m_shooterSub.movePivot(-0.4);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterPivotCmd - End" + (interrupted ? " (interrupted)" : ""));
+    m_shooterSub.movePivot(0.0);
   }
 
   // Returns true when the command should end.

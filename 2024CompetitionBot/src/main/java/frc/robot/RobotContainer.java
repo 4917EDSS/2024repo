@@ -8,8 +8,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionCmd;
+import frc.robot.commands.BackSpinIntakeCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DrivePathCmd;
@@ -34,6 +37,7 @@ import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
+import frc.robot.commands.UpIntakeGrp;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
@@ -79,6 +83,8 @@ public class RobotContainer {
   private final CommandPS4Controller m_operatorController =
       new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
 
+  SendableChooser<Command> m_Chooser = new SendableChooser<>();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -101,9 +107,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
+    NamedCommands.registerCommand("OffsetYaw45",
+        new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
 
     // Put manual robot initialize button on SmartDashboard
     SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
+
+    autoChooserSetup();
   }
 
 
@@ -134,7 +144,7 @@ public class RobotContainer {
         .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
 
     m_driverController.share()
-        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
 
     m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW)); // TODO: Remove this test code
 
@@ -169,10 +179,12 @@ public class RobotContainer {
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
 
-    // m_operatorController.circle()
+    m_operatorController.circle()
+        .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
+        .onTrue(
+            new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub, m_feederSub, m_intakeSub, m_arduinoSub, m_ledSub));
 
     m_operatorController.L1()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_drivetrainSub, m_climbSub));
@@ -188,8 +200,8 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options().onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
-        m_flywheelSub, m_feederSub, m_arduinoSub));
+    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));//ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
+    //m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
@@ -220,7 +232,15 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
+    //return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
+    return m_Chooser.getSelected();
+  }
+
+  void autoChooserSetup() {
+    m_Chooser.addOption("JustRunAuto", new PathPlannerAuto("JustRunAuto"));
+    m_Chooser.addOption("New Auto", new PathPlannerAuto("New Auto"));
+
+    SmartDashboard.putData("auto choices", m_Chooser);
   }
 
   public void disabledPeriodic() {
