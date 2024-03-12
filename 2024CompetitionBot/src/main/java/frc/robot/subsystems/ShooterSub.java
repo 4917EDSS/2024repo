@@ -84,7 +84,7 @@ public class ShooterSub extends SubsystemBase {
     if(m_areWeTryingToHold) {
       runPivotControl(false);
     }
-    if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
+    if(isPivotAtReverseLimit()) {
       resetPivot();
     }
 
@@ -134,16 +134,7 @@ public class ShooterSub extends SubsystemBase {
 
 
   public void resetPivot() {
-    if(resetDelay == 0) {
-      // Don't update the zero more than every half second
-      resetDelay = 25;
-      m_logger.warning(
-          "Zeroing pivot encoder. Cur Ticks=" + getPivotAngle() + " CurZero=" + m_pivotAbsoluteEncoder.getZeroOffset()
-              + " New=" + (getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
-      m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
-      m_logger.warning("New zero offset =" + m_pivotAbsoluteEncoder.getZeroOffset());
-    }
-    resetDelay--;
+    m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
   }
 
 
