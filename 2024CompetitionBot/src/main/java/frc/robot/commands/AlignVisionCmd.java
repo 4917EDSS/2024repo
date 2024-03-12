@@ -109,8 +109,7 @@ public class AlignVisionCmd extends Command {
     }
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
 
-    if(m_flywheelSub.isAtTargetVelocity() && Math.abs(m_visionSub.getSimpleHorizontalAngle()) < kRotationTolerance
-        && m_shooterSub.isAtPivotAngle()) {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
     } else {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
