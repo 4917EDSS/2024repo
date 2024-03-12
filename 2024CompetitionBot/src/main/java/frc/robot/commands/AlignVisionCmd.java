@@ -93,7 +93,7 @@ public class AlignVisionCmd extends Command {
 
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
 
-    if(m_flywheelSub.isAtTargetVelocity() && m_visionSub.getSimpleHorizontalAngle() < 5) { // within 5? degrees of april tag 
+    if(m_flywheelSub.isAtTargetVelocity() && m_visionSub.getSimpleHorizontalAngle() < 10) { // within 5? degrees of april tag 
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
     } else {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
@@ -111,9 +111,6 @@ public class AlignVisionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_driverController.square().getAsBoolean() == false) { // Command stops when button is released
-      return true;
-    }
     return false;
   }
 
