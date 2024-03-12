@@ -12,7 +12,10 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
+import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
@@ -21,18 +24,21 @@ public class ShooterShootCmd extends Command {
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
   private final ShooterSub m_shooterSub;
+  private final LedSub m_ledSub;
   //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
   private Instant start;
 
   /** Creates a new ShooterShootCmd. */
 
-  public ShooterShootCmd(FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub, ShooterSub shooterSub) {
+  public ShooterShootCmd(FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub, ShooterSub shooterSub,
+      LedSub ledSub) {
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
     m_shooterSub = shooterSub;
+    m_ledSub = ledSub;
 
-    addRequirements(flywheelSub, feederSub, shooterSub);
+    addRequirements(flywheelSub, feederSub, shooterSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
@@ -60,6 +66,7 @@ public class ShooterShootCmd extends Command {
     m_logger.fine("ShooterShootCmd - End" + (interrupted ? " (interrupted)" : ""));
     m_feederSub.spinBothFeeders(0, 0);
     m_flywheelSub.disableFlywheel();
+    m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
   }
 
   @Override

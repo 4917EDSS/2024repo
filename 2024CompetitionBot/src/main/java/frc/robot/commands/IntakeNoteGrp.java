@@ -9,14 +9,16 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class IntakeNoteGrp extends SequentialCommandGroup {
   /** Creates a new IntakeNoteGrp. */
-  public IntakeNoteGrp(ShooterSub shooterSub, IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub) {
+  public IntakeNoteGrp(ShooterSub shooterSub, IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub,
+      LedSub ledSub) {
     addCommands(
         new ShooterPivotCmd(0, shooterSub),
-        new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub),
+        new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub, ledSub),
         new ShooterPivotCmd(10.0, shooterSub),
         new ExpellNoteABitCmd(feederSub, arduinoSub)
 

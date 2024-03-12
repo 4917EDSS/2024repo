@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
+import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 public class AlignVisionCmd extends Command {
   /** Creates a new AlignVisionCmd. */
@@ -24,6 +27,7 @@ public class AlignVisionCmd extends Command {
   private final ShooterSub m_shooterSub;
   private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
+  private final LedSub m_ledSub;
 
   private static final double kA = 1.41;
   private static final double kB = 1.05;
@@ -35,12 +39,14 @@ public class AlignVisionCmd extends Command {
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
 
   public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
-      FlywheelSub flywheelSub, CommandPS4Controller driverController, CommandPS4Controller operatorController) {
+      FlywheelSub flywheelSub, LedSub ledSub, CommandPS4Controller driverController,
+      CommandPS4Controller operatorController) {
     m_visionSub = visionSub;
     m_drivetrainSub = drivetrainSub;
     m_shooterSub = shooterSub;
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
+    m_ledSub = ledSub;
 
     m_driverController = driverController;
     m_operatorController = operatorController;
@@ -86,6 +92,12 @@ public class AlignVisionCmd extends Command {
 
 
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
+
+    if(m_flywheelSub.isAtTargetVelocity() && m_visionSub.getSimpleHorizontalAngle() < 10) { // within 5? degrees of april tag 
+      m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
+    } else {
+      m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -93,14 +105,12 @@ public class AlignVisionCmd extends Command {
   public void end(boolean interrupted) {
     m_drivetrainSub.drive(0.0, 0.0, 0.0, 0.02);
     m_flywheelSub.disableFlywheel();
+    m_ledSub.setZoneColour(LedZones.ALL, LedColour.ORANGE);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_driverController.square().getAsBoolean() == false) { // Command stops when button is released
-      return true;
-    }
     return false;
   }
 
