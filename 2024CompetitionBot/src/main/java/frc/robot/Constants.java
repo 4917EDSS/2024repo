@@ -258,10 +258,10 @@ public final class Constants {
     //limits speed for a soft stop
     public static final double kArmPivotSlowSpeed = 0.1;
     public static final double kArmPivotSlowSpeedPrep = 0.3;
-    public static final double kImpossibleZone = 340;
+    public static final double kImpossibleZone = 300;
 
     //for joystick movment
-    public static final double kMovingCoifficant = 7 / 0.4;
+    public static final double kMovingCoifficant = 7 / 0.2;
   }
 
   public static final class Intake {
@@ -270,7 +270,7 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 80; //84 RPS is MAX speed
+    public static final double kFlywheelShootVelocity = 86.0;//80; //84 RPS is MAX speed
     public static final double ks = 0.25;
     public static final double kv = 0.128;
     public static final double kFlywheelTolerance = 5;

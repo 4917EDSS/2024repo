@@ -36,8 +36,11 @@ public class AlignVisionCmd extends Command {
   private static final double kD = 0.34;
   private static final double kLimelightAngle = 30.0; // degrees
 
+  private static final double kTurnFedPower = 0.0224;
+  private double gyroAngleOffset = 0.0;
+  private boolean gyroAngleSet = false;
 
-  private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
+  private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
 
   public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
       FlywheelSub flywheelSub, LedSub ledSub, CommandPS4Controller driverController,
@@ -60,7 +63,8 @@ public class AlignVisionCmd extends Command {
   @Override
   public void initialize() {
     m_lookatPID.setTolerance(kRotationTolerance);
-
+    gyroAngleSet = false;
+    gyroAngleOffset = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,29 +73,40 @@ public class AlignVisionCmd extends Command {
     // Stage 1: Look at apriltag
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
-    double rotationalPower = MathUtil.clamp(m_lookatPID.calculate(horizontalOffset), -0.5, 0.5); // TODO: Can we just remove the second parameter?
+    double rotationalPower = 0.0;
     double xPower = Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX();
     double yPower = Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY();
 
     double pivotAngle = calcAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
 
     if(m_visionSub.simpleHasTarget()) {
+      if(xPower * xPower + yPower * yPower > 0) {
+        gyroAngleSet = false;
+      }
+      if(!gyroAngleSet) {
+        gyroAngleOffset = m_drivetrainSub.getRotationDegrees() - horizontalOffset;
+        gyroAngleSet = true;
+      }
+      rotationalPower =
+          MathUtil.clamp(m_lookatPID.calculate(m_drivetrainSub.getRotationDegrees() - gyroAngleOffset, 0.0), -0.5, 0.5);
       m_shooterSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
-      if(m_operatorController.R2().getAsBoolean()) {
-        m_feederSub.spinBothFeeders(1.0, 1.0);
-      } else {
-        double feederPower =
-            Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
-        m_feederSub.spinBothFeeders(feederPower, 0.5 * feederPower);
-      }
+      double feederPower =
+          Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
+      m_feederSub.spinBothFeeders(feederPower, 0.5 * feederPower);
+
+
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : m_driverController.getRightX();
       m_flywheelSub.disableFlywheel();
+      gyroAngleSet = false;
     }
 
-
+    rotationalPower = kTurnFedPower * Math.signum(rotationalPower);
+    if(m_lookatPID.atSetpoint()) {
+      rotationalPower = 0.0;
+    }
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
 
     if(m_flywheelSub.isAtTargetVelocity() && Math.abs(m_visionSub.getSimpleHorizontalAngle()) < kRotationTolerance
@@ -117,7 +132,7 @@ public class AlignVisionCmd extends Command {
   }
 
   public double calcAngle(double limelightAngle) {
-    double x = kA / (kB / Math.tan(Math.toRadians(limelightAngle + kLimelightAngle)) + kC - kD);
+    double x = kA / ((kB / Math.tan(Math.toRadians(limelightAngle + kLimelightAngle))) + kC - kD);
     double v = Math.toDegrees(Math.atan(x));
     return 90.0 - v;
   }
