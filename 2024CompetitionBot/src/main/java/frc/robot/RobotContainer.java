@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionCmd;
+import frc.robot.commands.BackSpinIntakeCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DrivePathCmd;
@@ -34,6 +35,7 @@ import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
 import frc.robot.commands.TestLedsCmd;
+import frc.robot.commands.UpIntakeGrp;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
@@ -167,10 +169,12 @@ public class RobotContainer {
     m_operatorController.cross()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub));
 
-    // m_operatorController.circle()
+    m_operatorController.circle()
+        .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
+        .onTrue(
+            new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub, m_feederSub, m_intakeSub, m_arduinoSub, m_ledSub));
 
     m_operatorController.L1()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_drivetrainSub, m_climbSub));
@@ -186,8 +190,7 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options().onTrue(new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
-        m_flywheelSub));
+    m_operatorController.options().whileTrue(new BackSpinIntakeCmd(m_intakeSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
