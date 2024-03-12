@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.FeederSub;
+import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.ShooterSub;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
@@ -16,12 +17,12 @@ import frc.robot.subsystems.ArduinoSub;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterAmpShotGrp extends SequentialCommandGroup {
   /** Creates a new ShooterAmpShotGrp. */
-  public ShooterAmpShotGrp(ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub) {
+  public ShooterAmpShotGrp(ShooterSub shooterSub, FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleAmp, shooterSub),
-        new ShooterAmpShotCmd(feederSub, arduinoSub)
+        new ShooterAmpShotCmd(feederSub, arduinoSub, ledSub)
 
     );
   }

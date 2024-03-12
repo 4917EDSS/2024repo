@@ -27,6 +27,7 @@ import frc.robot.commands.IntakeUntilNoteInCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterAmpShotCmd;
+import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
@@ -165,13 +166,10 @@ public class RobotContainer {
     m_operatorController.cross()
         .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub));
 
-    //m_operatorController.circle()
-
+    // m_operatorController.circle()
 
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub));
-
-    //m_operatorController.triangle()
 
     m_operatorController.L1()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_drivetrainSub, m_climbSub));
@@ -196,7 +194,7 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotCmd(m_feederSub, m_arduinoSub));
+    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
 
     //m_operatorController.povRight()
 
