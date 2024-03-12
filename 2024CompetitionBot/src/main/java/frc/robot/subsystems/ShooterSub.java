@@ -32,7 +32,7 @@ public class ShooterSub extends SubsystemBase {
 
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
 
-  private final PIDController m_pivotPID = new PIDController(0.035, 0.0, 0.0);
+  private final PIDController m_pivotPID = new PIDController(0.03, 0.0, 0.0);
   private double m_targetAngle;
   private boolean m_areWeTryingToHold = false;
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
@@ -52,7 +52,7 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-    setTargetAngle(0.0);
+    disableTargetAngle();
 
     m_pivot.setInverted(true);
 
@@ -82,7 +82,7 @@ public class ShooterSub extends SubsystemBase {
   @Override
   public void periodic() {
     if(m_areWeTryingToHold) {
-      runPivotControl();
+      runPivotControl(false);
     }
     if(isPivotAtReverseLimit() && (Math.abs(getPivotAngle()) > 1.5)) {
       resetPivot();
@@ -167,13 +167,14 @@ public class ShooterSub extends SubsystemBase {
     return m_pivotPID.atSetpoint();
   }
 
-  private void runPivotControl() { // Returns true when at position
+  public void runPivotControl(boolean justCalculate) { // Returns true when at position
     //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
-
     double pidPower = m_pivotPID.calculate(getPivotAngle(), m_targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 
-    double pivotPower = pidPower + fedPower;
-    movePivot(pivotPower);
+    if(!justCalculate) {
+      double pivotPower = pidPower + fedPower;
+      movePivot(pivotPower);
+    }
   }
 }

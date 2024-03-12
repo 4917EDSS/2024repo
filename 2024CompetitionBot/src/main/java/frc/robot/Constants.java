@@ -237,6 +237,7 @@ public final class Constants {
     public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 37.95;
     public static final double kAngleAmp = 215.0;
+    public static final double kAnglePreAmp = 200.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
     public static final double kAnglePassing = 57.0;
@@ -257,10 +258,10 @@ public final class Constants {
     //limits speed for a soft stop
     public static final double kArmPivotSlowSpeed = 0.1;
     public static final double kArmPivotSlowSpeedPrep = 0.3;
-    public static final double kImpossibleZone = 340;
+    public static final double kImpossibleZone = 300;
 
     //for joystick movment
-    public static final double kMovingCoifficant = 7 / 0.4;
+    public static final double kMovingCoifficant = 7 / 0.2;
   }
 
   public static final class Intake {
