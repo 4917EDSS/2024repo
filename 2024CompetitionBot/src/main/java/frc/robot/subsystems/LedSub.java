@@ -141,7 +141,7 @@ public class LedSub extends SubsystemBase {
         setZoneColour(LedZones.ALL, LedColour.ORANGE);
       }
       if(250000 <= timeSinceIntakeLoaded && timeSinceIntakeLoaded <= 500000) {
-        setZoneColour(LedZones.ALL, LedColour.GREEN);
+        setZoneColour(LedZones.ALL, LedColour.WHITE);
       }
       if(timeSinceIntakeLoaded > 500000) {
         m_time = RobotController.getFPGATime();

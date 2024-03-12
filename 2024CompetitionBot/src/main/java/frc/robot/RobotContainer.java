@@ -8,8 +8,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -81,6 +83,8 @@ public class RobotContainer {
   private final CommandPS4Controller m_operatorController =
       new CommandPS4Controller(OperatorConstants.kOperatorControllerPort);
 
+  SendableChooser<Command> m_Chooser = new SendableChooser<>();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -103,9 +107,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
+    NamedCommands.registerCommand("OffsetYaw45",
+        new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
 
     // Put manual robot initialize button on SmartDashboard
     SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
+
+    autoChooserSetup();
   }
 
 
@@ -136,7 +144,7 @@ public class RobotContainer {
         .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
 
     m_driverController.share()
-        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyro(), m_drivetrainSub));
+        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
 
     m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW)); // TODO: Remove this test code
 
@@ -221,7 +229,15 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
+    //return new PathPlannerAuto("JustRunAuto"); // Takes in Auto file name
+    return m_Chooser.getSelected();
+  }
+
+  void autoChooserSetup() {
+    m_Chooser.addOption("JustRunAuto", new PathPlannerAuto("JustRunAuto"));
+    m_Chooser.addOption("New Auto", new PathPlannerAuto("New Auto"));
+
+    SmartDashboard.putData("auto choices", m_Chooser);
   }
 
   public void disabledPeriodic() {

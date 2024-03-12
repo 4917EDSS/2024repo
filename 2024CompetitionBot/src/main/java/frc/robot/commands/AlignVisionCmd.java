@@ -84,11 +84,12 @@ public class AlignVisionCmd extends Command {
         gyroAngleSet = false;
       }
       if(!gyroAngleSet) {
-        gyroAngleOffset = m_drivetrainSub.getRotationDegrees() - horizontalOffset;
+        gyroAngleOffset = m_drivetrainSub.getYawRotationDegrees() - horizontalOffset;
         gyroAngleSet = true;
       }
       rotationalPower =
-          MathUtil.clamp(m_lookatPID.calculate(m_drivetrainSub.getRotationDegrees() - gyroAngleOffset, 0.0), -0.5, 0.5);
+          MathUtil.clamp(m_lookatPID.calculate(m_drivetrainSub.getYawRotationDegrees() - gyroAngleOffset, 0.0), -0.5,
+              0.5);
       m_shooterSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
@@ -109,8 +110,7 @@ public class AlignVisionCmd extends Command {
     }
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
 
-    if(m_flywheelSub.isAtTargetVelocity() && Math.abs(m_visionSub.getSimpleHorizontalAngle()) < kRotationTolerance
-        && m_shooterSub.isAtPivotAngle()) {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
     } else {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
