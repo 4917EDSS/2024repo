@@ -33,7 +33,7 @@ public class DriveToRelativePositionCmd extends Command {
 
     Pose2d m_position = new Pose2d(m_relativePosition.getX() + m_drivetrainSub.getPos().getX(),
         m_relativePosition.getY() + m_drivetrainSub.getPos().getY(),
-        m_relativePosition.getRotation().plus(m_drivetrainSub.getRotation())); // Make position relative to robot position
+        m_relativePosition.getRotation().plus(m_drivetrainSub.getYawRotation2d())); // Make position relative to robot position
     // Resetting odometry is not a good idea m_drivetrainSub.resetOdometry();
     m_drivetrainSub.translateOdometry(m_position); // Set tranlation position
   }

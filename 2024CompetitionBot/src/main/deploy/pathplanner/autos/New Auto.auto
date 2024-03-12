@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "OffsetYaw45"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Test Path"

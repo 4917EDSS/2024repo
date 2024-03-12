@@ -55,7 +55,7 @@ public class ClimbSetHeightCmd extends Command {
     boolean moveRight = true;
     boolean isLeftAtTargetHeight = isLeftAtTargetHeight();
     boolean isRightAtTargetHeight = isRightAtTargetHeight();
-    double roll_angle = m_drivetrainSub.getRoll();
+    double roll_angle = m_drivetrainSub.getRollRotationDegrees();
 
     if(isLeftAtTargetHeight) {
       m_leftMotorDone = true;
