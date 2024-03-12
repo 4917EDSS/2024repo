@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterPivotCmd extends Command {
@@ -28,12 +29,13 @@ public class ShooterPivotCmd extends Command {
   public void initialize() {
     m_logger.fine("ShooterPivotCmd - Init");
     m_shooterSub.setTargetAngle(m_targetPivotPosition);
+    m_shooterSub.runPivotControl(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.

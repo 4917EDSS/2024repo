@@ -29,6 +29,7 @@ public class AlignVisionCmd extends Command {
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
 
+  private static final double kRotationTolerance = 1.0;
   private static final double kA = 1.41;
   private static final double kB = 1.05;
   private static final double kC = 0.06;
@@ -58,7 +59,7 @@ public class AlignVisionCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_lookatPID.setTolerance(1.0);
+    m_lookatPID.setTolerance(kRotationTolerance);
 
   }
 
@@ -93,7 +94,8 @@ public class AlignVisionCmd extends Command {
 
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
 
-    if(m_flywheelSub.isAtTargetVelocity() && m_visionSub.getSimpleHorizontalAngle() < 10) { // within 5? degrees of april tag 
+    if(m_flywheelSub.isAtTargetVelocity() && Math.abs(m_visionSub.getSimpleHorizontalAngle()) < kRotationTolerance
+        && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
     } else {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);

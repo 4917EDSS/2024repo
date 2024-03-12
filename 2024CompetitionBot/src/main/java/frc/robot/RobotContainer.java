@@ -200,7 +200,7 @@ public class RobotContainer {
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleAmp, m_shooterSub));
+        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAnglePreAmp, m_shooterSub));
 
     m_operatorController.povLeft().onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleSourceIntake, m_shooterSub));
 

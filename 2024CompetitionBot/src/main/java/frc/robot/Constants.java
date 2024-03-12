@@ -237,6 +237,7 @@ public final class Constants {
     public static final double kAngleSourceIntake = 217.0;
     public static final double kAngleSubwooferSpeaker = 37.95;
     public static final double kAngleAmp = 215.0;
+    public static final double kAnglePreAmp = 200.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
     public static final double kAnglePassing = 57.0;
