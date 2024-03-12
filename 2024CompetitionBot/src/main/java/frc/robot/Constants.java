@@ -269,7 +269,7 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 80; //84 RPS is MAX speed
+    public static final double kFlywheelShootVelocity = 86.0;//80; //84 RPS is MAX speed
     public static final double ks = 0.25;
     public static final double kv = 0.128;
     public static final double kFlywheelTolerance = 5;
