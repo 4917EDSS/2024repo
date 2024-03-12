@@ -52,6 +52,8 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
+    setTargetAngle(0.0);
+
     m_pivot.setInverted(true);
 
     m_pivot.setIdleMode(IdleMode.kBrake);
