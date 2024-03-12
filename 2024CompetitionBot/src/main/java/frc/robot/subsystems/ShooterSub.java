@@ -32,7 +32,7 @@ public class ShooterSub extends SubsystemBase {
 
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
 
-  private final PIDController m_pivotPID = new PIDController(0.035, 0.0, 0.0);
+  private final PIDController m_pivotPID = new PIDController(0.03, 0.0, 0.0);
   private double m_targetAngle;
   private boolean m_areWeTryingToHold = false;
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
@@ -52,7 +52,7 @@ public class ShooterSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing ShooterSub");
 
-    setTargetAngle(0.0);
+    disableTargetAngle();
 
     m_pivot.setInverted(true);
 

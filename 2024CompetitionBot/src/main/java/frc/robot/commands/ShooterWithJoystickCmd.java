@@ -49,14 +49,14 @@ public class ShooterWithJoystickCmd extends Command {
     if(Math.abs(pivotPower) < 0.05) {
       if(!m_wasInDeadZone) {
         System.out.println("is this workingn" + m_shooterSub.getPivotAngle());
-        m_shooterSub.setTargetAngle(m_shooterSub.getPivotAngle());
-        //+ m_shooterSub.getPivotVelocity() * Constants.Shooter.kMovingCoifficant);
+        m_shooterSub.setTargetAngle((m_shooterSub.getPivotAngle()
+            + m_shooterSub.getPivotVelocity() * Constants.Shooter.kMovingCoifficant));
       }
       m_wasInDeadZone = true;
     } else {
       m_wasInDeadZone = false;
       m_shooterSub.disableTargetAngle();
-      m_shooterSub.movePivot(pivotPower); // use later /2
+      m_shooterSub.movePivot(pivotPower / 2);
     }
     if(Math.abs(intakePower) < 0.05) {
       intakePower = 0;
