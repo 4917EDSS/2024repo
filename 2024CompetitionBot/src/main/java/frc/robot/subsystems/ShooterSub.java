@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
@@ -39,6 +40,28 @@ public class ShooterSub extends SubsystemBase {
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower;
+
+  // -13 degrees to 2 degrees
+  //private static final int kMinLimelightAngle = -13;
+  //private static final int kMaxLimelightAngle = 2;
+
+  private static final double kA = 1.41;
+  private static final double kB = 1.05;
+  private static final double kC = 0.06;
+  private static final double kD = 0.34;
+  private static final double kLimelightAngle = 30.0; // degrees
+
+  //private final double[] lookupLimelightAngles =
+  //    {65.9, 64.5, 63.0, 61.6, 60.1, 58.7, 57.3, 55.8, 54.4, 53.0, 51.6, 50.2, 48.9, 47.5, 46.1, 44.8};
+  //  -13   -12  -11   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1    0     1     2
+
+  private static final double kMinLimelightAngle = -17.0;
+  private static final double kMaxLimelightAngle = 13.0;
+  // -19 to 13 degrees
+  // @formatter:off
+  private final double[] limelightAngles = {kMinLimelightAngle, -12.9, -7.00, -1.00, 7.00,kMaxLimelightAngle}; //
+  private final double[] shooterAngles = {   68.0,  65.0,  57.3,  48.9, 38.3, 31.0}; //
+  // @formatter:on
 
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
@@ -92,6 +115,32 @@ public class ShooterSub extends SubsystemBase {
     updateShuffleBoard();
   }
 
+  public double calcShooterAngle(double limelightAngle) {
+    double x = kA / ((kB / Math.tan(Math.toRadians(limelightAngle + kLimelightAngle))) + kC - kD);
+    double v = Math.toDegrees(Math.atan(x));
+    return 90.0 - v;
+  }
+
+  public double interpolateShooterAngle(double limelightAngle) {
+    double shooterAngle = calcShooterAngle(limelightAngle);
+    if(limelightAngle > kMinLimelightAngle && limelightAngle < kMaxLimelightAngle) { // Range of inaccuracy
+      int minNum = 0; // lower interpolation value
+      int maxNum = 1; // upper interpolation
+      // find values limelight angle is between
+      for(int i = 0; i < limelightAngles.length - 1; i++) {
+        if(limelightAngle < limelightAngles[i + 1]) {
+          minNum = i;
+          maxNum = i + 1;
+          break;
+        }
+      }
+
+      double interpolatedT = (limelightAngle - limelightAngles[minNum])
+          / (limelightAngles[maxNum] - limelightAngles[minNum]);
+      shooterAngle = MathUtil.interpolate(shooterAngles[minNum], shooterAngles[maxNum], interpolatedT);
+    }
+    return shooterAngle;
+  }
 
   private void updateShuffleBoard() {
     m_shooterPivotPosition.setDouble(getPivotAngle());

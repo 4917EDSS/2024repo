@@ -30,12 +30,6 @@ public class AlignVisionCmd extends Command {
   private final LedSub m_ledSub;
 
   private static final double kRotationTolerance = 1.0;
-  private static final double kA = 1.41;
-  private static final double kB = 1.05;
-  private static final double kC = 0.06;
-  private static final double kD = 0.34;
-  private static final double kLimelightAngle = 30.0; // degrees
-
   private static final double kTurnFedPower = 0.0224;
   private double gyroAngleOffset = 0.0;
   private boolean gyroAngleSet = false;
@@ -74,10 +68,10 @@ public class AlignVisionCmd extends Command {
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
     double rotationalPower = 0.0;
-    double xPower = Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX();
-    double yPower = Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY();
+    double xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
+    double yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
 
-    double pivotAngle = calcAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
+    double pivotAngle = m_shooterSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
 
     if(m_visionSub.simpleHasTarget()) {
       if(xPower * xPower + yPower * yPower > 0) {
@@ -131,9 +125,5 @@ public class AlignVisionCmd extends Command {
     return false;
   }
 
-  public double calcAngle(double limelightAngle) {
-    double x = kA / ((kB / Math.tan(Math.toRadians(limelightAngle + kLimelightAngle))) + kC - kD);
-    double v = Math.toDegrees(Math.atan(x));
-    return 90.0 - v;
-  }
+
 }

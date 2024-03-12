@@ -103,7 +103,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
     NamedCommands.registerCommand("ShooterPrepGrp",
-        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub));
+        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
@@ -127,7 +127,6 @@ public class RobotContainer {
     m_driverController.square()
         .whileTrue(new AlignVisionCmd(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
             m_driverController, m_operatorController));
-
     //m_driverController.cross()
 
     //m_driverController.circle()
@@ -172,10 +171,12 @@ public class RobotContainer {
 
     // ======================================== Operator controller bindings ========================================
     m_operatorController.square()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
 
     m_operatorController.cross()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
 
     m_operatorController.circle()
         .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub));
@@ -198,7 +199,8 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options().whileTrue(new BackSpinIntakeCmd(m_intakeSub));
+    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));//ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
+    //m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
