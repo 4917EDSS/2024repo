@@ -83,6 +83,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
+    if(!m_isInitialized) {
+      m_robotContainer.initSubsystems();
+      m_isInitialized = true;
+    }
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -90,11 +96,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
-    // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
-    if(!m_isInitialized) {
-      m_robotContainer.initSubsystems();
-      m_isInitialized = true;
-    }
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -113,7 +115,7 @@ public class Robot extends TimedRobot {
 
     // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
     // TODO Restore this for competition
-    if(true /* !m_isInitialized */) {
+    if(!m_isInitialized) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
     }

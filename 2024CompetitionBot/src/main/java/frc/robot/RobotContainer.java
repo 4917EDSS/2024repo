@@ -28,6 +28,7 @@ import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterAmpShotGrp;
+import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
@@ -99,7 +100,7 @@ public class RobotContainer {
         new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
-        new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
+        new ShooterFlywheelCmd(m_flywheelSub));
 
     // Put manual robot initialize button on SmartDashboard
     SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
