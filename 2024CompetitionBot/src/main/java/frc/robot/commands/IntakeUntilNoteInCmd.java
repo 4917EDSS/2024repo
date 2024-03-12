@@ -10,6 +10,10 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.LedSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
+
 
 public class IntakeUntilNoteInCmd extends Command {
   private static Logger m_logger = Logger.getLogger(IntakeUntilNoteInCmd.class.getName());
@@ -17,15 +21,16 @@ public class IntakeUntilNoteInCmd extends Command {
   private final IntakeSub m_intakeSub;
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final LedSub m_LedSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeUntilNoteInCmd(IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub) {
+  public IntakeUntilNoteInCmd(IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
     m_intakeSub = intakeSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
-
+    m_LedSub = ledSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSub, feederSub);
+    addRequirements(intakeSub, feederSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
@@ -35,6 +40,7 @@ public class IntakeUntilNoteInCmd extends Command {
 
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
+    m_LedSub.setZoneColour(LedZones.ALL, LedColour.RED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,6 +63,7 @@ public class IntakeUntilNoteInCmd extends Command {
     // Make sure we're running the intake rollers in reverse and the feed rollers are off
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     m_feederSub.spinBothFeeders(0, 0);
+    m_LedSub.FlashOrange();
   }
 
   // Returns true when the command should end.
