@@ -247,11 +247,20 @@ public final class Constants {
     public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
 
+
     public static final double kNoteLowerExpellPower = -0.3;
     public static final double kNoteUpperExpellPower = kNoteLowerExpellPower * 0.9;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
+
+    //limits speed for a soft stop
+    public static final double kArmPivotSlowSpeed = 0.1;
+    public static final double kArmPivotSlowSpeedPrep = 0.3;
+    public static final double kImpossibleZone = 340;
+
+    //for joystick movment
+    public static final double kMovingCoifficant = 7 / 0.4;
   }
 
   public static final class Intake {
