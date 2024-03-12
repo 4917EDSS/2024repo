@@ -25,8 +25,12 @@ public class AlignVisionCmd extends Command {
   private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
 
-  private static final double kA = -0.86166;
-  private static final double kB = 51.7571;
+  private static final double kA = 1.41;
+  private static final double kB = 1.05;
+  private static final double kC = 0.06;
+  private static final double kD = 0.34;
+  private static final double kLimelightAngle = 30.0; // degrees
+
 
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
 
@@ -62,7 +66,7 @@ public class AlignVisionCmd extends Command {
     double xPower = Math.abs(m_driverController.getLeftX()) < 0.05 ? 0.0 : m_driverController.getLeftX();
     double yPower = Math.abs(m_driverController.getLeftY()) < 0.05 ? 0.0 : m_driverController.getLeftY();
 
-    double pivotAngle = kA * verticalAngle + kB; // Simple linear conversion from apriltag angle to shooter angle
+    double pivotAngle = calcAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
 
     if(m_visionSub.simpleHasTarget()) {
       m_shooterSub.setTargetAngle(pivotAngle);
@@ -98,5 +102,11 @@ public class AlignVisionCmd extends Command {
       return true;
     }
     return false;
+  }
+
+  public double calcAngle(double limelightAngle) {
+    double x = kA / (kB / Math.tan(Math.toRadians(limelightAngle + kLimelightAngle)) + kC - kD);
+    double v = Math.toDegrees(Math.atan(x));
+    return 90.0 - v;
   }
 }
