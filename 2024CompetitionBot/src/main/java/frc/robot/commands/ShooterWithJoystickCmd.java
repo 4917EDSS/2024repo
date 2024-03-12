@@ -48,9 +48,7 @@ public class ShooterWithJoystickCmd extends Command {
     // create deadband if power is less than 5%
     if(Math.abs(pivotPower) < 0.05) {
       if(!m_wasInDeadZone) {
-        System.out.println("is this workingn" + m_shooterSub.getPivotAngle());
-        m_shooterSub.setTargetAngle((m_shooterSub.getPivotAngle()
-            + m_shooterSub.getPivotVelocity() * Constants.Shooter.kMovingCoifficant));
+        m_shooterSub.setTargetAngle((m_shooterSub.getPivotAngle()));
       }
       m_wasInDeadZone = true;
     } else {

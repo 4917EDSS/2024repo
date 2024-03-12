@@ -40,7 +40,6 @@ public class ShooterSub extends SubsystemBase {
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
   private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower;
 
-
   public ShooterSub() {
     m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
@@ -62,6 +61,7 @@ public class ShooterSub extends SubsystemBase {
 
     m_pivotAbsoluteEncoder.setPositionConversionFactor(Constants.Shooter.kPivotAngleConversion);
     m_pivotAbsoluteEncoder.setVelocityConversionFactor(1.0);
+    m_pivot.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus5, 20);
 
     m_pivotPID.setTolerance(Constants.Shooter.kPivotAngleTolerance);
   }
