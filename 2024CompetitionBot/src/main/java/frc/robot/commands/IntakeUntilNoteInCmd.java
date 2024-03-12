@@ -63,11 +63,6 @@ public class IntakeUntilNoteInCmd extends Command {
     // Make sure we're running the intake rollers in reverse and the feed rollers are off
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     m_feederSub.spinBothFeeders(0, 0);
-    if(!interrupted) {
-      m_LedSub.FlashOrange();
-    } else {
-      m_LedSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
-    }
   }
 
   // Returns true when the command should end.

@@ -104,13 +104,13 @@ public class PowerSub extends SubsystemBase {
 
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    if(!RobotContainer.disableShuffleboardPrint) {
-      updateShuffleBoard();
-    }
-  }
+  // @Override
+  // public void periodic() {
+  //   // This method will be called once per scheduler run
+  //   if(!RobotContainer.disableShuffleboardPrint) {
+  //     updateShuffleBoard();
+  //   }
+  // }
 
 
   private void updateShuffleBoard() {
