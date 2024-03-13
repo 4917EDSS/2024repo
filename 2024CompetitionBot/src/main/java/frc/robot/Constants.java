@@ -82,34 +82,35 @@ public final class Constants {
   // }
 
   public static final class Breakers {
-    public static final int kDriveMotorFrontRight = 6; //
-    public static final int kDriveMotorFrontLeft = 19; //
-    public static final int kDriveMotorBackRight = 4; //
-    public static final int kDriveMotorBackLeft = 0; //
-    public static final int kSteeringMotorFR = 5; //
-    public static final int kSteeringMotorFL = 10; //
-    public static final int kSteeringMotorBR = 3; // 
-    public static final int kSteeringMotorBL = 18; //
+    // commented out values are for practice bot
+    public static final int kDriveMotorFrontRight = 4; //6
+    public static final int kDriveMotorFrontLeft = 11; //19
+    public static final int kDriveMotorBackRight = 6; //4
+    public static final int kDriveMotorBackLeft = 1; //0
+    public static final int kSteeringMotorFR = 5; //5
+    public static final int kSteeringMotorFL = 14; //10
+    public static final int kSteeringMotorBR = 7; //3
+    public static final int kSteeringMotorBL = 15; //18
 
-    public static final int kClimbMotorL = 1; //
-    public static final int kClimbMotorR = 2; //
+    public static final int kClimbMotorL = 3; //1
+    public static final int kClimbMotorR = 0; //2
 
-    public static final int kLowerFeeder = 12; //
-    public static final int kUpperFeeder = 11; //
-    public static final int kPivot = 17; //
+    public static final int kLowerFeeder = 12; //12
+    public static final int kUpperFeeder = 9; //11
+    public static final int kPivot = 13; //17
 
-    public static final int kFlywheelL = 8; //
-    public static final int kFlywheelR = 7; //
+    public static final int kFlywheelL = 2; //8
+    public static final int kFlywheelR = 8; //7
 
-    public static final int kIntakeRollers = 9; //
+    public static final int kIntakeRollers = 10; //9
 
-    public static final int kLimelightUp = 16; // Not on practice bot
+    public static final int kLimelightUp = 19; // Not on practice bot
     public static final int kLimelightDown = 18; // Not on practice bot
-    public static final int kCancoders = 19; // Not on practice bot
-    public static final int kVRM = 20; //
-    public static final int kRoboRio = 21; //
-    public static final int kArduino = 23; // 
-    public static final int kRadio = 22; //
+    public static final int kCancoders = 20; // Not on practice bot //they are on the vrm
+    public static final int kVRM = 20; //20
+    public static final int kRoboRio = 21; //21
+    public static final int kArduino = 23; //23 
+    public static final int kRadio = 22; //22
 
 
   }
@@ -185,6 +186,7 @@ public final class Constants {
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(0.5, 0.0, 0.0), new PIDConstants(0.2, 0.0, 0.0), 4.2,
             0.45, new ReplanningConfig());
+    public static final double kGyroPhysicalOffsetAngle = -90; // Gyro's 0 is pointing at this angle (e.g. -90 is pointing right)
   }
 
   public static final class Climb {

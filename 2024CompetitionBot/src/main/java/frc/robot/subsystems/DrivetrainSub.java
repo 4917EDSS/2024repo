@@ -250,7 +250,8 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbTargetROT.setDouble(rot);
 
       m_sbGYRO.setDouble(getYawRotationDegrees());
-      m_sbYaw.setDouble(m_gyro.getAngle());
+      // m_sbYaw.setDouble(m_gyro.getAngle());
+      m_sbYaw.setDouble(getYawRotation2d().getDegrees());
       m_sbRoll.setDouble(m_gyro.getRoll());
       m_sbPitch.setDouble(m_gyro.getPitch());
 
@@ -305,7 +306,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void resetGyroYaw(double angle) { // TODO: incorporate angle for non-zero cases (modulo 360 or 180?)
-    m_gyro.setAngleAdjustment(-angle); // NavX is oriented 90deg off of front
+    m_gyro.setAngleAdjustment(-angle - Constants.Drivetrain.kGyroPhysicalOffsetAngle); // NavX is oriented 90deg off of front
     m_gyro.reset();
     resetOdometry(); // Feed in rotation here too
   }

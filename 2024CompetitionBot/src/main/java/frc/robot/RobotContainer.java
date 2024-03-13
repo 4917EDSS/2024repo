@@ -238,6 +238,8 @@ public class RobotContainer {
   void autoChooserSetup() {
     m_Chooser.addOption("JustRunAuto", new PathPlannerAuto("JustRunAuto"));
     m_Chooser.addOption("New Auto", new PathPlannerAuto("New Auto"));
+    m_Chooser.addOption("Demo Auto", new PathPlannerAuto("Demo Auto"));
+
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
