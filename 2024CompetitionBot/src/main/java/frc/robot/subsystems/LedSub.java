@@ -41,11 +41,11 @@ public class LedSub extends SubsystemBase {
 
     // Disabled diagnostic zones
     //DIAG_DRIVE_ENC(14, 14, false), //
-    DIAG_CLIMBL_LIMIT(14, 14, false), //
-    DIAG_CLIMBR_LIMIT(15, 15, false), //
-    DIAG_SHOOTERFWD_LIMIT(16, 16, false), //
-    DIAG_SHOOTERREV_LIMIT(17, 17, false), //
-    DIAG_SHOOTER_ENC(18, 18, false); //this can still be assigned
+    DIAG_CLIMBL_LIMIT(7, 7, false), //
+    DIAG_CLIMBR_LIMIT(8, 8, false), //
+    DIAG_SHOOTERFWD_LIMIT(9, 9, false), //
+    DIAG_SHOOTERREV_LIMIT(10, 10, false), //
+    DIAG_SHOOTER_ENC(11, 11, false); //this can still be assigned
     //DIAG_INTAKE_ENC(20, 20, false), //
     //DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
     //DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
