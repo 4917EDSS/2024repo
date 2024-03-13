@@ -257,7 +257,7 @@ public final class Constants {
     public static final double kNoteUpperAmpShotPower = -1.0;
 
     //limits speed for a soft stop
-    public static final double kArmPivotSlowSpeed = 0.1;
+    public static final double kArmPivotSlowSpeed = 0.2;
     public static final double kArmPivotSlowSpeedPrep = 0.3;
     public static final double kArmPivotSlowSpeedPrepBefore = 0.6;
     public static final double kImpossibleZone = 300;

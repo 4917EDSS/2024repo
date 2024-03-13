@@ -168,8 +168,8 @@ public class ShooterSub extends SubsystemBase {
     //     power = -Constants.Shooter.kArmPivotSlowSpeedPrepBefore;
     //   }
     // } else 
-    if(getPivotAngle() <= 100 && power < 0) {
-      double testPower = getPivotAngle() / 100;
+    if(getPivotAngle() <= 80 && power < 0) {
+      double testPower = getPivotAngle() / 80;
       if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
         testPower = Constants.Shooter.kArmPivotSlowSpeed;
       }
