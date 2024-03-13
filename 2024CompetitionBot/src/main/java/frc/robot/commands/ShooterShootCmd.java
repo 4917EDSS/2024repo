@@ -76,6 +76,6 @@ public class ShooterShootCmd extends Command {
     }
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 0.5;
+    return timeElapsed.toSeconds() > 0.1;
   }
 }

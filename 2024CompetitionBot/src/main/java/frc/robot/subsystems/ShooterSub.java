@@ -51,9 +51,6 @@ public class ShooterSub extends SubsystemBase {
   private static final double kD = 0.34;
   private static final double kLimelightAngle = 30.0; // degrees
 
-  //private final double[] lookupLimelightAngles =
-  //    {65.9, 64.5, 63.0, 61.6, 60.1, 58.7, 57.3, 55.8, 54.4, 53.0, 51.6, 50.2, 48.9, 47.5, 46.1, 44.8};
-  //  -13   -12  -11   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1    0     1     2
 
   private static final double kMinLimelightAngle = -17.0;
   private static final double kMaxLimelightAngle = 14.0;
@@ -168,8 +165,8 @@ public class ShooterSub extends SubsystemBase {
     //     power = -Constants.Shooter.kArmPivotSlowSpeedPrepBefore;
     //   }
     // } else 
-    if(getPivotAngle() <= 100 && power < 0) {
-      double testPower = getPivotAngle() / 100;
+    if(getPivotAngle() <= 80 && power < 0) {
+      double testPower = getPivotAngle() / 80;
       if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
         testPower = Constants.Shooter.kArmPivotSlowSpeed;
       }

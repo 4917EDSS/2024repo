@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -34,7 +35,7 @@ public class AlignVisionCmd extends Command {
   private double gyroAngleOffset = 0.0;
   private boolean gyroAngleSet = false;
 
-  private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
+  private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
 
   public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
       FlywheelSub flywheelSub, LedSub ledSub, CommandPS4Controller driverController,
@@ -66,24 +67,32 @@ public class AlignVisionCmd extends Command {
   public void execute() {
     // Stage 1: Look at apriltag
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
+    if(Math.abs(m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond) > 0.2) {
+      horizontalOffset +=
+          m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond;
+      // TODO - delete this if unused (kroatationshotoffset is 0)
+    }
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
     double rotationalPower = 0.0;
     double xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
     double yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
 
     double pivotAngle = m_shooterSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
+    boolean hasTarget = m_visionSub.simpleHasTarget();
 
-    if(m_visionSub.simpleHasTarget()) {
-      if(xPower * xPower + yPower * yPower > 0) {
-        gyroAngleSet = false;
-      }
-      if(!gyroAngleSet) {
-        gyroAngleOffset = m_drivetrainSub.getYawRotationDegrees() - horizontalOffset;
-        gyroAngleSet = true;
-      }
+
+    if(hasTarget) {
+      // if(xPower * xPower + yPower * yPower > 0) {
+      //   gyroAngleSet = false;
+      // }
+      // if(!gyroAngleSet) {
+      //   gyroAngleOffset = m_drivetrainSub.getYawRotationDegrees() - horizontalOffset;
+      //   gyroAngleSet = true;
+      // }
       rotationalPower =
-          MathUtil.clamp(m_lookatPID.calculate(m_drivetrainSub.getYawRotationDegrees() - gyroAngleOffset, 0.0), -0.5,
+          MathUtil.clamp(m_lookatPID.calculate(horizontalOffset, 0.0), -0.5,
               0.5);
+      //rotationalPower += kTurnFedPower * Math.signum(rotationalPower);
       m_shooterSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
@@ -93,22 +102,23 @@ public class AlignVisionCmd extends Command {
 
 
     } else {
-      rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : m_driverController.getRightX();
+      rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
       m_flywheelSub.disableFlywheel();
       gyroAngleSet = false;
     }
 
-    rotationalPower = kTurnFedPower * Math.signum(rotationalPower);
     if(m_lookatPID.atSetpoint()) {
       rotationalPower = 0.0;
     }
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
-
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
+    } else if(hasTarget) {
+      m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
     } else {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
     }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -122,6 +132,9 @@ public class AlignVisionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
+      return true;
+    }
     return false;
   }
 

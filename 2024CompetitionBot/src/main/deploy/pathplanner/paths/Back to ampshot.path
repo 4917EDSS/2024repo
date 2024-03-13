@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 2.673008982381601,
+        "y": 4.104648209296419
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.057311750987138,
+        "y": 4.785646662202415
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at mid note for ampshot"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 7.0
+        "x": 1.0964509201745676,
+        "y": 1.5299143325559383
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 1.5908744544761815,
+        "y": 2.2109127854619346
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ampshot location"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": -123.69006752597979,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ampshot",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

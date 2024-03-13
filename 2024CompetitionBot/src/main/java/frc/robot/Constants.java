@@ -127,6 +127,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFR = 1.472;
       public static final double kAbsoluteEncoderOffsetBL = 1.056;
       public static final double kAbsoluteEncoderOffsetBR = -1.072;
+      public static final double kGearRatio = 6.12;
       public static final boolean kInvertLowerFeeder = false;
     }
 
@@ -136,6 +137,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetBL = 0.836;
       public static final double kAbsoluteEncoderOffsetBR = -1.715;
       public static final boolean kInvertLowerFeeder = true;
+      public static final double kGearRatio = 6.52;
     }
 
     public static final class Unknown {
@@ -144,6 +146,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetBL = 0.0;
       public static final double kAbsoluteEncoderOffsetBR = 0.0;
       public static final boolean kInvertLowerFeeder = true;
+      public static final double kGearRatio = 0.0;
     }
   }
 
@@ -176,6 +179,16 @@ public final class Constants {
         public static final int kCenterStage = 13;
       }
     }
+  }
+
+  public static final class ModuleConstants {
+
+    // Maxes
+    public static final double kMaxModuleAngularSpeed = 8.0 * Math.PI; // In Radians Per Second
+    public static final double kMaxModuleAngularAcceleration = 100.0 * Math.PI; // In Radians Per Second Squared
+
+    // Conversion factors
+    public static final double kWheelBaseDiameter = 0.1016; // Meters
   }
 
   public final static class Drivetrain {
@@ -259,7 +272,7 @@ public final class Constants {
     public static final double kNoteUpperAmpShotPower = -1.0;
 
     //limits speed for a soft stop
-    public static final double kArmPivotSlowSpeed = 0.1;
+    public static final double kArmPivotSlowSpeed = 0.2;
     public static final double kArmPivotSlowSpeedPrep = 0.3;
     public static final double kArmPivotSlowSpeedPrepBefore = 0.6;
     public static final double kImpossibleZone = 300;
