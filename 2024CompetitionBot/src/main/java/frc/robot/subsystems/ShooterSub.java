@@ -168,8 +168,8 @@ public class ShooterSub extends SubsystemBase {
     //     power = -Constants.Shooter.kArmPivotSlowSpeedPrepBefore;
     //   }
     // } else 
-    if(getPivotAngle() <= 60 && power < 0) {
-      double testPower = getPivotAngle() / 60;
+    if(getPivotAngle() <= 100 && power < 0) {
+      double testPower = getPivotAngle() / 100;
       if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
         testPower = Constants.Shooter.kArmPivotSlowSpeed;
       }
@@ -177,24 +177,15 @@ public class ShooterSub extends SubsystemBase {
         power = -testPower;
       }
     }
-    if(getPivotAngle() >= 230 && power > 0) {
-      double testPower = getPivotAngle() / 230;
-      if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
-        testPower = Constants.Shooter.kArmPivotSlowSpeed;
+    if(getPivotAngle() >= 250 && power > 0) {
+      if(power > Constants.Shooter.kArmPivotSlowSpeed) {
+        power = Constants.Shooter.kArmPivotSlowSpeed;
       }
-      if(power > testPower) {
-        power = testPower;
+    } else if(getPivotAngle() >= 230 && power > 0) {
+      if(power > Constants.Shooter.kArmPivotSlowSpeedPrep) {
+        power = Constants.Shooter.kArmPivotSlowSpeedPrep;
       }
     }
-    // if(getPivotAngle() >= 250 && power > 0) {
-    //   if(power > Constants.Shooter.kArmPivotSlowSpeed) {
-    //     power = Constants.Shooter.kArmPivotSlowSpeed;
-    //   }
-    // } else if(getPivotAngle() >= 230 && power > 0) {
-    //   if(power > Constants.Shooter.kArmPivotSlowSpeedPrep) {
-    //     power = Constants.Shooter.kArmPivotSlowSpeedPrep;
-    //   }
-    // }
     m_pivot.set(power);
   }
 

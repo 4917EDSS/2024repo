@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class FlywheelSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(FlywheelSub.class.getName());
@@ -121,8 +122,10 @@ public class FlywheelSub extends SubsystemBase {
   private void updateShuffleBoard() {
     m_shooterFlywheelVelocityL.setDouble(getFlywheelVelocityL());
     m_shooterFlywheelVelocityR.setDouble(getFlywheelVelocityR());
-    m_shooterflywheelPowerL.setDouble(m_flywheelL.get());
-    m_shooterflywheelPowerR.setDouble(m_flywheelR.get());
+    if(!RobotContainer.disableShuffleboardPrint) {
+      m_shooterflywheelPowerL.setDouble(m_flywheelL.get());
+      m_shooterflywheelPowerR.setDouble(m_flywheelR.get());
+    }
 
     // Uncomment if need to add PID controller
     //m_flyWheelPID.setP(SmartDashboard.getNumber("Flywheel P", m_flywheelP));
