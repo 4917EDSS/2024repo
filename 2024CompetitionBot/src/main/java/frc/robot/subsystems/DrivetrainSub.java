@@ -483,10 +483,10 @@ public class DrivetrainSub extends SubsystemBase {
       orca2.addInstrument(m_frontRight.m_steeringMotor);
       orca3.addInstrument(m_backLeft.m_steeringMotor);
       orca4.addInstrument(m_backRight.m_steeringMotor);
-      orca1.loadMusic("dat3n_downA.chrp");
-      orca2.loadMusic("dat3n_downB.chrp");
-      orca3.loadMusic("dat3n_downC.chrp");
-      orca4.loadMusic("dat3n_downD.chrp");
+      orca1.loadMusic("requiumA.chrp");
+      orca2.loadMusic("requiumB.chrp");
+      orca3.loadMusic("requiumC.chrp");
+      orca4.loadMusic("requiumD.chrp");
       orca1.play();
       orca2.play();
       orca3.play();
