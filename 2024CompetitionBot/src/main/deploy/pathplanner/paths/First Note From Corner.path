@@ -3,49 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.0,
-        "y": 6.0
+        "x": 1.4416145195926755,
+        "y": 1.7911192186020743
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.95361559953889,
-        "y": 6.006444070133222
+        "x": 2.4416145195926755,
+        "y": 1.7911192186020743
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Start In Corner"
     },
     {
       "anchor": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 8.018380400397163,
+        "y": 0.7836146581384071
       },
       "prevControl": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 7.018380400397163,
+        "y": 0.7836146581384069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "First Note"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.2,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0,
+    "velocity": 0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Steal And Score Auto",
   "previewStartingState": {
-    "rotation": -45.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": false

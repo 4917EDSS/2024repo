@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.0,
-        "y": 6.0
+        "x": 0.6859860992449257,
+        "y": 4.4777980465051845
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.95361559953889,
-        "y": 6.006444070133222
+        "x": 1.5908744544761815,
+        "y": 3.964717020343132
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 8.018380400397163,
+        "y": 0.7836146581384071
       },
       "prevControl": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 6.954903364352183,
+        "y": 0.21456115639504014
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "First Note"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 122.62915583571558,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -38,15 +44,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0,
-    "rotateFast": false
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Five Note Steal Auto",
   "previewStartingState": {
-    "rotation": -45.0,
+    "rotation": 121.75948008481284,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -16,21 +16,93 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpTouchingSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterShootCmd"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "StartPositionToMiddleNote"
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntilNoteInCmd"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "ToNoteInfrontOfSpeaker"
+                  "pathName": "Stage to Speaker Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpFromStage"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterShootCmd"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Drive Forward Pick up Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntilNoteInCmd"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpTouchingSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterShootCmd"
                 }
               },
               {
                 "type": "path",
                 "data": {
                   "pathName": "ToNoteInfrontOfAmp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntilNoteInCmd"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpFromAmp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterShootCmd"
                 }
               }
             ]

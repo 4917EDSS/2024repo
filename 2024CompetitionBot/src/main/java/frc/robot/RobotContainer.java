@@ -98,8 +98,9 @@ public class RobotContainer {
         new IntakeUntilNoteInCmd(m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
-    NamedCommands.registerCommand("ShooterPrepGrp",
-        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
+        new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));

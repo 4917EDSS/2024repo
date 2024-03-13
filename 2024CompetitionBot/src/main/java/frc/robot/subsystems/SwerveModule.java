@@ -24,23 +24,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(SwerveModule.class.getName());
-
-  /** Creates a new SwerveModule. */
-  public static final class ModuleConstants {
-
-    // Maxes
-    public static final double kMaxModuleAngularSpeed = 8.0 * Math.PI; // In Radians Per Second
-    public static final double kMaxModuleAngularAcceleration = 100.0 * Math.PI; // In Radians Per Second Squared
-
-    // Conversion factors
-    public static final double kWheelBaseDiameter = 0.1016; // Meters
-    public static final double kDriveDistanceFactor = (Math.PI * kWheelBaseDiameter) / (6.52);// 6.52 Circumference(m) * gear ratio 
-    public static final double kDriveVelocityFactor = kDriveDistanceFactor / 60.0; // RPM to m/s
-
-  }
 
   // Motors and Encoders
   private final CANSparkMax m_driveMotor;
@@ -49,13 +36,16 @@ public class SwerveModule extends SubsystemBase {
   private final CANcoder m_steeringEncoder;
   private final double m_turningEncoderOffset;
 
+  public final double kDriveDistanceFactor;// 6.52 Circumference(m) * gear ratio 
+  public final double kDriveVelocityFactor; // RPM to m/s
+
   // PID Controllers
   private final PIDController m_drivePID = new PIDController(0.0, 0, 0.0); // TODO: Tune the Driving PID
 
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(
-          ModuleConstants.kMaxModuleAngularSpeed,
-          ModuleConstants.kMaxModuleAngularAcceleration)); // TODO: Also tune the Steering PID
+          Constants.ModuleConstants.kMaxModuleAngularSpeed,
+          Constants.ModuleConstants.kMaxModuleAngularAcceleration)); // TODO: Also tune the Steering PID
 
   // These predict PID values which makes it work in real time
   // TODO: Resolved - Feed forward will probably need tuning as well
@@ -64,6 +54,7 @@ public class SwerveModule extends SubsystemBase {
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
     // Initialize motors and sensors
+
     m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     m_steeringMotor = new TalonFX(steeringMotorID);
     m_driveEncoder = m_driveMotor.getEncoder();
@@ -76,10 +67,22 @@ public class SwerveModule extends SubsystemBase {
     m_steeringPID.enableContinuousInput(-Math.PI, Math.PI);
 
     // Set conversion factors
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityFactor);
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveDistanceFactor);
 
     m_turningEncoderOffset = absoluteEncoderOffsetRad;
+
+    double GearRatio;
+    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+      GearRatio = Constants.RobotSpecific.Practice.kGearRatio;
+    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
+      GearRatio = Constants.RobotSpecific.Competition.kGearRatio;
+    } else {
+      GearRatio = Constants.RobotSpecific.Unknown.kGearRatio;
+    }
+    kDriveDistanceFactor = (Math.PI * Constants.ModuleConstants.kWheelBaseDiameter) / (GearRatio);
+    kDriveVelocityFactor = kDriveDistanceFactor / 60.0;
+
+    m_driveEncoder.setVelocityConversionFactor(kDriveVelocityFactor);
+    m_driveEncoder.setPositionConversionFactor(kDriveDistanceFactor);
 
     init();
   }

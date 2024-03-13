@@ -3,50 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.0,
-        "y": 6.0
+        "x": 2.7476389498233544,
+        "y": 3.3023760592975733
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.95361559953889,
-        "y": 6.006444070133222
+        "x": 4.361511995751264,
+        "y": 2.220241531392155
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot From Angle"
     },
     {
       "anchor": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 8.05569538411804,
+        "y": 2.4348026877871947
       },
       "prevControl": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 4.240238298658416,
+        "y": 1.2407232087191458
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Second Note Center Line"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 0.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.2,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 90.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Steal And Score Auto",
   "previewStartingState": {
-    "rotation": -45.0,
-    "velocity": 0
+    "rotation": 143.6469317079531,
+    "velocity": 0.0
   },
   "useDefaultConstraints": false
 }

@@ -3,50 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6619978954243629,
-        "y": 4.485794114445372
+        "x": 1.0964509201745676,
+        "y": 1.5299143325559383
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0573190148812626,
-        "y": 4.1513222403874765
+        "x": 1.8054356108712213,
+        "y": 1.1474357494169543
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ampshot location"
     },
     {
       "anchor": {
-        "x": 2.62,
-        "y": 4.085990717435981
+        "x": 2.673008982381601,
+        "y": 4.104648209296419
       },
       "prevControl": {
-        "x": 1.705782898838525,
-        "y": 4.048675733715104
+        "x": 1.6730089823816008,
+        "y": 4.104648209296419
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at mid note for ampshot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.05,
       "rotationDegrees": 0.0,
       "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": 119.36491502816416,
-      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
-    "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 540.0
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -54,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Four Note Auto",
+  "folder": "Ampshot",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": -124.07719528013071,
     "velocity": 0
   },
   "useDefaultConstraints": true
