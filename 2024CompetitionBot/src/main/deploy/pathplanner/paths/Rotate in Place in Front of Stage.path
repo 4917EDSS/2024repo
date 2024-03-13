@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4,
-        "y": 4.085990717435981
+        "x": 2.51,
+        "y": 4.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9628986001800275,
-        "y": 4.132038814863124
+        "x": 2.0728986001800274,
+        "y": 4.156048097427144
       },
       "isLocked": false,
       "linkedName": "at middle note in front of stage"
@@ -33,9 +33,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,

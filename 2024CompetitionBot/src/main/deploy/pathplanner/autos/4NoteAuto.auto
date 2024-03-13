@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.66,
-      "y": 4.49
+      "x": 0.7233010829658023,
+      "y": 4.403168079063431
     },
     "rotation": 120.0
   },
@@ -28,81 +28,130 @@
                 }
               },
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "StartPositionToMiddleNote"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "StartPositionToMiddleNote"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeNoteGrp"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "IntakeUntilNoteInCmd"
+                  "commands": [
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Stage to Speaker Note"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ShooterPrepGrpFromStage"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShooterShootCmd"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "Stage to Speaker Note"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Drive Forward Pick up Note"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeNoteGrp"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "ShooterPrepGrpFromStage"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShooterPrepGrpFromStage"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShooterShootCmd"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "ShooterShootCmd"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "ToNoteInfrontOfAmp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeNoteGrp"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Drive Forward Pick up Note"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUntilNoteInCmd"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShooterPrepGrpTouchingSpeaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShooterShootCmd"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "ToNoteInfrontOfAmp"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUntilNoteInCmd"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShooterPrepGrpFromAmp"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShooterShootCmd"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShooterPrepGrpFromAmp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShooterShootCmd"
+                      }
+                    }
+                  ]
                 }
               }
             ]
