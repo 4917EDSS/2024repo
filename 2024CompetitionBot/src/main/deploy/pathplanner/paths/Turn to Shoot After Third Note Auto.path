@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.0,
-        "y": 6.0
+        "x": 2.654351490521163,
+        "y": 7.043203177315446
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.95361559953889,
-        "y": 6.006444070133222
+        "x": 2.738310203893135,
+        "y": 6.819313274990187
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Pick Up Third Note After Speaker Shot"
     },
     {
       "anchor": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 2.551735285288752,
+        "y": 6.6140808645253655
       },
       "prevControl": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 2.7476389498233544,
+        "y": 6.735354561618215
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0,
+    "velocity": 0,
+    "rotation": -135.00000000000006,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ampshot",
   "previewStartingState": {
-    "rotation": -45.0,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

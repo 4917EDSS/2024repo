@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.0,
-        "y": 6.0
+        "x": 2.51,
+        "y": 4.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.95361559953889,
-        "y": 6.006444070133222
+        "x": 2.0728986001800274,
+        "y": 4.156048097427144
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at middle note in front of stage"
     },
     {
       "anchor": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 2.4,
+        "y": 4.104648209296419
       },
       "prevControl": {
-        "x": 15.348755420229981,
-        "y": 1.1454832211990011
+        "x": 1.9335272355338993,
+        "y": 4.165381989046627
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0,
-    "rotateFast": false
+    "velocity": 0,
+    "rotation": 140.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Four Note Auto",
   "previewStartingState": {
-    "rotation": -45.0,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

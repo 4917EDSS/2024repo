@@ -98,12 +98,24 @@ public class RobotContainer {
     configureBindings();
 
     // TODO: Add autonomous commands here
-    NamedCommands.registerCommand("IntakeUntilNoteInCmd",
-        new IntakeUntilNoteInCmd(m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
+    NamedCommands.registerCommand("IntakeNoteGrp",
+        new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
-    NamedCommands.registerCommand("ShooterPrepGrp",
-        new ShooterPrepGrp(0.0 /* pivot position? */, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
+        new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrpFromStage",
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 4, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 2, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
+    NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 4, m_shooterSub, m_flywheelSub, m_feederSub,
+            m_arduinoSub));
+    NamedCommands.registerCommand("AmpShot",
+        new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
@@ -145,8 +157,7 @@ public class RobotContainer {
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
 
-    m_driverController.options().onTrue(new TestLedsCmd(m_ledSub, LedColour.YELLOW)); // TODO: Remove this test code
-
+    //m_driverController.options()
     m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
 
     m_driverController.touchpad().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE)); // TODO: Remove this test code
@@ -236,10 +247,14 @@ public class RobotContainer {
   }
 
   void autoChooserSetup() {
-    m_Chooser.addOption("JustRunAuto", new PathPlannerAuto("JustRunAuto"));
-    m_Chooser.addOption("New Auto", new PathPlannerAuto("New Auto"));
-    m_Chooser.addOption("Demo Auto", new PathPlannerAuto("Demo Auto"));
-
+    m_Chooser.addOption("Test JustRunAuto", new PathPlannerAuto("Test JustRunAuto"));
+    m_Chooser.addOption("Test New Auto", new PathPlannerAuto("Test New Auto"));
+    m_Chooser.addOption("Test Demo Auto", new PathPlannerAuto("Test Demo Auto"));
+    m_Chooser.addOption("Five Note Score Auto", new PathPlannerAuto("Five Note Score Auto"));
+    m_Chooser.addOption("5NoteStealAuto", new PathPlannerAuto("5NoteStealAuto"));
+    m_Chooser.addOption("4NoteAuto", new PathPlannerAuto("4NoteAuto"));
+    m_Chooser.addOption("2 Note Steal and Score", new PathPlannerAuto("2 Note Steal and Score"));
+    m_Chooser.addOption("2 Amp 2 Speaker Auto", new PathPlannerAuto("2 Amp 2 Speaker Auto"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }

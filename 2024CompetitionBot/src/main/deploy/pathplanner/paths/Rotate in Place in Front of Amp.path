@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 2.868912646916203,
+        "y": 6.9872307017341315
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.4318112470962308,
+        "y": 7.033278799161275
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at middle amp note"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 7.0
+        "x": 2.868912646916203,
+        "y": 6.9872307017341315
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.4024398824501025,
+        "y": 7.047964481484339
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at middle amp note"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
-    "rotateFast": false
+    "rotation": -140.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Four Note Auto",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

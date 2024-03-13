@@ -20,7 +20,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -215,12 +217,10 @@ public class DrivetrainSub extends SubsystemBase {
 
     m_sbRobotName.setString(robotName);
 
-    boolean flipTeamSide = false; // TODO: Resolved (creating two pathes) - Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
-
     AutoBuilder.configureHolonomic(this::getOdometryPose2d, this::resetOdometry, this::getChassisSpeeds,
         this::driveChassisSpeeds, Constants.Drivetrain.kPathingConfig,
         () -> {
-          return flipTeamSide;
+          return DriverStation.getAlliance().get() == Alliance.Red;
         }, this);
 
   }

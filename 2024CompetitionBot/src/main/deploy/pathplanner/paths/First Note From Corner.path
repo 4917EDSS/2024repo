@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 1.4416145195926755,
+        "y": 1.7911192186020743
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.4416145195926755,
+        "y": 1.7911192186020743
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Start In Corner"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 7.0
+        "x": 8.018380400397163,
+        "y": 0.7836146581384071
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 7.018380400397163,
+        "y": 0.7836146581384069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "First Note"
     }
   ],
   "rotationTargets": [],
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Steal And Score Auto",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

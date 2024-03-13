@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6579998614542684,
+      "y": 4.468469300574965
+    },
+    "rotation": 120.46554491945986
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker To First Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return From Fist Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Pick Up Note Infront of Stage From Angle Shot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Stage to Speaker Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Drive Forward Pick up Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToNoteInfrontOfAmp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
