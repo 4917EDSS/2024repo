@@ -36,7 +36,7 @@ public class PivotToAprilTagCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = m_visionSub.getHorizontalAngle();
+    double angle = m_visionSub.getSimpleHorizontalAngle();
     double driveOutput = m_pivotForwardPid.calculate(m_shooterSub.getPivotAngle(), angle);
     driveOutput = MathUtil.clamp(driveOutput, -1.0, 1.0);
     m_shooterSub.movePivot(driveOutput);
