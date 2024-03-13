@@ -67,11 +67,6 @@ public class AlignVisionCmd extends Command {
   public void execute() {
     // Stage 1: Look at apriltag
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
-    if(Math.abs(m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond) > 0.2) {
-      horizontalOffset +=
-          m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond * Constants.AlignVision.krotationShotOffSet;
-      // TODO - delete this if unused (kroatationshotoffset is 0)
-    }
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
     double rotationalPower = 0.0;
     double xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
