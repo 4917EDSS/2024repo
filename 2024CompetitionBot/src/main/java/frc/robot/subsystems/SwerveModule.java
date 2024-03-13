@@ -50,7 +50,7 @@ public class SwerveModule extends SubsystemBase {
   private final double m_turningEncoderOffset;
 
   // PID Controllers
-  private final PIDController m_drivePID = new PIDController(0.0, 0, 0.0); // TODO: Tune the Driving PID
+  private final PIDController m_drivePID = new PIDController(0.1, 0, 0.0); // TODO: Tune the Driving PID
 
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(
@@ -59,7 +59,7 @@ public class SwerveModule extends SubsystemBase {
 
   // These predict PID values which makes it work in real time
   // TODO: Resolved - Feed forward will probably need tuning as well
-  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.43);//0.2);
+  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.43);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
@@ -161,12 +161,12 @@ public class SwerveModule extends SubsystemBase {
     betterState.speedMetersPerSecond *= betterState.angle.minus(steeringRotation).getCos();
 
     // Calculate power using velocity and PID
-    final double driveOutput = m_drivePID.calculate(m_driveEncoder.getVelocity(), betterState.speedMetersPerSecond);
-    final double driveFeedforward = m_driveFeedforward.calculate(betterState.speedMetersPerSecond);
+    double driveOutput = m_drivePID.calculate(m_driveEncoder.getVelocity(), betterState.speedMetersPerSecond);
+    double driveFeedforward = m_driveFeedforward.calculate(betterState.speedMetersPerSecond);
     // Calculate steering power using difference in angle
-    final double steeringOutput =
+    double steeringOutput =
         m_steeringPID.calculate(getTurningRotation(), betterState.angle.getRadians());
-    final double steeringFeedforward = m_steeringFeedforward.calculate(m_steeringPID.getSetpoint().velocity);
+    double steeringFeedforward = m_steeringFeedforward.calculate(m_steeringPID.getSetpoint().velocity);
 
     // Clamp these as needed
     double drivePower = driveOutput + driveFeedforward;
