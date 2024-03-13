@@ -107,7 +107,7 @@ public class ShooterSub extends SubsystemBase {
     if(m_areWeTryingToHold) {
       runPivotControl(false);
     }
-    if(isPivotAtReverseLimit()) {
+    if(isPivotAtReverseLimit() && getPivotAngle() > 0.75) {
       resetPivot();
     }
 
@@ -155,23 +155,46 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void movePivot(double power) {
-    if((getPivotAngle() <= 20 || getPivotAngle() >= Constants.Shooter.kImpossibleZone) && power < 0) {
-      if(power < -Constants.Shooter.kArmPivotSlowSpeed) {
-        power = -Constants.Shooter.kArmPivotSlowSpeed;
+    // if((getPivotAngle() <= 20 || getPivotAngle() >= Constants.Shooter.kImpossibleZone) && power < 0) {
+    //   if(power < -Constants.Shooter.kArmPivotSlowSpeed) {
+    //     power = -Constants.Shooter.kArmPivotSlowSpeed;
+    //   }
+    // } else if((getPivotAngle() <= 40) && power < 0) {
+    //   if(power < -Constants.Shooter.kArmPivotSlowSpeedPrep) {
+    //     power = -Constants.Shooter.kArmPivotSlowSpeedPrep;
+    //   }
+    // } else if((getPivotAngle() <= 60) && power < 0) {
+    //   if(power < -Constants.Shooter.kArmPivotSlowSpeedPrepBefore) {
+    //     power = -Constants.Shooter.kArmPivotSlowSpeedPrepBefore;
+    //   }
+    // } else 
+    if(getPivotAngle() <= 60 && power < 0) {
+      double testPower = getPivotAngle() / 60;
+      if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
+        testPower = Constants.Shooter.kArmPivotSlowSpeed;
       }
-    } else if((getPivotAngle() <= 60) && power < 0) {
-      if(power < -Constants.Shooter.kArmPivotSlowSpeedPrep) {
-        power = -Constants.Shooter.kArmPivotSlowSpeedPrep;
-      }
-    } else if(getPivotAngle() >= 250 && power > 0) {
-      if(power > Constants.Shooter.kArmPivotSlowSpeed) {
-        power = Constants.Shooter.kArmPivotSlowSpeed;
-      }
-    } else if(getPivotAngle() >= 220 && power > 0) {
-      if(power > Constants.Shooter.kArmPivotSlowSpeedPrep) {
-        power = Constants.Shooter.kArmPivotSlowSpeedPrep;
+      if(power < -testPower) {
+        power = -testPower;
       }
     }
+    if(getPivotAngle() >= 230 && power > 0) {
+      double testPower = getPivotAngle() / 230;
+      if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
+        testPower = Constants.Shooter.kArmPivotSlowSpeed;
+      }
+      if(power > testPower) {
+        power = testPower;
+      }
+    }
+    // if(getPivotAngle() >= 250 && power > 0) {
+    //   if(power > Constants.Shooter.kArmPivotSlowSpeed) {
+    //     power = Constants.Shooter.kArmPivotSlowSpeed;
+    //   }
+    // } else if(getPivotAngle() >= 230 && power > 0) {
+    //   if(power > Constants.Shooter.kArmPivotSlowSpeedPrep) {
+    //     power = Constants.Shooter.kArmPivotSlowSpeedPrep;
+    //   }
+    // }
     m_pivot.set(power);
   }
 
@@ -207,7 +230,7 @@ public class ShooterSub extends SubsystemBase {
     return m_pivotPID.atSetpoint();
   }
 
-  public void runPivotControl(boolean justCalculate) { // Returns true when at position
+  public void runPivotControl(boolean justCalculate) {
     //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
     double pidPower = m_pivotPID.calculate(getPivotAngle(), m_targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
