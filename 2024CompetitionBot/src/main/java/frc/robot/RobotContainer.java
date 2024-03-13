@@ -266,8 +266,32 @@ public class RobotContainer {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
     }
 
-    // if(m_shooterSub.getPivotAngle() > 0) {
-    //   m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 24000.0 * 255.0), 0);
+    int FL = (int) (Math.abs(m_drivetrainSub.getTurningEncoderFL()) / Math.PI * 255.0);
+    int FR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0);
+    int BL = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBL()) / Math.PI * 255.0);
+    int BR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBR()) / Math.PI * 255.0);
+    
+        
+    m_ledSub.setZoneRGB(LedZones.DIAG_PIVOT_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 50 * 255.0), 0); //
+
+    m_ledSub.setZoneRGB(LedZones.DIAG_FL_STEERING_ENC, FL % 2 == 0 ? 255 : 0,  FL % 3 ==  0? 255 :0, FL % 5 == 0 ? 255 : 0); //
+
+    m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC, FR % 2 == 0 ? 255 : 0,  FR % 3 ==  0? 255 :0, FR % 5 == 0 ? 255 : 0); //
+
+    m_ledSub.setZoneRGB(LedZones.DIAG_BL_STEERING_ENC, BL % 2 == 0 ? 255 : 0,  BL % 3 ==  0? 255 :0, BL % 5 == 0 ? 255 : 0); //
+
+    m_ledSub.setZoneRGB(LedZones.DIAG_BR_STEERING_ENC, BR % 2 == 0 ? 255 : 0,  BR % 3 ==  0? 255 :0, BR % 5 == 0 ? 255 : 0); //
+
+    // m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC,
+    //     (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0), 0, 0); //
+
+    // m_ledSub.setZoneRGB(LedZones.DIAG_BL_STEERING_ENC,
+    //     (int) (Math.abs(m_drivetrainSub.getTurningEncoderBL()) / Math.PI * 255.0), 0, 0); //
+
+    // m_ledSub.setZoneRGB(LedZones.DIAG_BR_STEERING_ENC,
+    //     (int) (Math.abs(m_drivetrainSub.getTurningEncoderBR()) / Math.PI * 255.0), 0, 0); //
+
+
     // } else if(m_shooterSub.getPivotAngle() < 0) {
     //   m_ledSub.setZoneRGB(LedZones.DIAG_SHOOTER_ENC, (int) (m_shooterSub.getPivotAngle() / -20000.0 * 255.0), 0, 0);
     // } else {

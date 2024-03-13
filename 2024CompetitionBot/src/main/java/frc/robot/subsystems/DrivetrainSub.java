@@ -469,6 +469,22 @@ public class DrivetrainSub extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
+  public double getTurningEncoderFL() {
+    return m_frontLeft.getTurningEncoder();
+  }
+
+  public double getTurningEncoderFR() {
+    return m_frontRight.getTurningEncoder();
+  }
+
+  public double getTurningEncoderBL() {
+    return m_backLeft.getTurningEncoder();
+  }
+
+  public double getTurningEncoderBR() {
+    return m_backRight.getTurningEncoder();
+  }
+
 
   public void fun() {
     if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks

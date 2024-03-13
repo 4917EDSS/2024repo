@@ -45,7 +45,11 @@ public class LedSub extends SubsystemBase {
     DIAG_CLIMBR_LIMIT(8, 8, false), //
     DIAG_SHOOTERFWD_LIMIT(9, 9, false), //
     DIAG_SHOOTERREV_LIMIT(10, 10, false), //
-    DIAG_SHOOTER_ENC(11, 11, false); //this can still be assigned
+    DIAG_PIVOT_ENC(11, 11, false), //
+    DIAG_FL_STEERING_ENC(0, 6, false), //
+    DIAG_FR_STEERING_ENC(12, 18, false), //
+    DIAG_BR_STEERING_ENC(19, 25, false), //
+    DIAG_BL_STEERING_ENC(26, 32, false); //
     //DIAG_INTAKE_ENC(20, 20, false), //
     //DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
     //DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
@@ -188,8 +192,6 @@ public class LedSub extends SubsystemBase {
     r = MathUtil.clamp(r, 0, 255);
     g = MathUtil.clamp(g, 0, 255);
     b = MathUtil.clamp(b, 0, 255);
-
-    m_newColoursAvailable = false;
 
     for(int i = zone.start; i <= zone.end; i++) {
       setBuffer(i, r, b, g);
