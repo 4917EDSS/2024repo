@@ -14,15 +14,22 @@ public class ShooterPivotCmd extends Command {
 
   private final ShooterSub m_shooterSub;
   private final double m_targetPivotPosition;
+  private final double m_maxSpeed;
 
   /** Creates a new PivotCmd. */
-  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
+  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub, double maxSpeed) {
     m_targetPivotPosition = targetPivotPosition;
     m_shooterSub = shooterSub;
+    m_maxSpeed = maxSpeed;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
   }
+
+  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
+    this(targetPivotPosition, shooterSub, 1.0);
+  }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -40,7 +47,7 @@ public class ShooterPivotCmd extends Command {
   @Override
   public void execute() {
     if(m_targetPivotPosition == 0) {
-      m_shooterSub.movePivot(-0.4);
+      m_shooterSub.movePivot(-m_maxSpeed);
     }
   }
 
@@ -56,7 +63,10 @@ public class ShooterPivotCmd extends Command {
   public boolean isFinished() {
     boolean hitLimit = (m_shooterSub.getPivotPower() < 0.0) ? m_shooterSub.isPivotAtReverseLimit()
         : m_shooterSub.isPivotAtForwardLimit(); // Emergency case to stop command
-
-    return m_shooterSub.isAtPivotAngle() || hitLimit;
+    if(m_targetPivotPosition != 0) {
+      return m_shooterSub.isAtPivotAngle() || hitLimit;
+    } else {
+      return hitLimit;
+    }
   }
 }

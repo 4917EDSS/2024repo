@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 
 public class ClimbSub extends SubsystemBase {
@@ -81,8 +82,10 @@ public class ClimbSub extends SubsystemBase {
   }
 
   private void updateShuffleBoard() {
-    m_sbClimbLeftpower.setDouble(m_climbMotorLeft.get());
-    m_sbClimbRightpower.setDouble(m_climbMotorRight.get());
+    if(!RobotContainer.disableShuffleboardPrint) {
+      m_sbClimbLeftpower.setDouble(m_climbMotorLeft.get());
+      m_sbClimbRightpower.setDouble(m_climbMotorRight.get());
+    }
     m_sbClimbLeftheight.setDouble(getLeftHeight());
     m_sbClimbRightheight.setDouble(getRightHeight());
     m_sbClimbLeftLimit.setBoolean(isLeftAtLimit());
