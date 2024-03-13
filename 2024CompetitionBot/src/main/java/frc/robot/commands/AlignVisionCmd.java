@@ -69,7 +69,7 @@ public class AlignVisionCmd extends Command {
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
     if(Math.abs(m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond) > 0.2) {
       horizontalOffset +=
-          m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond * Constants.AlignVision.krotationShotOffSet;
+          m_drivetrainSub.getChassisSpeeds().vxMetersPerSecond;
       // TODO - delete this if unused (kroatationshotoffset is 0)
     }
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
