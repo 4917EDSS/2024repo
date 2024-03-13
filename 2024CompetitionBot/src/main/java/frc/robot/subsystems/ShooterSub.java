@@ -56,11 +56,11 @@ public class ShooterSub extends SubsystemBase {
   //  -13   -12  -11   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1    0     1     2
 
   private static final double kMinLimelightAngle = -17.0;
-  private static final double kMaxLimelightAngle = 13.0;
+  private static final double kMaxLimelightAngle = 14.0;
   // -19 to 13 degrees
   // @formatter:off
-  private final double[] limelightAngles = {kMinLimelightAngle, -15.0, -12.9, -11.2, -8.90, -0.40, 5.20, 11.9, kMaxLimelightAngle}; //
-  private final double[] shooterAngles = {                68.0,  68.2,  65.0,  64.3,  62.9,  55.5, 49.5, 44.3, 42.6}; //
+  private final double[] limelightAngles = {kMinLimelightAngle, -15.0, -12.9, -11.2, -8.90, -0.40, 5.20, 11.9, 13.0, kMaxLimelightAngle}; //
+  private final double[] shooterAngles = {                68.0,  68.2,  65.0,  64.3,  62.9,  55.5, 49.5, 44.3, 42.6, 37.9}; //
   // @formatter:on
 
   public ShooterSub() {

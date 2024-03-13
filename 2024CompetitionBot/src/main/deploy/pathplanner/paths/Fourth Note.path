@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.11
+        "x": 8.466160205047682,
+        "y": 4.020689495924446
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4797706738270624,
-        "y": 4.940237309046047
+        "x": 8.634077631791627,
+        "y": 4.617729235458471
       },
       "isLocked": false,
-      "linkedName": "at middle note in front of stage"
+      "linkedName": "Third Note"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 5.541275082550166
+        "x": 8.466160205047682,
+        "y": 5.746507493014986
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.852280561703981
+        "x": 8.904611263767983,
+        "y": 5.233426466852934
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "at middle speaker note"
+      "linkedName": "Fourth Note"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 173.1572265873691,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Five Note Steal Auto",
   "previewStartingState": {
-    "rotation": -1.7399334791511283,
+    "rotation": 135.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

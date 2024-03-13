@@ -20,7 +20,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -215,12 +217,10 @@ public class DrivetrainSub extends SubsystemBase {
 
     m_sbRobotName.setString(robotName);
 
-    boolean flipTeamSide = false; // TODO: Resolved (creating two pathes) - Figure out if we should flip the team or just have multiple paths (Origin will always stay on blue side)
-
     AutoBuilder.configureHolonomic(this::getOdometryPose2d, this::resetOdometry, this::getChassisSpeeds,
         this::driveChassisSpeeds, Constants.Drivetrain.kPathingConfig,
         () -> {
-          return flipTeamSide;
+          return DriverStation.getAlliance().get() == Alliance.Red;
         }, this);
 
   }
@@ -250,7 +250,8 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbTargetROT.setDouble(rot);
 
       m_sbGYRO.setDouble(getYawRotationDegrees());
-      m_sbYaw.setDouble(m_gyro.getAngle());
+      // m_sbYaw.setDouble(m_gyro.getAngle());
+      m_sbYaw.setDouble(getYawRotation2d().getDegrees());
       m_sbRoll.setDouble(m_gyro.getRoll());
       m_sbPitch.setDouble(m_gyro.getPitch());
 
@@ -305,7 +306,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void resetGyroYaw(double angle) { // TODO: incorporate angle for non-zero cases (modulo 360 or 180?)
-    m_gyro.setAngleAdjustment(-angle); // NavX is oriented 90deg off of front
+    m_gyro.setAngleAdjustment(-angle - Constants.Drivetrain.kGyroPhysicalOffsetAngle); // NavX is oriented 90deg off of front
     m_gyro.reset();
     resetOdometry(); // Feed in rotation here too
   }
@@ -482,10 +483,10 @@ public class DrivetrainSub extends SubsystemBase {
       orca2.addInstrument(m_frontRight.m_steeringMotor);
       orca3.addInstrument(m_backLeft.m_steeringMotor);
       orca4.addInstrument(m_backRight.m_steeringMotor);
-      orca1.loadMusic("dat3n_downA.chrp");
-      orca2.loadMusic("dat3n_downB.chrp");
-      orca3.loadMusic("dat3n_downC.chrp");
-      orca4.loadMusic("dat3n_downD.chrp");
+      orca1.loadMusic("shpitaA.chrp");
+      orca2.loadMusic("shpitaB.chrp");
+      orca3.loadMusic("shpitaC.chrp");
+      orca4.loadMusic("shpitaD.chrp");
       orca1.play();
       orca2.play();
       orca3.play();

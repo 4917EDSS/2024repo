@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.11
+        "x": 2.7476389498233544,
+        "y": 3.3023760592975733
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4797706738270624,
-        "y": 4.940237309046047
+        "x": 2.047983005056919,
+        "y": 3.1531161244140673
       },
       "isLocked": false,
-      "linkedName": "at middle note in front of stage"
+      "linkedName": "Shoot From Angle"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 5.541275082550166
+        "x": 1.4416145195926755,
+        "y": 1.7911192186020743
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.852280561703981
+        "x": 3.036830073660147,
+        "y": 1.6605167755790062
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "at middle speaker note"
+      "linkedName": "Start In Corner"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Steal And Score Auto",
   "previewStartingState": {
-    "rotation": -1.7399334791511283,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

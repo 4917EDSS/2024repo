@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.11
+        "x": 2.673008982381601,
+        "y": 4.104648209296419
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4797706738270624,
-        "y": 4.940237309046047
+        "x": 2.057311750987138,
+        "y": 4.785646662202415
       },
       "isLocked": false,
-      "linkedName": "at middle note in front of stage"
+      "linkedName": "at mid note for ampshot"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 5.541275082550166
+        "x": 1.0964509201745676,
+        "y": 1.5299143325559383
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.852280561703981
+        "x": 1.5908744544761815,
+        "y": 2.2109127854619346
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "at middle speaker note"
+      "linkedName": "ampshot location"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": -123.69006752597979,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ampshot",
   "previewStartingState": {
-    "rotation": -1.7399334791511283,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

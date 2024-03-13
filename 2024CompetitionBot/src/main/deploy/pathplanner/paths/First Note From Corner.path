@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.11
+        "x": 1.4416145195926755,
+        "y": 1.7911192186020743
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4797706738270624,
-        "y": 4.940237309046047
+        "x": 2.4416145195926755,
+        "y": 1.7911192186020743
       },
       "isLocked": false,
-      "linkedName": "at middle note in front of stage"
+      "linkedName": "Start In Corner"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 5.541275082550166
+        "x": 8.018380400397163,
+        "y": 0.7836146581384071
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.852280561703981
+        "x": 7.018380400397163,
+        "y": 0.7836146581384069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "at middle speaker note"
+      "linkedName": "First Note"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Steal And Score Auto",
   "previewStartingState": {
-    "rotation": -1.7399334791511283,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

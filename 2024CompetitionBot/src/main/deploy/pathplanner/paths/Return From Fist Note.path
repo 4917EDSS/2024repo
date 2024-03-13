@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.11
+        "x": 8.018380400397163,
+        "y": 0.7836146581384071
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4797706738270624,
-        "y": 4.940237309046047
+        "x": 6.460479830050569,
+        "y": 0.5783822476735869
       },
       "isLocked": false,
-      "linkedName": "at middle note in front of stage"
+      "linkedName": "First Note"
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 5.541275082550166
+        "x": 2.7476389498233544,
+        "y": 3.3023760592975733
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.852280561703981
+        "x": 3.7458147643568034,
+        "y": 2.7706375412750828
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "at middle speaker note"
+      "linkedName": "Shoot From Angle"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 135.00000000000006,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Five Note Score Auto",
   "previewStartingState": {
-    "rotation": -1.7399334791511283,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
