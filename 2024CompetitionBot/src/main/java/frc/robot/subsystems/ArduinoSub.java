@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.time.Duration;
 import java.time.Instant;
+import javax.print.DocFlavor.STRING;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
@@ -113,6 +114,16 @@ public class ArduinoSub extends SubsystemBase {
   public boolean isSensorTripped(int sensorIndex) {
     if(m_intakeSensors[sensorIndex] < 1000) {
       return true;
+    }
+    return false;
+  }
+
+  public boolean isAnySansorTripped() {
+    for(int i = 0; i <= 8; i++) {
+      boolean isIt = isSensorTripped(i);
+      if(isIt) {
+        return true;
+      }
     }
     return false;
   }
