@@ -254,13 +254,13 @@ public class RobotContainer {
       encoderValue /= 2.0 / 3.0 * Math.PI;
       encoderValue *= 255.0;
       int intEncoderValue = (int) (encoderValue);
-      m_ledSub.setZoneRGB(zone, 0, intEncoderValue, 255 - intEncoderValue);
+      m_ledSub.setZoneRGB(zone, intEncoderValue, 0, 255 - intEncoderValue);
     } else {
       encoderValue += Math.PI / 3.0;
       encoderValue /= 2.0 / 3.0 * Math.PI;
       encoderValue *= 255.0;
       int intEncoderValue = (int) (encoderValue);
-      m_ledSub.setZoneRGB(zone, 255 - intEncoderValue, 0, intEncoderValue);
+      m_ledSub.setZoneRGB(zone, 0, 255 - intEncoderValue, intEncoderValue);
     }
   }
 
