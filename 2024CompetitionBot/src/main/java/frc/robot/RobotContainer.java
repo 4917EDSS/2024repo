@@ -237,9 +237,33 @@ public class RobotContainer {
     m_Chooser.addOption("4NoteAuto", new PathPlannerAuto("4NoteAuto"));
     m_Chooser.addOption("2 Note Steal and Score", new PathPlannerAuto("2 Note Steal and Score"));
     m_Chooser.addOption("2 Amp 2 Speaker Auto", new PathPlannerAuto("2 Amp 2 Speaker Auto"));
+    m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
+
+  public void setLEDs(double encoderValue, LedZones zone) {
+    if(encoderValue < -Math.PI / 3) {
+      encoderValue += Math.PI / 3;
+      encoderValue /= 2 / 3 * Math.PI;
+      encoderValue *= -255;
+      int intEncoderValue = (int) (encoderValue);
+      m_ledSub.setZoneRGB(zone, intEncoderValue, 255 - intEncoderValue, 0);
+    } else if(encoderValue > Math.PI / 3) {
+      encoderValue -= Math.PI / 3;
+      encoderValue /= 2 / 3 * Math.PI;
+      encoderValue *= 255;
+      int intEncoderValue = (int) (encoderValue);
+      m_ledSub.setZoneRGB(zone, 0, intEncoderValue, 255 - intEncoderValue);
+    } else {
+      encoderValue += Math.PI / 3;
+      encoderValue /= 2 / 3 * Math.PI;
+      encoderValue *= 255;
+      int intEncoderValue = (int) (encoderValue);
+      m_ledSub.setZoneRGB(zone, 255 - intEncoderValue, 0, intEncoderValue);
+    }
+  }
+
 
   public void disabledPeriodic() {
 
@@ -254,7 +278,7 @@ public class RobotContainer {
     } else {
       m_ledSub.setZoneColour(LedZones.DIAG_SHOOTERREV_LIMIT, LedColour.RED);
     }
-
+  
     if(m_climbSub.isLeftAtLimit()) {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBL_LIMIT, LedColour.GREEN);
     } else {
@@ -267,14 +291,20 @@ public class RobotContainer {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
     }
 
-    int FL = (int) (Math.abs(m_drivetrainSub.getTurningEncoderFL()) / Math.PI * 255.0);
-    int FR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0);
-    int BL = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBL()) / Math.PI * 255.0);
-    int BR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBR()) / Math.PI * 255.0);
-
-
     m_ledSub.setZoneRGB(LedZones.DIAG_PIVOT_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 50 * 255.0), 0); //
 
+    double FL = (m_drivetrainSub.getTurningEncoderFL());
+    double FR = (m_drivetrainSub.getTurningEncoderFR());
+    double BL = (m_drivetrainSub.getTurningEncoderBL());
+    double BR = (m_drivetrainSub.getTurningEncoderBR());
+
+  
+    setLEDs(FL, LedZones.DIAG_FL_STEERING_ENC);
+    setLEDs(FR, LedZones.DIAG_FR_STEERING_ENC);
+    setLEDs(BL, LedZones.DIAG_BL_STEERING_ENC);
+    setLEDs(BR, LedZones.DIAG_BR_STEERING_ENC);
+
+/* 
     m_ledSub.setZoneRGB(LedZones.DIAG_FL_STEERING_ENC, FL % 2 == 0 ? 255 : 0, FL % 3 == 0 ? 255 : 0,
         FL % 5 == 0 ? 255 : 0); //
 
@@ -286,7 +316,7 @@ public class RobotContainer {
 
     m_ledSub.setZoneRGB(LedZones.DIAG_BR_STEERING_ENC, BR % 2 == 0 ? 255 : 0, BR % 3 == 0 ? 255 : 0,
         BR % 5 == 0 ? 255 : 0); //
-
+*/
     // m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC,
     //     (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0), 0, 0); //
 
