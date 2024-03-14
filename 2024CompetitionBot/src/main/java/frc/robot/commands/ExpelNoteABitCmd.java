@@ -8,14 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.IntakeSub;
 
-public class ExpellNoteABitCmd extends Command {
+public class ExpelNoteABitCmd extends Command {
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public ExpellNoteABitCmd(FeederSub feederSub, ArduinoSub arduinoSub) {
+  public ExpelNoteABitCmd(FeederSub feederSub, ArduinoSub arduinoSub) {
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
 

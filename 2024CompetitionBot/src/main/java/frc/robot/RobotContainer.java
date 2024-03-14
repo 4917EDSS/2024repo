@@ -8,28 +8,21 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionGrp;
-import frc.robot.commands.BackSpinIntakeCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DrivePathCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.IntakeNoteGrp;
-import frc.robot.commands.IntakeUntilNoteInCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
-import frc.robot.commands.ShooterAmpShotCmd;
 import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
@@ -71,8 +64,6 @@ public class RobotContainer {
   private final FeederSub m_feederSub = new FeederSub();
   private final ArduinoSub m_arduinoSub = new ArduinoSub();
   private final PowerSub m_powerSub = new PowerSub();
-
-  private boolean m_isRedAlliance = true;
 
   // Disables large amount of prints from DrivetrainSub, ShooterSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
@@ -335,15 +326,6 @@ public class RobotContainer {
     m_flywheelSub.init();
     m_arduinoSub.init();
     m_powerSub.init();
-
-    if(DriverStation.getAlliance().isPresent()) {
-      if(DriverStation.getAlliance().get() == Alliance.Red) {
-        m_isRedAlliance = true;
-      } else if(DriverStation.getAlliance().get() == Alliance.Blue) {
-        m_isRedAlliance = false;
-      }
-      m_visionSub.setAlliance(m_isRedAlliance);
-    }
   }
 }
 

@@ -30,7 +30,7 @@ public class AlignVisionGrp extends SequentialCommandGroup {
     addCommands(
         new ConditionalCommand(new ShooterPivotCmd(10, shooterSub), new InstantCommand(),
             () -> shooterSub.getPivotAngle() < 9),
-        new ExpellNoteABitCmd(feederSub, arduinoSub),
+        new ExpelNoteABitCmd(feederSub, arduinoSub),
         new AlignVisionCmd(drivetrainSub, visionSub, shooterSub, feederSub, flywheelSub, ledSub,
             driverController, operatorController),
         new ShooterShootCmd(flywheelSub, feederSub, arduinoSub, shooterSub, ledSub),

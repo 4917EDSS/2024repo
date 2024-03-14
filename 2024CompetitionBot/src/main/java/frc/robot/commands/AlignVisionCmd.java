@@ -8,15 +8,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
-import frc.robot.subsystems.VisionSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
+import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.VisionSub;
 
 public class AlignVisionCmd extends Command {
   /** Creates a new AlignVisionCmd. */
@@ -31,9 +30,6 @@ public class AlignVisionCmd extends Command {
   private final LedSub m_ledSub;
 
   private static final double kRotationTolerance = 1.0;
-  private static final double kTurnFedPower = 0.0224;
-  private double gyroAngleOffset = 0.0;
-  private boolean gyroAngleSet = false;
 
   private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
 
@@ -58,8 +54,6 @@ public class AlignVisionCmd extends Command {
   @Override
   public void initialize() {
     m_lookatPID.setTolerance(kRotationTolerance);
-    gyroAngleSet = false;
-    gyroAngleOffset = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -99,7 +93,6 @@ public class AlignVisionCmd extends Command {
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
       m_flywheelSub.disableFlywheel();
-      gyroAngleSet = false;
     }
 
     if(m_lookatPID.atSetpoint()) {

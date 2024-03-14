@@ -26,7 +26,7 @@ public class ShooterPrepGrp extends ParallelCommandGroup {
             () -> shooterSub.getPivotAngle() < 9),
         new ShooterFlywheelCmd(flywheelSub),
         new ShooterPivotCmd(pivotPosition, shooterSub),
-        new ExpellNoteABitCmd(feederSub, arduinoSub));
+        new ExpelNoteABitCmd(feederSub, arduinoSub));
 
   }
 }

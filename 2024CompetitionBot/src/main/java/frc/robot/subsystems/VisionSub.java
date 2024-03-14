@@ -25,7 +25,7 @@ public class VisionSub extends SubsystemBase {
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Vision");
   private final GenericEntry m_shuffleboardtx,
       m_shuffleboardty,
-      m_target, m_tagID,
+      m_target,
       m_apriltagCount;
 
   private NetworkTableEntry m_tx;
@@ -36,7 +36,6 @@ public class VisionSub extends SubsystemBase {
   private NetworkTableEntry m_botpose_target;
   private NetworkTableEntry m_getpipe;
   private NetworkTableEntry m_pipeline; // Use constants for pipeline
-  private boolean m_isRedAlliance = true;
 
   /** Creates a new VisionSub. */
   public VisionSub() {
@@ -54,7 +53,6 @@ public class VisionSub extends SubsystemBase {
     m_shuffleboardty = m_shuffleboardTab.add("ty", 0).getEntry();
 
     m_target = m_shuffleboardTab.add("has target", false).getEntry();
-    m_tagID = m_shuffleboardTab.add("get primary", 0).getEntry();
     m_apriltagCount = m_shuffleboardTab.add("apriltag count", 0).getEntry();
   }
 
@@ -70,10 +68,6 @@ public class VisionSub extends SubsystemBase {
       // This method will be called once per scheduler run
       updateShuffleBoard();
     }
-  }
-
-  public void setAlliance(boolean isRedAlliance) {
-    m_isRedAlliance = isRedAlliance;
   }
 
   public double getDistance(int id) { // In meters
