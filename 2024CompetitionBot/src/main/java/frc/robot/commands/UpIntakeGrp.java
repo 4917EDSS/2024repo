@@ -20,7 +20,7 @@ public class UpIntakeGrp extends SequentialCommandGroup {
         new ShooterPivotCmd(Constants.Shooter.kHighPickUp, shooterSub),
         new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub, ledSub),
         new ShooterPivotCmd(50.0, shooterSub),
-        new ExpellNoteABitCmd(feederSub, arduinoSub),
+        new ExpelNoteABitCmd(feederSub, arduinoSub),
         new IntakeNoteFromSourceCmd(feederSub, arduinoSub, ledSub));
 
   }

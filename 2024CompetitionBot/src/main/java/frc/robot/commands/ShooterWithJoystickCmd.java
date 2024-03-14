@@ -7,10 +7,9 @@ package frc.robot.commands;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.subsystems.ShooterSub;
-import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.ShooterSub;
 
 public class ShooterWithJoystickCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());

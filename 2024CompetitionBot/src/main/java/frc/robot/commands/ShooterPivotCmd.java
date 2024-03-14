@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterPivotCmd extends Command {

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
@@ -20,9 +22,11 @@ public class ShooterPrepGrp extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        new ConditionalCommand(new ShooterPivotCmd(10, shooterSub), new InstantCommand(),
+            () -> shooterSub.getPivotAngle() < 9),
         new ShooterFlywheelCmd(flywheelSub),
         new ShooterPivotCmd(pivotPosition, shooterSub),
-        new ExpellNoteABitCmd(feederSub, arduinoSub));
+        new ExpelNoteABitCmd(feederSub, arduinoSub));
 
   }
 }
