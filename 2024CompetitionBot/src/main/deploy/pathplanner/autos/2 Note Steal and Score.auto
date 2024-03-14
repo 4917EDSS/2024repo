@@ -12,15 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "First Note From Corner"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeUntilNoteInCmd"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "First Note From Corner"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,15 +49,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Second Note From Shooting Position"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeUntilNoteInCmd"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Second Note From Shooting Position"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
           }
         },
         {

@@ -132,10 +132,10 @@ public final class Constants {
     }
 
     public static final class Competition {
-      public static final double kAbsoluteEncoderOffsetFL = 1.881;
-      public static final double kAbsoluteEncoderOffsetFR = -2.628;
-      public static final double kAbsoluteEncoderOffsetBL = 0.836;
-      public static final double kAbsoluteEncoderOffsetBR = -1.715;
+      public static final double kAbsoluteEncoderOffsetFL = 1.850;
+      public static final double kAbsoluteEncoderOffsetFR = -2.760;
+      public static final double kAbsoluteEncoderOffsetBL = 0.980;
+      public static final double kAbsoluteEncoderOffsetBR = -0.480;
       public static final boolean kInvertLowerFeeder = true;
       public static final double kGearRatio = 6.52;
     }

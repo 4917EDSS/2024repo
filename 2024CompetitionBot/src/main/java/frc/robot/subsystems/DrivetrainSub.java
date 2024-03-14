@@ -239,8 +239,14 @@ public class DrivetrainSub extends SubsystemBase {
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
 
+    m_sbYaw.setDouble(getYawRotation2d().getDegrees());
+    m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
+    m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
+    m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
+    m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
+
     if(!RobotContainer.disableShuffleboardPrint) {
-      SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
+      // SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
 
       double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
       m_sbXPOS.setDouble(xPos);
@@ -251,27 +257,21 @@ public class DrivetrainSub extends SubsystemBase {
 
       m_sbGYRO.setDouble(getYawRotationDegrees());
       // m_sbYaw.setDouble(m_gyro.getAngle());
-      m_sbYaw.setDouble(getYawRotation2d().getDegrees());
       m_sbRoll.setDouble(m_gyro.getRoll());
       m_sbPitch.setDouble(m_gyro.getPitch());
-
-      m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
-      m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
-      m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
-      m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
       m_sbSerialNumber.setString(Constants.Drivetrain.serialNumber);
 
       ChassisSpeeds currentSpeeds = getChassisSpeeds();
       double vx = currentSpeeds.vxMetersPerSecond;
       double vy = currentSpeeds.vyMetersPerSecond;
       double currentSpeed = Math.sqrt(vx * vx + vy * vy);
-      SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
-      kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
-      kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
-      kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
-      kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
-      kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
-      kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
+      // SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
+      // kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
+      // kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
+      // kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);
+      // kRotPIDp = SmartDashboard.getNumber("Rot kP", kRotPIDp);
+      // kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
+      // kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
 
       m_sbRotKP.setDouble(kRotPIDp);
       m_sbRotKD.setDouble(kRotPIDd);
