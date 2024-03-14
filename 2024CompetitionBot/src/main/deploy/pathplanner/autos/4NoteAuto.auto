@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FastShooterPrepGrpTouchingSpeaker"
+                  "name": "ShooterPrepGrpTouchingSpeaker"
                 }
               },
               {
@@ -32,15 +32,28 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "sequential",
                       "data": {
-                        "pathName": "StartPositionToMiddleNote"
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 1.0
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "StartPositionToMiddleNote"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "FastIntakeNoteGrp"
+                        "name": "IntakeNoteGrp"
                       }
                     }
                   ]
@@ -63,7 +76,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "FastShooterPrepGrpFromStage"
+                              "name": "ShooterPrepGrpFromStage"
                             }
                           }
                         ]
@@ -85,17 +98,17 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "FastIntakeNoteGrp"
+                        "name": "IntakeNoteGrp"
                       }
                     },
                     {
-                      "type": "sequential",
+                      "type": "parallel",
                       "data": {
                         "commands": [
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.5
+                              "waitTime": 2.0
                             }
                           },
                           {
@@ -117,7 +130,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "FastShooterPrepGrpFromSpeaker"
+                        "name": "ShooterPrepGrpFromStage"
                       }
                     },
                     {
@@ -142,7 +155,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "FastIntakeNoteGrp"
+                        "name": "IntakeNoteGrp"
                       }
                     }
                   ]
@@ -155,7 +168,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "FastShooterPrepGrpFromAmp"
+                        "name": "ShooterPrepGrpFromAmp"
                       }
                     },
                     {

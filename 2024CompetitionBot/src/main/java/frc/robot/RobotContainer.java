@@ -243,6 +243,7 @@ public class RobotContainer {
     m_Chooser.addOption("2 Note Steal and Score", new PathPlannerAuto("2 Note Steal and Score"));
     m_Chooser.addOption("2 Amp 2 Speaker Auto", new PathPlannerAuto("2 Amp 2 Speaker Auto"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
+    m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
