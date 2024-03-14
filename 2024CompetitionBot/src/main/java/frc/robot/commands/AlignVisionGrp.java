@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ArduinoSub;
@@ -36,7 +37,7 @@ public class AlignVisionGrp extends SequentialCommandGroup {
         new AlignVisionCmd(drivetrainSub, visionSub, shooterSub, feederSub, flywheelSub, ledSub,
             driverController, operatorController),
         new ShooterShootCmd(flywheelSub, feederSub, arduinoSub, shooterSub, ledSub),
-        new ParallelCommandGroup(new ShooterPivotCmd(0, shooterSub),
+        new ParallelDeadlineGroup(new ShooterPivotCmd(0, shooterSub),
             new DriveFieldRelativeCmd(driverController, drivetrainSub)));
 
 
