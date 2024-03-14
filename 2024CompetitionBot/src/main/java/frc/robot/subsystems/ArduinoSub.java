@@ -129,12 +129,12 @@ public class ArduinoSub extends SubsystemBase {
     byte receiveBuffer[] = new byte[Constants.Arduino.kBufferSize];
 
     int bytesInBuffer = m_SerialPort.getBytesReceived();
-    SmartDashboard.putBoolean("Got Bytes", false);
+    SmartDashboard.putBoolean("Arduino", false);
     if(bytesInBuffer < Constants.Arduino.kReadMessageLength) {
       //wait for complete message
       return;
     }
-    SmartDashboard.putBoolean("Got Bytes", true);
+    SmartDashboard.putBoolean("Arduino", true);
     receiveBuffer = m_SerialPort.read(bytesInBuffer);
 
     int bufferIndex = 0;
@@ -142,9 +142,9 @@ public class ArduinoSub extends SubsystemBase {
     byte version = 0;
 
     // Checksum check
-    SmartDashboard.putBoolean("Valid Arduino Data", false);
-    SmartDashboard.putBoolean("Not enough bytes", false);
-    SmartDashboard.putBoolean("Found header", false);
+    //   SmartDashboard.putBoolean("Valid Arduino Data", false);
+    //   SmartDashboard.putBoolean("Not enough bytes", false);
+    //   SmartDashboard.putBoolean("Found header", false);
     while(bufferIndex < receiveBuffer.length) {
 
       // Loop until header found
@@ -153,10 +153,10 @@ public class ArduinoSub extends SubsystemBase {
         continue;
       }
       // Start at the header
-      SmartDashboard.putBoolean("Found header", true);
+      // SmartDashboard.putBoolean("Found header", true);
       // Don't go over max amount of bytes recieved
       if((bytesInBuffer - (bufferIndex - 1)) < Constants.Arduino.kReadMessageLength) {
-        SmartDashboard.putBoolean("Not enough bytes", true);
+        // SmartDashboard.putBoolean("Not enough bytes", true);
         break;
       }
 
@@ -179,7 +179,7 @@ public class ArduinoSub extends SubsystemBase {
       bufferIndex++;
       // Parse sensor data
       // John C - bufferIndex should be pointing at the data
-      SmartDashboard.putBoolean("Valid Arduino Data", true);
+      // SmartDashboard.putBoolean("Valid Arduino Data", true);
       for(int s = 0; s < 8; s++) {
         // John C : need to convert signed byte to unsigned values before doing the math!!!
 
