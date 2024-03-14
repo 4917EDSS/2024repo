@@ -21,7 +21,7 @@ public class ClimbSetHeightCmd extends Command {
 
   private boolean m_leftMotorDone = false;
   private boolean m_rightMotorDone = false;
-  private boolean m_climbingUp = false;
+  private boolean m_goingUp = false;
 
 
   /** Creates a new Climb. */
@@ -42,8 +42,8 @@ public class ClimbSetHeightCmd extends Command {
     m_logger.fine("ClimbSetHeightCmd - Init");
     m_leftMotorDone = false;
     m_rightMotorDone = false;
-    m_climbingUp = m_climbSub.getLeftHeight() - m_targetHeight < 0;
-    if(!m_climbingUp) {
+    m_goingUp = m_climbSub.getLeftHeight() < m_targetHeight;
+    if(!m_goingUp) {
       m_power = -m_power;
     }
   }
@@ -127,9 +127,7 @@ public class ClimbSetHeightCmd extends Command {
     // }
 
     double angleAdjustment = 0;
-    if(m_climbingUp) {
-      angleAdjustment = m_drivetrainSub.getRollRotationDegrees() / 10;
-    }
+
 
     m_climbSub.setClimbPowerRight(m_power + angleAdjustment);
     m_climbSub.setClimbPowerLeft(m_power - angleAdjustment);
@@ -150,18 +148,18 @@ public class ClimbSetHeightCmd extends Command {
   }
 
   private boolean isLeftAtTargetHeight() {
-    if(m_climbingUp) {
-      return m_climbSub.getLeftHeight() - m_targetHeight < 0;
+    if(m_goingUp) {
+      return m_climbSub.getLeftHeight() >= m_targetHeight;
     } else {
-      return m_climbSub.getLeftHeight() - m_targetHeight > 0;
+      return m_climbSub.getLeftHeight() <= m_targetHeight;
     }
   }
 
   private boolean isRightAtTargetHeight() {
-    if(m_climbingUp) {
-      return m_climbSub.getLeftHeight() - m_targetHeight < 0;
+    if(m_goingUp) {
+      return m_climbSub.getRightHeight() >= m_targetHeight;
     } else {
-      return m_climbSub.getLeftHeight() - m_targetHeight > 0;
+      return m_climbSub.getRightHeight() <= m_targetHeight;
     }
   }
 }

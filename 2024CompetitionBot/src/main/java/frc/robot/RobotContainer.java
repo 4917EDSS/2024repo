@@ -119,9 +119,7 @@ public class RobotContainer {
     // ======================================== Driver controller bindings ========================================
 
     // This basically takes over the robot right now
-    m_driverController.square()
-        .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
-            m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
+    // m_driverController.square()
 
     //m_driverController.cross()
 
@@ -133,7 +131,9 @@ public class RobotContainer {
 
     //m_driverController.R1()
 
-    //m_driverController.L2()
+    m_driverController.L2()
+        .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
+            m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
 
     m_driverController.R2()
         .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
@@ -195,10 +195,10 @@ public class RobotContainer {
     m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
-        new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
+        new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
     m_operatorController.touchpad().whileTrue(
-        new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
+        new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
     m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
 
