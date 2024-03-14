@@ -114,6 +114,16 @@ public class ArduinoSub extends SubsystemBase {
     return false;
   }
 
+  public boolean isAnySansorTripped() {
+    for(int i = 0; i <= 8; i++) {
+      boolean isIt = isSensorTripped(i);
+      if(isIt) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void RS232Listen() {
 
     byte receiveBuffer[] = new byte[Constants.Arduino.kBufferSize];
