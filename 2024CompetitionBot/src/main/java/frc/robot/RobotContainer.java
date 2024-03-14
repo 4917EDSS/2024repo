@@ -92,13 +92,13 @@ public class RobotContainer {
         new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.5, m_shooterSub, m_flywheelSub, m_feederSub,
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.25, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 2, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.5, m_shooterSub, m_flywheelSub, m_feederSub,
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.25, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",
         new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));

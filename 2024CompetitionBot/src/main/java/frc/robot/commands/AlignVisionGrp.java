@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ArduinoSub;
@@ -26,6 +28,8 @@ public class AlignVisionGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        new ConditionalCommand(new ShooterPivotCmd(10, shooterSub), new InstantCommand(),
+            () -> shooterSub.getPivotAngle() < 9),
         new ExpelNoteABitCmd(feederSub, arduinoSub),
         new AlignVisionCmd(drivetrainSub, visionSub, shooterSub, feederSub, flywheelSub, ledSub,
             driverController, operatorController),
