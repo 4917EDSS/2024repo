@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.IntakeSub;
@@ -25,7 +24,7 @@ public class IntakeNoteGrp extends SequentialCommandGroup {
         new ShooterPivotCmd(0, shooterSub),
         new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub, ledSub),
         new ShooterPivotCmd(10.0, shooterSub),
-        new ExpellNoteABitCmd(feederSub, arduinoSub),
+        new ExpelNoteABitCmd(feederSub, arduinoSub),
         new InstantCommand(() -> m_ledSub.FlashOrange()));
 
   }

@@ -22,7 +22,7 @@ public class ShooterPrepGrp extends ParallelCommandGroup {
     addCommands(
         new ShooterFlywheelCmd(flywheelSub),
         new ShooterPivotCmd(pivotPosition, shooterSub),
-        new ExpellNoteABitCmd(feederSub, arduinoSub));
+        new ExpelNoteABitCmd(feederSub, arduinoSub));
 
   }
 }

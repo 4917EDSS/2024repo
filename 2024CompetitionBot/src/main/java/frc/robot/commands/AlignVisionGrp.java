@@ -26,7 +26,7 @@ public class AlignVisionGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ExpellNoteABitCmd(feederSub, arduinoSub),
+        new ExpelNoteABitCmd(feederSub, arduinoSub),
         new AlignVisionCmd(drivetrainSub, visionSub, shooterSub, feederSub, flywheelSub, ledSub,
             driverController, operatorController),
         new ShooterShootCmd(flywheelSub, feederSub, arduinoSub, shooterSub, ledSub),

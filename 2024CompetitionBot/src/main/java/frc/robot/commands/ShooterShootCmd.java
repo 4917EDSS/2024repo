@@ -23,7 +23,6 @@ public class ShooterShootCmd extends Command {
   private final FlywheelSub m_flywheelSub;
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
-  private final ShooterSub m_shooterSub;
   private final LedSub m_ledSub;
   //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
   private Instant start;
@@ -35,7 +34,6 @@ public class ShooterShootCmd extends Command {
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
-    m_shooterSub = shooterSub;
     m_ledSub = ledSub;
 
     addRequirements(flywheelSub, feederSub, shooterSub, ledSub);
