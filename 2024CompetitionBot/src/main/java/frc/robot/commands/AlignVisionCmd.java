@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.logging.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +29,8 @@ public class AlignVisionCmd extends Command {
   private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
+
+  private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
 
   private static final double kRotationTolerance = 1.0;
 
@@ -101,6 +104,9 @@ public class AlignVisionCmd extends Command {
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
+      m_logger.fine("Shot with target pivot angle: " + pivotAngle);
+      m_logger.fine("Actual pivot angle: " + m_shooterSub.getPivotAngle());
+      m_logger.fine("Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
     } else if(hasTarget) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
     } else {

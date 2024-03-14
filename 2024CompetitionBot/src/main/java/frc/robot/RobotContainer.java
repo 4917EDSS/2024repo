@@ -87,9 +87,9 @@ public class RobotContainer {
 
     // TODO: Add autonomous commands here
     NamedCommands.registerCommand("IntakeNoteGrp",
-        new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
+        new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
     NamedCommands.registerCommand("FastIntakeNoteGrp",
-        new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
+        new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
     NamedCommands.registerCommand("FastShooterPrepGrpTouchingSpeaker",
@@ -176,7 +176,7 @@ public class RobotContainer {
             m_arduinoSub));
 
     m_operatorController.circle()
-        .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub));
+        .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub, m_flywheelSub));
 
     m_operatorController.triangle()
         .onTrue(
@@ -188,7 +188,8 @@ public class RobotContainer {
     m_operatorController.R1()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 1.0, m_drivetrainSub, m_climbSub));
 
-    m_operatorController.L2().onTrue(new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
+    m_operatorController.L2()
+        .onTrue(new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
 
     m_operatorController.R2()
         .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));

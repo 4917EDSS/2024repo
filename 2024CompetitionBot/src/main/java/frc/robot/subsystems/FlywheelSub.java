@@ -87,6 +87,16 @@ public class FlywheelSub extends SubsystemBase {
     }
   }
 
+  public void brakeFlywheels() {
+    m_flywheelR.setIdleMode(IdleMode.kBrake);
+    m_flywheelL.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void unbrakeFlywheels() {
+    m_flywheelR.setIdleMode(IdleMode.kCoast);
+    m_flywheelL.setIdleMode(IdleMode.kCoast);
+  }
+
   public void setFlywheelVoltage(double voltage) {
     m_flywheelL.setVoltage(voltage);
     m_flywheelR.setVoltage(voltage);

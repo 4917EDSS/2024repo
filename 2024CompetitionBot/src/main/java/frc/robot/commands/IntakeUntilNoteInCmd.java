@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
+import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
@@ -22,15 +23,18 @@ public class IntakeUntilNoteInCmd extends Command {
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
   private final LedSub m_LedSub;
+  private final FlywheelSub m_flywheelSub;
 
   /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeUntilNoteInCmd(IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
+  public IntakeUntilNoteInCmd(IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub,
+      FlywheelSub flywheelSub) {
     m_intakeSub = intakeSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
     m_LedSub = ledSub;
+    m_flywheelSub = flywheelSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSub, feederSub, ledSub);
+    addRequirements(intakeSub, feederSub, ledSub, flywheelSub);
   }
 
   // Called when the command is initially scheduled.
@@ -41,6 +45,7 @@ public class IntakeUntilNoteInCmd extends Command {
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
     m_LedSub.setZoneColour(LedZones.ALL, LedColour.RED);
+    m_flywheelSub.brakeFlywheels();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,6 +68,7 @@ public class IntakeUntilNoteInCmd extends Command {
     // Make sure we're running the intake rollers in reverse and the feed rollers are off
     m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     m_feederSub.spinBothFeeders(0, 0);
+    m_flywheelSub.unbrakeFlywheels();
   }
 
   // Returns true when the command should end.
