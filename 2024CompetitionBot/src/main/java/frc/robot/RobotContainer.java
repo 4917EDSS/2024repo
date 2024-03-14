@@ -106,13 +106,13 @@ public class RobotContainer {
         new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3, m_shooterSub, m_flywheelSub, m_feederSub,
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.25, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 2, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3, m_shooterSub, m_flywheelSub, m_feederSub,
+        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.25, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",
         new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
@@ -289,17 +289,21 @@ public class RobotContainer {
     int FR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0);
     int BL = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBL()) / Math.PI * 255.0);
     int BR = (int) (Math.abs(m_drivetrainSub.getTurningEncoderBR()) / Math.PI * 255.0);
-    
-        
+
+
     m_ledSub.setZoneRGB(LedZones.DIAG_PIVOT_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 50 * 255.0), 0); //
 
-    m_ledSub.setZoneRGB(LedZones.DIAG_FL_STEERING_ENC, FL % 2 == 0 ? 255 : 0,  FL % 3 ==  0? 255 :0, FL % 5 == 0 ? 255 : 0); //
+    m_ledSub.setZoneRGB(LedZones.DIAG_FL_STEERING_ENC, FL % 2 == 0 ? 255 : 0, FL % 3 == 0 ? 255 : 0,
+        FL % 5 == 0 ? 255 : 0); //
 
-    m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC, FR % 2 == 0 ? 255 : 0,  FR % 3 ==  0? 255 :0, FR % 5 == 0 ? 255 : 0); //
+    m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC, FR % 2 == 0 ? 255 : 0, FR % 3 == 0 ? 255 : 0,
+        FR % 5 == 0 ? 255 : 0); //
 
-    m_ledSub.setZoneRGB(LedZones.DIAG_BL_STEERING_ENC, BL % 2 == 0 ? 255 : 0,  BL % 3 ==  0? 255 :0, BL % 5 == 0 ? 255 : 0); //
+    m_ledSub.setZoneRGB(LedZones.DIAG_BL_STEERING_ENC, BL % 2 == 0 ? 255 : 0, BL % 3 == 0 ? 255 : 0,
+        BL % 5 == 0 ? 255 : 0); //
 
-    m_ledSub.setZoneRGB(LedZones.DIAG_BR_STEERING_ENC, BR % 2 == 0 ? 255 : 0,  BR % 3 ==  0? 255 :0, BR % 5 == 0 ? 255 : 0); //
+    m_ledSub.setZoneRGB(LedZones.DIAG_BR_STEERING_ENC, BR % 2 == 0 ? 255 : 0, BR % 3 == 0 ? 255 : 0,
+        BR % 5 == 0 ? 255 : 0); //
 
     // m_ledSub.setZoneRGB(LedZones.DIAG_FR_STEERING_ENC,
     //     (int) (Math.abs(m_drivetrainSub.getTurningEncoderFR()) / Math.PI * 255.0), 0, 0); //

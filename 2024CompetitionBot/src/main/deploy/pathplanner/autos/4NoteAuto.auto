@@ -83,15 +83,28 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Drive Forward Pick up Note"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "IntakeNoteGrp"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 2.0
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Drive Forward Pick up Note"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
