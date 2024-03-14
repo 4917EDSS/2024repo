@@ -206,7 +206,7 @@ public final class Constants {
     // Heights in meters
     public static final double kHeightHookLowered = 0.00; // Retracted hooks height
     public static final double kHeightTallHookRaised = 0.20; // Minimum hook height, climb in centre
-    public static final double kHeightShortHookRaised = 0.55; // Maximum hook height, short trap hooks or tall hooks with a side climb
+    public static final double kHeightShortHookRaised = 0.66; // Maximum hook height, short trap hooks or tall hooks with a side climb
     public static final double kHeightGrabChain = 0.38; // For trap shot when needing to drive back with chain
     public static final double kHeightTrap = 0.00; // For trap shot when expelling note
 
