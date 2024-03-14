@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6859860992449257,
+      "y": 4.393839333133212
+    },
+    "rotation": 118.23744553816728
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "FastShooterPrepGrpTouchingSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterShootCmd"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Leave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
