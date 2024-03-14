@@ -66,7 +66,8 @@ public class IntakeUntilNoteInCmd extends Command {
     m_logger.fine("IntakeUntilNoteInCmd - End" + (interrupted ? " (interrupted)" : ""));
 
     // Make sure we're running the intake rollers in reverse and the feed rollers are off
-    m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
+    m_intakeSub.setIntakeMotors(0); // Possible reason why the notes were occasionally getting stuck.
+    //m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     m_feederSub.spinBothFeeders(0, 0);
     m_flywheelSub.unbrakeFlywheels();
   }
