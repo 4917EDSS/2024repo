@@ -135,7 +135,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetFL = 1.850;
       public static final double kAbsoluteEncoderOffsetFR = -2.760;
       public static final double kAbsoluteEncoderOffsetBL = 0.980;
-      public static final double kAbsoluteEncoderOffsetBR = -1.792;
+      public static final double kAbsoluteEncoderOffsetBR = -0.480;
       public static final boolean kInvertLowerFeeder = true;
       public static final double kGearRatio = 6.52;
     }
