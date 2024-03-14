@@ -104,9 +104,9 @@ public class AlignVisionCmd extends Command {
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
-      m_logger.fine("Target pivot angle: " + pivotAngle);
-      m_logger.fine("Pivot angle: " + m_shooterSub.getPivotAngle());
-      m_logger.fine("flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
+      m_logger.fine("Shot with target pivot angle: " + pivotAngle);
+      m_logger.fine("Actual pivot angle: " + m_shooterSub.getPivotAngle());
+      m_logger.fine("Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
     } else if(hasTarget) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
     } else {
