@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,8 +16,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionGrp;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
-import frc.robot.commands.DrivePathCmd;
-import frc.robot.commands.DriveToRelativePositionCmd;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
@@ -29,7 +25,6 @@ import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.ShooterWithJoystickCmd;
-import frc.robot.commands.TestLedsCmd;
 import frc.robot.commands.UpIntakeGrp;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
@@ -130,17 +125,18 @@ public class RobotContainer {
     m_driverController.square()
         .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
             m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
+
     //m_driverController.cross()
 
     //m_driverController.circle()
 
     //m_driverController.triangle()
 
-    m_driverController.L1().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 255, 0, 0))); // TODO: Remove this test code
+    //m_driverController.L1()
 
-    m_driverController.R1().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 255, 0))); // TODO: Remove this test code
+    //m_driverController.R1()
 
-    m_driverController.L2().onTrue(new InstantCommand(() -> m_arduinoSub.updateLED(9, 0, 0, 255))); // TODO: Remove this test code
+    //m_driverController.L2()
 
     m_driverController.R2()
         .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
@@ -149,20 +145,18 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
 
     //m_driverController.options()
+
     m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
 
-    m_driverController.touchpad().onTrue(new TestLedsCmd(m_ledSub, LedColour.BLUE)); // TODO: Remove this test code
+    //m_driverController.touchpad()
 
-    m_driverController.povRight().onTrue(new DrivePathCmd(m_drivetrainSub)); // TODO: Remove this test code
+    //m_driverController.povUp()
 
-    m_driverController.povUp()
-        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(90.0)), m_drivetrainSub)); // TODO: Remove this test code
+    //m_driverController.povRight()
 
-    m_driverController.povDown()
-        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0)), m_drivetrainSub)); // TODO: Remove this test code
+    //m_driverController.povDown()
 
-    m_driverController.povLeft()
-        .onTrue(new DriveToRelativePositionCmd(new Pose2d(0.0, -1.0, Rotation2d.fromDegrees(0.0)), m_drivetrainSub)); // TODO: Remove this test code
+    //m_driverController.povLeft()
 
     m_driverController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
@@ -201,8 +195,7 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
 
-    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));//ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub,
-    //m_flywheelSub));
+    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
@@ -217,7 +210,8 @@ public class RobotContainer {
     m_operatorController.povDown()
         .onTrue(new ShooterPivotCmd(Constants.Shooter.kAnglePreAmp, m_shooterSub));
 
-    m_operatorController.povLeft().onTrue(new ShooterPivotCmd(Constants.Shooter.kAngleSourceIntake, m_shooterSub));
+    m_operatorController.povLeft().onTrue(
+        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
