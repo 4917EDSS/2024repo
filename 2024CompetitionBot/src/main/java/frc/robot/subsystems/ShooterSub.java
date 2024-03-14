@@ -39,7 +39,7 @@ public class ShooterSub extends SubsystemBase {
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Shooter");
-  private final GenericEntry m_shooterPivotPosition, m_shooterPivotVelocity, m_shooterPivotPower;
+  private final GenericEntry m_shooterPivotVelocity, m_shooterPivotPower;
 
   // -13 degrees to 2 degrees
   //private static final int kMinLimelightAngle = -13;
@@ -61,7 +61,6 @@ public class ShooterSub extends SubsystemBase {
   // @formatter:on
 
   public ShooterSub() {
-    m_shooterPivotPosition = m_shuffleboardTab.add("Pivot Pos", 0).getEntry();
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
 
@@ -140,15 +139,13 @@ public class ShooterSub extends SubsystemBase {
   }
 
   private void updateShuffleBoard() {
-    m_shooterPivotPosition.setDouble(getPivotAngle());
     m_shooterPivotVelocity.setDouble(getPivotVelocity());
     m_shooterPivotPower.setDouble(m_pivot.get());
-
 
     // We want this easily accessible to the drivers so put on SmartDashboard tab
     SmartDashboard.putBoolean("Pivot Fwd Limit", isPivotAtForwardLimit());
     SmartDashboard.putBoolean("Pivot Bck Limit", isPivotAtReverseLimit());
-
+    SmartDashboard.putNumber("Pivot Angle", getPivotAngle());
   }
 
   public void movePivot(double power) {

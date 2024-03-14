@@ -62,7 +62,7 @@ public class RobotContainer {
 
   // Disables large amount of prints from DrivetrainSub, ShooterSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
-  public static boolean disableShuffleboardPrint = false;
+  public static boolean disableShuffleboardPrint = true;
 
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
@@ -107,9 +107,6 @@ public class RobotContainer {
         new ShooterFlywheelCmd(m_flywheelSub));
     NamedCommands.registerCommand("OffsetYaw45",
         new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
-
-    // Put manual robot initialize button on SmartDashboard
-    SmartDashboard.putData("RobotInit", new InstantCommand(() -> initSubsystems()));
 
     autoChooserSetup();
   }
