@@ -88,16 +88,16 @@ public class AlignVisionCmd extends Command {
       double feederPower =
           Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
       m_feederSub.spinBothFeeders(feederPower, 0.5 * feederPower);
-
+      if(m_lookatPID.atSetpoint()) {
+        rotationalPower = 0.0;
+      }
 
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
       m_flywheelSub.disableFlywheel();
     }
 
-    if(m_lookatPID.atSetpoint()) {
-      rotationalPower = 0.0;
-    }
+
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
