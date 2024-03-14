@@ -15,12 +15,13 @@ public class ClimbSetHeightCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ClimbSetHeightCmd.class.getName());
 
   private final double m_targetHeight;
-  private final double m_power;
+  private double m_power;
   private final ClimbSub m_climbSub;
   private final DrivetrainSub m_drivetrainSub;
 
   private boolean m_leftMotorDone = false;
   private boolean m_rightMotorDone = false;
+  private boolean m_climbingUp = false;
 
 
   /** Creates a new Climb. */
@@ -41,85 +42,97 @@ public class ClimbSetHeightCmd extends Command {
     m_logger.fine("ClimbSetHeightCmd - Init");
     m_leftMotorDone = false;
     m_rightMotorDone = false;
+    m_climbingUp = m_climbSub.getLeftHeight() - m_targetHeight < 0;
+    if(!m_climbingUp) {
+      m_power = -m_power;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentLeftHeight = m_climbSub.getLeftHeight();
-    double currentRightHeight = m_climbSub.getRightHeight();
-    int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
-    int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
+    // double currentLeftHeight = m_climbSub.getLeftHeight();
+    // double currentRightHeight = m_climbSub.getRightHeight();
+    // int leftDirection = (m_targetHeight > currentLeftHeight) ? 1 : -1;
+    // int rightDirection = (m_targetHeight > currentRightHeight) ? 1 : -1;
 
-    boolean moveLeft = true;
-    boolean moveRight = true;
-    boolean isLeftAtTargetHeight = isLeftAtTargetHeight();
-    boolean isRightAtTargetHeight = isRightAtTargetHeight();
-    double roll_angle = m_drivetrainSub.getRollRotationDegrees();
+    // boolean moveLeft = true;
+    // boolean moveRight = true;
+    // boolean isLeftAtTargetHeight = isLeftAtTargetHeight();
+    // boolean isRightAtTargetHeight = isRightAtTargetHeight();
+    // double roll_angle = m_drivetrainSub.getRollRotationDegrees();
 
-    if(isLeftAtTargetHeight) {
-      m_leftMotorDone = true;
+    // if(isLeftAtTargetHeight) {
+    //   m_leftMotorDone = true;
+    // }
+
+    // if(isRightAtTargetHeight) {
+    //   m_rightMotorDone = true;
+    // }
+
+    // // Is left at height or right at height
+    // if(isLeftAtTargetHeight || isRightAtTargetHeight) {
+    //   // If left at height
+    //   if(isLeftAtTargetHeight) {
+    //     // Stop left
+    //     moveLeft = false;
+    //   }
+    //   // If right at height
+    //   if(isRightAtTargetHeight) {
+    //     // Stop right
+    //     moveRight = false;
+    //   }
+    // } else if(roll_angle < Constants.Climb.kMinRollAngle) {
+    //   // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
+    //   // if direction is positive
+    //   if(leftDirection > 0) {
+    //     // Stop right motor
+    //     moveRight = false;
+    //   } else {
+    //     // else (direction is negative)
+    //     // Stop the left motor
+    //     moveLeft = false;
+    //   }
+    //   // else if roll angle > maxRoll
+    // } else if(roll_angle > Constants.Climb.kMaxRollAngle) {
+    //   // if direction is positive
+    //   if(rightDirection > 0) {
+    //     // Stop left motor
+    //     moveLeft = false;
+    //   } else {
+    //     // else
+    //     // Stop right motor
+    //     moveRight = false;
+    //   }
+    // }
+
+    // if(moveLeft && !m_leftMotorDone) {
+    //   m_climbSub.setClimbPowerLeft(m_power * leftDirection);
+
+    //   //m_logger.fine(" move left " + moveLeft);
+    //   //m_logger.fine("left motor done " + m_leftMotorDone);
+
+    // } else {
+    //   m_climbSub.setClimbPowerLeft(0.0);
+
+
+    // }
+    // if(moveRight && !m_rightMotorDone) {
+    //   m_climbSub.setClimbPowerRight(m_power * rightDirection);
+    //   //m_logger.fine(" move right " + moveRight);
+    //   // m_logger.fine("right motor done " + m_rightMotorDone);
+
+    // } else {
+    //   m_climbSub.setClimbPowerRight(0.0);
+    // }
+
+    double angleAdjustment = 0;
+    if(m_climbingUp) {
+      angleAdjustment = m_drivetrainSub.getRollRotationDegrees() / 10;
     }
 
-    if(isRightAtTargetHeight) {
-      m_rightMotorDone = true;
-    }
-
-    // Is left at height or right at height
-    if(isLeftAtTargetHeight || isRightAtTargetHeight) {
-      // If left at height
-      if(isLeftAtTargetHeight) {
-        // Stop left
-        moveLeft = false;
-      }
-      // If right at height
-      if(isRightAtTargetHeight) {
-        // Stop right
-        moveRight = false;
-      }
-    } else if(roll_angle < Constants.Climb.kMinRollAngle) {
-      // else if roll angle < minRoll  (i.e. tilted to the right because right tilt is negative)
-      // if direction is positive
-      if(leftDirection > 0) {
-        // Stop right motor
-        moveRight = false;
-      } else {
-        // else (direction is negative)
-        // Stop the left motor
-        moveLeft = false;
-      }
-      // else if roll angle > maxRoll
-    } else if(roll_angle > Constants.Climb.kMaxRollAngle) {
-      // if direction is positive
-      if(rightDirection > 0) {
-        // Stop left motor
-        moveLeft = false;
-      } else {
-        // else
-        // Stop right motor
-        moveRight = false;
-      }
-    }
-
-    if(moveLeft && !m_leftMotorDone) {
-      m_climbSub.setClimbPowerLeft(m_power * leftDirection);
-
-      //m_logger.fine(" move left " + moveLeft);
-      //m_logger.fine("left motor done " + m_leftMotorDone);
-
-    } else {
-      m_climbSub.setClimbPowerLeft(0.0);
-
-
-    }
-    if(moveRight && !m_rightMotorDone) {
-      m_climbSub.setClimbPowerRight(m_power * rightDirection);
-      //m_logger.fine(" move right " + moveRight);
-      // m_logger.fine("right motor done " + m_rightMotorDone);
-
-    } else {
-      m_climbSub.setClimbPowerRight(0.0);
-    }
+    m_climbSub.setClimbPowerRight(m_power + angleAdjustment);
+    m_climbSub.setClimbPowerLeft(m_power - angleAdjustment);
   }
 
   // Called once the command ends or is interrupted.
@@ -133,15 +146,23 @@ public class ClimbSetHeightCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (isLeftAtTargetHeight() && isRightAtTargetHeight());
+    return (isLeftAtTargetHeight() || isRightAtTargetHeight());
   }
 
   private boolean isLeftAtTargetHeight() {
-    return (Math.abs(m_climbSub.getLeftHeight() - m_targetHeight) < Constants.Climb.kHeightTolerence);
+    if(m_climbingUp) {
+      return m_climbSub.getLeftHeight() - m_targetHeight < 0;
+    } else {
+      return m_climbSub.getLeftHeight() - m_targetHeight > 0;
+    }
   }
 
   private boolean isRightAtTargetHeight() {
-    return (Math.abs(m_climbSub.getRightHeight() - m_targetHeight) < Constants.Climb.kHeightTolerence);
+    if(m_climbingUp) {
+      return m_climbSub.getLeftHeight() - m_targetHeight < 0;
+    } else {
+      return m_climbSub.getLeftHeight() - m_targetHeight > 0;
+    }
   }
 }
 

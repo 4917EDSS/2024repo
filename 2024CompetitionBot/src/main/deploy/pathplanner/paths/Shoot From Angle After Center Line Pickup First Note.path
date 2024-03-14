@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.018380400397163,
-        "y": 0.7836146581384069
+        "x": 7.449326898653797,
+        "y": 1.0075045604636672
       },
       "isLocked": false,
       "linkedName": "First Note"
@@ -20,8 +20,8 @@
         "y": 3.3023760592975733
       },
       "prevControl": {
-        "x": 2.7476389498233544,
-        "y": 2.145611563950401
+        "x": 3.2513912300551873,
+        "y": 2.2109127854619346
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Steal And Score Auto",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

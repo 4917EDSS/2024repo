@@ -121,8 +121,8 @@ public class FlywheelSub extends SubsystemBase {
 
   private void updateShuffleBoard() {
     m_shooterFlywheelVelocityL.setDouble(getFlywheelVelocityL());
-    m_shooterFlywheelVelocityR.setDouble(getFlywheelVelocityR());
     if(!RobotContainer.disableShuffleboardPrint) {
+      m_shooterFlywheelVelocityR.setDouble(getFlywheelVelocityR());
       m_shooterflywheelPowerL.setDouble(m_flywheelL.get());
       m_shooterflywheelPowerR.setDouble(m_flywheelR.get());
     }
