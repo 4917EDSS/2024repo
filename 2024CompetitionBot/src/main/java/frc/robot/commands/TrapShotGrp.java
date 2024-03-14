@@ -9,8 +9,8 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.ShooterSub;
 
-public class TrapShotCmd extends SequentialCommandGroup {
-  public TrapShotCmd(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,
+public class TrapShotGrp extends SequentialCommandGroup {
+  public TrapShotGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,
       DriveFieldRelativeCmd driveFieldRelativeCmd) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
