@@ -111,6 +111,8 @@ public class RobotContainer {
         new ShooterFlywheelCmd(m_flywheelSub));
     NamedCommands.registerCommand("OffsetYaw45",
         new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
+    NamedCommands.registerCommand("VisionAlignCmdGrp", new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub,
+        m_feederSub, m_flywheelSub, m_ledSub, m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
 
     autoChooserSetup();
   }

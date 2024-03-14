@@ -24,9 +24,34 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Leave"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Leave"
+            "pathName": "Shoot From Angle After Center Line Pickup First Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlignCmdGrp"
           }
         }
       ]
