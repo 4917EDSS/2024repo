@@ -16,6 +16,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionGrp;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
+import frc.robot.commands.FastIntakeNoteGrp;
+import frc.robot.commands.FastShooterPrepGrp;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
@@ -86,19 +88,21 @@ public class RobotContainer {
     // TODO: Add autonomous commands here
     NamedCommands.registerCommand("IntakeNoteGrp",
         new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
+    NamedCommands.registerCommand("FastIntakeNoteGrp",
+        new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
-    NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
-        new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
+    NamedCommands.registerCommand("FastShooterPrepGrpTouchingSpeaker",
+        new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.95, m_shooterSub, m_flywheelSub, m_feederSub,
+    NamedCommands.registerCommand("FastShooterPrepGrpFromStage",
+        new FastShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.95, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.9, m_shooterSub, m_flywheelSub, m_feederSub,
+    NamedCommands.registerCommand("FastShooterPrepGrpFromSpeaker",
+        new FastShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.9, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.7, m_shooterSub, m_flywheelSub, m_feederSub,
+    NamedCommands.registerCommand("FastShooterPrepGrpFromAmp",
+        new FastShooterPrepGrp(Constants.Shooter.kAngleAutoLine + 3.7, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",
         new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));

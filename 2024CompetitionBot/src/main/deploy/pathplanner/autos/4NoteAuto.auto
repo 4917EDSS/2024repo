@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPrepGrpTouchingSpeaker"
+                  "name": "FastShooterPrepGrpTouchingSpeaker"
                 }
               },
               {
@@ -40,7 +40,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "IntakeNoteGrp"
+                        "name": "FastIntakeNoteGrp"
                       }
                     }
                   ]
@@ -63,7 +63,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "ShooterPrepGrpFromStage"
+                              "name": "FastShooterPrepGrpFromStage"
                             }
                           }
                         ]
@@ -85,7 +85,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "IntakeNoteGrp"
+                        "name": "FastIntakeNoteGrp"
                       }
                     },
                     {
@@ -95,7 +95,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 1.0
+                              "waitTime": 0.5
                             }
                           },
                           {
@@ -117,7 +117,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "ShooterPrepGrpFromSpeaker"
+                        "name": "FastShooterPrepGrpFromSpeaker"
                       }
                     },
                     {
@@ -142,7 +142,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "IntakeNoteGrp"
+                        "name": "FastIntakeNoteGrp"
                       }
                     }
                   ]
@@ -155,7 +155,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "ShooterPrepGrpFromAmp"
+                        "name": "FastShooterPrepGrpFromAmp"
                       }
                     },
                     {
