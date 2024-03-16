@@ -10,18 +10,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionGrp;
+import frc.robot.commands.AmpShotCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
+import frc.robot.commands.ExpelAmpNoteCmd;
 import frc.robot.commands.FastIntakeNoteGrp;
 import frc.robot.commands.FastShooterPrepGrp;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
-import frc.robot.commands.ShooterAmpShotGrp;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
@@ -103,7 +105,7 @@ public class RobotContainer {
         new FastShooterPrepGrp(67, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",
-        new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
+        new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
@@ -127,7 +129,7 @@ public class RobotContainer {
     // This basically takes over the robot right now
     // m_driverController.square()
 
-    //m_driverController.cross()
+    // m_driverController.cross()
 
     //m_driverController.circle()
 
@@ -135,7 +137,7 @@ public class RobotContainer {
 
     //m_driverController.L1()
 
-    m_driverController.R1().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
+    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
 
     m_driverController.L2()
         .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
@@ -207,12 +209,13 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
+    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
 
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new ShooterPivotCmd(Constants.Shooter.kAnglePreAmp, m_shooterSub));
+        .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
+            new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
 
     m_operatorController.povLeft().onTrue(
         new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
