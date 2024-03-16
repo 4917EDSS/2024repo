@@ -92,16 +92,16 @@ public class RobotContainer {
         new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
-    NamedCommands.registerCommand("FastShooterPrepGrpTouchingSpeaker",
+    NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("FastShooterPrepGrpFromStage",
+    NamedCommands.registerCommand("ShooterPrepGrpFromStage",
         new FastShooterPrepGrp(66, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("FastShooterPrepGrpFromSpeaker",
+    NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new FastShooterPrepGrp(63, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
-    NamedCommands.registerCommand("FastShooterPrepGrpFromAmp",
+    NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
         new FastShooterPrepGrp(67, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",

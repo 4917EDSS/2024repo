@@ -70,6 +70,9 @@ public class IntakeUntilNoteInCmd extends Command {
     //m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     m_feederSub.spinBothFeeders(0, 0);
     m_flywheelSub.unbrakeFlywheels();
+    if(!interrupted) {
+      m_LedSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
+    }
   }
 
   // Returns true when the command should end.

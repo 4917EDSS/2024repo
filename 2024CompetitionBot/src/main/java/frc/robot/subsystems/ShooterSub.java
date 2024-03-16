@@ -60,6 +60,8 @@ public class ShooterSub extends SubsystemBase {
   private final double[] shooterAngles = {                68.0,  66.0,  63.8,  62.5,  61.2,  53.0, 48.7, 44.3, 39}; //
   // @formatter:on
 
+  private int m_hitLimitCounter = 0;
+
   public ShooterSub() {
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
@@ -103,8 +105,15 @@ public class ShooterSub extends SubsystemBase {
     if(m_areWeTryingToHold) {
       runPivotControl(false);
     }
-    if(isPivotAtReverseLimit() && getPivotAngle() > 0.75) {
+    if(isPivotAtReverseLimit() && Math.abs(getPivotAngle()) > 0.15) {
+      m_hitLimitCounter++;
+    } else {
+      m_hitLimitCounter = 0;
+    }
+
+    if(m_hitLimitCounter >= 5) {
       resetPivot();
+      m_hitLimitCounter = 0;
     }
 
     // This method will be called once per scheduler run
@@ -192,6 +201,7 @@ public class ShooterSub extends SubsystemBase {
 
   public void resetPivot() {
     m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+    m_logger.fine("Pivot Reset");
   }
 
 
