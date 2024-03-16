@@ -60,6 +60,6 @@ public class ShooterAmpShotCmd extends Command {
     }
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 3.0;
+    return timeElapsed.toMillis() > 3000;
   }
 }

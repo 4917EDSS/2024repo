@@ -119,7 +119,9 @@ public class AlignVisionCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_drivetrainSub.drive(0.0, 0.0, 0.0, 0.02);
-    m_flywheelSub.disableFlywheel();
+    if(interrupted) {
+      m_flywheelSub.disableFlywheel();
+    }
     m_ledSub.setZoneColour(LedZones.ALL, LedColour.ORANGE);
   }
 

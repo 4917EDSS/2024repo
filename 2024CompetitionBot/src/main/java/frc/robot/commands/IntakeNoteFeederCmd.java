@@ -44,6 +44,6 @@ public class IntakeNoteFeederCmd extends Command {
   public boolean isFinished() {
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 0.25;
+    return timeElapsed.toMillis() > 250;
   }
 }
