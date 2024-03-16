@@ -27,6 +27,8 @@ public class Robot extends TimedRobot {
 
   private boolean m_isInitialized = false;
 
+  private boolean m_needsPostAutoInit = false;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -95,8 +97,7 @@ public class Robot extends TimedRobot {
     if(m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-
+    m_needsPostAutoInit = true;
   }
 
   /** This function is called periodically during autonomous. */
@@ -114,10 +115,13 @@ public class Robot extends TimedRobot {
     }
 
     // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
-    // TODO Restore this for competition
     if(!m_isInitialized) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
+    }
+    if(m_needsPostAutoInit) {
+      m_robotContainer.postAutoInit();
+      m_needsPostAutoInit = false;
     }
   }
 

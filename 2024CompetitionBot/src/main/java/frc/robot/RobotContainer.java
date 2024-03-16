@@ -356,5 +356,9 @@ public class RobotContainer {
     m_arduinoSub.init();
     m_powerSub.init();
   }
+
+  public void postAutoInit() {
+    m_drivetrainSub.postAutoResetYaw();
+  }
 }
 

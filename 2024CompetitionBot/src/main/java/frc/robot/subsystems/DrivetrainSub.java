@@ -311,6 +311,22 @@ public class DrivetrainSub extends SubsystemBase {
     resetOdometry(); // Feed in rotation here too
   }
 
+  public void postAutoResetYaw() {
+    if(DriverStation.getAlliance().get() == Alliance.Red) {
+      double previousAngleAdjustment = m_gyro.getAngleAdjustment();
+      double angleAdjustment = previousAngleAdjustment;
+      if(previousAngleAdjustment <= 0) {
+        angleAdjustment += 180;
+      } else {
+        angleAdjustment -= 180;
+      }
+      m_logger.fine("Adj " + m_gyro.getAngleAdjustment() + " crrent " + angleAdjustment);
+      m_gyro.setAngleAdjustment(angleAdjustment);
+      m_gyro.reset();
+      resetOdometry();
+    }
+  }
+
   public float getRollRotationDegrees() {
     // proto type bot roll is navx pitch
     return m_gyro.getPitch();
