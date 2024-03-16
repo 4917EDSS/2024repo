@@ -94,7 +94,7 @@ public class RobotContainer {
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(66, m_shooterSub, m_flywheelSub, m_feederSub,
+        new FastShooterPrepGrp(64.5, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new FastShooterPrepGrp(63, m_shooterSub, m_flywheelSub, m_feederSub,
@@ -303,8 +303,10 @@ public class RobotContainer {
       m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.GREEN);
     } else if(m_shooterSub.getPivotAngle() < 10) {
       m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.BLUE);
-    } else if(m_shooterSub.getPivotAngle() < 270) {
+    } else if(m_shooterSub.getPivotAngle() < 40) {
       m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.YELLOW);
+    } else if(m_shooterSub.getPivotAngle() < 270) {
+      m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.ORANGE);
     } else {
       m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.RED);
     }
