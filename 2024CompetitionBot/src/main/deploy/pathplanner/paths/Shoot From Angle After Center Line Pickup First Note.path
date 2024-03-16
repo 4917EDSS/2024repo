@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 8.018380400397163,
-        "y": 0.7836146581384071
+        "y": 0.68
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.449326898653797,
-        "y": 1.0075045604636672
+        "y": 0.9038899023252601
       },
       "isLocked": false,
       "linkedName": "First Note"
