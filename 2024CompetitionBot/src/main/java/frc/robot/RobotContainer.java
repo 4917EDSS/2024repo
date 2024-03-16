@@ -299,7 +299,15 @@ public class RobotContainer {
       m_ledSub.setZoneColour(LedZones.DIAG_CLIMBR_LIMIT, LedColour.RED);
     }
 
-    m_ledSub.setZoneRGB(LedZones.DIAG_PIVOT_ENC, 0, (int) (m_shooterSub.getPivotAngle() / 50 * 255.0), 0); //
+    if(m_shooterSub.getPivotAngle() < 2) {
+      m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.GREEN);
+    } else if(m_shooterSub.getPivotAngle() < 10) {
+      m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.BLUE);
+    } else if(m_shooterSub.getPivotAngle() < 270) {
+      m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.YELLOW);
+    } else {
+      m_ledSub.setZoneColour(LedZones.DIAG_PIVOT_ENC, LedColour.RED);
+    }
 
     double FL = (m_drivetrainSub.getTurningEncoderFL());
     double FR = (m_drivetrainSub.getTurningEncoderFR());
