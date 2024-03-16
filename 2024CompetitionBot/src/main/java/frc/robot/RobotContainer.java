@@ -87,8 +87,6 @@ public class RobotContainer {
 
     // TODO: Add autonomous commands here
     NamedCommands.registerCommand("IntakeNoteGrp",
-        new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
-    NamedCommands.registerCommand("FastIntakeNoteGrp",
         new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
@@ -135,7 +133,7 @@ public class RobotContainer {
 
     //m_driverController.L1()
 
-    //m_driverController.R1()
+    m_driverController.R1().onTrue(new ShooterAmpShotGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub));
 
     m_driverController.L2()
         .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
