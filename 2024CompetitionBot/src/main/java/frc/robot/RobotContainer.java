@@ -98,6 +98,7 @@ public class RobotContainer {
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
         new FastShooterPrepGrp(61, m_shooterSub, m_flywheelSub, m_feederSub,
+        new FastShooterPrepGrp(62, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new FastShooterPrepGrp(60, m_shooterSub, m_flywheelSub, m_feederSub,
