@@ -97,7 +97,6 @@ public class RobotContainer {
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(61, m_shooterSub, m_flywheelSub, m_feederSub,
         new FastShooterPrepGrp(62, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
