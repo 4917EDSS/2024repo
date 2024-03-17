@@ -23,13 +23,13 @@ public class AmpShotCmd extends Command {
   private final LedSub m_ledSub;
   private Instant start;
 
-  public AmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub, ShooterSub shooterSub, LedSub ledSub) {
+  public AmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
     m_ledSub = ledSub;
 
-    addRequirements(feederSub, arduinoSub, shooterSub, ledSub);
+    addRequirements(feederSub, arduinoSub, ledSub);
   }
 
   // Called when the command is initially scheduled.

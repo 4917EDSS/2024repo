@@ -97,13 +97,13 @@ public class RobotContainer {
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(62, m_shooterSub, m_flywheelSub, m_feederSub,
+        new FastShooterPrepGrp(61, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new FastShooterPrepGrp(60, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new FastShooterPrepGrp(67, m_shooterSub, m_flywheelSub, m_feederSub,
+        new FastShooterPrepGrp(64, m_shooterSub, m_flywheelSub, m_feederSub,
             m_arduinoSub));
     NamedCommands.registerCommand("AmpShot",
         new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
@@ -214,15 +214,15 @@ public class RobotContainer {
 
     //m_operatorController.povRight()
 
-    m_operatorController.povDown()
-        .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
-            new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
-
+    //m_operatorController.povDown()
+    //.onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
+    //new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
 
     // UNTESTED faster amp prep
-    //m_operatorController.povDown()
-    //  .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(40.0, m_shooterSub), (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
-    //    new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)))));
+    m_operatorController.povDown()
+        .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_shooterSub),
+            (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
+                new AmpShotCmd(m_feederSub, m_arduinoSub, m_ledSub)))));
 
     m_operatorController.povLeft().onTrue(
         new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
