@@ -7,8 +7,6 @@ package frc.robot.commands;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class ShooterWithJoystickCmd extends Command {
@@ -16,19 +14,14 @@ public class ShooterWithJoystickCmd extends Command {
 
   private CommandPS4Controller m_controller;
   private ShooterSub m_shooterSub;
-  private IntakeSub m_intakeSub;
-  private FeederSub m_feederSub;
   private boolean m_wasInDeadZone;
 
   /** Creates a new ShooterWithJoystickCmd. */
-  public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub, FeederSub feederSub,
-      IntakeSub intakeSub) {
+  public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub) {
     m_shooterSub = shooterSub;
     m_controller = controller;
-    m_intakeSub = intakeSub;
-    m_feederSub = feederSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSub, intakeSub, feederSub);
+    addRequirements(shooterSub);
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +35,6 @@ public class ShooterWithJoystickCmd extends Command {
   public void execute() {
     // get controller joystick value
     double pivotPower = -m_controller.getLeftY();
-    double intakePower = -m_controller.getRightY();
 
     // create deadband if power is less than 5%
     if(Math.abs(pivotPower) < 0.05) {
@@ -55,15 +47,6 @@ public class ShooterWithJoystickCmd extends Command {
       m_shooterSub.disableTargetAngle();
       m_shooterSub.movePivot(pivotPower / 2);
     }
-    if(Math.abs(intakePower) < 0.05) {
-      intakePower = 0;
-    }
-    // square power value to give more control when moving slower
-    intakePower *= Math.abs(intakePower);
-
-    // set movePivot with the new power
-    m_feederSub.spinBothFeeders(intakePower, intakePower / 2);
-    m_intakeSub.setIntakeMotors(intakePower);
   }
 
   // Called once the command ends or is interrupted.

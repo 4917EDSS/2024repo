@@ -49,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Steal And Score Auto",
+  "folder": null,
   "previewStartingState": {
     "rotation": 143.6469317079531,
     "velocity": 0.0
