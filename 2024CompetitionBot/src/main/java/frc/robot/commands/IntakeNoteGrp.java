@@ -28,7 +28,7 @@ public class IntakeNoteGrp extends SequentialCommandGroup {
         new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub, ledSub, flywheelSub),
         new ShooterPivotCmd(10.0, shooterSub),
         new ExpelNoteABitCmd(feederSub, arduinoSub),
-        new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.ORANGE)));
+        new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.PURPLE)));
 
   }
 }
