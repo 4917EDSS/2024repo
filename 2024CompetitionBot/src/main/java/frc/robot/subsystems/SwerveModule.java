@@ -40,15 +40,14 @@ public class SwerveModule extends SubsystemBase {
   public final double kDriveVelocityFactor; // RPM to m/s
 
   // PID Controllers
-  private final PIDController m_drivePID = new PIDController(0.1, 0, 0.0); // TODO: Tune the Driving PID
+  private final PIDController m_drivePID = new PIDController(0.1, 0, 0.0);
 
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(
           Constants.ModuleConstants.kMaxModuleAngularSpeed,
-          Constants.ModuleConstants.kMaxModuleAngularAcceleration)); // TODO: Also tune the Steering PID
+          Constants.ModuleConstants.kMaxModuleAngularAcceleration));
 
   // These predict PID values which makes it work in real time
-  // TODO: Resolved - Feed forward will probably need tuning as well
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.43);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
 

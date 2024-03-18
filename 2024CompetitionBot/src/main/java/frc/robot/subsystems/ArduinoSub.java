@@ -45,8 +45,6 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   public void init() {
-    // TODO:  Power cycle the arduino?
-
     //Set top and bottom led sections to green
     m_SerialPort.setReadBufferSize(m_LEDUpdateMessage.length);
     m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;

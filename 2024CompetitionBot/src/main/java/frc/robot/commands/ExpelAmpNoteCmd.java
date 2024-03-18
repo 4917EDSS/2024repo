@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class ExpelAmpNoteCmd extends Command {

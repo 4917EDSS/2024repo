@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import com.ctre.phoenix6.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
@@ -21,11 +20,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.AnalogInput;
@@ -34,44 +32,6 @@ import frc.robot.RobotContainer;
 
 public class DrivetrainSub extends SubsystemBase {
 
-  // TODO: Remove both classes and all relating functions when trajectory is finished
-  public class Point {
-    public Pose2d point;
-    public boolean passthough = false; // Don't slow down at this point
-
-    public Point(Pose2d p, boolean pass) {
-      point = p;
-      passthough = pass;
-    }
-  }
-  public class Path {
-    private ArrayList<Point> points = new ArrayList<Point>();
-    private double pTolerance = kThreshold;
-    private double pMaxspeed = 1.0;
-    public int index = 0;
-
-    public Path(double tolarance, double maxSpeed) {
-      pTolerance = tolarance;
-      pMaxspeed = maxSpeed;
-    }
-
-    void addPoint(Pose2d p) {
-      Point t = new Point(p, false);
-      points.add(t);
-    }
-
-    void addPoint(double x, double y, Rotation2d r) {
-      Pose2d temp = new Pose2d(x, y, r);
-      Point t = new Point(temp, false);
-      points.add(t);
-    }
-
-    void addPoint(double x, double y, Rotation2d r, boolean pass) {
-      Pose2d temp = new Pose2d(x, y, r);
-      Point t = new Point(temp, pass);
-      points.add(t);
-    }
-  }
 
   private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
 
@@ -112,7 +72,6 @@ public class DrivetrainSub extends SubsystemBase {
   private double kTurnThreshold = 1.0;
 
   private Pose2d targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-  private Rotation2d previousRotation;
   public PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   public PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
@@ -188,8 +147,6 @@ public class DrivetrainSub extends SubsystemBase {
     m_drivePIDr.setTolerance(1.0);
     m_drivePIDr.enableContinuousInput(-180.0, 180.0);
 
-    previousRotation = getYawRotation2d();
-
     m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
     m_sbYPOS = m_shuffleboardTab.add("YPOS", 0.0).getEntry();
     m_sbTargetXPOS = m_shuffleboardTab.add("TARGET XPOS", 0.0).getEntry();
@@ -228,14 +185,12 @@ public class DrivetrainSub extends SubsystemBase {
   public void init() {
     m_logger.info("Initializing DrivetrainSub");
     resetGyroYaw(0);
-
-    // TODO: Resolved -  Do we need to call each swerve module's init()?
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateOdometry(); // TODO: Resolved? - Move this to an autonomous periodic so it isn't running during teleop
+    updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
 
@@ -261,10 +216,10 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbPitch.setDouble(m_gyro.getPitch());
       m_sbSerialNumber.setString(Constants.Drivetrain.serialNumber);
 
-      ChassisSpeeds currentSpeeds = getChassisSpeeds();
-      double vx = currentSpeeds.vxMetersPerSecond;
-      double vy = currentSpeeds.vyMetersPerSecond;
-      double currentSpeed = Math.sqrt(vx * vx + vy * vy);
+      // ChassisSpeeds currentSpeeds = getChassisSpeeds();
+      // double vx = currentSpeeds.vxMetersPerSecond;
+      // double vy = currentSpeeds.vyMetersPerSecond;
+      // double currentSpeed = Math.sqrt(vx * vx + vy * vy);
       // SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
       // kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
       // kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
@@ -305,7 +260,7 @@ public class DrivetrainSub extends SubsystemBase {
     return MathUtil.inputModulus(getYawRotation2d().getDegrees(), -180.0, 180.0);
   }
 
-  public void resetGyroYaw(double angle) { // TODO: incorporate angle for non-zero cases (modulo 360 or 180?)
+  public void resetGyroYaw(double angle) {
     m_gyro.setAngleAdjustment(-angle - Constants.Drivetrain.kGyroPhysicalOffsetAngle); // NavX is oriented 90deg off of front
     m_gyro.reset();
     resetOdometry(); // Feed in rotation here too
@@ -366,53 +321,6 @@ public class DrivetrainSub extends SubsystemBase {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02); // Everyone uses 0.02 for the period for some reason
     SwerveModuleState[] targetStates = m_kinematics.toSwerveModuleStates(targetSpeeds);
     driveStates(targetStates);
-  }
-
-  public Path generateTestPath() { // TODO: Remove after finishing Path Planner
-    Path tesPath = new Path(0.2, 0.2); // 10cm tolerance with 20% speed
-    Rotation2d currentRotation = getYawRotation2d();
-    tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
-    tesPath.addPoint(0.0 + getPos().getX(), 0.5 + getPos().getY(), currentRotation, true);
-
-    tesPath.addPoint(0.0 + getPos().getX(), 1.0 + getPos().getY(), currentRotation);
-    tesPath.addPoint(0.5 + getPos().getX(), 1.0 + getPos().getY(), currentRotation, true);
-
-    tesPath.addPoint(1.0 + getPos().getX(), 1.0 + getPos().getY(), currentRotation);
-    tesPath.addPoint(1.0 + getPos().getX(), 0.5 + getPos().getY(), currentRotation, true);
-
-    tesPath.addPoint(1.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
-    tesPath.addPoint(0.5 + getPos().getX(), 0.0 + getPos().getY(), currentRotation, true);
-
-    tesPath.addPoint(0.0 + getPos().getX(), 0.0 + getPos().getY(), currentRotation);
-    return tesPath;
-  }
-
-  public void startPath(Path p) {
-    p.index = 0;
-    m_odometryPIDx.setTolerance(p.pTolerance);
-    m_odometryPIDy.setTolerance(p.pTolerance);
-    translateOdometry(p.points.get(p.index).point);
-  }
-
-  public boolean runPath(Path p) {
-    if(p.index >= p.points.size()) {
-      return true;
-    }
-    if(p.index == p.points.size() - 1) {
-      m_odometryPIDx.setTolerance(kThreshold);
-      m_odometryPIDy.setTolerance(kThreshold);
-    } else {
-      m_odometryPIDx.setTolerance(p.pTolerance);
-      m_odometryPIDy.setTolerance(p.pTolerance);
-    }
-
-    if(updateOdometryTransform(p.pMaxspeed, p.points.get(p.index).passthough)) {
-      p.index += 1;
-      if(p.index < p.points.size()) {
-        translateOdometry(p.points.get(p.index).point);
-      }
-    }
-    return false;
   }
 
   public void translateOdometry(Translation2d pos) { // Set target position 
