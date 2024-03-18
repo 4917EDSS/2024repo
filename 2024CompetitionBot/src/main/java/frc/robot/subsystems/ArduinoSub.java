@@ -112,7 +112,7 @@ public class ArduinoSub extends SubsystemBase {
     return false;
   }
 
-  public boolean isAnySansorTripped() {
+  public boolean isAnySensorTripped() {
     for(int i = 0; i < 8; i++) {
       boolean isIt = isSensorTripped(i);
       if(isIt) {
