@@ -139,7 +139,7 @@ void setLedArray(uint8_t command, uint8_t *colours) {
     case COMMAND_SET_EACH_LED:
       // Set each LED to the specified RGB colour
       for (int i = 0; i < NUM_PIXELS; i++) {
-        setLeds(i, colours[3*i], colours[3*i + 1], colours[3*i + 2]);
+        setLeds(ledMapping[i], colours[3*i], colours[3*i + 1], colours[3*i + 2]);
       }
       break;
     
@@ -209,7 +209,7 @@ void sendSensorData() {
 }
 
 
-void handleMessage(uint8_t command, uint8_t parameters) {
+void handleMessage(uint8_t command, uint8_t *parameters) {
   switch(command) {
     case COMMAND_GET_SENSORS:
       // Send data without changing our LEDs

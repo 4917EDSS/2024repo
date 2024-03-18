@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -52,7 +53,7 @@ public class ArduinoSub extends SubsystemBase {
 
     // Set top and bottom LEDs
     updateLED(0, 0, 255, 0);
-    updateLED(1, 0, 255, 0);
+    updateLED(1, 50, 255, 0);
 
     m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize); // John cthis should only be called once during initialization
     m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength); // John c: consider setting this to zero to only read the available bytes
@@ -99,10 +100,12 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   public void updateLED(int LEDIndex, int r, int g, int b) {
+    m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;
+    m_LEDUpdateMessage[1] = (byte) 0x02; //command byte for updating LEDs
     m_LEDUpdateMessage[LEDIndex * 3 + 2] = (byte) r;
     m_LEDUpdateMessage[LEDIndex * 3 + 3] = (byte) g;
     m_LEDUpdateMessage[LEDIndex * 3 + 4] = (byte) b;
-    m_LEDHasChanged = false;
+    m_LEDHasChanged = true;
   }
 
   public boolean isSensorTripped(int sensorIndex) {
@@ -112,7 +115,7 @@ public class ArduinoSub extends SubsystemBase {
     return false;
   }
 
-  public boolean isAnySansorTripped() {
+  public boolean isAnySensorTripped() {
     for(int i = 0; i < 8; i++) {
       boolean isIt = isSensorTripped(i);
       if(isIt) {

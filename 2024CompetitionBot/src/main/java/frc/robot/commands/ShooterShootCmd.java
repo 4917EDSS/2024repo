@@ -69,7 +69,7 @@ public class ShooterShootCmd extends Command {
 
   @Override
   public boolean isFinished() {
-    if(m_arduinoSub.isAnySansorTripped()) {
+    if(m_arduinoSub.isAnySensorTripped()) {
       start = Instant.now();
     }
     Instant end = Instant.now();
