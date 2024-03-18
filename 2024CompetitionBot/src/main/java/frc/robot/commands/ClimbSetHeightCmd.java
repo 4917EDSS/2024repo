@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 
@@ -17,17 +16,17 @@ public class ClimbSetHeightCmd extends Command {
   private final double m_targetHeight;
   private double m_power;
   private final ClimbSub m_climbSub;
-  private final DrivetrainSub m_drivetrainSub;
+  // private final DrivetrainSub m_drivetrainSub;
 
-  private boolean m_leftMotorDone = false;
-  private boolean m_rightMotorDone = false;
+  // private boolean m_leftMotorDone = false;
+  // private boolean m_rightMotorDone = false;
   private boolean m_goingUp = false;
 
 
   /** Creates a new Climb. */
   public ClimbSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
     m_climbSub = climbSub;
-    m_drivetrainSub = drivetrainSub;
+    //m_drivetrainSub = drivetrainSub;
     m_targetHeight = heightM;
     m_power = power;
 
@@ -40,8 +39,8 @@ public class ClimbSetHeightCmd extends Command {
   @Override
   public void initialize() {
     m_logger.fine("ClimbSetHeightCmd - Init");
-    m_leftMotorDone = false;
-    m_rightMotorDone = false;
+    // m_leftMotorDone = false;
+    // m_rightMotorDone = false;
     m_goingUp = m_climbSub.getLeftHeight() < m_targetHeight;
     if(!m_goingUp) {
       m_power = -m_power;

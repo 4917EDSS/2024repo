@@ -50,7 +50,7 @@ public class VisionAlignDriveCmd extends Command {
   public void execute() {
     // Stage 1: Look at apriltag
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
-    double rotationalPower = MathUtil.clamp(m_lookatPID.calculate(horizontalOffset), -0.5, 0.5); // TODO: Can we just remove the second parameter?
+    double rotationalPower = MathUtil.clamp(m_lookatPID.calculate(horizontalOffset), -0.5, 0.5);
 
     // Stage 2: Align with center of april tag
 

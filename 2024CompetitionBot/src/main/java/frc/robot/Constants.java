@@ -195,7 +195,6 @@ public final class Constants {
     // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
     public static final String serialNumber = System.getenv("serialnum");
     // Translation PID, Rotation PID, Max module speed (m/s), Robot radius, default path config
-    // TODO: These PIDs should be tuned
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(7, 0.0, 0.0), new PIDConstants(3.5, 0.0, 0.0), 4.2, //7 for translation P, 6 for rotation p, 0.25 for rotation D, 0.5 for translation D
             0.45, new ReplanningConfig());
@@ -223,7 +222,7 @@ public final class Constants {
     // Parameters to keep the climb horizontal (using gyro's 'roll' angle)
     public static final double kHeightTolerence = 0.01; // In meters
     public static final double kResetHeightTolerence = 0.005; // In meters
-    public static final double kRollZero = 0.0;//-4.3; // In degrees  // TODO:  Check zero on practice and good bot
+    public static final double kRollZero = 0.0; // In degrees
     public static final double kRollTolerence = 10; // In degrees
     public static final double kMinRollAngle = kRollZero - kRollTolerence;
     public static final double kMaxRollAngle = kRollZero + kRollTolerence;

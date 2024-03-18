@@ -100,7 +100,7 @@ public class PowerSub extends SubsystemBase {
   }
 
   public void init() {
-
+    updateShuffleBoard();
   }
 
   // @Override
@@ -111,9 +111,7 @@ public class PowerSub extends SubsystemBase {
   //   }
   // }
 
-
   private void updateShuffleBoard() {
-
     m_sbVoltage.setDouble(powerDistributionModule.getVoltage());
     m_sbTemperature.setDouble(powerDistributionModule.getTemperature());
     m_sbTotalCurrent.setDouble(powerDistributionModule.getTotalCurrent());
@@ -144,9 +142,5 @@ public class PowerSub extends SubsystemBase {
     m_sbRoboRio.setDouble(powerDistributionModule.getCurrent(Constants.Breakers.kRoboRio));
     m_sbArduino.setDouble(powerDistributionModule.getCurrent(Constants.Breakers.kArduino));
     m_sbRadio.setDouble(powerDistributionModule.getCurrent(Constants.Breakers.kRadio));
-
-
   }
-
-
 }

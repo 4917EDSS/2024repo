@@ -88,7 +88,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureBindings();
 
-    // TODO: Add autonomous commands here
+    // Add autonomous commands needed by Path Planner here
     NamedCommands.registerCommand("IntakeNoteGrp",
         new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
     NamedCommands.registerCommand("ShooterShootCmd",
