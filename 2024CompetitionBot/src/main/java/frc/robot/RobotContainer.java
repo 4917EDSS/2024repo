@@ -221,7 +221,6 @@ public class RobotContainer {
     //.onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
     //new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
 
-    // UNTESTED faster amp prep
     m_operatorController.povDown()
         .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_shooterSub),
             (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
