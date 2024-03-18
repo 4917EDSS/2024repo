@@ -13,7 +13,6 @@ import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
-import frc.robot.subsystems.ShooterSub;
 
 public class AmpShotCmd extends Command {
   /** Creates a new AmpShotCmd. */
