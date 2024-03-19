@@ -260,12 +260,13 @@ public final class Constants {
     public static final double kAngleZero = 0.0;
     public static final double kHighPickUp = 212.0;
 
+    public static final double kNoteUpperSurfaceSpeedDifferential = 0.9;
+
     public static final double kNoteLowerIntakePower = 1.0;
-    public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * 0.9;
+    public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * kNoteUpperSurfaceSpeedDifferential;
 
-
-    public static final double kNoteLowerExpellPower = -0.3;
-    public static final double kNoteUpperExpellPower = kNoteLowerExpellPower * 0.9;
+    public static final double kNoteLowerExpelPower = -0.3;
+    public static final double kNoteUpperExpelPower = kNoteLowerExpelPower * kNoteUpperSurfaceSpeedDifferential;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;

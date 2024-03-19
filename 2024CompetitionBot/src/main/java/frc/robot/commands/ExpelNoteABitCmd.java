@@ -23,7 +23,7 @@ public class ExpelNoteABitCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerExpellPower, Constants.Shooter.kNoteUpperExpellPower);
+    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerExpelPower, Constants.Shooter.kNoteUpperExpelPower);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

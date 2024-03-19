@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -86,7 +87,7 @@ public class AlignVisionCmd extends Command {
 
       double feederPower =
           Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
-      m_feederSub.spinBothFeeders(feederPower, 0.5 * feederPower);
+      m_feederSub.spinBothFeeders(feederPower, feederPower * Constants.Shooter.kNoteUpperSurfaceSpeedDifferential);
       if(m_lookatPID.atSetpoint()) {
         rotationalPower = 0.0;
       }

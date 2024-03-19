@@ -8,15 +8,21 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FeederSub;
+import frc.robot.subsystems.LedSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 public class ExpelAmpNoteCmd extends Command {
   private final FeederSub m_feederSub;
+  private final LedSub m_ledSub;
+
   private Instant start;
 
-  public ExpelAmpNoteCmd(FeederSub feederSub) {
+  public ExpelAmpNoteCmd(FeederSub feederSub, LedSub ledSub) {
     m_feederSub = feederSub;
+    m_ledSub = ledSub;
 
-    addRequirements(feederSub);
+    addRequirements(feederSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
@@ -34,6 +40,7 @@ public class ExpelAmpNoteCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_feederSub.spinBothFeeders(0, 0);
+    m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
   }
 
   // Returns true when the command should end.

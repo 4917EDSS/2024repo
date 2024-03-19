@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionGrp;
-import frc.robot.commands.AmpShotCmd;
+import frc.robot.commands.AmpShotPrepCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.ExpelAmpNoteCmd;
@@ -105,7 +105,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
         new FastShooterPrepGrp(64, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("AmpShot",
-        new ExpelAmpNoteCmd(m_feederSub));
+        new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd",
         new PivotToAprilTagCmd(m_pivotSub, m_visionSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
@@ -139,7 +139,7 @@ public class RobotContainer {
 
     //m_driverController.L1()
 
-    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub));
+    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
 
     m_driverController.L2()
         .onTrue(new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
@@ -210,14 +210,14 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_feederSub));
+    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
 
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
         .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_pivotSub),
             (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_pivotSub),
-                new AmpShotCmd(m_arduinoSub, m_feederSub, m_ledSub)))));
+                new AmpShotPrepCmd(m_arduinoSub, m_feederSub)))));
 
     m_operatorController.povLeft().onTrue(
         new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));

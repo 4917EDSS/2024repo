@@ -10,22 +10,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.LedSub.LedColour;
-import frc.robot.subsystems.LedSub.LedZones;
 
-public class AmpShotCmd extends Command {
+
+public class AmpShotPrepCmd extends Command {
   private final ArduinoSub m_arduinoSub;
   private final FeederSub m_feederSub;
-  private final LedSub m_ledSub;
   private Instant start;
 
-  public AmpShotCmd(ArduinoSub arduinoSub, FeederSub feederSub, LedSub ledSub) {
+  public AmpShotPrepCmd(ArduinoSub arduinoSub, FeederSub feederSub) {
     m_arduinoSub = arduinoSub;
     m_feederSub = feederSub;
-    m_ledSub = ledSub;
 
-    addRequirements(arduinoSub, feederSub, ledSub);
+    addRequirements(arduinoSub, feederSub);
   }
 
   // Called when the command is initially scheduled.
@@ -47,7 +43,6 @@ public class AmpShotCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_feederSub.spinBothFeeders(0, 0);
-    m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
   }
 
   // Returns true when the command should end.
