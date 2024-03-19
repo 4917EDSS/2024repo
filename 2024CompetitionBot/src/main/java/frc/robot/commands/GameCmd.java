@@ -46,17 +46,19 @@ public class GameCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_arduinoSub.clearPixels();
-    if(Duration.between(time, Instant.now()).toMillis() > 200) {
-      getInput();
-      m_arduinoSub.clearPixels();
-      updateWorm();
-      drawFood();
-      drawWorm();
-      checkFood();
-      m_arduinoSub.updatePixels();
+    if(Robot.inTestMode) { // Only run this in test mode
+      //m_arduinoSub.clearPixels();
+      if(Duration.between(time, Instant.now()).toMillis() > 200) {
+        getInput();
+        m_arduinoSub.clearPixels();
+        updateWorm();
+        drawFood();
+        drawWorm();
+        checkFood();
+        m_arduinoSub.updatePixels();
 
-      time = Instant.now();
+        time = Instant.now();
+      }
     }
   }
 
@@ -108,11 +110,9 @@ public class GameCmd extends Command {
   }
 
   void drawWorm() {
-
     for(int i = 0; i < length; i++) {
       m_arduinoSub.writePixel(xWorm[i], yWorm[i], 0, 255, 0);
     }
-
   }
 
   void drawFood() {
@@ -142,8 +142,8 @@ public class GameCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arduinoSub.updateLED(0, 0, 255, 0);
-    m_arduinoSub.updateLED(1, 0, 255, 128);
+    m_arduinoSub.updateLEDHalf(0, 0, 255, 0);
+    m_arduinoSub.updateLEDHalf(1, 0, 255, 128);
 
   }
 

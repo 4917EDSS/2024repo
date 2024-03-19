@@ -156,7 +156,7 @@ public class RobotContainer {
 
     //m_driverController.options()
 
-    m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
+    m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub)); // Will only actually run in test mode
 
     m_driverController.touchpad().onTrue(new GameCmd(m_arduinoSub, m_driverController)); // Will only actually run in test mode
 

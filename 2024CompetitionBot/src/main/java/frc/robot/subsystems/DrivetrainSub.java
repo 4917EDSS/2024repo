@@ -26,18 +26,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 // import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotContainer;
 
 
 public class DrivetrainSub extends SubsystemBase {
-
-
   private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
-
-
-  //Analog sensors
-  //private final AnalogInput m_frontDistanceSensor = new AnalogInput(Constants.AnalogInIds.kFrontDistanceSenor);
 
   private final Orchestra orca1 = new Orchestra();
   private final Orchestra orca2 = new Orchestra();
@@ -45,10 +40,8 @@ public class DrivetrainSub extends SubsystemBase {
   private final Orchestra orca4 = new Orchestra();
 
   // Speed multipliers
-  public static final double kMaxDriveSpeed = 2.0;//4.0; // In m/s
+  public static final double kMaxDriveSpeed = 2.0; // In m/s
   public static final double kMaxTurnSpeed = 9; // was 50
-
-  //public static final double kMaxSpeed = 10000.0;// meters per second
 
   // Locations of Swerve Modules relative to the center of the robot
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
@@ -61,7 +54,6 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbFREncoder, m_sbBLEncoder, m_sbBREncoder, m_sbRotKP, m_sbRotKD, m_sbRotThreshold, m_sbPathKP, m_sbPathKD,
       m_sbPathThreshold, m_sbSerialNumber, m_sbRobotName;
 
-
   // PID value setting
   private double kPIDp = 0.4;
   private double kPIDd = 0.0;
@@ -72,8 +64,8 @@ public class DrivetrainSub extends SubsystemBase {
   private double kTurnThreshold = 1.0;
 
   private Pose2d targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-  public PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
-  public PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
+  private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
+  private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
   private PIDController m_drivePIDr = new PIDController(0.05, 0.0, 0.0);
 
@@ -86,8 +78,7 @@ public class DrivetrainSub extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Kinematics controls movement, Odemetry tracks position
-  public final SwerveDriveKinematics m_kinematics;
-
+  private final SwerveDriveKinematics m_kinematics;
   private final SwerveDriveOdometry m_odometry;
 
 
@@ -179,7 +170,6 @@ public class DrivetrainSub extends SubsystemBase {
         () -> {
           return DriverStation.getAlliance().get() == Alliance.Red;
         }, this);
-
   }
 
   public void init() {
@@ -240,8 +230,6 @@ public class DrivetrainSub extends SubsystemBase {
 
     }
     // Setting PID constants
-
-
     m_odometryPIDx.setP(kPIDp);
     m_odometryPIDx.setD(kPIDd);
     m_odometryPIDx.setTolerance(kThreshold);
@@ -412,35 +400,34 @@ public class DrivetrainSub extends SubsystemBase {
     return m_backRight.getTurningEncoder();
   }
 
-
   public void fun() {
-    if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
-      orca1.stop();
-      orca2.stop();
-      orca3.stop();
-      orca4.stop();
-      orca1.clearInstruments();
-      orca2.clearInstruments();
-      orca3.clearInstruments();
-      orca1.addInstrument(m_frontLeft.m_steeringMotor);
-      orca2.addInstrument(m_frontRight.m_steeringMotor);
-      orca3.addInstrument(m_backLeft.m_steeringMotor);
-      orca4.addInstrument(m_backRight.m_steeringMotor);
-      orca1.loadMusic("shpitaA.chrp");
-      orca2.loadMusic("shpitaB.chrp");
-      orca3.loadMusic("shpitaC.chrp");
-      orca4.loadMusic("shpitaD.chrp");
-      orca1.play();
-      orca2.play();
-      orca3.play();
-      orca4.play();
-    } else {
-      orca1.stop();
-      orca2.stop();
-      orca3.stop();
-      orca4.stop();
+    if(Robot.inTestMode) { // Only run this in test mode
+      if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
+        orca1.stop();
+        orca2.stop();
+        orca3.stop();
+        orca4.stop();
+        orca1.clearInstruments();
+        orca2.clearInstruments();
+        orca3.clearInstruments();
+        orca1.addInstrument(m_frontLeft.m_steeringMotor);
+        orca2.addInstrument(m_frontRight.m_steeringMotor);
+        orca3.addInstrument(m_backLeft.m_steeringMotor);
+        orca4.addInstrument(m_backRight.m_steeringMotor);
+        orca1.loadMusic("shpitaA.chrp");
+        orca2.loadMusic("shpitaB.chrp");
+        orca3.loadMusic("shpitaC.chrp");
+        orca4.loadMusic("shpitaD.chrp");
+        orca1.play();
+        orca2.play();
+        orca3.play();
+        orca4.play();
+      } else {
+        orca1.stop();
+        orca2.stop();
+        orca3.stop();
+        orca4.stop();
+      }
     }
   }
-
-
 }
