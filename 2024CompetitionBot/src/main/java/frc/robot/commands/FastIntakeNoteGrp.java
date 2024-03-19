@@ -19,7 +19,5 @@ public class FastIntakeNoteGrp extends SequentialCommandGroup {
     addCommands(
         new ShooterPivotCmd(0, pivotSub),
         new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub));
-
-
   }
 }

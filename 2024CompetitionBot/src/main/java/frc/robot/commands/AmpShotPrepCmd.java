@@ -21,7 +21,7 @@ public class AmpShotPrepCmd extends Command {
     m_arduinoSub = arduinoSub;
     m_feederSub = feederSub;
 
-    addRequirements(arduinoSub, feederSub);
+    addRequirements(feederSub);
   }
 
   // Called when the command is initially scheduled.

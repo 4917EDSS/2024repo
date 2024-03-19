@@ -27,6 +27,5 @@ public class IntakeNoteGrp extends SequentialCommandGroup {
         new ShooterPivotCmd(10.0, pivotSub),
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.PURPLE)));
-
   }
 }

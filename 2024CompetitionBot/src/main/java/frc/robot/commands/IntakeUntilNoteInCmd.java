@@ -29,7 +29,7 @@ public class IntakeUntilNoteInCmd extends Command {
     m_flywheelSub = flywheelSub;
     m_LedSub = ledSub;
 
-    addRequirements(feederSub, flywheelSub, ledSub);
+    addRequirements(feederSub, flywheelSub); // It's fine if two commands change LEDs
   }
 
   // Called when the command is initially scheduled.

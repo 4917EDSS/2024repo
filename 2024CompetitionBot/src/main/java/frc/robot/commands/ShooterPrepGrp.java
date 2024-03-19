@@ -23,11 +23,13 @@ public class ShooterPrepGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ConditionalCommand(new ShooterPivotCmd(10, pivotSub), new InstantCommand(),
+        new ConditionalCommand(
+            new ShooterPivotCmd(10, pivotSub),
+            new InstantCommand(),
             () -> pivotSub.getPivotAngle() < 9),
-        new ParallelCommandGroup(new ShooterFlywheelCmd(flywheelSub),
+        new ParallelCommandGroup(
+            new ShooterFlywheelCmd(flywheelSub),
             new ShooterPivotCmd(pivotPosition, pivotSub),
             new ExpelNoteABitCmd(arduinoSub, feederSub)));
-
   }
 }

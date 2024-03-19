@@ -31,8 +31,8 @@ import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
-import frc.robot.commands.ShooterWithJoystickCmd;
-import frc.robot.commands.UpIntakeGrp;
+import frc.robot.commands.PivotWithJoystickCmd;
+import frc.robot.commands.SourceIntakeGrp;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
@@ -83,7 +83,7 @@ public class RobotContainer {
     m_drivetrainSub.setDefaultCommand(
         new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     m_pivotSub.setDefaultCommand(
-        new ShooterWithJoystickCmd(m_operatorController, m_pivotSub));
+        new PivotWithJoystickCmd(m_operatorController, m_pivotSub));
     m_feederSub.setDefaultCommand(
         new IntakeWithJoystickCmd(m_operatorController, m_feederSub));
 
@@ -94,7 +94,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeNoteGrp",
         new FastIntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterShootCmd",
-        new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+        new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
     NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub));
@@ -105,7 +105,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
         new FastShooterPrepGrp(64, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("AmpShot",
-        new ExpelAmpNoteCmd(m_arduinoSub, m_feederSub, m_ledSub));
+        new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd",
         new PivotToAprilTagCmd(m_pivotSub, m_visionSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
@@ -139,14 +139,14 @@ public class RobotContainer {
 
     //m_driverController.L1()
 
-    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_arduinoSub, m_feederSub, m_ledSub));
+    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
 
     m_driverController.L2()
         .onTrue(new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
             m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
 
     m_driverController.R2()
-        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
@@ -182,7 +182,7 @@ public class RobotContainer {
             m_pivotSub));
 
     m_operatorController.circle()
-        .onTrue(new UpIntakeGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+        .onTrue(new SourceIntakeGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
@@ -197,7 +197,7 @@ public class RobotContainer {
         .onTrue(new IntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.R2()
-        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
 
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_climbSub, m_drivetrainSub));
@@ -210,7 +210,7 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_arduinoSub, m_feederSub, m_ledSub));
+    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
 
     //m_operatorController.povRight()
 

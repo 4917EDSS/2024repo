@@ -22,7 +22,7 @@ public class PivotToAprilTagCmd extends Command {
     m_pivotSub = pivotSub;
     m_visionSub = visionSub;
 
-    addRequirements(pivotSub, visionSub);
+    addRequirements(pivotSub); // Vision isn't changed, only read
   }
 
   // Called when the command is initially scheduled.

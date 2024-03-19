@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.PivotSub;
 
-public class ShooterWithJoystickCmd extends Command {
+public class PivotWithJoystickCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
   private final CommandPS4Controller m_controller;
@@ -17,7 +17,7 @@ public class ShooterWithJoystickCmd extends Command {
 
   private boolean m_wasInDeadZone;
 
-  public ShooterWithJoystickCmd(CommandPS4Controller controller, PivotSub pivotSub) {
+  public PivotWithJoystickCmd(CommandPS4Controller controller, PivotSub pivotSub) {
     m_controller = controller;
     m_pivotSub = pivotSub;
 

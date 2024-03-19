@@ -13,8 +13,8 @@ import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.PivotSub;
 
 
-public class UpIntakeGrp extends SequentialCommandGroup {
-  public UpIntakeGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
+public class SourceIntakeGrp extends SequentialCommandGroup {
+  public SourceIntakeGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
       PivotSub pivotSub) {
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kHighPickUp, pivotSub),
@@ -22,6 +22,5 @@ public class UpIntakeGrp extends SequentialCommandGroup {
         new ShooterPivotCmd(50.0, pivotSub),
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new IntakeNoteFromSourceCmd(arduinoSub, feederSub, ledSub));
-
   }
 }

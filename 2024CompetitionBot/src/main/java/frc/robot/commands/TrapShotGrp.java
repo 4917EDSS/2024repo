@@ -15,8 +15,8 @@ public class TrapShotGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        // Untested
         new TrapShotPrepGrp(climbSub, drivetrainSub, pivotSub),
         new TrapShotStepTwoGrp(driveFieldRelativeCmd, climbSub, drivetrainSub, pivotSub));
   }
-  //All heights for height are wrong and need to be tested
 }

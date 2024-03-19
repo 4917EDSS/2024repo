@@ -11,9 +11,9 @@ import frc.robot.subsystems.PivotSub;
 public class ShooterPivotCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterPivotCmd.class.getName());
 
-  private final PivotSub m_pivotSub;
   private final double m_targetPivotPosition;
   private final double m_maxSpeed;
+  private final PivotSub m_pivotSub;
 
   public ShooterPivotCmd(double targetPivotPosition, double maxSpeed, PivotSub pivotSub) {
     m_targetPivotPosition = targetPivotPosition;

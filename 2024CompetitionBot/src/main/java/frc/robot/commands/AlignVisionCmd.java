@@ -23,14 +23,14 @@ public class AlignVisionCmd extends Command {
   private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
   private static final double kRotationTolerance = 1.0;
 
-  private final VisionSub m_visionSub;
-  private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
   private final CommandPS4Controller m_operatorController;
-  private final PivotSub m_pivotSub;
+  private final DrivetrainSub m_drivetrainSub;
   private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
+  private final PivotSub m_pivotSub;
+  private final VisionSub m_visionSub;
 
   private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
 
@@ -47,7 +47,7 @@ public class AlignVisionCmd extends Command {
     m_pivotSub = pivotSub;
     m_visionSub = visionSub;
 
-    addRequirements(drivetrainSub, feederSub, flywheelSub, pivotSub, visionSub);
+    addRequirements(drivetrainSub, feederSub, flywheelSub, pivotSub); // It's fine if two commands change LEDs.  Vision is not changed, only read.
   }
 
   // Called when the command is initially scheduled.

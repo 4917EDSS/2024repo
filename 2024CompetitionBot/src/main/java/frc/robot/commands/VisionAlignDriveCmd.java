@@ -29,7 +29,7 @@ public class VisionAlignDriveCmd extends Command {
     m_drivetrainSub = drivetrainSub;
     m_visionSub = visionSub;
 
-    addRequirements(drivetrainSub, visionSub);
+    addRequirements(drivetrainSub); // Vision is not changed, only read.
   }
 
   // Called when the command is initially scheduled.

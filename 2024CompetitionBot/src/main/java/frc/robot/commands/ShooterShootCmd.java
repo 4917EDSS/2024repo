@@ -13,28 +13,26 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
-  private final FlywheelSub m_flywheelSub;
-  private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final FeederSub m_feederSub;
+  private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
 
   private Instant start;
 
-  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
-      PivotSub pivotSub) {
-    m_flywheelSub = flywheelSub;
-    m_feederSub = feederSub;
+  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub) {
     m_arduinoSub = arduinoSub;
+    m_feederSub = feederSub;
+    m_flywheelSub = flywheelSub;
     m_ledSub = ledSub;
 
-    addRequirements(feederSub, flywheelSub, ledSub, pivotSub);
+    addRequirements(feederSub, flywheelSub); // It's fine if two commands change LEDs
   }
 
   // Called when the command is initially scheduled.
@@ -48,12 +46,11 @@ public class ShooterShootCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-
     // Flywheel needs to spin at full power prior to m_pivotSub.spinBothFeeders being executed.
-    // double driveOutput = m_FlyWheelPID.calculate(m_pivotSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-        Constants.Shooter.kNoteUpperIntakePower);
+    if(m_flywheelSub.isAtTargetVelocity()) {
+      m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
+          Constants.Shooter.kNoteUpperIntakePower);
+    }
   }
 
   // Called once the command ends or is interrupted.

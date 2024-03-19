@@ -36,11 +36,9 @@ public class AlignVisionGrp extends SequentialCommandGroup {
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new AlignVisionCmd(driverController, operatorController, drivetrainSub, feederSub, flywheelSub, ledSub,
             pivotSub, visionSub),
-        new ShooterShootCmd(arduinoSub, feederSub, flywheelSub, ledSub, pivotSub),
+        new ShooterShootCmd(arduinoSub, feederSub, flywheelSub, ledSub),
         new ParallelDeadlineGroup(
             new ShooterPivotCmd(0, pivotSub),
             new DriveFieldRelativeCmd(driverController, drivetrainSub)));
-
-
   }
 }

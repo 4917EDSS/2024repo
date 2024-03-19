@@ -26,7 +26,7 @@ public class IntakeNoteFromSourceCmd extends Command {
     m_feederSub = feederSub;
     m_LedSub = ledSub;
 
-    addRequirements(feederSub, ledSub);
+    addRequirements(feederSub); // It's fine if two commands change LEDs
   }
 
   // Called when the command is initially scheduled.
