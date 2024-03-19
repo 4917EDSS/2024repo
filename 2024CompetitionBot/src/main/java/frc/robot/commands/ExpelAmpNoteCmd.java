@@ -7,22 +7,25 @@ package frc.robot.commands;
 import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 
 public class ExpelAmpNoteCmd extends Command {
+  private final ArduinoSub m_arduinoSub;
   private final FeederSub m_feederSub;
   private final LedSub m_ledSub;
 
   private Instant start;
 
-  public ExpelAmpNoteCmd(FeederSub feederSub, LedSub ledSub) {
+  public ExpelAmpNoteCmd(ArduinoSub arduinoSub, FeederSub feederSub, LedSub ledSub) {
+    m_arduinoSub = arduinoSub;
     m_feederSub = feederSub;
     m_ledSub = ledSub;
 
-    addRequirements(feederSub, ledSub);
+    addRequirements(m_arduinoSub, feederSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
