@@ -74,7 +74,7 @@ public class ShooterSub extends SubsystemBase {
 
     disableTargetAngle();
 
-    m_pivot.setInverted(true);
+    m_pivot.setInverted(false);
 
     m_pivot.setIdleMode(IdleMode.kBrake);
 
