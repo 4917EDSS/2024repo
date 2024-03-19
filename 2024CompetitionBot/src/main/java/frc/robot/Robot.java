@@ -29,6 +29,8 @@ public class Robot extends TimedRobot {
 
   private boolean m_needsPostAutoInit = false;
 
+  public static boolean inTestMode = false;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -75,7 +77,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    inTestMode = false;
+  }
 
   @Override
   public void disabledPeriodic() {
@@ -137,6 +141,10 @@ public class Robot extends TimedRobot {
     // Reset most parts of the robot
     m_logger.warning("Resetting robot subsystems via testInit");
     m_isInitialized = false;
+
+    m_robotContainer.testInitSubsystems();
+    inTestMode = true;
+
   }
 
   /** This function is called periodically during test mode. */

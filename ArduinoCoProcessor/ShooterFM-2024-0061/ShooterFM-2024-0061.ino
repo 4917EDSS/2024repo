@@ -12,7 +12,7 @@
 
 // Define adafruit neopixel stuff
 #define PIN 2
-#define NUM_PIXELS 24
+#define NUM_PIXELS 48
 #define DELAYVAL 500
 
 // Number of sensors that the board (or board pair) supports
@@ -124,22 +124,25 @@ void setLedArray(uint8_t command, uint8_t *colours) {
   
   switch(command) {
     case COMMAND_SET_LED_HALVES:
-      for (int i = 0; i < NUM_PIXELS; i++) {
+      for (int i = 0; i < NUM_PIXELS/2; i++) {
         // Set first half of LEDs with one RGB colour
-        if(i < (NUM_PIXELS / 2)){
+        if(i < (NUM_PIXELS / 4)){
           setLeds(ledMapping[i], colours[0], colours[1], colours[2]);
+          setLeds(ledMapping[i]+NUM_PIXELS/2, colours[0], colours[1], colours[2]);
         } 
         // Set second half of LEDs with the second RGB colour
         else {
           setLeds(ledMapping[i], colours[3], colours[4], colours[5]);
+          setLeds(ledMapping[i]+NUM_PIXELS/2, colours[3], colours[4], colours[5]);
         }
       }
       break;
     
     case COMMAND_SET_EACH_LED:
       // Set each LED to the specified RGB colour
-      for (int i = 0; i < NUM_PIXELS; i++) {
+      for (int i = 0; i < NUM_PIXELS/2; i++) {
         setLeds(ledMapping[i], colours[3*i], colours[3*i + 1], colours[3*i + 2]);
+        setLeds(ledMapping[i]+NUM_PIXELS/2, colours[3*i], colours[3*i + 1], colours[3*i + 2]);
       }
       break;
     

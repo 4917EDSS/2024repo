@@ -22,6 +22,7 @@ import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.ExpelAmpNoteCmd;
 import frc.robot.commands.FastIntakeNoteGrp;
 import frc.robot.commands.FastShooterPrepGrp;
+import frc.robot.commands.GameCmd;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
@@ -154,7 +155,7 @@ public class RobotContainer {
 
     m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub));
 
-    //m_driverController.touchpad()
+    m_driverController.touchpad().onTrue(new GameCmd(m_arduinoSub, m_driverController)); // Will only actually run in test mode
 
     //m_driverController.povUp()
 
@@ -375,6 +376,10 @@ public class RobotContainer {
     m_flywheelSub.init();
     m_arduinoSub.init();
     m_powerSub.init();
+  }
+
+  public void testInitSubsystems() {
+    m_arduinoSub.init();
   }
 
   public void postAutoInit() {

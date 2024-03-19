@@ -24,8 +24,11 @@ public class ArduinoSub extends SubsystemBase {
 
   /** Creates a new ArduinoSub. */
   private static byte[] m_LEDUpdateMessage = new byte[75];
+  private static byte[] m_LEDUpdateArray = new byte[24 * 3 + 3];
   private static byte[] m_getMessage = {(byte) Constants.Arduino.kMessageHeader, (byte) 0x01, (byte) 0xA6}; // header, command 1 to get sensor info, checksum
   private static boolean m_LEDHasChanged = true;
+  private static boolean m_LEDArrayChanged = false;
+  private static boolean halfSend = false;
   private static int m_intakeSensors[] = new int[8];
 
   // Creating an instances of RS_232 port to communicate with Arduino (sensors)
@@ -55,6 +58,7 @@ public class ArduinoSub extends SubsystemBase {
     updateLED(0, 0, 255, 0);
     updateLED(1, 50, 255, 0);
 
+
     m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize); // John cthis should only be called once during initialization
     m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength); // John c: consider setting this to zero to only read the available bytes
 
@@ -81,6 +85,26 @@ public class ArduinoSub extends SubsystemBase {
     m_sensorIntakeNear.setDouble(m_intakeSensors[7]);
   }
 
+
+  public void writePixel(int x, int y, int r, int g, int b) {
+    int i = x + y * 4;
+    if(i < 24 && i >= 0) {
+      m_LEDUpdateArray[i * 3 + 2] = (byte) r;
+      m_LEDUpdateArray[i * 3 + 3] = (byte) g;
+      m_LEDUpdateArray[i * 3 + 4] = (byte) b;
+    }
+  }
+
+  public void updatePixels() {
+    m_LEDArrayChanged = true;
+  }
+
+  public void clearPixels() {
+    for(int i = 0; i < m_LEDUpdateArray.length; i++) {
+      m_LEDUpdateArray[i] = 0;
+    }
+  }
+
   private void writeToSerial() {
     // Get intake sensor data
     if(!m_LEDHasChanged) {
@@ -94,6 +118,17 @@ public class ArduinoSub extends SubsystemBase {
       }
       m_SerialPort.write(m_LEDUpdateMessage, 9);
       m_LEDHasChanged = false;
+    }
+    if(m_LEDArrayChanged) {
+      m_LEDUpdateArray[0] = Constants.Arduino.kMessageHeader;
+      m_LEDUpdateArray[1] = (byte) 0x03;
+      m_LEDUpdateArray[74] = 0;
+      for(int i = 0; i < 74; i++) {
+        m_LEDUpdateArray[74] += m_LEDUpdateArray[i];
+      }
+      m_SerialPort.write(m_LEDUpdateArray, m_LEDUpdateArray.length);
+      m_LEDArrayChanged = false;
+
     }
     //m_SerialPort.flush();
 
