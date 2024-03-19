@@ -10,14 +10,13 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class TrapShotGrp extends SequentialCommandGroup {
-  public TrapShotGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,
-      DriveFieldRelativeCmd driveFieldRelativeCmd) {
+  public TrapShotGrp(DriveFieldRelativeCmd driveFieldRelativeCmd, ClimbSub climbSub, DrivetrainSub drivetrainSub,
+      ShooterSub shooterSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new TrapShotPrepGrp(shooterSub, climbSub, drivetrainSub),
-        new TrapShotStepTwoGrp(shooterSub, climbSub, drivetrainSub, driveFieldRelativeCmd));
-
+        new TrapShotPrepGrp(climbSub, drivetrainSub, shooterSub),
+        new TrapShotStepTwoGrp(driveFieldRelativeCmd, climbSub, drivetrainSub, shooterSub));
   }
   //All heights for height are wrong and need to be tested
 }

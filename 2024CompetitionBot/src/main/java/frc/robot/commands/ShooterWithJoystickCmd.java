@@ -12,15 +12,15 @@ import frc.robot.subsystems.ShooterSub;
 public class ShooterWithJoystickCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
-  private CommandPS4Controller m_controller;
-  private ShooterSub m_shooterSub;
+  private final CommandPS4Controller m_controller;
+  private final ShooterSub m_shooterSub;
+
   private boolean m_wasInDeadZone;
 
-  /** Creates a new ShooterWithJoystickCmd. */
   public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub) {
-    m_shooterSub = shooterSub;
     m_controller = controller;
-    // Use addRequirements() here to declare subsystem dependencies.
+    m_shooterSub = shooterSub;
+
     addRequirements(shooterSub);
   }
 

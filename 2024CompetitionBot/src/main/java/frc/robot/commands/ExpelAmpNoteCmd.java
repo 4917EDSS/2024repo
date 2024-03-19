@@ -8,18 +8,15 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FeederSub;
-import frc.robot.subsystems.ShooterSub;
 
 public class ExpelAmpNoteCmd extends Command {
-  /** Creates a new ExpelAmpNoteCmd. */
-
   private final FeederSub m_feederSub;
   private Instant start;
 
-  public ExpelAmpNoteCmd(ShooterSub shooterSub, FeederSub feederSub) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ExpelAmpNoteCmd(FeederSub feederSub) {
     m_feederSub = feederSub;
-    addRequirements(shooterSub, feederSub);
+
+    addRequirements(feederSub);
   }
 
   // Called when the command is initially scheduled.

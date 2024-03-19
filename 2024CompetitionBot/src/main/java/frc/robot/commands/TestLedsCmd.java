@@ -11,28 +11,20 @@ import frc.robot.subsystems.LedSub.LedZones;
 
 /** An example command that uses an example subsystem. */
 public class TestLedsCmd extends Command {
-
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final LedColour m_ledColour;
   private final LedSub m_ledSub;
-  private final LedColour m_LedColour;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param LedSub The subsystem used by this command.
-   */
-  public TestLedsCmd(LedSub LedSub, LedColour colour) {
+  public TestLedsCmd(LedColour colour, LedSub LedSub) {
+    m_ledColour = colour;
     m_ledSub = LedSub;
-    m_LedColour = colour;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(LedSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ledSub.setZoneColour(LedZones.ALL, m_LedColour);
+    m_ledSub.setZoneColour(LedZones.ALL, m_ledColour);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

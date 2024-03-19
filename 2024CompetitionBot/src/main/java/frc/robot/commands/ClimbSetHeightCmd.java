@@ -14,23 +14,20 @@ public class ClimbSetHeightCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ClimbSetHeightCmd.class.getName());
 
   private final double m_targetHeight;
-  private double m_power;
   private final ClimbSub m_climbSub;
   // private final DrivetrainSub m_drivetrainSub;
 
   // private boolean m_leftMotorDone = false;
   // private boolean m_rightMotorDone = false;
   private boolean m_goingUp = false;
+  private double m_power;
 
-
-  /** Creates a new Climb. */
-  public ClimbSetHeightCmd(double heightM, double power, DrivetrainSub drivetrainSub, ClimbSub climbSub) {
+  public ClimbSetHeightCmd(double heightM, double power, ClimbSub climbSub, DrivetrainSub drivetrainSub) {
     m_climbSub = climbSub;
     //m_drivetrainSub = drivetrainSub;
     m_targetHeight = heightM;
     m_power = power;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     // Don't require drivetrainSub since we only use it to read the 'roll' angle
     addRequirements(climbSub);
   }

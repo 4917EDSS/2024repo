@@ -13,7 +13,6 @@ public class ShooterFlywheelCmd extends Command {
 
   private final FlywheelSub m_flywheelSub;
 
-  /** Creates a new FlywheelCmd. */
   public ShooterFlywheelCmd(FlywheelSub flywheelSub) {
     m_flywheelSub = flywheelSub;
 

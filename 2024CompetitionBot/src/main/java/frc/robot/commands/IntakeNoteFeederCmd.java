@@ -11,16 +11,14 @@ import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeNoteFeederCmd extends Command {
-
-
   private final FeederSub m_feederSub;
   private Instant start;
 
-  /** Creates a new IntakeNoteFeederCmd. */
   public IntakeNoteFeederCmd(FeederSub feederSub) {
     m_feederSub = feederSub;
     start = Instant.now();
-    addRequirements(feederSub); //here to declare subsystem dependencies.
+
+    addRequirements(feederSub);
   }
 
   // Called when the command is initially scheduled.

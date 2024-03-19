@@ -12,14 +12,11 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.VisionSub;
 
 public class VisionAlignDriveCmd extends Command {
-  /**
-   * This command is specifically for automatically lining up infront of an apriltag and moving forwards and backwards
-   * from it
-   */
+  // This command is specifically for automatically lining up infront of an apriltag and moving forwards and backwards from it
 
-  private final VisionSub m_visionSub;
-  private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
+  private final DrivetrainSub m_drivetrainSub;
+  private final VisionSub m_visionSub;
 
   private final PIDController m_lookatPID = new PIDController(0.005, 0.0, 0.0); // For facing apriltag
   private final PIDController m_alignTagPID = new PIDController(0.01, 0, 0); // For aligning infront of apriltag
@@ -27,14 +24,12 @@ public class VisionAlignDriveCmd extends Command {
   private double angleSnapshot = 0.0;
   private boolean hasAngleSnapshot = false;
 
-  public VisionAlignDriveCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, CommandPS4Controller driverController) {
-
-    m_visionSub = visionSub;
-    m_drivetrainSub = drivetrainSub;
+  public VisionAlignDriveCmd(CommandPS4Controller driverController, DrivetrainSub drivetrainSub, VisionSub visionSub) {
     m_driverController = driverController;
+    m_drivetrainSub = drivetrainSub;
+    m_visionSub = visionSub;
 
-    addRequirements(visionSub, drivetrainSub);
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drivetrainSub, visionSub);
   }
 
   // Called when the command is initially scheduled.

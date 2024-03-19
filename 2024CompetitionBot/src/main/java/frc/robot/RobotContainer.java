@@ -39,7 +39,6 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
@@ -56,16 +55,15 @@ import frc.robot.subsystems.VisionSub;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final LedSub m_ledSub = new LedSub();
+  private final ArduinoSub m_arduinoSub = new ArduinoSub();
   private final ClimbSub m_climbSub = new ClimbSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
-  private final IntakeSub m_intakeSub = new IntakeSub();
+  private final FeederSub m_feederSub = new FeederSub();
+  private final FlywheelSub m_flywheelSub = new FlywheelSub();
+  private final LedSub m_ledSub = new LedSub();
+  private final PowerSub m_powerSub = new PowerSub();
   private final ShooterSub m_shooterSub = new ShooterSub();
   private final VisionSub m_visionSub = new VisionSub();
-  private final FlywheelSub m_flywheelSub = new FlywheelSub();
-  private final FeederSub m_feederSub = new FeederSub();
-  private final ArduinoSub m_arduinoSub = new ArduinoSub();
-  private final PowerSub m_powerSub = new PowerSub();
 
   // Disables large amount of prints from DrivetrainSub, ShooterSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
@@ -86,38 +84,37 @@ public class RobotContainer {
         new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     m_shooterSub.setDefaultCommand(
         new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
-    m_intakeSub.setDefaultCommand(
-        new IntakeWithJoystickCmd(m_operatorController, m_intakeSub, m_feederSub));
+    m_feederSub.setDefaultCommand(
+        new IntakeWithJoystickCmd(m_operatorController, m_feederSub));
 
     // Configure the button bindings
     configureBindings();
 
     // Add autonomous commands needed by Path Planner here
     NamedCommands.registerCommand("IntakeNoteGrp",
-        new FastIntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
+        new FastIntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterShootCmd",
-        new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
+        new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
-        new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
+            m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(62, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        new FastShooterPrepGrp(62, m_arduinoSub, m_feederSub, m_flywheelSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
-        new FastShooterPrepGrp(60, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        new FastShooterPrepGrp(60, m_arduinoSub, m_feederSub, m_flywheelSub, m_shooterSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new FastShooterPrepGrp(64, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        new FastShooterPrepGrp(64, m_arduinoSub, m_feederSub, m_flywheelSub, m_shooterSub));
     NamedCommands.registerCommand("AmpShot",
-        new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
-    NamedCommands.registerCommand("PivotToAprilTagCmd", new PivotToAprilTagCmd(m_visionSub, m_shooterSub)); //this command isFinished return false
+        new ExpelAmpNoteCmd(m_feederSub));
+    NamedCommands.registerCommand("PivotToAprilTagCmd",
+        new PivotToAprilTagCmd(m_shooterSub, m_visionSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
         new ShooterFlywheelCmd(m_flywheelSub));
     NamedCommands.registerCommand("OffsetYaw45",
         new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
-    NamedCommands.registerCommand("VisionAlignCmdGrp", new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub,
-        m_feederSub, m_flywheelSub, m_ledSub, m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
+    NamedCommands.registerCommand("VisionAlignCmdGrp",
+        new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
+            m_flywheelSub, m_ledSub, m_shooterSub, m_visionSub));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_shooterSub));
 
@@ -142,14 +139,14 @@ public class RobotContainer {
 
     //m_driverController.L1()
 
-    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
+    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub));
 
     m_driverController.L2()
-        .onTrue(new AlignVisionGrp(m_drivetrainSub, m_visionSub, m_shooterSub, m_feederSub, m_flywheelSub, m_ledSub,
-            m_driverController, m_operatorController, m_arduinoSub, m_intakeSub));
+        .onTrue(new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
+            m_flywheelSub, m_ledSub, m_shooterSub, m_visionSub));
 
     m_driverController.R2()
-        .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
+        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
 
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
@@ -158,7 +155,7 @@ public class RobotContainer {
 
     m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub)); // Will only actually run in test mode
 
-    m_driverController.touchpad().onTrue(new GameCmd(m_arduinoSub, m_driverController)); // Will only actually run in test mode
+    m_driverController.touchpad().onTrue(new GameCmd(m_driverController, m_arduinoSub)); // Will only actually run in test mode
 
     //m_driverController.povUp()
 
@@ -169,42 +166,41 @@ public class RobotContainer {
     //m_driverController.povLeft()
 
     m_driverController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_shooterSub));
 
     m_driverController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_shooterSub));
 
 
     // ======================================== Operator controller bindings ========================================
     m_operatorController.square()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_arduinoSub, m_feederSub, m_flywheelSub,
+            m_shooterSub));
 
     m_operatorController.cross()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_shooterSub, m_flywheelSub, m_feederSub,
-            m_arduinoSub));
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
+            m_shooterSub));
 
     m_operatorController.circle()
-        .onTrue(new UpIntakeGrp(m_shooterSub, m_feederSub, m_arduinoSub, m_ledSub, m_intakeSub, m_flywheelSub));
+        .onTrue(new UpIntakeGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
 
     m_operatorController.triangle()
-        .onTrue(
-            new ZeroPivotNoFlywheelGrp(m_shooterSub, m_flywheelSub, m_feederSub, m_intakeSub, m_arduinoSub, m_ledSub));
+        .onTrue(new ZeroPivotNoFlywheelGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
 
     m_operatorController.L1()
-        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_climbSub, m_drivetrainSub));
 
     m_operatorController.R1()
-        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 1.0, m_drivetrainSub, m_climbSub));
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 1.0, m_climbSub, m_drivetrainSub));
 
     m_operatorController.L2()
-        .onTrue(new IntakeNoteGrp(m_shooterSub, m_intakeSub, m_feederSub, m_arduinoSub, m_ledSub, m_flywheelSub));
+        .onTrue(new IntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
 
     m_operatorController.R2()
-        .onTrue(new ShooterShootCmd(m_flywheelSub, m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub));
+        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_shooterSub));
 
     m_operatorController.share()
-        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_drivetrainSub, m_climbSub)); //228.6
+        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_climbSub, m_drivetrainSub));
 
     m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
 
@@ -214,27 +210,23 @@ public class RobotContainer {
     m_operatorController.touchpad().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(1.0, 1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_shooterSub, m_feederSub));
+    m_operatorController.povUp().onTrue(new ExpelAmpNoteCmd(m_feederSub));
 
     //m_operatorController.povRight()
-
-    //m_operatorController.povDown()
-    //.onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
-    //new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
 
     m_operatorController.povDown()
         .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_shooterSub),
             (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
-                new AmpShotCmd(m_feederSub, m_arduinoSub, m_ledSub)))));
+                new AmpShotCmd(m_arduinoSub, m_feederSub, m_ledSub)))));
 
     m_operatorController.povLeft().onTrue(
-        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_shooterSub, m_flywheelSub, m_feederSub, m_arduinoSub));
+        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_arduinoSub, m_feederSub, m_flywheelSub, m_shooterSub));
 
     m_operatorController.L3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_shooterSub));
 
     m_operatorController.R3()
-        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_intakeSub, m_feederSub, m_shooterSub, m_flywheelSub));
+        .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_shooterSub));
   }
 
 
@@ -365,7 +357,6 @@ public class RobotContainer {
     m_ledSub.init();
     m_climbSub.init();
     m_drivetrainSub.init();
-    m_intakeSub.init();
     m_shooterSub.init();
     m_visionSub.init();
     m_flywheelSub.init();

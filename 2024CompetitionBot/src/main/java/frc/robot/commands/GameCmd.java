@@ -12,9 +12,8 @@ import frc.robot.Robot;
 import frc.robot.subsystems.ArduinoSub;
 
 public class GameCmd extends Command {
-  /** Creates a new GameCmd. */
-  private final ArduinoSub m_arduinoSub;
   private final CommandPS4Controller m_driverController;
+  private final ArduinoSub m_arduinoSub;
 
   private Instant time;
 
@@ -26,11 +25,11 @@ public class GameCmd extends Command {
   private int foodX = 0;
   private int foodY = 0;
 
-  public GameCmd(ArduinoSub arduinoSub, CommandPS4Controller controller) {
-    m_arduinoSub = arduinoSub;
+  public GameCmd(CommandPS4Controller controller, ArduinoSub arduinoSub) {
     m_driverController = controller;
+    m_arduinoSub = arduinoSub;
+
     addRequirements(arduinoSub);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

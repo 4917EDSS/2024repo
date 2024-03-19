@@ -8,18 +8,17 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.IntakeSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class FastIntakeNoteGrp extends SequentialCommandGroup {
   /** Creates a new IntakeNoteGrp. */
-  public FastIntakeNoteGrp(ShooterSub shooterSub, IntakeSub intakeSub, FeederSub feederSub, ArduinoSub arduinoSub,
-      LedSub ledSub, FlywheelSub flywheelSub) {
+  public FastIntakeNoteGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
+      ShooterSub shooterSub) {
 
     addCommands(
         new ShooterPivotCmd(0, shooterSub),
-        new IntakeUntilNoteInCmd(intakeSub, feederSub, arduinoSub, ledSub, flywheelSub));
+        new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub));
 
 
   }

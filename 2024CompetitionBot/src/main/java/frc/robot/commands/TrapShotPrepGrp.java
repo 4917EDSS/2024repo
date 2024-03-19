@@ -12,12 +12,9 @@ import frc.robot.subsystems.ShooterSub;
 
 public class TrapShotPrepGrp extends ParallelCommandGroup {
   /** Creates a new TrapShoot. */
-  public TrapShotPrepGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub) {
+  public TrapShotPrepGrp(ClimbSub climbSub, DrivetrainSub drivetrainSub, ShooterSub shooterSub) {
     addCommands(
         new ShooterPivotCmd(Constants.Shooter.kAngleTrap, shooterSub),
-        new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, Constants.Climb.kPower, drivetrainSub, climbSub));
-
-    // Use addRequirements() here to declare subsystem dependencies.
+        new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, Constants.Climb.kPower, climbSub, drivetrainSub));
   }
-
 }

@@ -19,7 +19,8 @@ import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.VisionSub;
 
 public class AlignVisionCmd extends Command {
-  /** Creates a new AlignVisionCmd. */
+  private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
+  private static final double kRotationTolerance = 1.0;
 
   private final VisionSub m_visionSub;
   private final DrivetrainSub m_drivetrainSub;
@@ -30,27 +31,22 @@ public class AlignVisionCmd extends Command {
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
 
-  private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
-
-  private static final double kRotationTolerance = 1.0;
-
   private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
 
-  public AlignVisionCmd(DrivetrainSub drivetrainSub, VisionSub visionSub, ShooterSub shooterSub, FeederSub feederSub,
-      FlywheelSub flywheelSub, LedSub ledSub, CommandPS4Controller driverController,
-      CommandPS4Controller operatorController) {
-    m_visionSub = visionSub;
-    m_drivetrainSub = drivetrainSub;
-    m_shooterSub = shooterSub;
-    m_flywheelSub = flywheelSub;
-    m_feederSub = feederSub;
-    m_ledSub = ledSub;
-
+  public AlignVisionCmd(CommandPS4Controller driverController, CommandPS4Controller operatorController,
+      DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub, ShooterSub shooterSub,
+      VisionSub visionSub) {
     m_driverController = driverController;
     m_operatorController = operatorController;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(visionSub, drivetrainSub, shooterSub, feederSub, flywheelSub);
+    m_drivetrainSub = drivetrainSub;
+    m_feederSub = feederSub;
+    m_flywheelSub = flywheelSub;
+    m_ledSub = ledSub;
+    m_shooterSub = shooterSub;
+    m_visionSub = visionSub;
+
+    addRequirements(drivetrainSub, feederSub, flywheelSub, shooterSub, visionSub);
   }
 
   // Called when the command is initially scheduled.

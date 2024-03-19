@@ -15,20 +15,17 @@ import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 
 public class AmpShotCmd extends Command {
-  /** Creates a new AmpShotCmd. */
-
-  private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final FeederSub m_feederSub;
   private final LedSub m_ledSub;
   private Instant start;
 
-  public AmpShotCmd(FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_feederSub = feederSub;
+  public AmpShotCmd(ArduinoSub arduinoSub, FeederSub feederSub, LedSub ledSub) {
     m_arduinoSub = arduinoSub;
+    m_feederSub = feederSub;
     m_ledSub = ledSub;
 
-    addRequirements(feederSub, arduinoSub, ledSub);
+    addRequirements(arduinoSub, feederSub, ledSub);
   }
 
   // Called when the command is initially scheduled.

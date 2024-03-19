@@ -10,15 +10,13 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 
 public class ExpelNoteABitCmd extends Command {
-  private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final FeederSub m_feederSub;
 
-  /** Creates a new IntakeUntilNoteInCmd. */
-  public ExpelNoteABitCmd(FeederSub feederSub, ArduinoSub arduinoSub) {
-    m_feederSub = feederSub;
+  public ExpelNoteABitCmd(ArduinoSub arduinoSub, FeederSub feederSub) {
     m_arduinoSub = arduinoSub;
+    m_feederSub = feederSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feederSub);
   }
 

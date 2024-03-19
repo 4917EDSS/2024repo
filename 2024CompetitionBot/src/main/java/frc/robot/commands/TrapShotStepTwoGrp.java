@@ -11,12 +11,12 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.ShooterSub;
 
 public class TrapShotStepTwoGrp extends SequentialCommandGroup {
-  public TrapShotStepTwoGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub,
-      DriveFieldRelativeCmd driveFieldRelativeCmd) {
+  public TrapShotStepTwoGrp(DriveFieldRelativeCmd driveFieldRelativeCmd, ClimbSub climbSub, DrivetrainSub drivetrainSub,
+      ShooterSub shooterSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ClimbSetHeightCmd(Constants.Climb.kHeightGrabChain, Constants.Climb.kPower, drivetrainSub, climbSub));
+        new ClimbSetHeightCmd(Constants.Climb.kHeightGrabChain, Constants.Climb.kPower, climbSub, drivetrainSub));
     // new DriveFieldRelativeCmd());  drive back a amount 
     //move pivot to corect angle 
     //new ShooterPivotCmd(Constants.Shooter.kAngleTrapShot, shooterSub),

@@ -24,19 +24,17 @@ public class ShooterShootCmd extends Command {
   private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
   private final LedSub m_ledSub;
-  //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
+
   private Instant start;
 
-  /** Creates a new ShooterShootCmd. */
-
-  public ShooterShootCmd(FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub, ShooterSub shooterSub,
-      LedSub ledSub) {
+  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
+      ShooterSub shooterSub) {
     m_flywheelSub = flywheelSub;
     m_feederSub = feederSub;
     m_arduinoSub = arduinoSub;
     m_ledSub = ledSub;
 
-    addRequirements(flywheelSub, feederSub, shooterSub, ledSub);
+    addRequirements(feederSub, flywheelSub, ledSub, shooterSub);
   }
 
   // Called when the command is initially scheduled.

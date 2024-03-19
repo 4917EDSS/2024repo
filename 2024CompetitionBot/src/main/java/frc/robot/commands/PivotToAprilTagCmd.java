@@ -8,23 +8,21 @@ import java.util.logging.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.VisionSub;
 import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.VisionSub;
 
 public class PivotToAprilTagCmd extends Command {
   private static Logger m_logger = Logger.getLogger(PivotToAprilTagCmd.class.getName());
 
   private final PIDController m_pivotForwardPid = new PIDController(0.04, 0, 0);
-  private final VisionSub m_visionSub;
   private final ShooterSub m_shooterSub;
+  private final VisionSub m_visionSub;
 
-  /** Creates a new PivotToAprilTagCmd. */
-  public PivotToAprilTagCmd(VisionSub visionSub, ShooterSub shooterSub) {
-    m_visionSub = visionSub;
+  public PivotToAprilTagCmd(ShooterSub shooterSub, VisionSub visionSub) {
     m_shooterSub = shooterSub;
+    m_visionSub = visionSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(visionSub, shooterSub);
+    addRequirements(shooterSub, visionSub);
   }
 
   // Called when the command is initially scheduled.

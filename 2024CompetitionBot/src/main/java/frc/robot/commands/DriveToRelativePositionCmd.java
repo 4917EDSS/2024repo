@@ -17,12 +17,10 @@ public class DriveToRelativePositionCmd extends Command {
 
   private boolean atSetpoint = false;
 
-  /** Creates a new DriveToPositionCmd. */
   public DriveToRelativePositionCmd(Pose2d position, DrivetrainSub drivetrainSub) {
     m_relativePosition = position;
     m_drivetrainSub = drivetrainSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSub);
   }
 

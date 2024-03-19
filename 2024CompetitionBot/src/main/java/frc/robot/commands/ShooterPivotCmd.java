@@ -15,20 +15,17 @@ public class ShooterPivotCmd extends Command {
   private final double m_targetPivotPosition;
   private final double m_maxSpeed;
 
-  /** Creates a new PivotCmd. */
-  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub, double maxSpeed) {
+  public ShooterPivotCmd(double targetPivotPosition, double maxSpeed, ShooterSub shooterSub) {
     m_targetPivotPosition = targetPivotPosition;
-    m_shooterSub = shooterSub;
     m_maxSpeed = maxSpeed;
+    m_shooterSub = shooterSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSub);
   }
 
   public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
-    this(targetPivotPosition, shooterSub, 1.0);
+    this(targetPivotPosition, 1.0, shooterSub);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
