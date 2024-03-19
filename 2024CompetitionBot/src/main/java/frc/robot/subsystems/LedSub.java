@@ -142,7 +142,7 @@ public class LedSub extends SubsystemBase {
       long timeSinceIntakeLoaded = RobotController.getFPGATime() - m_time;
 
       if(timeSinceIntakeLoaded < 250000) { // Led ON time
-        setZoneColour(LedZones.ALL, LedColour.ORANGE);
+        setZoneColour(LedZones.ALL, LedColour.PURPLE);
       }
       if(250000 <= timeSinceIntakeLoaded && timeSinceIntakeLoaded <= 500000) {
         setZoneColour(LedZones.ALL, LedColour.WHITE);
@@ -154,13 +154,13 @@ public class LedSub extends SubsystemBase {
       if(m_ledblinktimes >= 3) {//when it is done flashing
         m_isFlashing = false;
         m_ledblinktimes = 0;
-        setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+        setZoneColour(LedZones.GAME_PIECE, LedColour.PURPLE);
       }
     }
   }
 
   // This method will be called once per scheduler run
-  public void FlashOrange() {
+  public void flashLEDs() {
     m_isFlashing = true;
 
     m_time = RobotController.getFPGATime(); // The time when the flashing will begin

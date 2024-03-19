@@ -84,7 +84,7 @@ public class VisionAlignDriveCmd extends Command {
     double powerApriltagAlign =
         MathUtil.clamp(m_alignTagPID.calculate(-calculatedSnapshot), -0.75,
             0.75);
-    if(!m_visionSub.simpleHasTarget() || forwardPowerX * forwardPowerY != 0.0) { // Stop aligning if driving  TODO: Check if this code is needed or not
+    if(!m_visionSub.simpleHasTarget() || forwardPowerX * forwardPowerY != 0.0) { // Stop aligning if driving  
       powerApriltagAlign = 0.0;
     }
 

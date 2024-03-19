@@ -24,6 +24,7 @@ import frc.robot.commands.FastIntakeNoteGrp;
 import frc.robot.commands.FastShooterPrepGrp;
 import frc.robot.commands.GameCmd;
 import frc.robot.commands.IntakeNoteGrp;
+import frc.robot.commands.IntakeWithJoystickCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterFlywheelCmd;
@@ -84,7 +85,9 @@ public class RobotContainer {
     m_drivetrainSub.setDefaultCommand(
         new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     m_shooterSub.setDefaultCommand(
-        new ShooterWithJoystickCmd(m_operatorController, m_shooterSub, m_feederSub, m_intakeSub));
+        new ShooterWithJoystickCmd(m_operatorController, m_shooterSub));
+    m_intakeSub.setDefaultCommand(
+        new IntakeWithJoystickCmd(m_operatorController, m_intakeSub, m_feederSub));
 
     // Configure the button bindings
     configureBindings();
@@ -219,7 +222,6 @@ public class RobotContainer {
     //.onTrue(new SequentialCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
     //new AmpShotCmd(m_feederSub, m_arduinoSub, m_shooterSub, m_ledSub)));
 
-    // UNTESTED faster amp prep
     m_operatorController.povDown()
         .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_shooterSub),
             (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_shooterSub),
@@ -247,14 +249,7 @@ public class RobotContainer {
   }
 
   void autoChooserSetup() {
-    m_Chooser.addOption("Test JustRunAuto", new PathPlannerAuto("Test JustRunAuto"));
-    m_Chooser.addOption("Test New Auto", new PathPlannerAuto("Test New Auto"));
-    m_Chooser.addOption("Test Demo Auto", new PathPlannerAuto("Test Demo Auto"));
-    m_Chooser.addOption("Five Note Score Auto", new PathPlannerAuto("Five Note Score Auto"));
-    m_Chooser.addOption("5NoteStealAuto", new PathPlannerAuto("5NoteStealAuto"));
     m_Chooser.addOption("4NoteAuto", new PathPlannerAuto("4NoteAuto"));
-    m_Chooser.addOption("2 Note Steal and Score", new PathPlannerAuto("2 Note Steal and Score"));
-    m_Chooser.addOption("2 Amp 2 Speaker Auto", new PathPlannerAuto("2 Amp 2 Speaker Auto"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
 

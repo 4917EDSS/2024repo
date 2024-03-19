@@ -190,10 +190,15 @@ public class DrivetrainSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateOdometry(); // TODO: Move this to an autonomous periodic so it isn't running during teleop
-    double xPos = m_odometry.getPoseMeters().getX();
-    double yPos = m_odometry.getPoseMeters().getY();
-
+    if(DriverStation.isAutonomous()) {
+      updateOdometry();
+      double xPos = m_odometry.getPoseMeters().getX();
+      double yPos = m_odometry.getPoseMeters().getY();
+      if(!RobotContainer.disableShuffleboardPrint) {
+        m_sbXPOS.setDouble(xPos);
+        m_sbYPOS.setDouble(yPos);
+      }
+    }
     m_sbYaw.setDouble(getYawRotation2d().getDegrees());
     m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
     m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
@@ -204,8 +209,6 @@ public class DrivetrainSub extends SubsystemBase {
       // SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
 
       double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
-      m_sbXPOS.setDouble(xPos);
-      m_sbYPOS.setDouble(yPos);
       m_sbTargetXPOS.setDouble(targetPos.getX());
       m_sbTargetYPOS.setDouble(targetPos.getY());
       m_sbTargetROT.setDouble(rot);

@@ -35,7 +35,6 @@ public class ShooterFlywheelCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterFlywheelCmd - End" + (interrupted ? " (interrupted)" : ""));
-    // TODO: Set shoot status LEDs to ready
   }
 
   // Returns true when the command should end.
