@@ -7,21 +7,21 @@ package frc.robot.commands;
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class ShooterWithJoystickCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
   private final CommandPS4Controller m_controller;
-  private final ShooterSub m_shooterSub;
+  private final PivotSub m_pivotSub;
 
   private boolean m_wasInDeadZone;
 
-  public ShooterWithJoystickCmd(CommandPS4Controller controller, ShooterSub shooterSub) {
+  public ShooterWithJoystickCmd(CommandPS4Controller controller, PivotSub pivotSub) {
     m_controller = controller;
-    m_shooterSub = shooterSub;
+    m_pivotSub = pivotSub;
 
-    addRequirements(shooterSub);
+    addRequirements(pivotSub);
   }
 
   // Called when the command is initially scheduled.
@@ -39,13 +39,13 @@ public class ShooterWithJoystickCmd extends Command {
     // create deadband if power is less than 5%
     if(Math.abs(pivotPower) < 0.05) {
       if(!m_wasInDeadZone) {
-        m_shooterSub.setTargetAngle((m_shooterSub.getPivotAngle()));
+        m_pivotSub.setTargetAngle((m_pivotSub.getPivotAngle()));
       }
       m_wasInDeadZone = true;
     } else {
       m_wasInDeadZone = false;
-      m_shooterSub.disableTargetAngle();
-      m_shooterSub.movePivot(pivotPower / 2);
+      m_pivotSub.disableTargetAngle();
+      m_pivotSub.movePivot(pivotPower / 2);
     }
   }
 

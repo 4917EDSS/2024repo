@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
@@ -18,12 +18,12 @@ import frc.robot.subsystems.ShooterSub;
 public class FastShooterPrepGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
   public FastShooterPrepGrp(double pivotPosition, ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ShooterFlywheelCmd(flywheelSub),
-        new ShooterPivotCmd(pivotPosition, shooterSub),
+        new ShooterPivotCmd(pivotPosition, pivotSub),
         new SequentialCommandGroup(
             new WaitCommand(0.2),
             new ExpelNoteABitCmd(arduinoSub, feederSub)));

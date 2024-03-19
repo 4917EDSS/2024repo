@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
@@ -19,14 +19,14 @@ import frc.robot.subsystems.ShooterSub;
 public class ShooterPrepGrp extends SequentialCommandGroup {
   /** Creates a new ShooterPrepGrp. */
   public ShooterPrepGrp(double pivotPosition, ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ConditionalCommand(new ShooterPivotCmd(10, shooterSub), new InstantCommand(),
-            () -> shooterSub.getPivotAngle() < 9),
+        new ConditionalCommand(new ShooterPivotCmd(10, pivotSub), new InstantCommand(),
+            () -> pivotSub.getPivotAngle() < 9),
         new ParallelCommandGroup(new ShooterFlywheelCmd(flywheelSub),
-            new ShooterPivotCmd(pivotPosition, shooterSub),
+            new ShooterPivotCmd(pivotPosition, pivotSub),
             new ExpelNoteABitCmd(arduinoSub, feederSub)));
 
   }

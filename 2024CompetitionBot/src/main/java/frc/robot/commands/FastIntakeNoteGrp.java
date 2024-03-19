@@ -9,15 +9,15 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class FastIntakeNoteGrp extends SequentialCommandGroup {
   /** Creates a new IntakeNoteGrp. */
   public FastIntakeNoteGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
 
     addCommands(
-        new ShooterPivotCmd(0, shooterSub),
+        new ShooterPivotCmd(0, pivotSub),
         new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub));
 
 

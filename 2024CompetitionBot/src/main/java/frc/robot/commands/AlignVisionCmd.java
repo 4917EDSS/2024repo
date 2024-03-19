@@ -15,7 +15,7 @@ import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.VisionSub;
 
 public class AlignVisionCmd extends Command {
@@ -26,7 +26,7 @@ public class AlignVisionCmd extends Command {
   private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
   private final CommandPS4Controller m_operatorController;
-  private final ShooterSub m_shooterSub;
+  private final PivotSub m_pivotSub;
   private final FeederSub m_feederSub;
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
@@ -34,7 +34,7 @@ public class AlignVisionCmd extends Command {
   private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
 
   public AlignVisionCmd(CommandPS4Controller driverController, CommandPS4Controller operatorController,
-      DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub, ShooterSub shooterSub,
+      DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub, PivotSub pivotSub,
       VisionSub visionSub) {
     m_driverController = driverController;
     m_operatorController = operatorController;
@@ -43,10 +43,10 @@ public class AlignVisionCmd extends Command {
     m_feederSub = feederSub;
     m_flywheelSub = flywheelSub;
     m_ledSub = ledSub;
-    m_shooterSub = shooterSub;
+    m_pivotSub = pivotSub;
     m_visionSub = visionSub;
 
-    addRequirements(drivetrainSub, feederSub, flywheelSub, shooterSub, visionSub);
+    addRequirements(drivetrainSub, feederSub, flywheelSub, pivotSub, visionSub);
   }
 
   // Called when the command is initially scheduled.
@@ -65,7 +65,7 @@ public class AlignVisionCmd extends Command {
     double xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
     double yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
 
-    double pivotAngle = m_shooterSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
+    double pivotAngle = m_pivotSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
     boolean hasTarget = m_visionSub.simpleHasTarget();
 
 
@@ -81,7 +81,7 @@ public class AlignVisionCmd extends Command {
           MathUtil.clamp(m_lookatPID.calculate(horizontalOffset, 0.0), -0.5,
               0.5);
       //rotationalPower += kTurnFedPower * Math.signum(rotationalPower);
-      m_shooterSub.setTargetAngle(pivotAngle);
+      m_pivotSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
       double feederPower =
@@ -98,10 +98,10 @@ public class AlignVisionCmd extends Command {
 
 
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
-    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
       m_logger.fine("Shot with target pivot angle: " + pivotAngle);
-      m_logger.fine("Actual pivot angle: " + m_shooterSub.getPivotAngle());
+      m_logger.fine("Actual pivot angle: " + m_pivotSub.getPivotAngle());
       m_logger.fine("Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
     } else if(hasTarget) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
@@ -124,7 +124,7 @@ public class AlignVisionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_shooterSub.isAtPivotAngle()) {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()) {
       return true;
     }
     return false;

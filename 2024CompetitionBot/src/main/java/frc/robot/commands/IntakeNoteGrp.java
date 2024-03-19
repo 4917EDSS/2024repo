@@ -10,7 +10,7 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 
@@ -19,12 +19,12 @@ public class IntakeNoteGrp extends SequentialCommandGroup {
   private final LedSub m_ledSub;
 
   public IntakeNoteGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     m_ledSub = ledSub;
     addCommands(
-        new ShooterPivotCmd(0, shooterSub),
+        new ShooterPivotCmd(0, pivotSub),
         new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub),
-        new ShooterPivotCmd(10.0, shooterSub),
+        new ShooterPivotCmd(10.0, pivotSub),
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.PURPLE)));
 

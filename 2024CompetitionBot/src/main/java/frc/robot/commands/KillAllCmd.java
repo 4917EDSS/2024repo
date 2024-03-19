@@ -10,7 +10,7 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class KillAllCmd extends Command {
   private static Logger m_logger = Logger.getLogger(KillAllCmd.class.getName());
@@ -18,10 +18,10 @@ public class KillAllCmd extends Command {
   private final FlywheelSub m_flywheelSub;
 
   public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     m_flywheelSub = flywheelSub;
 
-    addRequirements(climbSub, drivetrainSub, feederSub, flywheelSub, shooterSub);
+    addRequirements(climbSub, drivetrainSub, feederSub, flywheelSub, pivotSub);
   }
 
   // Called when the command is initially scheduled.

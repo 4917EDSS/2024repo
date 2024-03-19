@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 
@@ -19,12 +19,12 @@ import frc.robot.subsystems.FeederSub;
 public class ZeroPivotNoFlywheelGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
   public ZeroPivotNoFlywheelGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new IntakeNoteFeederCmd(feederSub),
-        new ShooterPivotCmd(0, 0.4, shooterSub),
+        new ShooterPivotCmd(0, 0.4, pivotSub),
         new InstantCommand(() -> flywheelSub.disableFlywheel()));
   }
 }

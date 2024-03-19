@@ -7,16 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class TrapShotGrp extends SequentialCommandGroup {
   public TrapShotGrp(DriveFieldRelativeCmd driveFieldRelativeCmd, ClimbSub climbSub, DrivetrainSub drivetrainSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new TrapShotPrepGrp(climbSub, drivetrainSub, shooterSub),
-        new TrapShotStepTwoGrp(driveFieldRelativeCmd, climbSub, drivetrainSub, shooterSub));
+        new TrapShotPrepGrp(climbSub, drivetrainSub, pivotSub),
+        new TrapShotStepTwoGrp(driveFieldRelativeCmd, climbSub, drivetrainSub, pivotSub));
   }
   //All heights for height are wrong and need to be tested
 }

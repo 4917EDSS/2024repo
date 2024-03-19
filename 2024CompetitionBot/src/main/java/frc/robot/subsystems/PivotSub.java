@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-public class ShooterSub extends SubsystemBase {
-  private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
+public class PivotSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(PivotSub.class.getName());
 
 
   private final CANSparkMax m_pivot =
@@ -62,7 +62,7 @@ public class ShooterSub extends SubsystemBase {
 
   private int m_hitLimitCounter = 0;
 
-  public ShooterSub() {
+  public PivotSub() {
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
 
@@ -70,7 +70,7 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void init() {
-    m_logger.info("Initializing ShooterSub");
+    m_logger.info("Initializing pivotSub");
 
     disableTargetAngle();
 

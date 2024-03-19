@@ -75,7 +75,7 @@ public class FlywheelSub extends SubsystemBase {
   public void periodic() {
     updateShuffleBoard();
 
-    // Flywheel needs to spin at set velocity prior to m_shooterSub.spinBothFeeders being executed. 
+    // Flywheel needs to spin at set velocity prior to m_pivotSub.spinBothFeeders being executed. 
     if(m_isFlywheelEnabled) {
       double feedForwardVoltage = m_flyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
       // So far, we don't need the PID control.  Feedforward is doing well on its own

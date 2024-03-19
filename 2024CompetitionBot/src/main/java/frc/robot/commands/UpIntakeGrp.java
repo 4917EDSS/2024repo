@@ -10,16 +10,16 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 
 public class UpIntakeGrp extends SequentialCommandGroup {
   public UpIntakeGrp(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub,
-      ShooterSub shooterSub) {
+      PivotSub pivotSub) {
     addCommands(
-        new ShooterPivotCmd(Constants.Shooter.kHighPickUp, shooterSub),
+        new ShooterPivotCmd(Constants.Shooter.kHighPickUp, pivotSub),
         new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub),
-        new ShooterPivotCmd(50.0, shooterSub),
+        new ShooterPivotCmd(50.0, pivotSub),
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new IntakeNoteFromSourceCmd(arduinoSub, feederSub, ledSub));
 

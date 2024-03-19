@@ -42,7 +42,7 @@ public class IntakeNoteFromSourceCmd extends Command {
   @Override
   public void execute() {
     // Once the note has cleared the intake rollers, run those rollers in reverse to avoid controlling two notes
-    // if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
+    // if(m_pivotSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
     //   m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     // }
     // if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {
