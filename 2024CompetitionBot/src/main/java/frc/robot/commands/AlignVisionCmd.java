@@ -32,7 +32,7 @@ public class AlignVisionCmd extends Command {
   private final PivotSub m_pivotSub;
   private final VisionSub m_visionSub;
 
-  private final PIDController m_lookatPID = new PIDController(0.007, 0.0, 0.009); // For facing apriltag
+  private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
 
   public AlignVisionCmd(CommandPS4Controller driverController, CommandPS4Controller operatorController,
       DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub, PivotSub pivotSub,
@@ -88,9 +88,6 @@ public class AlignVisionCmd extends Command {
       double feederPower =
           Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
       m_feederSub.spinBothFeeders(feederPower, feederPower * Constants.Shooter.kNoteUpperSurfaceSpeedDifferential);
-      if(m_lookatPID.atSetpoint()) {
-        rotationalPower = 0.0;
-      }
 
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
