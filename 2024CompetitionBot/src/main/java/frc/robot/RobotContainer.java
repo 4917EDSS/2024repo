@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignVisionCmd;
 import frc.robot.commands.AlignVisionGrp;
 import frc.robot.commands.AmpShotPrepCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
@@ -129,7 +130,8 @@ public class RobotContainer {
     // ======================================== Driver controller bindings ========================================
 
     // This basically takes over the robot right now
-    // m_driverController.square()
+    m_driverController.square().onTrue(new AlignVisionCmd(m_driverController, m_operatorController, m_drivetrainSub,
+        m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
 
     // m_driverController.cross()
 
