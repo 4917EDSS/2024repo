@@ -11,10 +11,12 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PwmIds;
+import frc.robot.subsystems.ArduinoSub;
 
 
 public class LedSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(LedSub.class.getName());
+  private final ArduinoSub m_arduinoSub;
 
   // Constants
   private final static int kLedStripLength = 33;
@@ -114,7 +116,8 @@ public class LedSub extends SubsystemBase {
   AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(kLedStripLength);
 
   /** Creates a new LedSub. */
-  public LedSub() {
+  public LedSub(ArduinoSub arduinoSub) {
+    m_arduinoSub = arduinoSub;
     m_ledStrip.setLength(m_ledBuffer.getLength());
     m_ledStrip.setData(m_ledBuffer);
     m_ledStrip.start();
@@ -169,6 +172,21 @@ public class LedSub extends SubsystemBase {
    */
   public void setZoneColour(LedZones zone, LedColour ledColour) {
     setZoneRGB(zone, ledColour.red, ledColour.green, ledColour.blue);
+    //adding local colors because led colors set here are final. Maybe they shouldn't be?
+    int r = ledColour.red;
+    int g = ledColour.green;
+    int b = ledColour.blue;
+
+    if(zone == LedZones.ALL) {
+      if(ledColour.red + ledColour.blue + ledColour.blue > 510) { //might already be divided in arduino sub
+        r = ledColour.red / 2; //divide them by 2 because it draws too much voltage from my understanding
+        g = ledColour.green / 2;
+        b = ledColour.blue / 2;
+      }
+      m_arduinoSub.updateLEDHalf(0, r, g, b);
+      m_arduinoSub.updateLEDHalf(1, r, g, b);
+    }
+
     // TODO: If zone is ALL, also set the Arduino board LEDs to this colour (but don't let the R + G + B value exceed 510)
     // Something like 
     // if(sum-of-LED-colours > 510) {
