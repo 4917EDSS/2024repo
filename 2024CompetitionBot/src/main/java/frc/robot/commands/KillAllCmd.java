@@ -10,21 +10,18 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
-import frc.robot.subsystems.IntakeSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class KillAllCmd extends Command {
   private static Logger m_logger = Logger.getLogger(KillAllCmd.class.getName());
 
   private final FlywheelSub m_flywheelSub;
 
-  /** Creates a new KillAllCmd. */
-  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, IntakeSub intakeSub, FeederSub feederSub,
-      ShooterSub shooterSub, FlywheelSub flywheelSub) {
+  public KillAllCmd(ClimbSub climbSub, DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub,
+      PivotSub pivotSub) {
     m_flywheelSub = flywheelSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climbSub, drivetrainSub, intakeSub, feederSub, shooterSub, flywheelSub);
+    addRequirements(climbSub, drivetrainSub, feederSub, flywheelSub, pivotSub);
   }
 
   // Called when the command is initially scheduled.

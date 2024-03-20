@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "FastShooterPrepGrpTouchingSpeaker"
+            "name": "ShooterPrepGrpTouchingSpeaker"
           }
         },
         {
@@ -46,6 +46,37 @@
           "type": "path",
           "data": {
             "pathName": "Shoot From Angle After Center Line Pickup First Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlignCmdGrp"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Second Note From Shooting Position"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot From Angle After Center Line Pickup Second Note"
           }
         },
         {

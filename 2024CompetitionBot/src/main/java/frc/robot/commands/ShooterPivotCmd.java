@@ -6,39 +6,36 @@ package frc.robot.commands;
 
 import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class ShooterPivotCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterPivotCmd.class.getName());
 
-  private final ShooterSub m_shooterSub;
   private final double m_targetPivotPosition;
   private final double m_maxSpeed;
+  private final PivotSub m_pivotSub;
 
-  /** Creates a new PivotCmd. */
-  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub, double maxSpeed) {
+  public ShooterPivotCmd(double targetPivotPosition, double maxSpeed, PivotSub pivotSub) {
     m_targetPivotPosition = targetPivotPosition;
-    m_shooterSub = shooterSub;
     m_maxSpeed = maxSpeed;
+    m_pivotSub = pivotSub;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSub);
+    addRequirements(pivotSub);
   }
 
-  public ShooterPivotCmd(double targetPivotPosition, ShooterSub shooterSub) {
-    this(targetPivotPosition, shooterSub, 1.0);
+  public ShooterPivotCmd(double targetPivotPosition, PivotSub pivotSub) {
+    this(targetPivotPosition, 1.0, pivotSub);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_logger.fine("ShooterPivotCmd - Init");
     if(m_targetPivotPosition != 0) {
-      m_shooterSub.setTargetAngle(m_targetPivotPosition);
-      m_shooterSub.runPivotControl(true);
+      m_pivotSub.setTargetAngle(m_targetPivotPosition);
+      m_pivotSub.runPivotControl(true);
     } else {
-      m_shooterSub.disableTargetAngle();
+      m_pivotSub.disableTargetAngle();
     }
   }
 
@@ -46,7 +43,7 @@ public class ShooterPivotCmd extends Command {
   @Override
   public void execute() {
     if(m_targetPivotPosition == 0) {
-      m_shooterSub.movePivot(-m_maxSpeed);
+      m_pivotSub.movePivot(-m_maxSpeed);
     }
   }
 
@@ -54,16 +51,16 @@ public class ShooterPivotCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterPivotCmd - End" + (interrupted ? " (interrupted)" : ""));
-    m_shooterSub.movePivot(0.0);
+    m_pivotSub.movePivot(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean hitLimit = (m_shooterSub.getPivotPower() < 0.0) ? m_shooterSub.isPivotAtReverseLimit()
-        : m_shooterSub.isPivotAtForwardLimit(); // Emergency case to stop command
+    boolean hitLimit = (m_pivotSub.getPivotPower() < 0.0) ? m_pivotSub.isPivotAtReverseLimit()
+        : m_pivotSub.isPivotAtForwardLimit(); // Emergency case to stop command
     if(m_targetPivotPosition != 0) {
-      return m_shooterSub.isAtPivotAngle() || hitLimit;
+      return m_pivotSub.isAtPivotAngle() || hitLimit;
     } else {
       return hitLimit;
     }

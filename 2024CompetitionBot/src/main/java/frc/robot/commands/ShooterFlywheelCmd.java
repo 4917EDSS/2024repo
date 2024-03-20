@@ -13,7 +13,6 @@ public class ShooterFlywheelCmd extends Command {
 
   private final FlywheelSub m_flywheelSub;
 
-  /** Creates a new FlywheelCmd. */
   public ShooterFlywheelCmd(FlywheelSub flywheelSub) {
     m_flywheelSub = flywheelSub;
 
@@ -35,7 +34,6 @@ public class ShooterFlywheelCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     m_logger.fine("ShooterFlywheelCmd - End" + (interrupted ? " (interrupted)" : ""));
-    // TODO: Set shoot status LEDs to ready
   }
 
   // Returns true when the command should end.

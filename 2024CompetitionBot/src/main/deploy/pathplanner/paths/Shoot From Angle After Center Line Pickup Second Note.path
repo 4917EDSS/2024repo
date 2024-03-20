@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 3.111460041101901,
-        "y": 2.8266100168563977
+        "y": 2.8266100168563972
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Steal And Score Auto",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -54,7 +54,6 @@ public class LedSub extends SubsystemBase {
     //DIAG_INTAKE_SENSOR(21, 21, false), DIAG_NOTE_INSIDE(0, 3, false), // Indicates if a note is inside storage. Was originally called Limit Switches Hit
     //DIAG_SHOOTER_POSITION(4, kLedStripLength - 1, false); //indicates shooter position
 
-
     public final int start;
     public final int end;
     public final boolean mirror;
@@ -142,7 +141,7 @@ public class LedSub extends SubsystemBase {
       long timeSinceIntakeLoaded = RobotController.getFPGATime() - m_time;
 
       if(timeSinceIntakeLoaded < 250000) { // Led ON time
-        setZoneColour(LedZones.ALL, LedColour.ORANGE);
+        setZoneColour(LedZones.ALL, LedColour.PURPLE);
       }
       if(250000 <= timeSinceIntakeLoaded && timeSinceIntakeLoaded <= 500000) {
         setZoneColour(LedZones.ALL, LedColour.WHITE);
@@ -154,15 +153,14 @@ public class LedSub extends SubsystemBase {
       if(m_ledblinktimes >= 3) {//when it is done flashing
         m_isFlashing = false;
         m_ledblinktimes = 0;
-        setZoneColour(LedZones.GAME_PIECE, LedColour.ORANGE);
+        setZoneColour(LedZones.GAME_PIECE, LedColour.PURPLE);
       }
     }
   }
 
   // This method will be called once per scheduler run
-  public void FlashOrange() {
+  public void flashLEDs() {
     m_isFlashing = true;
-
     m_time = RobotController.getFPGATime(); // The time when the flashing will begin
   }
 
@@ -171,6 +169,14 @@ public class LedSub extends SubsystemBase {
    */
   public void setZoneColour(LedZones zone, LedColour ledColour) {
     setZoneRGB(zone, ledColour.red, ledColour.green, ledColour.blue);
+    // TODO: If zone is ALL, also set the Arduino board LEDs to this colour (but don't let the R + G + B value exceed 510)
+    // Something like 
+    // if(sum-of-LED-colours > 510) {
+    //   Divide each colour value by two
+    // }
+    // And then
+    // m_arduinoSub.updateLEDHalf(0, ledColour.red, ledColour.green, ledColour.blue);
+    // m_arduinoSub.updateLEDHalf(1, ledColour.red, ledColour.green, ledColour.blue);
   }
 
   private void setBuffer(int position, int r, int g, int b) {

@@ -17,17 +17,16 @@ import frc.robot.subsystems.LedSub.LedZones;
 public class IntakeNoteFromSourceCmd extends Command {
   private static Logger m_logger = Logger.getLogger(IntakeNoteFromSourceCmd.class.getName());
 
-  private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final FeederSub m_feederSub;
   private final LedSub m_LedSub;
 
-  /** Creates a new IntakeUntilNoteInCmd. */
-  public IntakeNoteFromSourceCmd(FeederSub feederSub, ArduinoSub arduinoSub, LedSub ledSub) {
-    m_feederSub = feederSub;
+  public IntakeNoteFromSourceCmd(ArduinoSub arduinoSub, FeederSub feederSub, LedSub ledSub) {
     m_arduinoSub = arduinoSub;
+    m_feederSub = feederSub;
     m_LedSub = ledSub;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(feederSub, ledSub);
+
+    addRequirements(feederSub); // It's fine if two commands change LEDs
   }
 
   // Called when the command is initially scheduled.
@@ -43,7 +42,7 @@ public class IntakeNoteFromSourceCmd extends Command {
   @Override
   public void execute() {
     // Once the note has cleared the intake rollers, run those rollers in reverse to avoid controlling two notes
-    // if(m_shooterSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
+    // if(m_pivotSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
     //   m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
     // }
     // if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)) {

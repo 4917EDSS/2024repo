@@ -9,19 +9,17 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
 
 public class DriveFieldRelativeCmd extends Command {
-  private final DrivetrainSub m_drivetrainSub;
   private final CommandPS4Controller m_driverController;
+  private final DrivetrainSub m_drivetrainSub;
 
   private final double m_deadband = 0.07;
 
   private double m_targetHeading;
 
-  /** Creates a new DriverFeildRelativeDriveCmd. */
   public DriveFieldRelativeCmd(CommandPS4Controller commandPS4Controller, DrivetrainSub drivetrainSub) {
     m_drivetrainSub = drivetrainSub;
     m_driverController = commandPS4Controller;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrainSub);
   }
 

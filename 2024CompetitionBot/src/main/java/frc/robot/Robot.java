@@ -27,6 +27,10 @@ public class Robot extends TimedRobot {
 
   private boolean m_isInitialized = false;
 
+  private boolean m_needsPostAutoInit = false;
+
+  public static boolean inTestMode = false;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -73,7 +77,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    inTestMode = false;
+  }
 
   @Override
   public void disabledPeriodic() {
@@ -95,8 +101,7 @@ public class Robot extends TimedRobot {
     if(m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-
+    m_needsPostAutoInit = true;
   }
 
   /** This function is called periodically during autonomous. */
@@ -114,10 +119,13 @@ public class Robot extends TimedRobot {
     }
 
     // Reset the subsystems if this is the first time we run or if we have signaled that we should reset
-    // TODO Restore this for competition
     if(!m_isInitialized) {
       m_robotContainer.initSubsystems();
       m_isInitialized = true;
+    }
+    if(m_needsPostAutoInit) {
+      m_robotContainer.postAutoInit();
+      m_needsPostAutoInit = false;
     }
   }
 
@@ -133,6 +141,10 @@ public class Robot extends TimedRobot {
     // Reset most parts of the robot
     m_logger.warning("Resetting robot subsystems via testInit");
     m_isInitialized = false;
+
+    m_robotContainer.testInitSubsystems();
+    inTestMode = true;
+
   }
 
   /** This function is called periodically during test mode. */

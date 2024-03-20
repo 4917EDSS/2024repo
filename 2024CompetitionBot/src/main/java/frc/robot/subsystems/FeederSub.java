@@ -12,7 +12,8 @@ import frc.robot.Constants;
 
 public class FeederSub extends SubsystemBase {
   /** Creates a new FeederSub. */
-
+  private final CANSparkMax m_intakeRollers =
+      new CANSparkMax(Constants.CanIds.kIntakeRollers, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =
       new CANSparkMax(Constants.CanIds.kUpperFeeder, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_lowerFeeder =
@@ -24,6 +25,8 @@ public class FeederSub extends SubsystemBase {
   }
 
   public void init() {
+    m_intakeRollers.setSmartCurrentLimit(40);
+
     m_upperFeeder.setInverted(false);
     if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
       m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
@@ -39,7 +42,13 @@ public class FeederSub extends SubsystemBase {
     m_upperFeeder.setSmartCurrentLimit(40);
     m_lowerFeeder.setSmartCurrentLimit(40);
 
+    setIntakeMotors(0.0);
     spinBothFeeders(0, 0);
+  }
+
+  // positive power intakes 
+  public void setIntakeMotors(double power) {
+    m_intakeRollers.set(power);
   }
 
   public void spinUpperFeeder(double power) {

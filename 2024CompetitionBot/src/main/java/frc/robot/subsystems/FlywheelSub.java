@@ -30,6 +30,7 @@ public class FlywheelSub extends SubsystemBase {
       new SimpleMotorFeedforward(Constants.Flywheel.ks, Constants.Flywheel.kv);
 
   private boolean m_isFlywheelEnabled = false;
+  //private double m_currentVoltage = 0.0;  // For Feedforward testing
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
   private final GenericEntry m_shooterFlywheelVelocityL, m_shooterFlywheelVelocityR, m_shooterflywheelPowerL,
@@ -40,10 +41,10 @@ public class FlywheelSub extends SubsystemBase {
 
 
   public FlywheelSub() {
-    m_shooterFlywheelVelocityL = m_shuffleboardTab.add("Left Shooter Flywheel Velocity", 0).getEntry();
-    m_shooterFlywheelVelocityR = m_shuffleboardTab.add("Right Shooter Flywheel Velocity", 0).getEntry();
-    m_shooterflywheelPowerL = m_shuffleboardTab.add("Left ShooterFlywheel power", 0).getEntry();
-    m_shooterflywheelPowerR = m_shuffleboardTab.add("Right ShooterFlywheel power", 0).getEntry();
+    m_shooterFlywheelVelocityL = m_shuffleboardTab.add("Left Velocity", 0).getEntry();
+    m_shooterFlywheelVelocityR = m_shuffleboardTab.add("Right Velocity", 0).getEntry();
+    m_shooterflywheelPowerL = m_shuffleboardTab.add("Left Power", 0).getEntry();
+    m_shooterflywheelPowerR = m_shuffleboardTab.add("Right Power", 0).getEntry();
 
     init();
   }
@@ -75,7 +76,7 @@ public class FlywheelSub extends SubsystemBase {
   public void periodic() {
     updateShuffleBoard();
 
-    // Flywheel needs to spin at set velocity prior to m_shooterSub.spinBothFeeders being executed. 
+    // Flywheel needs to spin at set velocity prior to m_pivotSub.spinBothFeeders being executed. 
     if(m_isFlywheelEnabled) {
       double feedForwardVoltage = m_flyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
       // So far, we don't need the PID control.  Feedforward is doing well on its own
@@ -100,6 +101,8 @@ public class FlywheelSub extends SubsystemBase {
   public void setFlywheelVoltage(double voltage) {
     m_flywheelL.setVoltage(voltage);
     m_flywheelR.setVoltage(voltage);
+
+    // m_currentVoltage = voltage; // For Feedforward testing
   }
 
   public double getFlywheelVelocityR() {
@@ -129,6 +132,11 @@ public class FlywheelSub extends SubsystemBase {
     return false;
   }
 
+  // For Feedforward testing
+  // public void incrementVoltage() {
+  //   setFlywheelVoltage(m_currentVoltage + 0.125);
+  // }
+
   private void updateShuffleBoard() {
     m_shooterFlywheelVelocityL.setDouble(getFlywheelVelocityL());
     if(!RobotContainer.disableShuffleboardPrint) {
@@ -139,6 +147,8 @@ public class FlywheelSub extends SubsystemBase {
 
     // Uncomment if need to add PID controller
     //m_flyWheelPID.setP(SmartDashboard.getNumber("Flywheel P", m_flywheelP));
+    // SmartDashboard.putNumber("FW L Pos", m_flywheelL.getEncoder().getPosition());
+    // SmartDashboard.putNumber("FW L Voltage", m_currentVoltage);
   }
 }
 

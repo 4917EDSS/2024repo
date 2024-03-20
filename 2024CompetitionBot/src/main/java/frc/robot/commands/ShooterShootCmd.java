@@ -13,30 +13,26 @@ import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.LedSub;
-import frc.robot.subsystems.ShooterSub;
 import frc.robot.subsystems.LedSub.LedColour;
 import frc.robot.subsystems.LedSub.LedZones;
 
 public class ShooterShootCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterShootCmd.class.getName());
 
-  private final FlywheelSub m_flywheelSub;
-  private final FeederSub m_feederSub;
   private final ArduinoSub m_arduinoSub;
+  private final FeederSub m_feederSub;
+  private final FlywheelSub m_flywheelSub;
   private final LedSub m_ledSub;
-  //private final ShooterFlywheelCmd m_shooterFlywheelCmd;
+
   private Instant start;
 
-  /** Creates a new ShooterShootCmd. */
-
-  public ShooterShootCmd(FlywheelSub flywheelSub, FeederSub feederSub, ArduinoSub arduinoSub, ShooterSub shooterSub,
-      LedSub ledSub) {
-    m_flywheelSub = flywheelSub;
-    m_feederSub = feederSub;
+  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub) {
     m_arduinoSub = arduinoSub;
+    m_feederSub = feederSub;
+    m_flywheelSub = flywheelSub;
     m_ledSub = ledSub;
 
-    addRequirements(flywheelSub, feederSub, shooterSub, ledSub);
+    addRequirements(feederSub, flywheelSub); // It's fine if two commands change LEDs
   }
 
   // Called when the command is initially scheduled.
@@ -50,12 +46,11 @@ public class ShooterShootCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-
-    // Flywheel needs to spin at full power prior to m_shooterSub.spinBothFeeders being executed.
-    // double driveOutput = m_FlyWheelPID.calculate(m_shooterSub.getFlywheelVelocity(), 4200); //10 is a target velocity we don't know what it is
-    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-        Constants.Shooter.kNoteUpperIntakePower);
+    // Flywheel needs to spin at full power prior to m_pivotSub.spinBothFeeders being executed.
+    if(m_flywheelSub.isAtTargetVelocity()) {
+      m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
+          Constants.Shooter.kNoteUpperIntakePower);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -69,11 +64,11 @@ public class ShooterShootCmd extends Command {
 
   @Override
   public boolean isFinished() {
-    if(m_arduinoSub.isAnySansorTripped()) {
+    if(m_arduinoSub.isAnySensorTripped()) {
       start = Instant.now();
     }
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
-    return timeElapsed.toSeconds() > 0.1;
+    return timeElapsed.toMillis() > 100;
   }
 }

@@ -8,16 +8,13 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
-import frc.robot.subsystems.ShooterSub;
+import frc.robot.subsystems.PivotSub;
 
 public class TrapShotPrepGrp extends ParallelCommandGroup {
   /** Creates a new TrapShoot. */
-  public TrapShotPrepGrp(ShooterSub shooterSub, ClimbSub climbSub, DrivetrainSub drivetrainSub) {
+  public TrapShotPrepGrp(ClimbSub climbSub, DrivetrainSub drivetrainSub, PivotSub pivotSub) {
     addCommands(
-        new ShooterPivotCmd(Constants.Shooter.kAngleTrap, shooterSub),
-        new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, Constants.Climb.kPower, drivetrainSub, climbSub));
-
-    // Use addRequirements() here to declare subsystem dependencies.
+        new ShooterPivotCmd(Constants.Shooter.kAngleTrap, pivotSub),
+        new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, Constants.Climb.kPower, climbSub, drivetrainSub));
   }
-
 }

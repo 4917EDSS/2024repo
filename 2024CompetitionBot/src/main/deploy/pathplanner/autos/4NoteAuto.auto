@@ -32,28 +32,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.0
-                            }
-                          },
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "StartPositionToMiddleNote"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "IntakeNoteGrp"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "StartPositionToMiddleNote"
                       }
                     }
                   ]
@@ -64,7 +51,7 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "parallel",
+                      "type": "deadline",
                       "data": {
                         "commands": [
                           {
@@ -92,6 +79,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "ZeroPivot"
+                }
+              },
+              {
                 "type": "parallel",
                 "data": {
                   "commands": [
@@ -102,22 +95,9 @@
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "path",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 2.0
-                            }
-                          },
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Drive Forward Pick up Note"
-                            }
-                          }
-                        ]
+                        "pathName": "Drive Forward Pick up Note"
                       }
                     }
                   ]

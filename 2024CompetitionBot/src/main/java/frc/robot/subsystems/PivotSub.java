@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-public class ShooterSub extends SubsystemBase {
-  private static Logger m_logger = Logger.getLogger(ShooterSub.class.getName());
+public class PivotSub extends SubsystemBase {
+  private static Logger m_logger = Logger.getLogger(PivotSub.class.getName());
 
 
   private final CANSparkMax m_pivot =
@@ -60,7 +60,9 @@ public class ShooterSub extends SubsystemBase {
   private final double[] shooterAngles = {                68.0,  66.0,  63.8,  62.5,  61.2,  53.0, 48.7, 44.3, 39}; //
   // @formatter:on
 
-  public ShooterSub() {
+  private int m_hitLimitCounter = 0;
+
+  public PivotSub() {
     m_shooterPivotVelocity = m_shuffleboardTab.add("Pivot Vel", 0).getEntry();
     m_shooterPivotPower = m_shuffleboardTab.add("Pivot Power", 0).getEntry();
 
@@ -68,11 +70,11 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public void init() {
-    m_logger.info("Initializing ShooterSub");
+    m_logger.info("Initializing pivotSub");
 
     disableTargetAngle();
 
-    m_pivot.setInverted(true);
+    m_pivot.setInverted(false);
 
     m_pivot.setIdleMode(IdleMode.kBrake);
 
@@ -103,8 +105,15 @@ public class ShooterSub extends SubsystemBase {
     if(m_areWeTryingToHold) {
       runPivotControl(false);
     }
-    if(isPivotAtReverseLimit() && getPivotAngle() > 0.75) {
+    if(isPivotAtReverseLimit() && Math.abs(getPivotAngle()) > 0.15) {
+      m_hitLimitCounter++;
+    } else {
+      m_hitLimitCounter = 0;
+    }
+
+    if(m_hitLimitCounter >= 5) {
       resetPivot();
+      m_hitLimitCounter = 0;
     }
 
     // This method will be called once per scheduler run
@@ -192,6 +201,7 @@ public class ShooterSub extends SubsystemBase {
 
   public void resetPivot() {
     m_pivotAbsoluteEncoder.setZeroOffset((getPivotAngle() + m_pivotAbsoluteEncoder.getZeroOffset()) % 360);
+    m_logger.fine("Pivot Reset");
   }
 
 
