@@ -67,7 +67,7 @@ public class RobotContainer {
 
   // Disables large amount of prints from DrivetrainSub, pivotSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
-  public static boolean disableShuffleboardPrint = false;
+  public static boolean disableShuffleboardPrint = true;
 
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
