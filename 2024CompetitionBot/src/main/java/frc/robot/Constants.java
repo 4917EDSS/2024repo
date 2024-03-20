@@ -287,11 +287,12 @@ public final class Constants {
   }
 
   public static final class Flywheel {
-    public static final double kFlywheelShootVelocity = 86.0;//80; //84 RPS is MAX speed
-    public static final double ks = 0.25;
-    public static final double kv = 0.128;
+    public static final double kFlywheelShootVelocity = 70.0; // 76 is MAX velocity in RPS. Set a little below for when battery weakens
+    public static final double ks = 0.5;
+    public static final double kv = 0.131; // ~0.95 per 0.125 V.  Was 0.128 with old gearing
+    //public static final double kStaticThresholdVelocity = 1.6; // RPS when we apply ks volts
     public static final double kFlywheelTolerance = 5;
-    public static final double kPositionConversionFactor = 10.0 / 16.5;
-    public static final double kVelocityConversionFactor = 1.0 / 60.0;
+    public static final double kPositionConversionFactor = 10.0 / 9.524; // Was 10.0 / 16.5 with previous gearing
+    public static final double kVelocityConversionFactor = 1.0 / 60.0; // RPM to RPS
   }
 }

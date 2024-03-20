@@ -180,6 +180,8 @@ public class DrivetrainSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // Only run the odometry when the driver's station has Auto selected (doesn't have to be enabled)
     if(DriverStation.isAutonomous()) {
       updateOdometry();
       double xPos = m_odometry.getPoseMeters().getX();
