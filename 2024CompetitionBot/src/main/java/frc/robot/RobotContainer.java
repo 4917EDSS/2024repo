@@ -368,6 +368,10 @@ public class RobotContainer {
     m_arduinoSub.init();
   }
 
+  public void disableTest() {
+    m_drivetrainSub.nofun();
+  }
+
   public void postAutoInit() {
     m_drivetrainSub.postAutoResetYaw();
   }

@@ -416,10 +416,10 @@ public class DrivetrainSub extends SubsystemBase {
         orca2.addInstrument(m_frontRight.m_steeringMotor);
         orca3.addInstrument(m_backLeft.m_steeringMotor);
         orca4.addInstrument(m_backRight.m_steeringMotor);
-        orca1.loadMusic("shpitaA.chrp");
-        orca2.loadMusic("shpitaB.chrp");
-        orca3.loadMusic("shpitaC.chrp");
-        orca4.loadMusic("shpitaD.chrp");
+        orca1.loadMusic("shpitaA_up.chrp");
+        orca2.loadMusic("shpitaB_up.chrp");
+        orca3.loadMusic("shpitaC_up.chrp");
+        orca4.loadMusic("shpitaD_up.chrp");
         orca1.play();
         orca2.play();
         orca3.play();
@@ -430,6 +430,15 @@ public class DrivetrainSub extends SubsystemBase {
         orca3.stop();
         orca4.stop();
       }
+    }
+  }
+
+  public void nofun() {
+    if(orca1.isPlaying() || orca2.isPlaying()) {
+      orca1.stop();
+      orca2.stop();
+      orca3.stop();
+      orca4.stop();
     }
   }
 }
