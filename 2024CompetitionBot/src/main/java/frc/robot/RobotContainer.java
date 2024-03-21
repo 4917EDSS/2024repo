@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignVisionCmd;
@@ -217,9 +218,12 @@ public class RobotContainer {
     //m_operatorController.povRight()
 
     m_operatorController.povDown()
-        .onTrue(new SequentialCommandGroup(new ShooterPivotCmd(140.0, m_pivotSub),
-            (new ParallelCommandGroup(new ShooterPivotCmd(227.0, m_pivotSub),
-                new AmpShotPrepCmd(m_arduinoSub, m_feederSub)))));
+        .onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(new InstantCommand(() -> m_flywheelSub.disableFlywheel()),
+                new ShooterPivotCmd(227.0, m_pivotSub),
+                new SequentialCommandGroup(new WaitCommand(0.1),
+                    new AmpShotPrepCmd(m_arduinoSub, m_feederSub))),
+            new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
     m_operatorController.povLeft().onTrue(
         new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));

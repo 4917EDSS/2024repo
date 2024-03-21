@@ -23,7 +23,9 @@ import frc.robot.subsystems.VisionSub;
 
 public class AlignVisionCmd extends Command {
   private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
-  private static final double kRotationTolerance = 1.0;
+  private static final double kRotationTolerance = 1.5;
+  private static final double kTurnFedPower = 0.017;
+
 
   private final CommandPS4Controller m_driverController;
   private final CommandPS4Controller m_operatorController;
@@ -35,6 +37,7 @@ public class AlignVisionCmd extends Command {
   private final VisionSub m_visionSub;
 
   private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
+  private final double kMaxRotationRatio = 0.5;
 
   private Instant flywheelDelay;
 
@@ -74,7 +77,6 @@ public class AlignVisionCmd extends Command {
     double pivotAngle = m_pivotSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
     boolean hasTarget = m_visionSub.simpleHasTarget();
 
-
     if(hasTarget) {
       flywheelDelay = Instant.now();
       // if(xPower * xPower + yPower * yPower > 0) {
@@ -87,7 +89,19 @@ public class AlignVisionCmd extends Command {
       rotationalPower =
           MathUtil.clamp(m_lookatPID.calculate(horizontalOffset, 0.0), -0.5,
               0.5);
-      //rotationalPower += kTurnFedPower * Math.signum(rotationalPower);
+
+      rotationalPower += ((m_lookatPID.atSetpoint()) ? 0.0 : kTurnFedPower) * Math.signum(rotationalPower);
+
+      // Stop rotating if moving too fast
+      double robotRotationSpeed = Math.abs(m_drivetrainSub.getChassisSpeeds().omegaRadiansPerSecond * 180.0 / Math.PI);
+      // if(robotRotationSpeed > 0.001) {
+      //   System.out.println("**********  Robot Rotation Speed: " + robotRotationSpeed);
+      // }
+      if(robotRotationSpeed * kMaxRotationRatio > Math
+          .abs(horizontalOffset)) {
+        rotationalPower = 0.0;
+
+      }
       m_pivotSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
@@ -104,15 +118,18 @@ public class AlignVisionCmd extends Command {
 
 
     m_drivetrainSub.drive(-xPower, yPower, rotationalPower, 0.02);
+
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
       m_logger.fine("Shot with target pivot angle: " + pivotAngle);
       m_logger.fine("Actual pivot angle: " + m_pivotSub.getPivotAngle());
       m_logger.fine("Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
+    } else if(m_lookatPID.atSetpoint()) {
+      m_ledSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
     } else if(hasTarget) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
     } else {
-      m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
+      m_ledSub.setZoneColour(LedZones.ALL, LedColour.PURPLE);
     }
 
   }

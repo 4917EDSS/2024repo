@@ -260,7 +260,7 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void postAutoResetYaw() {
-    if(DriverStation.getAlliance().get() == Alliance.Red) {
+    if(DriverStation.getAlliance().get() != Alliance.Blue) {
       double previousAngleAdjustment = m_gyro.getAngleAdjustment();
       double angleAdjustment = previousAngleAdjustment;
       if(previousAngleAdjustment <= 0) {
