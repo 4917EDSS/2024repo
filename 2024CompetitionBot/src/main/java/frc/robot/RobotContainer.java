@@ -27,6 +27,7 @@ import frc.robot.commands.GameCmd;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.IntakeWithJoystickCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.commands.NoteVisionAlignCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterPivotCmd;
@@ -130,8 +131,7 @@ public class RobotContainer {
     // ======================================== Driver controller bindings ========================================
 
     // This basically takes over the robot right now
-    m_driverController.square().onTrue(new AlignVisionCmd(m_driverController, m_operatorController, m_drivetrainSub,
-        m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
+    m_driverController.square().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub, m_driverController));
 
     // m_driverController.cross()
 

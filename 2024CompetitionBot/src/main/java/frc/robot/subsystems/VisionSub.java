@@ -22,11 +22,16 @@ public class VisionSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(VisionSub.class.getName());
 
   private final NetworkTable m_limelight;
+  private final NetworkTable m_limelightDriver;
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Vision");
   private final GenericEntry m_shuffleboardtx,
       m_shuffleboardty,
       m_target,
       m_apriltagCount;
+
+  private NetworkTableEntry m_tnx;
+  private NetworkTableEntry m_tnv;
+
 
   private NetworkTableEntry m_tx;
   private NetworkTableEntry m_ty;
@@ -40,6 +45,9 @@ public class VisionSub extends SubsystemBase {
   /** Creates a new VisionSub. */
   public VisionSub() {
     m_limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    m_limelightDriver = NetworkTableInstance.getDefault().getTable("limelight-driver");
+    m_tnx = m_limelightDriver.getEntry("tx");
+    m_tnv = m_limelightDriver.getEntry("tv");
     m_tx = m_limelight.getEntry("tx");
     m_ty = m_limelight.getEntry("ty");
     m_ta = m_limelight.getEntry("ta");
@@ -120,9 +128,18 @@ public class VisionSub extends SubsystemBase {
     return m_ty.getDouble(0.0);
   }
 
+  public double getNoteHorizontalAngle() {
+    return m_tnx.getDouble(0.0);
+  }
+
+  public boolean hasNoteTarget() {
+    return (m_tnv.getDouble(0.0) == 0.0) ? false : true;
+  }
+
   public double getTargetArea() {
     return m_ta.getDouble(0.0);
   }
+
 
   public boolean simpleHasTarget() {
     return (m_tv.getDouble(0.0) == 0.0) ? false : true;

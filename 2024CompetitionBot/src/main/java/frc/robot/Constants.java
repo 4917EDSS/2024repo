@@ -254,7 +254,7 @@ public final class Constants {
     public static final double kAnglePreAmp = 200.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
-    public static final double kAnglePassing = 57.0;
+    public static final double kAnglePassing = 80.0;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;
