@@ -100,11 +100,11 @@ public class RobotContainer {
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(62, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+        new FastShooterPrepGrp(66, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
-        new FastShooterPrepGrp(60, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+        new FastShooterPrepGrp(60.5, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
-        new FastShooterPrepGrp(64, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+        new FastShooterPrepGrp(64.25, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("AmpShot",
         new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd",
