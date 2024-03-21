@@ -61,7 +61,7 @@ public class RobotContainer {
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final FeederSub m_feederSub = new FeederSub();
   private final FlywheelSub m_flywheelSub = new FlywheelSub();
-  private final LedSub m_ledSub = new LedSub();
+  private final LedSub m_ledSub = new LedSub(m_arduinoSub);
   private final PowerSub m_powerSub = new PowerSub();
   private final PivotSub m_pivotSub = new PivotSub();
   private final VisionSub m_visionSub = new VisionSub();

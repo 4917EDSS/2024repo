@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.logging.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -34,6 +36,8 @@ public class AlignVisionCmd extends Command {
 
   private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
 
+  private Instant flywheelDelay;
+
   public AlignVisionCmd(CommandPS4Controller driverController, CommandPS4Controller operatorController,
       DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub, PivotSub pivotSub,
       VisionSub visionSub) {
@@ -54,6 +58,7 @@ public class AlignVisionCmd extends Command {
   @Override
   public void initialize() {
     m_lookatPID.setTolerance(kRotationTolerance);
+    flywheelDelay = Instant.now();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,6 +76,7 @@ public class AlignVisionCmd extends Command {
 
 
     if(hasTarget) {
+      flywheelDelay = Instant.now();
       // if(xPower * xPower + yPower * yPower > 0) {
       //   gyroAngleSet = false;
       // }
@@ -91,7 +97,9 @@ public class AlignVisionCmd extends Command {
 
     } else {
       rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
-      m_flywheelSub.disableFlywheel();
+      if(Duration.between(flywheelDelay, Instant.now()).toMillis() > 200) { // Wait 0.2 seconds before disabling flywheel
+        m_flywheelSub.disableFlywheel();
+      }
     }
 
 
