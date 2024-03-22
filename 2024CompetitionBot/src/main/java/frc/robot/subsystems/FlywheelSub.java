@@ -132,6 +132,15 @@ public class FlywheelSub extends SubsystemBase {
     return false;
   }
 
+  public boolean isAtRelativeVelocity(double velocity) {
+
+    if(Math.abs(
+        getFlywheelVelocityL() - velocity) < Constants.Flywheel.kFlywheelTolerance) {
+      return true;
+    }
+    return false;
+  }
+
   // For Feedforward testing
   // public void incrementVoltage() {
   //   setFlywheelVoltage(m_currentVoltage + 0.125);

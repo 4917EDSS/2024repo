@@ -71,8 +71,13 @@ public class AlignVisionCmd extends Command {
     double horizontalOffset = m_visionSub.getSimpleHorizontalAngle();
     double verticalAngle = m_visionSub.getSimpleVerticalAngle();
     double rotationalPower = 0.0;
-    double xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
-    double yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
+    double xPower = 0.0;
+    double yPower = 0.0;
+
+    if(m_driverController != null) {
+      xPower = Math.abs(m_driverController.getLeftX()) < 0.07 ? 0.0 : m_driverController.getLeftX();
+      yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
+    }
 
     double pivotAngle = m_pivotSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
     boolean hasTarget = m_visionSub.simpleHasTarget();
@@ -105,12 +110,20 @@ public class AlignVisionCmd extends Command {
       m_pivotSub.setTargetAngle(pivotAngle);
       m_flywheelSub.enableFlywheel();
 
-      double feederPower =
-          Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
-      m_feederSub.spinBothFeeders(feederPower, feederPower * Constants.Shooter.kNoteUpperSurfaceSpeedDifferential);
+      if(m_operatorController != null) {
+        double feederPower =
+            Math.abs(m_operatorController.getRightY()) < 0.05 ? 0.0 : -m_operatorController.getRightY();
+        m_feederSub.spinBothFeeders(feederPower, feederPower * Constants.Shooter.kNoteUpperSurfaceSpeedDifferential);
+      }
 
     } else {
-      rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
+
+      if(m_driverController != null) {
+        rotationalPower = Math.abs(m_driverController.getRightX()) < 0.05 ? 0.0 : -m_driverController.getRightX();
+      } else {
+        rotationalPower = 0.0;
+      }
+
       if(Duration.between(flywheelDelay, Instant.now()).toMillis() > 200) { // Wait 0.2 seconds before disabling flywheel
         m_flywheelSub.disableFlywheel();
       }
@@ -147,7 +160,8 @@ public class AlignVisionCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()) {
+    if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()
+        && m_visionSub.simpleHasTarget()) {
       return true;
     }
     return false;

@@ -35,6 +35,7 @@ import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.commands.PivotWithJoystickCmd;
+import frc.robot.commands.QuickVisionAlignGrp;
 import frc.robot.commands.SourceIntakeGrp;
 import frc.robot.commands.ZeroPivotNoFlywheelGrp;
 import frc.robot.subsystems.ArduinoSub;
@@ -101,6 +102,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
         new FastShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub));
+    NamedCommands.registerCommand("QuickVisionAlignGrp", new QuickVisionAlignGrp(m_drivetrainSub, m_feederSub,
+        m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub, m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
         new FastShooterPrepGrp(66, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",

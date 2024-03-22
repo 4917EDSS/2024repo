@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -22,7 +23,8 @@ public class FastShooterPrepGrp extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ShooterFlywheelCmd(flywheelSub),
+        new ConditionalCommand(new FastShooterFlywheelCmd(flywheelSub), new ShooterFlywheelCmd(flywheelSub),
+            () -> (pivotPosition < 40.0)),
         new ShooterPivotCmd(pivotPosition, pivotSub),
         new SequentialCommandGroup(
             new WaitCommand(0.2),

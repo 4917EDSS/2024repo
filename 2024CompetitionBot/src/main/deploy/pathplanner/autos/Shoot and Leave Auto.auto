@@ -43,15 +43,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Shoot From Angle After Center Line Pickup First Note"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot From Angle After Center Line Pickup First Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpFromAmp"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionAlignCmdGrp"
+            "name": "QuickVisionAlignGrp"
           }
         },
         {
@@ -74,15 +87,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Shoot From Angle After Center Line Pickup Second Note"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot From Angle After Center Line Pickup Second Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrpFromAmp"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionAlignCmdGrp"
+            "name": "QuickVisionAlignGrp"
           }
         }
       ]
