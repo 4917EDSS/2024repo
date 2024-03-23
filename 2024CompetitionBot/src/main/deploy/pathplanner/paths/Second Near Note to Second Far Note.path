@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4,
-        "y": 4.0
+        "x": 2.89,
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.013873045927909,
-        "y": 2.917865472094581
+        "x": 4.892549606208337,
+        "y": 7.122555926686094
       },
       "isLocked": false,
-      "linkedName": "Shoot From Angle"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.05569538411804,
-        "y": 2.4348026877871947
+        "x": 8.255570858190017,
+        "y": 5.786158835287259
       },
       "prevControl": {
-        "x": 4.240238298658416,
-        "y": 1.2407232087191458
+        "x": 7.491915377390684,
+        "y": 6.2707863519483755
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Second Note Center Line"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 0.0,
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -26.569999999999993,
       "rotateFast": false
     }
   ],
@@ -44,15 +44,15 @@
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0,
+    "velocity": 0,
+    "rotation": -26.569999999999993,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Four Note Auto",
   "previewStartingState": {
-    "rotation": 143.6469317079531,
-    "velocity": 0.0
+    "rotation": 180.0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

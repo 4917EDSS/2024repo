@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4,
-        "y": 4.0
+        "x": 8.29962790515921,
+        "y": 4.097305368134887
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.013873045927909,
-        "y": 2.917865472094581
+        "x": 5.729633498622991,
+        "y": 3.0986789701665276
       },
       "isLocked": false,
-      "linkedName": "Shoot From Angle"
+      "linkedName": "3rd Far Pickup"
     },
     {
       "anchor": {
-        "x": 8.05569538411804,
-        "y": 2.4348026877871947
+        "x": 4.25,
+        "y": 5.522617590689727
       },
       "prevControl": {
-        "x": 4.240238298658416,
-        "y": 1.2407232087191458
+        "x": 4.246379583993516,
+        "y": 4.919703578226477
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Second Note Center Line"
+      "linkedName": "Note Shot Behind"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 0.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -44,15 +38,15 @@
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0,
+    "velocity": 0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "2 Far Notes Under Stage Auto",
   "previewStartingState": {
-    "rotation": 143.6469317079531,
-    "velocity": 0.0
+    "rotation": 0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

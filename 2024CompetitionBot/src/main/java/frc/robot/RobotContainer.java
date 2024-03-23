@@ -105,11 +105,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("QuickVisionAlignGrp", new QuickVisionAlignGrp(m_drivetrainSub, m_feederSub,
         m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub, m_arduinoSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
-        new FastShooterPrepGrp(66, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+        new FastShooterPrepGrp(66.25, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
         new FastShooterPrepGrp(60.5, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
         new FastShooterPrepGrp(64.25, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+    NamedCommands.registerCommand("ShooterPrepGrp10Degrees",
+        new FastShooterPrepGrp(10, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("AmpShot",
         new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
     NamedCommands.registerCommand("PivotToAprilTagCmd",
@@ -251,8 +253,10 @@ public class RobotContainer {
 
   void autoChooserSetup() {
     m_Chooser.addOption("4NoteAuto", new PathPlannerAuto("4NoteAuto"));
+    m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
+    m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }

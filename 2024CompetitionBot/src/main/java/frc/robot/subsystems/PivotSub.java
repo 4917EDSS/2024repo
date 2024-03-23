@@ -57,7 +57,7 @@ public class PivotSub extends SubsystemBase {
   // -19 to 13 degrees
   // @formatter:off
   private final double[] limelightAngles = {kMinLimelightAngle, -14.9, -12.9, -11.2, -8.90, -0.40, 5.20, 11.9, 14.0, kMaxLimelightAngle}; //
-  private final double[] shooterAngles = {                69.5,  68.5,  66.8,  65.0,  63.6,  57.3, 52.0, 45.7, 42.5, 40.0}; //
+  private final double[] shooterAngles = {                69.9,  69.3,  67.6,  65.8,  64.0,  57.3, 52.0, 45.7, 42.5, 40.0}; //
   // @formatter:on
 
   private int m_hitLimitCounter = 0;

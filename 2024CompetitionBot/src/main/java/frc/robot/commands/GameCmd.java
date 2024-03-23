@@ -109,8 +109,14 @@ public class GameCmd extends Command {
   }
 
   void drawWorm() {
+
     for(int i = 0; i < length; i++) {
-      m_arduinoSub.writePixel(xWorm[i], yWorm[i], 0, 255, 0);
+      if(i < 2) {
+        m_arduinoSub.writePixel(xWorm[i], yWorm[i], 0, 255, 255);
+      } else {
+        m_arduinoSub.writePixel(xWorm[i], yWorm[i], 0, 255, 0);
+      }
+
     }
   }
 

@@ -1,0 +1,113 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.46,
+      "y": 2.15
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup 2nd Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2nd Note to Shot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrp10Degrees"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "QuickVisionAlignGrp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ZeroPivot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup 3rd Note Far"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot 3rd Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPrepGrp10Degrees"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "QuickVisionAlignGrp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
