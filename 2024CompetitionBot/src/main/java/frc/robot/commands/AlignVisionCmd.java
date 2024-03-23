@@ -62,6 +62,8 @@ public class AlignVisionCmd extends Command {
   public void initialize() {
     m_lookatPID.setTolerance(kRotationTolerance);
     flywheelDelay = Instant.now();
+    m_pivotSub.setTargetAngle(45.0);
+    m_pivotSub.runPivotControl(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

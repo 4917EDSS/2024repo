@@ -224,7 +224,7 @@ public class RobotContainer {
         .onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(new InstantCommand(() -> m_flywheelSub.disableFlywheel()),
                 new ShooterPivotCmd(227.0, m_pivotSub),
-                new SequentialCommandGroup(new WaitCommand(0.1),
+                new SequentialCommandGroup(new WaitCommand(0.3),
                     new AmpShotPrepCmd(m_arduinoSub, m_feederSub))),
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 

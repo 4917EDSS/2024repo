@@ -268,9 +268,8 @@ public class DrivetrainSub extends SubsystemBase {
       } else {
         angleAdjustment -= 180;
       }
-      m_logger.fine("Adj " + m_gyro.getAngleAdjustment() + " crrent " + angleAdjustment);
+      m_logger.fine("Adj " + m_gyro.getAngleAdjustment() + " current " + angleAdjustment);
       m_gyro.setAngleAdjustment(angleAdjustment);
-      m_gyro.reset();
       resetOdometry();
     }
   }

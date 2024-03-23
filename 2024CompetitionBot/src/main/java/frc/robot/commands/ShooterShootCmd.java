@@ -46,11 +46,9 @@ public class ShooterShootCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Flywheel needs to spin at full power prior to m_pivotSub.spinBothFeeders being executed.
-    if(m_flywheelSub.isAtTargetVelocity()) {
-      m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
-          Constants.Shooter.kNoteUpperIntakePower);
-    }
+    // Flywheel should always be at targetr speed
+    m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
+        Constants.Shooter.kNoteUpperIntakePower);
   }
 
   // Called once the command ends or is interrupted.
