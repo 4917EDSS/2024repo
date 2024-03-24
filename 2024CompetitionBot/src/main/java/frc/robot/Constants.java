@@ -195,6 +195,11 @@ public final class Constants {
     // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
     public static final String serialNumber = System.getenv("serialnum");
     // Translation PID, Rotation PID, Max module speed (m/s), Robot radius, default path config
+    // TODO ONCMP
+    // 4.2 here is the "max speed". We should use the exact same number as in DrivetrainSub, we should probably 
+    // use the actual same constant. Then, we should update the global constraints in PathPlanner, and
+    // make the max speed the same as this #. ALSO, we should tune the PathPlanner acceleration, to be higher, basically
+    // as high as we can track with little error.
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(7, 0.0, 0.0), new PIDConstants(3.5, 0.0, 0.0), 4.2, //7 for translation P, 6 for rotation p, 0.25 for rotation D, 0.5 for translation D
             0.45, new ReplanningConfig());
