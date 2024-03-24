@@ -174,7 +174,9 @@ public class SwerveModule extends SubsystemBase {
         m_steeringPID.calculate(getTurningRotation(), betterState.angle.getRadians());
     double steeringFeedforward = m_steeringFeedforward.calculate(m_steeringPID.getSetpoint().velocity);
 
-    // Clamp these as needed
+    // TODO ONCMP
+    // Log the drivePower (without any other changes, and probably only on 1 module). We really want to see
+    // how much power we are actually using right now with our current code.
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
     m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
