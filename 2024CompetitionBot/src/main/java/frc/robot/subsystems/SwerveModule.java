@@ -151,6 +151,10 @@ public class SwerveModule extends SubsystemBase {
   public void setState(SwerveModuleState state) { // Set the proper motor speeds and directions for the given state
     var steeringRotation = new Rotation2d(getTurningRotation());
 
+    // TODO ONCMP
+    // This deadband is actually surprisingly high. This is likely what caused us so much trouble
+    // with aligning to vision, as we can't move slowly. We should signifcantly lower this (maybe like 0.01).
+    // We already have deadbands in the actual joystick code.
     if(Math.abs(state.speedMetersPerSecond) < 0.1) { // deadband
       stop();
       return;
@@ -174,6 +178,10 @@ public class SwerveModule extends SubsystemBase {
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
     m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
+    // TODO ONCMP
+    // This clamp of 0.4 may be a bit too agressive. If we can up this without causing steering
+    // oscillation, we should, as this will give us better tracking (especially at the very start of
+    // auto when we quickly need to get going in the right way.
     m_steeringMotor.set(MathUtil.clamp(steeringPower, -0.4, 0.4));
   }
 
