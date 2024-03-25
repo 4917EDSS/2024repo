@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.1153162306324615,
-        "y": 0.5783822476735869
+        "x": 5.964604415792017,
+        "y": 0.4846275166611164
       },
       "isLocked": false,
       "linkedName": "Second Note Center Line"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 2.7638210912785466,
-        "y": 3.524233957558824
+        "x": 2.3372408819951813,
+        "y": 2.5699944065362192
       },
       "nextControl": null,
       "isLocked": false,

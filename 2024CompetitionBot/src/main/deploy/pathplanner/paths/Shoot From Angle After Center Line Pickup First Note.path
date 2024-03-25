@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.450946498256634,
-        "y": 1.00388990232526
+        "x": 7.021973543052633,
+        "y": 0.8958266217069119
       },
       "isLocked": false,
       "linkedName": "First Note"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 2.572211799164207,
-        "y": 2.7755939590591177
+        "x": 2.3519265643182456,
+        "y": 2.731536912089924
       },
       "nextControl": null,
       "isLocked": false,
