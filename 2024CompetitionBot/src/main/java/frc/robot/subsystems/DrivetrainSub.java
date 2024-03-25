@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -43,8 +44,8 @@ public class DrivetrainSub extends SubsystemBase {
   // TODO ONCMP
   // Test both of these extensively with a good battery. Turn them way up, and see how fast we can actually get
   // the robot turning, and driving, then update these.
-  public static final double kMaxDriveSpeed = 2.0; // In m/s
-  public static final double kMaxTurnSpeed = 9; // In radians/s
+  public static final double kMaxDriveSpeed = 4.1; // In m/s
+  public static final double kMaxTurnSpeed = 9.0; // In radians/s
 
   // Locations of Swerve Modules relative to the center of the robot
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
@@ -196,6 +197,15 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
     m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
     m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
+    ChassisSpeeds currentSpeeds = getChassisSpeeds();
+    double vx = currentSpeeds.vxMetersPerSecond;
+    double vy = currentSpeeds.vyMetersPerSecond;
+    double currentSpeed = Math.sqrt(vx * vx + vy * vy);
+    SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
+    SmartDashboard.putNumber("FL Power", m_frontLeft.testGetPower());
+    SmartDashboard.putNumber("FR Power", m_frontRight.testGetPower());
+    SmartDashboard.putNumber("BL Power", m_backLeft.testGetPower());
+    SmartDashboard.putNumber("BR Power", m_backRight.testGetPower());
 
     if(!RobotContainer.disableShuffleboardPrint) {
       // SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
@@ -211,11 +221,7 @@ public class DrivetrainSub extends SubsystemBase {
       m_sbPitch.setDouble(m_gyro.getPitch());
       m_sbSerialNumber.setString(Constants.Drivetrain.serialNumber);
 
-      // ChassisSpeeds currentSpeeds = getChassisSpeeds();
-      // double vx = currentSpeeds.vxMetersPerSecond;
-      // double vy = currentSpeeds.vyMetersPerSecond;
-      // double currentSpeed = Math.sqrt(vx * vx + vy * vy);
-      // SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
+
       // kPIDp = SmartDashboard.getNumber("Path kP", kPIDp);
       // kPIDd = SmartDashboard.getNumber("Path kD", kPIDd);
       // kThreshold = SmartDashboard.getNumber("Path Threshold", kThreshold);

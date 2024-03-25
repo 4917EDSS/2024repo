@@ -49,7 +49,7 @@ public class SwerveModule extends SubsystemBase {
 
   // These predict PID values which makes it work in real time
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.43);
-  private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0, 0);
+  private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0.0, 0);
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
     // Initialize motors and sensors
@@ -121,6 +121,14 @@ public class SwerveModule extends SubsystemBase {
     return position;// - m_turningEncoderOffset;
   }
 
+  public void setP(double val) {
+    m_drivePID.setP(val);
+  }
+
+  public double getP() {
+    return m_drivePID.getP();
+  }
+
   public double getTurningEncoder() { // Without any offset
     double position = (m_steeringEncoder.getAbsolutePosition().getValueAsDouble());// -0.5 to 0.5
 
@@ -148,6 +156,10 @@ public class SwerveModule extends SubsystemBase {
         new Rotation2d(getTurningRotation()));
   }
 
+  public double testGetPower() {
+    return m_driveMotor.get();
+  }
+
   public void setState(SwerveModuleState state) { // Set the proper motor speeds and directions for the given state
     var steeringRotation = new Rotation2d(getTurningRotation());
 
@@ -155,7 +167,7 @@ public class SwerveModule extends SubsystemBase {
     // This deadband is actually surprisingly high. This is likely what caused us so much trouble
     // with aligning to vision, as we can't move slowly. We should signifcantly lower this (maybe like 0.01).
     // We already have deadbands in the actual joystick code.
-    if(Math.abs(state.speedMetersPerSecond) < 0.1) { // deadband
+    if(Math.abs(state.speedMetersPerSecond) < 0.02) { // deadband
       stop();
       return;
     }
@@ -174,17 +186,11 @@ public class SwerveModule extends SubsystemBase {
         m_steeringPID.calculate(getTurningRotation(), betterState.angle.getRadians());
     double steeringFeedforward = m_steeringFeedforward.calculate(m_steeringPID.getSetpoint().velocity);
 
-    // TODO ONCMP
-    // Log the drivePower (without any other changes, and probably only on 1 module). We really want to see
-    // how much power we are actually using right now with our current code.
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
     m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
-    // TODO ONCMP
-    // This clamp of 0.4 may be a bit too agressive. If we can up this without causing steering
-    // oscillation, we should, as this will give us better tracking (especially at the very start of
-    // auto when we quickly need to get going in the right way.
-    m_steeringMotor.set(MathUtil.clamp(steeringPower, -0.4, 0.4));
+
+    m_steeringMotor.set(MathUtil.clamp(steeringPower, -1.0, 1.0)); // This clamp doesn't actually affect the PID calculation so it can just be a -1 to 1 clamp
   }
 
   public void stop() {

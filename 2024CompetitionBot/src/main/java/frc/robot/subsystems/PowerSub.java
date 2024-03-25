@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class PowerSub extends SubsystemBase {
 
@@ -103,13 +104,13 @@ public class PowerSub extends SubsystemBase {
     updateShuffleBoard();
   }
 
-  // @Override
-  // public void periodic() {
-  //   // This method will be called once per scheduler run
-  //   if(!RobotContainer.disableShuffleboardPrint) {
-  //     updateShuffleBoard();
-  //   }
-  // }
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    if(!RobotContainer.disableShuffleboardPrint) {
+      updateShuffleBoard();
+    }
+  }
 
   private void updateShuffleBoard() {
     m_sbVoltage.setDouble(powerDistributionModule.getVoltage());
