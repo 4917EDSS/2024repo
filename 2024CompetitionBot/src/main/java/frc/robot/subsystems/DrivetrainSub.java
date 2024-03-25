@@ -40,8 +40,11 @@ public class DrivetrainSub extends SubsystemBase {
   private final Orchestra orca4 = new Orchestra();
 
   // Speed multipliers
+  // TODO ONCMP
+  // Test both of these extensively with a good battery. Turn them way up, and see how fast we can actually get
+  // the robot turning, and driving, then update these.
   public static final double kMaxDriveSpeed = 2.0; // In m/s
-  public static final double kMaxTurnSpeed = 9; // was 50
+  public static final double kMaxTurnSpeed = 9; // In radians/s
 
   // Locations of Swerve Modules relative to the center of the robot
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
@@ -67,7 +70,6 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
-  private PIDController m_drivePIDr = new PIDController(0.05, 0.0, 0.0);
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft;
@@ -135,8 +137,6 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setTolerance(1.0, 3.0); // In degrees
     m_odometryPIDr.enableContinuousInput(-180.0, 180.0);
 
-    m_drivePIDr.setTolerance(1.0);
-    m_drivePIDr.enableContinuousInput(-180.0, 180.0);
 
     m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
     m_sbYPOS = m_shuffleboardTab.add("YPOS", 0.0).getEntry();
