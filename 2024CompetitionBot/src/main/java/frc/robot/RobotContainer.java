@@ -253,6 +253,7 @@ public class RobotContainer {
 
   void autoChooserSetup() {
     m_Chooser.addOption("4NoteAuto", new PathPlannerAuto("4NoteAuto"));
+    m_Chooser.addOption("With Vision 4NoteAuto", new PathPlannerAuto("With Vision 4NoteAuto"));
     m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));

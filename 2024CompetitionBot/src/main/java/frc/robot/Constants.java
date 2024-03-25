@@ -192,6 +192,7 @@ public final class Constants {
   }
 
   public final static class Drivetrain {
+    public static final double kMaxChassisSpeed = 4.2;
     // Measured precicely on Feb 10 kAbsoluteEncoderOffsetFL
     public static final String serialNumber = System.getenv("serialnum");
     // Translation PID, Rotation PID, Max module speed (m/s), Robot radius, default path config
@@ -201,7 +202,8 @@ public final class Constants {
     // make the max speed the same as this #. ALSO, we should tune the PathPlanner acceleration, to be higher, basically
     // as high as we can track with little error.
     public static final HolonomicPathFollowerConfig kPathingConfig =
-        new HolonomicPathFollowerConfig(new PIDConstants(7, 0.0, 0.0), new PIDConstants(3.5, 0.0, 0.0), 4.2, //7 for translation P, 6 for rotation p, 0.25 for rotation D, 0.5 for translation D
+        new HolonomicPathFollowerConfig(new PIDConstants(7, 0.0, 0.0), new PIDConstants(3.5, 0.0, 0.0),
+            kMaxChassisSpeed, //7 for translation P, 6 for rotation p, 0.25 for rotation D, 0.5 for translation D
             0.45, new ReplanningConfig());
     public static final double kGyroPhysicalOffsetAngle = -90; // Gyro's 0 is pointing at this angle (e.g. -90 is pointing right)
   }
