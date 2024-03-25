@@ -44,7 +44,6 @@ public class DrivetrainSub extends SubsystemBase {
   // TODO ONCMP
   // Test both of these extensively with a good battery. Turn them way up, and see how fast we can actually get
   // the robot turning, and driving, then update these.
-  public static final double kMaxDriveSpeed = 4.1; // In m/s
   public static final double kMaxTurnSpeed = 9.0; // In radians/s
 
   // Locations of Swerve Modules relative to the center of the robot
@@ -286,15 +285,15 @@ public class DrivetrainSub extends SubsystemBase {
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed, double periodSeconds) { // Period should be time period between whenever this is called
-    xSpeed *= kMaxDriveSpeed;
-    ySpeed *= kMaxDriveSpeed;
+    xSpeed *= Constants.Drivetrain.kMaxChassisSpeed;
+    ySpeed *= Constants.Drivetrain.kMaxChassisSpeed;
     rotationSpeed *= kMaxTurnSpeed; // This is negative so it's CCW Positive
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
         ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, getYawRotation2d()), periodSeconds)); // Get swerve states
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, kMaxDriveSpeed); // Keep motors below max speed (Might not need to be used)
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, Constants.Drivetrain.kMaxChassisSpeed); // Keep motors below max speed (Might not need to be used)
 
     // Drive motors
     m_frontLeft.setState(swerveStates[0]);
