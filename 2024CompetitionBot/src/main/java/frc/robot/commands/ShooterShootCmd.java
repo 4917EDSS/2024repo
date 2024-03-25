@@ -40,7 +40,7 @@ public class ShooterShootCmd extends Command {
   public void initialize() {
     m_logger.fine("ShooterShootCmd - Init");
     start = Instant.now();
-    m_flywheelSub.enableFlywheel();
+    m_flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelShootVelocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PwmIds;
-import frc.robot.subsystems.ArduinoSub;
 
 
 public class LedSub extends SubsystemBase {

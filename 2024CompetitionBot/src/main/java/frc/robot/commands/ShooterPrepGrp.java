@@ -18,7 +18,8 @@ import frc.robot.subsystems.PivotSub;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterPrepGrp extends SequentialCommandGroup {
   /** Creates a new ShooterPrepGrp. */
-  public ShooterPrepGrp(double pivotPosition, ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub,
+  public ShooterPrepGrp(double pivotPosition, double flywheelVelocity, ArduinoSub arduinoSub, FeederSub feederSub,
+      FlywheelSub flywheelSub,
       PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -28,7 +29,7 @@ public class ShooterPrepGrp extends SequentialCommandGroup {
             new InstantCommand(),
             () -> pivotSub.getPivotAngle() < 9),
         new ParallelCommandGroup(
-            new ShooterFlywheelCmd(flywheelSub),
+            new ShooterFlywheelCmd(flywheelVelocity, flywheelSub),
             new ShooterPivotCmd(pivotPosition, pivotSub),
             new ExpelNoteABitCmd(arduinoSub, feederSub)));
   }

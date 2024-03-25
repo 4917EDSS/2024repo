@@ -30,6 +30,7 @@ public class FlywheelSub extends SubsystemBase {
       new SimpleMotorFeedforward(Constants.Flywheel.ks, Constants.Flywheel.kv);
 
   private boolean m_isFlywheelEnabled = false;
+  private double m_flywheelShootVelocity = Constants.Flywheel.kFlywheelShootVelocity;
   //private double m_currentVoltage = 0.0;  // For Feedforward testing
 
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("Flywheel");
@@ -38,7 +39,7 @@ public class FlywheelSub extends SubsystemBase {
 
   // Only needed if we decide we need a PID controller
   private final PIDController m_flyWheelPID = new PIDController(0.012, 0.0, 0.0);
-
+  double FlywheelShootVelocity;
 
   public FlywheelSub() {
     m_shooterFlywheelVelocityL = m_shuffleboardTab.add("Left Velocity", 0).getEntry();
@@ -78,9 +79,9 @@ public class FlywheelSub extends SubsystemBase {
 
     // Flywheel needs to spin at set velocity prior to m_pivotSub.spinBothFeeders being executed. 
     if(m_isFlywheelEnabled) {
-      double feedForwardVoltage = m_flyWheelFeedforward.calculate(Constants.Flywheel.kFlywheelShootVelocity, 0.0);
+      double feedForwardVoltage = m_flyWheelFeedforward.calculate(m_flywheelShootVelocity, 0.0);
       // So far, we don't need the PID control.  Feedforward is doing well on its own
-      double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), Constants.Flywheel.kFlywheelShootVelocity);
+      double pidVoltage = m_flyWheelPID.calculate(getFlywheelVelocityL(), m_flywheelShootVelocity);
 
       setFlywheelVoltage(feedForwardVoltage + pidVoltage);
     } else {
@@ -113,8 +114,9 @@ public class FlywheelSub extends SubsystemBase {
     return m_flywheelL.getEncoder().getVelocity();
   }
 
-  public void enableFlywheel() {
+  public void enableFlywheel(double flywheelVelocity) {
     m_isFlywheelEnabled = true;
+    m_flywheelShootVelocity = flywheelVelocity;
     //System.out.println("En Flywheel");
   }
 
