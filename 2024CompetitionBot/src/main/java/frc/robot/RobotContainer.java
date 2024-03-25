@@ -123,6 +123,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("VisionAlignCmdGrp",
         new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
             m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
+    NamedCommands.registerCommand("NoteVisionAlignCmd",
+        new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub, m_driverController));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_pivotSub));
 
@@ -257,6 +259,7 @@ public class RobotContainer {
     m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
+    m_Chooser.addOption("No Vision Shoot and Leave Auto", new PathPlannerAuto("No Vision Shoot and Leave Auto"));
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
