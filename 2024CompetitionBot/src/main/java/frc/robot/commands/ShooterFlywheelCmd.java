@@ -11,10 +11,12 @@ import frc.robot.subsystems.FlywheelSub;
 public class ShooterFlywheelCmd extends Command {
   private static Logger m_logger = Logger.getLogger(ShooterFlywheelCmd.class.getName());
 
+  private final double m_flywheelVelocity;
   private final FlywheelSub m_flywheelSub;
 
-  public ShooterFlywheelCmd(FlywheelSub flywheelSub) {
+  public ShooterFlywheelCmd(double flywheelVelocity, FlywheelSub flywheelSub) {
     m_flywheelSub = flywheelSub;
+    m_flywheelVelocity = flywheelVelocity;
 
     addRequirements(flywheelSub);
   }
@@ -23,7 +25,7 @@ public class ShooterFlywheelCmd extends Command {
   @Override
   public void initialize() {
     m_logger.fine("ShooterFlywheelCmd - Init");
-    m_flywheelSub.enableFlywheel();
+    m_flywheelSub.enableFlywheel(m_flywheelVelocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

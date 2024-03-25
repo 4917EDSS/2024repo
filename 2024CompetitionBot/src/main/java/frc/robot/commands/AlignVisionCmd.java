@@ -110,7 +110,7 @@ public class AlignVisionCmd extends Command {
 
       }
       m_pivotSub.setTargetAngle(pivotAngle);
-      m_flywheelSub.enableFlywheel();
+      m_flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelShootVelocity);
 
       if(m_operatorController != null) {
         double feederPower =
