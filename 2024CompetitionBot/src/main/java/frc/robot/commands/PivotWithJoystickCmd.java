@@ -45,7 +45,7 @@ public class PivotWithJoystickCmd extends Command {
     } else {
       m_wasInDeadZone = false;
       m_pivotSub.disableTargetAngle();
-      m_pivotSub.movePivot(pivotPower / 2);
+      m_pivotSub.movePivot(pivotPower);
     }
   }
 
