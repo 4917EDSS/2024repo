@@ -33,7 +33,7 @@ public class PivotSub extends SubsystemBase {
 
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
 
-  private final PIDController m_pivotPID = new PIDController(0.03, 0.0, 0.0);
+  private final PIDController m_pivotPID = new PIDController(0.025, 0.0, 0.0);
   private double m_targetAngle;
   private boolean m_areWeTryingToHold = false;
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
@@ -170,9 +170,9 @@ public class PivotSub extends SubsystemBase {
     //   if(power < -Constants.Shooter.kArmPivotSlowSpeedPrepBefore) {
     //     power = -Constants.Shooter.kArmPivotSlowSpeedPrepBefore;
     //   }
-    // } else 
-    if(getPivotAngle() <= 80 && power < 0) {
-      double testPower = getPivotAngle() / 80;
+    // } else
+    if(getPivotAngle() <= 20 && power < 0) {
+      double testPower = getPivotAngle() / 20;
       if(testPower < Constants.Shooter.kArmPivotSlowSpeed) {
         testPower = Constants.Shooter.kArmPivotSlowSpeed;
       }

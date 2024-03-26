@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -29,6 +30,6 @@ public class IntakeNoteGrp extends SequentialCommandGroup {
         new ShooterPivotCmd(10.0, pivotSub),
         new ExpelNoteABitCmd(arduinoSub, feederSub),
         new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE)),
-        new InstantCommand(() -> m_flywheelSub.enableFlywheel()));
+        new InstantCommand(() -> m_flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelShootVelocity)));
   }
 }

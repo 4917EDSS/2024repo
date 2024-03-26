@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlignVisionCmd;
 import frc.robot.commands.AlignVisionGrp;
 import frc.robot.commands.AmpShotPrepCmd;
 import frc.robot.commands.ClimbSetHeightCmd;
@@ -118,12 +117,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("PivotToAprilTagCmd",
         new PivotToAprilTagCmd(m_pivotSub, m_visionSub)); //this command isFinished return false
     NamedCommands.registerCommand("ShooterFlywheelCmd",
-        new ShooterFlywheelCmd(m_flywheelSub));
+        new ShooterFlywheelCmd(Constants.Flywheel.kFlywheelShootVelocity, m_flywheelSub));
     NamedCommands.registerCommand("OffsetYaw45",
         new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(45), m_drivetrainSub));
     NamedCommands.registerCommand("VisionAlignCmdGrp",
         new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
             m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
+    NamedCommands.registerCommand("NoteVisionAlignCmd",
+        new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub, m_driverController));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_pivotSub));
 
@@ -184,11 +185,13 @@ public class RobotContainer {
 
     // ======================================== Operator controller bindings ========================================
     m_operatorController.square()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, m_arduinoSub, m_feederSub, m_flywheelSub,
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleAutoLine, Constants.Flywheel.kFlywheelShootVelocity,
+            m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub));
 
     m_operatorController.cross()
-        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, m_arduinoSub, m_feederSub, m_flywheelSub,
+        .onTrue(new ShooterPrepGrp(Constants.Shooter.kAngleSubwooferSpeaker, Constants.Flywheel.kFlywheelShootVelocity,
+            m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub));
 
     m_operatorController.circle()
@@ -212,7 +215,8 @@ public class RobotContainer {
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_climbSub, m_drivetrainSub));
 
-    m_operatorController.options().onTrue(new ShooterFlywheelCmd(m_flywheelSub));
+    m_operatorController.options()
+        .onTrue(new ShooterFlywheelCmd(Constants.Flywheel.kFlywheelShootVelocity, m_flywheelSub));
 
     m_operatorController.PS().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
@@ -233,7 +237,8 @@ public class RobotContainer {
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
     m_operatorController.povLeft().onTrue(
-        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
+        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, Constants.Flywheel.kFlywheelLobVelocity, m_arduinoSub,
+            m_feederSub, m_flywheelSub, m_pivotSub));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub));
@@ -259,6 +264,7 @@ public class RobotContainer {
     m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
+    m_Chooser.addOption("No Vision Shoot and Leave Auto", new PathPlannerAuto("No Vision Shoot and Leave Auto"));
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
 
     SmartDashboard.putData("auto choices", m_Chooser);

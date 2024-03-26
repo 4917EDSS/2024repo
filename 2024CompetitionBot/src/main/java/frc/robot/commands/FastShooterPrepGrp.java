@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -23,7 +24,8 @@ public class FastShooterPrepGrp extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ConditionalCommand(new FastShooterFlywheelCmd(flywheelSub), new ShooterFlywheelCmd(flywheelSub),
+        new ConditionalCommand(new FastShooterFlywheelCmd(flywheelSub),
+            new ShooterFlywheelCmd(Constants.Flywheel.kFlywheelShootVelocity, flywheelSub),
             () -> (pivotPosition < 40.0)),
         new ShooterPivotCmd(pivotPosition, pivotSub),
         new SequentialCommandGroup(
