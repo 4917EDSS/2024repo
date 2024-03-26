@@ -18,9 +18,9 @@ public class NoteVisionAlignCmd extends Command {
 
   private double noteAngle = 0.0;
 
-  private final double drivePower = 0.5;
+  private final double drivePower = 0.7;
 
-  private PIDController m_turnPID = new PIDController(0.004, 0.0, 0.0);
+  private PIDController m_turnPID = new PIDController(0.006, 0.0, 0.0);
 
   public NoteVisionAlignCmd(VisionSub visionSub, DrivetrainSub drivetrainSub, CommandPS4Controller driverController) {
     // Use addRequirements() here to declare subsystem dependencies.

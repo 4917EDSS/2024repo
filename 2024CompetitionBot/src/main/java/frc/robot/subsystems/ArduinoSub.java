@@ -25,9 +25,11 @@ public class ArduinoSub extends SubsystemBase {
   private static byte[] m_LEDUpdateMessage = new byte[75];
   private static byte[] m_LEDUpdateArray = new byte[24 * 3 + 3];
   private static byte[] m_getMessage = {(byte) Constants.Arduino.kMessageHeader, (byte) 0x01, (byte) 0xA6}; // header, command 1 to get sensor info, checksum
-  private static boolean m_LEDHalfHasChanged = true;
+  private static boolean m_LEDHasChanged = true;
   private static boolean m_LEDArrayChanged = false;
   private static int m_intakeSensors[] = new int[8];
+
+  private int[] m_currentRGB = new int[3];
 
   // Creating an instances of RS_232 port to communicate with Arduino (sensors)
   private final SerialPort m_SerialPort =
@@ -47,14 +49,13 @@ public class ArduinoSub extends SubsystemBase {
   }
 
   public void init() {
-    //Set top and bottom led sections to green
+    //Set led section to green
     m_SerialPort.setReadBufferSize(m_LEDUpdateMessage.length);
     m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;
     m_LEDUpdateMessage[1] = (byte) 0x02; //command byte for updating LEDs
 
-    // Set top and bottom LEDs
-    updateLEDHalf(0, 0, 255, 0);
-    updateLEDHalf(1, 0, 255, 0);
+    // Set LEDs
+    updateLED(0, 255, 0);
 
     m_SerialPort.setReadBufferSize(Constants.Arduino.kBufferSize); // John cthis should only be called once during initialization
     m_SerialPort.setTimeout(Constants.Arduino.kTimeOutLength); // John c: consider setting this to zero to only read the available bytes
@@ -100,7 +101,7 @@ public class ArduinoSub extends SubsystemBase {
 
   private void writeToSerial() {
     // Get intake sensor data
-    if(!m_LEDHalfHasChanged) {
+    if(!m_LEDHasChanged) {
       m_SerialPort.write(m_getMessage, m_getMessage.length);
     }
     // Update LED panel colors when the update request is true
@@ -110,7 +111,7 @@ public class ArduinoSub extends SubsystemBase {
         m_LEDUpdateMessage[8] += m_LEDUpdateMessage[i];
       }
       m_SerialPort.write(m_LEDUpdateMessage, 9);
-      m_LEDHalfHasChanged = false;
+      m_LEDHasChanged = false;
     }
     if(m_LEDArrayChanged) {
       m_LEDUpdateArray[0] = Constants.Arduino.kMessageHeader;
@@ -126,13 +127,21 @@ public class ArduinoSub extends SubsystemBase {
     //m_SerialPort.flush();
   }
 
-  public void updateLEDHalf(int LEDHalfIndex, int r, int g, int b) {
+  public void updateLED(int r, int g, int b) {
     m_LEDUpdateMessage[0] = Constants.Arduino.kMessageHeader;
     m_LEDUpdateMessage[1] = (byte) 0x02; //command byte for updating top half and bottom half of LEDs
-    m_LEDUpdateMessage[LEDHalfIndex * 3 + 2] = (byte) r;
-    m_LEDUpdateMessage[LEDHalfIndex * 3 + 3] = (byte) g;
-    m_LEDUpdateMessage[LEDHalfIndex * 3 + 4] = (byte) b;
-    m_LEDHalfHasChanged = true;
+    m_LEDUpdateMessage[2] = (byte) r;
+    m_LEDUpdateMessage[3] = (byte) g;
+    m_LEDUpdateMessage[4] = (byte) b;
+    m_LEDUpdateMessage[5] = (byte) r;
+    m_LEDUpdateMessage[6] = (byte) g;
+    m_LEDUpdateMessage[7] = (byte) b;
+    if(m_currentRGB[0] != r || m_currentRGB[1] != g || m_currentRGB[2] != b) {
+      m_LEDHasChanged = true;
+      m_currentRGB[0] = r;
+      m_currentRGB[1] = g;
+      m_currentRGB[2] = b;
+    }
   }
 
   public boolean isSensorTripped(int sensorIndex) {

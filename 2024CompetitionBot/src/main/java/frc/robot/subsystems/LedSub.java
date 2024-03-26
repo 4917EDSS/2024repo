@@ -183,8 +183,7 @@ public class LedSub extends SubsystemBase {
         g = ledColour.green / 2;
         b = ledColour.blue / 2;
       }
-      m_arduinoSub.updateLEDHalf(0, r, g, b);
-      m_arduinoSub.updateLEDHalf(1, r, g, b);
+      m_arduinoSub.updateLED(r, g, b);
     }
 
     // TODO: If zone is ALL, also set the Arduino board LEDs to this colour (but don't let the R + G + B value exceed 510)
@@ -193,8 +192,7 @@ public class LedSub extends SubsystemBase {
     //   Divide each colour value by two
     // }
     // And then
-    // m_arduinoSub.updateLEDHalf(0, ledColour.red, ledColour.green, ledColour.blue);
-    // m_arduinoSub.updateLEDHalf(1, ledColour.red, ledColour.green, ledColour.blue);
+    // m_arduinoSub.updateLED(ledColour.red, ledColour.green, ledColour.blue);
   }
 
   private void setBuffer(int position, int r, int g, int b) {

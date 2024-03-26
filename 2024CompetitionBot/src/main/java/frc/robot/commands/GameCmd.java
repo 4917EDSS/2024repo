@@ -147,8 +147,7 @@ public class GameCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arduinoSub.updateLEDHalf(0, 0, 255, 0);
-    m_arduinoSub.updateLEDHalf(1, 0, 255, 128);
+    m_arduinoSub.updateLED(0, 255, 0);
 
   }
 

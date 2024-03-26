@@ -23,6 +23,8 @@ public class IntakeUntilNoteInCmd extends Command {
   private final FlywheelSub m_flywheelSub;
   private final LedSub m_LedSub;
 
+  private boolean lowerSensorTripped = false;
+
   public IntakeUntilNoteInCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub) {
     m_arduinoSub = arduinoSub;
     m_feederSub = feederSub;
@@ -46,6 +48,11 @@ public class IntakeUntilNoteInCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(m_arduinoSub.isAnySensorTripped()) {
+      m_LedSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
+    } else {
+      m_LedSub.setZoneColour(LedZones.ALL, LedColour.RED);
+    }
     // Once the note has cleared the intake rollers, run those rollers in reverse to avoid controlling two notes
     // if(m_pivotSub.isNoteAtPosition(Constants.Shooter.kNoteSensorNearFlywheel)) {
     //   m_intakeSub.setIntakeMotors(Constants.Intake.kNoteExpelPower);
@@ -77,9 +84,16 @@ public class IntakeUntilNoteInCmd extends Command {
     // if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorAtFlywheel)) {
     //   return true;
     // }
-    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwNear)) {
-      return true;
+    if(lowerSensorTripped) {
+      if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwNear)) {
+        return true;
+      }
+      return false;
+    } else {
+      if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorIntakeNear)) {
+        lowerSensorTripped = true;
+      }
+      return false;
     }
-    return false;
   }
 }
