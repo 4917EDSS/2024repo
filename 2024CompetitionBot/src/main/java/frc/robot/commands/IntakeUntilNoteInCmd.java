@@ -43,6 +43,7 @@ public class IntakeUntilNoteInCmd extends Command {
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
     m_LedSub.setZoneColour(LedZones.ALL, LedColour.RED);
     m_flywheelSub.brakeFlywheels();
+    lowerSensorTripped = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
