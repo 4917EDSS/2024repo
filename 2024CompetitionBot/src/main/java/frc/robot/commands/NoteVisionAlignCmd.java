@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.VisionSub;
 
@@ -14,29 +13,26 @@ public class NoteVisionAlignCmd extends Command {
   /** Creates a new NoteVisionAlignCmd. */
   private final VisionSub m_visionSub;
   private final DrivetrainSub m_drivetrainSub;
-  private final CommandPS4Controller m_driverController;
+
 
   private double noteAngle = 0.0;
 
   private final double drivePower = 0.7;
 
-  private PIDController m_turnPID = new PIDController(0.006, 0.0, 0.0);
+  private PIDController m_turnPID = new PIDController(0.01, 0.0, 0.0);
 
-  public NoteVisionAlignCmd(VisionSub visionSub, DrivetrainSub drivetrainSub, CommandPS4Controller driverController) {
+  public NoteVisionAlignCmd(VisionSub visionSub, DrivetrainSub drivetrainSub) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_visionSub = visionSub;
     m_drivetrainSub = drivetrainSub;
-    m_driverController = driverController;
 
     addRequirements(visionSub, drivetrainSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -50,8 +46,9 @@ public class NoteVisionAlignCmd extends Command {
 
       setRotation = m_drivetrainSub.getYawRotation2d().getDegrees() + noteAngle;
 
-      double xPower = Math.cos(Math.toRadians(setRotation)) * drivePower;
-      double yPower = Math.sin(Math.toRadians(setRotation)) * drivePower;
+      double slowDownToTurn = (100 - Math.abs(noteAngle)) / 100;
+      double xPower = Math.cos(Math.toRadians(setRotation)) * drivePower * slowDownToTurn;
+      double yPower = Math.sin(Math.toRadians(setRotation)) * drivePower * slowDownToTurn;
 
       m_drivetrainSub.drive(xPower, yPower, rotationPower, 0.02);
     }
@@ -66,8 +63,6 @@ public class NoteVisionAlignCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(!m_driverController.square().getAsBoolean() || !m_visionSub.hasNoteTarget())
-      return true;
     return false;
   }
 }
