@@ -24,7 +24,6 @@ import frc.robot.commands.ExpelAmpNoteCmd;
 import frc.robot.commands.FastIntakeNoteGrp;
 import frc.robot.commands.FastShooterPrepGrp;
 import frc.robot.commands.GameCmd;
-import frc.robot.commands.IntakeAndAutoAlignGrp;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.IntakeWithJoystickCmd;
 import frc.robot.commands.KillAllCmd;
@@ -127,7 +126,7 @@ public class RobotContainer {
         new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
             m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
     NamedCommands.registerCommand("NoteVisionAlignCmd",
-        new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub, m_driverController));
+        new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_pivotSub));
 
@@ -142,8 +141,7 @@ public class RobotContainer {
     // ======================================== Driver controller bindings ========================================
 
     // This basically takes over the robot right now
-    m_driverController.square().whileTrue(new IntakeAndAutoAlignGrp(m_arduinoSub, m_drivetrainSub, m_driverController,
-        m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
+    m_driverController.square().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
 
     // m_driverController.cross()
 
