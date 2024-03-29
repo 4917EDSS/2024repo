@@ -137,7 +137,7 @@ public final class Constants {
       public static final double kAbsoluteEncoderOffsetBL = 0.982;
       public static final double kAbsoluteEncoderOffsetBR = -0.450;
       public static final boolean kInvertLowerFeeder = true;
-      public static final double kGearRatio = 6.52;
+      public static final double kGearRatio = 6.05; // THIS IS WRONG, USE WITH CAUTION
     }
 
     public static final class Unknown {
@@ -204,7 +204,7 @@ public final class Constants {
     public static final HolonomicPathFollowerConfig kPathingConfig =
         new HolonomicPathFollowerConfig(new PIDConstants(7, 0.0, 0.0), new PIDConstants(3.5, 0.0, 0.0),
             kMaxChassisSpeed, //7 for translation P, 6 for rotation p, 0.25 for rotation D, 0.5 for translation D
-            0.45, new ReplanningConfig());
+            0.54, new ReplanningConfig());
     public static final double kGyroPhysicalOffsetAngle = -90; // Gyro's 0 is pointing at this angle (e.g. -90 is pointing right)
   }
 

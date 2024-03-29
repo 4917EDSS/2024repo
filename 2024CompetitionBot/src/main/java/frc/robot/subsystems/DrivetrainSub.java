@@ -182,15 +182,15 @@ public class DrivetrainSub extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // Only run the odometry when the driver's station has Auto selected (doesn't have to be enabled)
-    if(DriverStation.isAutonomous()) {
-      updateOdometry();
-      double xPos = m_odometry.getPoseMeters().getX();
-      double yPos = m_odometry.getPoseMeters().getY();
-      if(!RobotContainer.disableShuffleboardPrint) {
-        m_sbXPOS.setDouble(xPos);
-        m_sbYPOS.setDouble(yPos);
-      }
-    }
+    //if(DriverStation.isAutonomous()) {
+    updateOdometry();
+    double xPos = m_odometry.getPoseMeters().getX();
+    double yPos = m_odometry.getPoseMeters().getY();
+    //if(!RobotContainer.disableShuffleboardPrint) {
+    m_sbXPOS.setDouble(xPos);
+    m_sbYPOS.setDouble(yPos);
+    //}
+    //}
     m_sbYaw.setDouble(getYawRotation2d().getDegrees());
     m_sbFLEncoder.setDouble(m_frontLeft.getTurningEncoder());
     m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());

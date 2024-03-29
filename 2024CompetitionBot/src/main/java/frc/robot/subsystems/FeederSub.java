@@ -64,6 +64,12 @@ public class FeederSub extends SubsystemBase {
     spinUpperFeeder(upperPower);
   }
 
+  public void spinAllFeedersAndIntake(double lowerPower, double upperPower, double power) {
+    spinLowerFeeder(lowerPower);
+    spinUpperFeeder(upperPower);
+    m_intakeRollers.set(power);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

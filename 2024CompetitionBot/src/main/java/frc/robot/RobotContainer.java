@@ -31,6 +31,7 @@ import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteVisionAlignCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterFlywheelCmd;
+import frc.robot.commands.ShooterIntakeGrp;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
@@ -97,6 +98,8 @@ public class RobotContainer {
     // Add autonomous commands needed by Path Planner here
     NamedCommands.registerCommand("IntakeNoteGrp",
         new FastIntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+    NamedCommands.registerCommand("ShooterIntakeGrp",
+        new ShooterIntakeGrp(m_feederSub, m_flywheelSub, 1.0));
     NamedCommands.registerCommand("ShooterShootCmd",
         new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
     NamedCommands.registerCommand("ShooterPrepGrpTouchingSpeaker",
@@ -266,6 +269,8 @@ public class RobotContainer {
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
     m_Chooser.addOption("No Vision Shoot and Leave Auto", new PathPlannerAuto("No Vision Shoot and Leave Auto"));
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
+    m_Chooser.addOption("1meterAuto", new PathPlannerAuto("1meterAuto"));
+    m_Chooser.addOption("StealBecauseWeAreMean", new PathPlannerAuto("StealBecauseWeAreMean"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
