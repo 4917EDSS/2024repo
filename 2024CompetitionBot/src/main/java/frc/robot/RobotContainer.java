@@ -111,7 +111,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterPrepGrpFromStage",
         new FastShooterPrepGrp(56.25, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub)); // Was at 66.25 before vision
     NamedCommands.registerCommand("ShooterPrepGrpFromSpeaker",
-        new FastShooterPrepGrp(50.5, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub)); // Was at 60.5 before vision
+        new FastShooterPrepGrp(50.5, 46.0, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub)); // Was at 60.5 before vision
     NamedCommands.registerCommand("ShooterPrepGrpFromAmp",
         new FastShooterPrepGrp(64.25, m_arduinoSub, m_feederSub, m_flywheelSub, m_pivotSub));
     NamedCommands.registerCommand("ShooterPrepGrp10Degrees",

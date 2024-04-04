@@ -21,11 +21,17 @@ public class FastShooterPrepGrp extends ParallelCommandGroup {
   /** Creates a new ShooterPrepGrp. */
   public FastShooterPrepGrp(double pivotPosition, ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub,
       PivotSub pivotSub) {
+    this(pivotPosition, Constants.Flywheel.kFlywheelShootVelocity, arduinoSub, feederSub, flywheelSub, pivotSub);
+  }
+
+  public FastShooterPrepGrp(double pivotPosition, double flywheelSpeed, ArduinoSub arduinoSub, FeederSub feederSub,
+      FlywheelSub flywheelSub,
+      PivotSub pivotSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ConditionalCommand(new FastShooterFlywheelCmd(flywheelSub),
-            new ShooterFlywheelCmd(Constants.Flywheel.kFlywheelShootVelocity, flywheelSub),
+            new ShooterFlywheelCmd(flywheelSpeed, flywheelSub),
             () -> (pivotPosition < 40.0)),
         new ShooterPivotCmd(pivotPosition, pivotSub),
         new SequentialCommandGroup(
