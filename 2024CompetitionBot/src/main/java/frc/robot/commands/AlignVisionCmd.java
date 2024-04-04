@@ -36,6 +36,8 @@ public class AlignVisionCmd extends Command {
   private final PivotSub m_pivotSub;
   private final VisionSub m_visionSub;
 
+  double pivotAngle = 0.0;
+
   private final PIDController m_lookatPID = new PIDController(0.004, 0.0, 0.0); // For facing apriltag
   private final double kMaxRotationRatio = 0.5;
 
@@ -81,7 +83,7 @@ public class AlignVisionCmd extends Command {
       yPower = Math.abs(m_driverController.getLeftY()) < 0.07 ? 0.0 : m_driverController.getLeftY();
     }
 
-    double pivotAngle = m_pivotSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
+    pivotAngle = m_pivotSub.interpolateShooterAngle(verticalAngle); // Simple linear conversion from apriltag angle to shooter angle
     boolean hasTarget = m_visionSub.simpleHasTarget();
 
     if(hasTarget) {
@@ -136,9 +138,7 @@ public class AlignVisionCmd extends Command {
 
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
-      m_logger.fine("Shot with target pivot angle: " + pivotAngle);
-      m_logger.fine("Actual pivot angle: " + m_pivotSub.getPivotAngle());
-      m_logger.fine("Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
+
     } else if(m_lookatPID.atSetpoint()) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
     } else if(hasTarget) {
@@ -164,6 +164,10 @@ public class AlignVisionCmd extends Command {
   public boolean isFinished() {
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()
         && m_visionSub.simpleHasTarget()) {
+      m_logger.fine("[Shot] Limelight angle: " + m_visionSub.getSimpleVerticalAngle() + ", Set pivot angle: "
+          + pivotAngle + ", Real pivot angle: " + m_pivotSub.getPivotAngle()
+          + ", Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
+
       return true;
     }
     return false;

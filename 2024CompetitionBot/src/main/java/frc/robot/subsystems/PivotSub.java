@@ -93,6 +93,7 @@ public class PivotSub extends SubsystemBase {
     }
     m_targetAngle = position;
     m_areWeTryingToHold = true;
+    runPivotControl(true);
   }
 
   public void disableTargetAngle() {

@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.FlywheelSub;
+import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.PivotSub;
+import frc.robot.subsystems.LedSub.LedColour;
+import frc.robot.subsystems.LedSub.LedZones;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
@@ -20,7 +23,7 @@ public class ShooterPrepGrp extends SequentialCommandGroup {
   /** Creates a new ShooterPrepGrp. */
   public ShooterPrepGrp(double pivotPosition, double flywheelVelocity, ArduinoSub arduinoSub, FeederSub feederSub,
       FlywheelSub flywheelSub,
-      PivotSub pivotSub) {
+      PivotSub pivotSub, LedSub ledSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -31,6 +34,7 @@ public class ShooterPrepGrp extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new ShooterFlywheelCmd(flywheelVelocity, flywheelSub),
             new ShooterPivotCmd(pivotPosition, pivotSub),
-            new ExpelNoteABitCmd(arduinoSub, feederSub)));
+            new ExpelNoteABitCmd(arduinoSub, feederSub)),
+        new InstantCommand(() -> ledSub.setZoneColour(LedZones.ALL, LedColour.ORANGE), ledSub));
   }
 }

@@ -28,36 +28,42 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeNoteGrp"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "StartPositionToMiddleNote"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "deadline",
+                      "type": "sequential",
                       "data": {
                         "commands": [
                           {
                             "type": "path",
                             "data": {
+                              "pathName": "StartPositionToMiddleNote"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
                               "pathName": "Stage to Speaker Note"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeNoteGrp"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.4
                             }
                           },
                           {
@@ -68,7 +74,14 @@
                           }
                         ]
                       }
-                    },
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
                     {
                       "type": "named",
                       "data": {
