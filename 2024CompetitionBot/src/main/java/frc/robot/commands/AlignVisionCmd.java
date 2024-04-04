@@ -164,7 +164,7 @@ public class AlignVisionCmd extends Command {
   public boolean isFinished() {
     if(m_flywheelSub.isAtTargetVelocity() && m_lookatPID.atSetpoint() && m_pivotSub.isAtPivotAngle()
         && m_visionSub.simpleHasTarget()) {
-      m_logger.fine("[Shot] Limelight angle: " + m_visionSub.getSimpleVerticalAngle() + ", Set pivot angle: "
+      m_flywheelSub.addLog("[Shot] Limelight angle: " + m_visionSub.getSimpleVerticalAngle() + ", Set pivot angle: "
           + pivotAngle + ", Real pivot angle: " + m_pivotSub.getPivotAngle()
           + ", Flywheel speed: " + m_flywheelSub.getFlywheelVelocityL());
 

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
@@ -19,6 +20,8 @@ import frc.robot.RobotContainer;
 
 public class FlywheelSub extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(FlywheelSub.class.getName());
+
+  private ArrayList<String> loggingStrings = new ArrayList<String>();
 
   private final CANSparkMax m_flywheelL =
       new CANSparkMax(Constants.CanIds.kFlywheelL, CANSparkLowLevel.MotorType.kBrushless);
@@ -86,6 +89,16 @@ public class FlywheelSub extends SubsystemBase {
       setFlywheelVoltage(feedForwardVoltage + pidVoltage);
     } else {
       setFlywheelVoltage(0.0);
+    }
+  }
+
+  public void addLog(String data) {
+    loggingStrings.add(data);
+  }
+
+  public void printLogs() {
+    for(int logNum = 0; logNum < loggingStrings.size(); logNum++) {
+      m_logger.fine("[" + logNum + "] " + loggingStrings.get(logNum));
     }
   }
 

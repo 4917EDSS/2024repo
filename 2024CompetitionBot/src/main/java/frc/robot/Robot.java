@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     inTestMode = false;
     m_robotContainer.disableTest();
+    m_robotContainer.printShooterLogs();
   }
 
   @Override

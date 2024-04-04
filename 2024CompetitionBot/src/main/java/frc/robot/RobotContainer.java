@@ -28,6 +28,7 @@ import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.IntakeWithJoystickCmd;
 import frc.robot.commands.KillAllCmd;
 import frc.robot.commands.NoteVisionAlignCmd;
+import frc.robot.commands.NoteVisionAlignInAutoCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
 import frc.robot.commands.ShooterFlywheelCmd;
 import frc.robot.commands.ShooterIntakeGrp;
@@ -130,6 +131,8 @@ public class RobotContainer {
         new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_pivotSub));
+    NamedCommands.registerCommand("NoteVisionAlignInAutoCmd",
+        new NoteVisionAlignInAutoCmd(m_visionSub, m_drivetrainSub));
 
     autoChooserSetup();
   }
@@ -204,11 +207,11 @@ public class RobotContainer {
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
-    m_operatorController.L1()
-        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightHookLowered, 1.0, m_climbSub, m_drivetrainSub));
+    m_operatorController.L1().whileTrue(
+        new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, 0.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
-    m_operatorController.R1()
-        .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightShortHookRaised, 1.0, m_climbSub, m_drivetrainSub));
+    m_operatorController.R1().whileTrue(
+        new StartEndCommand(() -> m_climbSub.setClimbPower(0.0, -1.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));
 
     m_operatorController.L2()
         .onTrue(new IntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
@@ -272,6 +275,7 @@ public class RobotContainer {
     m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
     m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
+    m_Chooser.addOption("Note Vision Shoot and Leave Auto", new PathPlannerAuto("Note Vision Shoot and Leave Auto"));
     m_Chooser.addOption("No Vision Shoot and Leave Auto", new PathPlannerAuto("No Vision Shoot and Leave Auto"));
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
     m_Chooser.addOption("1meterAuto", new PathPlannerAuto("1meterAuto"));
@@ -398,6 +402,10 @@ public class RobotContainer {
 
   public void testInitSubsystems() {
     m_arduinoSub.init();
+  }
+
+  public void printShooterLogs() {
+    m_flywheelSub.printLogs();
   }
 
   public void disableTest() {
