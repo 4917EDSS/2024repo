@@ -41,6 +41,6 @@ public class FastShooterFlywheelCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_flywheelSub.isAtRelativeVelocity(40.0);
+    return m_flywheelSub.isAtLeastRelativeVelocity(40.0);
   }
 }

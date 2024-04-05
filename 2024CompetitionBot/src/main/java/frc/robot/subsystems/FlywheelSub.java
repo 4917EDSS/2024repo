@@ -147,10 +147,9 @@ public class FlywheelSub extends SubsystemBase {
     return false;
   }
 
-  public boolean isAtRelativeVelocity(double velocity) {
+  public boolean isAtLeastRelativeVelocity(double velocity) {
 
-    if(Math.abs(
-        getFlywheelVelocityL() - velocity) < Constants.Flywheel.kFlywheelTolerance) {
+    if(getFlywheelVelocityL() > velocity - Constants.Flywheel.kFlywheelTolerance) {
       return true;
     }
     return false;

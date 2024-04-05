@@ -24,6 +24,8 @@ public class NoteVisionAlignInAutoCmd extends Command {
   private PIDController m_turnPID = new PIDController(0.01, 0.0, 0.0);
 
   Instant start;
+  //boolean hasSeenNote;
+  //boolean goingForSecondNote;
 
   public NoteVisionAlignInAutoCmd(VisionSub visionSub, DrivetrainSub drivetrainSub) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -48,6 +50,7 @@ public class NoteVisionAlignInAutoCmd extends Command {
 
     noteAngle = m_visionSub.getNoteHorizontalAngle();
     if(m_visionSub.hasNoteTarget()) {
+      // hasSeenNote = true;
       rotationPower = m_turnPID.calculate(noteAngle);
 
       setRotation = m_drivetrainSub.getYawRotation2d().getDegrees() + noteAngle;
@@ -60,6 +63,9 @@ public class NoteVisionAlignInAutoCmd extends Command {
 
       start = Instant.now();
     }
+    // } else if(goingForSecondNote){
+    //   m_drivetrainSub.drive(0, 0, 0.2, 0.02);
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -72,6 +78,9 @@ public class NoteVisionAlignInAutoCmd extends Command {
   @Override
   public boolean isFinished() {
     if(Duration.between(start, Instant.now()).toMillis() > 200) {
+      // if(!hasSeenNote){
+      //  goingForSecondNote = true;
+      // }
       return true;
     }
     return false;

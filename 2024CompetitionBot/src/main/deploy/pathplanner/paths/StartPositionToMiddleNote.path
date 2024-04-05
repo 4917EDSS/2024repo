@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 4.085990717435981
+        "x": 2.7,
+        "y": 4.11
       },
       "prevControl": {
-        "x": 1.685782898838525,
-        "y": 4.048675733715104
+        "x": 1.7857828988385251,
+        "y": 4.072685016279124
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at middle note in front of stage"
     }
   ],
   "rotationTargets": [

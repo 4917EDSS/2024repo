@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6,
-        "y": 4.085990717435981
+        "x": 2.7,
+        "y": 4.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.213284226568453,
-        "y": 5.410672639527097
+        "x": 2.3132842265684532,
+        "y": 5.434681922091117
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "at middle note in front of stage"
     },
     {
       "anchor": {

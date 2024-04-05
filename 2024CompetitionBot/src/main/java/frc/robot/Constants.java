@@ -299,7 +299,7 @@ public final class Constants {
     public static final double ks = 0.5;
     public static final double kv = 0.131; // ~0.95 per 0.125 V.  Was 0.128 with old gearing
     //public static final double kStaticThresholdVelocity = 1.6; // RPS when we apply ks volts
-    public static final double kFlywheelTolerance = 5;
+    public static final double kFlywheelTolerance = 1;
     public static final double kPositionConversionFactor = 10.0 / 9.524; // Was 10.0 / 16.5 with previous gearing
     public static final double kVelocityConversionFactor = 1.0 / 60.0; // RPM to RPS
   }
