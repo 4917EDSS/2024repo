@@ -27,6 +27,7 @@ import frc.robot.commands.GameCmd;
 import frc.robot.commands.IntakeNoteGrp;
 import frc.robot.commands.IntakeWithJoystickCmd;
 import frc.robot.commands.KillAllCmd;
+import frc.robot.commands.LobPrepGrp;
 import frc.robot.commands.NoteVisionAlignCmd;
 import frc.robot.commands.NoteVisionAlignInAutoCmd;
 import frc.robot.commands.PivotToAprilTagCmd;
@@ -217,7 +218,9 @@ public class RobotContainer {
         .onTrue(new IntakeNoteGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.R2()
-        .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
+        //  .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
+        .onTrue(new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub)
+            .andThen(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub)));
 
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_climbSub, m_drivetrainSub));
@@ -248,8 +251,7 @@ public class RobotContainer {
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
     m_operatorController.povLeft().onTrue(
-        new ShooterPrepGrp(Constants.Shooter.kAnglePassing, Constants.Flywheel.kFlywheelLobVelocity, m_arduinoSub,
-            m_feederSub, m_flywheelSub, m_pivotSub, m_ledSub));
+        new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub));
@@ -280,6 +282,7 @@ public class RobotContainer {
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
     m_Chooser.addOption("1meterAuto", new PathPlannerAuto("1meterAuto"));
     m_Chooser.addOption("StealBecauseWeAreMean", new PathPlannerAuto("StealBecauseWeAreMean"));
+    m_Chooser.addOption("Mess Up Everything Auto", new PathPlannerAuto("Mess Up Everything Auto"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
