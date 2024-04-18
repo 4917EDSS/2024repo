@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.3,
-        "y": 3.9
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.4697046666820603,
-        "y": 2.8480901470893856
+        "y": 3.0480901470893853
       },
       "isLocked": false,
       "linkedName": "Shoot From Angle"

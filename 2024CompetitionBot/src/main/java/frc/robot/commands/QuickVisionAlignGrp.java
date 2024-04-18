@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
@@ -22,7 +25,9 @@ public class QuickVisionAlignGrp extends SequentialCommandGroup {
       PivotSub pivotSub, VisionSub visionSub, ArduinoSub arduinoSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AlignVisionCmd(null, null, drivetrainSub, feederSub, flywheelSub, ledSub, pivotSub, visionSub),
+    addCommands(
+        new ParallelRaceGroup(new WaitCommand(3),
+            new AlignVisionCmd(null, null, drivetrainSub, feederSub, flywheelSub, ledSub, pivotSub, visionSub)),
         new ShooterShootCmd(arduinoSub, feederSub, flywheelSub, ledSub));
   }
 }

@@ -70,6 +70,8 @@ public class DrivetrainSub extends SubsystemBase {
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
+  private PIDController m_rotateToLobPID = new PIDController(0.005, 0.0, 0.0); // Rotational PID
+
 
   // Swerve Modules that control the motors
   private final SwerveModule m_frontLeft;
@@ -136,6 +138,9 @@ public class DrivetrainSub extends SubsystemBase {
 
     m_odometryPIDr.setTolerance(1.0, 3.0); // In degrees
     m_odometryPIDr.enableContinuousInput(-180.0, 180.0);
+
+    m_rotateToLobPID.setTolerance(1.0, 3.0); // In degrees
+    m_rotateToLobPID.enableContinuousInput(-180.0, 180.0);
 
 
     m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
@@ -335,6 +340,18 @@ public class DrivetrainSub extends SubsystemBase {
         -1.0, 1.0);
   }
 
+  public double getLobRotationPower(double target) {
+    // SmartDashboard.putNumber("difference", Math.abs(getYawRotationDegrees() - target));
+    // SmartDashboard.putNumber("speed", Math.abs(m_gyro.getRate()));
+    if(Math.abs(getYawRotationDegrees() - target) < 8 * Math.abs(m_gyro.getRate())) {
+      return 0;
+    }
+    return MathUtil.clamp(
+        m_rotateToLobPID.calculate(getYawRotationDegrees(),
+            MathUtil.inputModulus(target, -180.0, 180.0)),
+        -1.0, 1.0);
+  }
+
   public boolean updateOdometryTransform() { // Returns true when at position
     //double rotationDifference = m_odometryPIDr.getPositionError(); // In degrees
     double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), targetPos.getX()), -0.5, 0.5);
@@ -411,7 +428,7 @@ public class DrivetrainSub extends SubsystemBase {
       if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
         orca1.stop();
         orca2.stop();
-        orca3.stop();
+        orca4.stop();
         orca4.stop();
         orca1.clearInstruments();
         orca2.clearInstruments();

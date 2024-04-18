@@ -261,7 +261,7 @@ public final class Constants {
     public static final double kAnglePreAmp = 200.0;
     public static final double kAngleTrap = 270.0;
     public static final double kAngleAutoLine = 57.0;
-    public static final double kAnglePassing = 55.0;
+    public static final double kAnglePassing = 52.0;
     public static final double kAngleWingLine = 72.522;
     public static final double kAngleTrapShot = 180.0;//needs to be found for trap shot
     public static final double kAngleZero = 0.0;
@@ -295,7 +295,7 @@ public final class Constants {
 
   public static final class Flywheel {
     public static final double kFlywheelShootVelocity = 70.0; // 76 is MAX velocity in RPS. Set a little below for when battery weakens
-    public static final double kFlywheelLobVelocity = 38.0;
+    public static final double kFlywheelLobVelocity = 42.0;
     public static final double ks = 0.5;
     public static final double kv = 0.131; // ~0.95 per 0.125 V.  Was 0.128 with old gearing
     //public static final double kStaticThresholdVelocity = 1.6; // RPS when we apply ks volts

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.DrivetrainSub;
@@ -51,11 +52,14 @@ public class DriveFieldRelativeCmd extends Command {
     }
     if(m_driverController.cross().getAsBoolean()) { // Override robot rotation with target heading
       if(DriverStation.getAlliance().get() == Alliance.Blue) { // On blue side
-        rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(65.0);
+        rotationPower = m_drivetrainSub.getLobRotationPower(55.0);
       } else {
-        rotationPower = m_drivetrainSub.getRotationPIDPowerDegrees(115.0);
+        rotationPower = m_drivetrainSub.getLobRotationPower(125.0);
       }
     }
+
+    // SmartDashboard.putNumber("rotationPower", rotationPower);
+
     m_drivetrainSub.drive(
         (Math.abs(m_driverController.getLeftX()) < m_deadband ? 0.0
             : -m_driverController.getLeftX()),
