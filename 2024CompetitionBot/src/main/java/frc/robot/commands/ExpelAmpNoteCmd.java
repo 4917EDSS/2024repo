@@ -47,6 +47,6 @@ public class ExpelAmpNoteCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Duration.between(start, Instant.now()).toMillis() > 800;
+    return Duration.between(start, Instant.now()).toMillis() > 500;
   }
 }

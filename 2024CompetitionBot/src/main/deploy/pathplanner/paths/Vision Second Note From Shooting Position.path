@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8,
-        "y": 3.58
+        "x": 2.3,
+        "y": 3.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9697046666820603,
-        "y": 2.5280901470893857
+        "x": 3.4697046666820603,
+        "y": 2.8480901470893856
       },
       "isLocked": false,
       "linkedName": "Shoot From Angle"

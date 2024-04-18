@@ -157,7 +157,8 @@ public class RobotContainer {
 
     //m_driverController.options()
 
-    m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
+    m_driverController.R1().onTrue(new SequentialCommandGroup(new ExpelAmpNoteCmd(m_feederSub, m_ledSub),
+        new ShooterPivotCmd(0.0, m_pivotSub)));
 
     m_driverController.L2()
         .onTrue(new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
@@ -212,7 +213,8 @@ public class RobotContainer {
         new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.triangle()
-        .onTrue(new ZeroPivotNoFlywheelGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+        .onTrue(new ShooterPivotCmd(0, m_pivotSub));
+    m_operatorController.triangle().onFalse(new ShooterPivotCmd(Constants.Shooter.kAnglePassing, m_pivotSub));
 
     m_operatorController.L1().whileTrue(
         new StartEndCommand(() -> m_climbSub.setClimbPower(-1.0, 0.0), () -> m_climbSub.setClimbPower(0.0, 0.0)));

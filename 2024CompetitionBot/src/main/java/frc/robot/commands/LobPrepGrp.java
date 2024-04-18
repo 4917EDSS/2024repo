@@ -36,7 +36,8 @@ public class LobPrepGrp extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new ShooterPivotCmd(Constants.Shooter.kAnglePassing, pivotSub),
             new SequentialCommandGroup(
-                new WaitCommand(0.3),
+                new ConditionalCommand(new InstantCommand(), new WaitCommand(0.3),
+                    () -> pivotSub.getPivotAngle() > 10.0),
                 new InstantCommand(() -> flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelLobVelocity)),
                 new ExpelNoteABitCmd(arduinoSub, feederSub),
                 new InstantCommand(() -> ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE)))));
