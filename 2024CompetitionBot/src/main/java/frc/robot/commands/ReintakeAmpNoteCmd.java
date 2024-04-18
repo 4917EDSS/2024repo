@@ -42,7 +42,12 @@ public class ReintakeAmpNoteCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)
-        || m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwMid));
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwFar)
+        || m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwMid)) {
+      m_feederSub.finishedNoteIntake = true;
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -27,7 +29,10 @@ public class LobPrepGrp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub),
+        new ConditionalCommand(new InstantCommand(),
+            new SequentialCommandGroup(new ShooterPivotCmd(0, pivotSub),
+                new IntakeUntilNoteInCmd(arduinoSub, feederSub, flywheelSub, ledSub)),
+            () -> feederSub.finishedNoteIntake),
         new ParallelCommandGroup(
             new ShooterPivotCmd(Constants.Shooter.kAnglePassing, pivotSub),
             new SequentialCommandGroup(

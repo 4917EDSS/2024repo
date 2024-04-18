@@ -140,7 +140,13 @@ public class AlignVisionCmd extends Command {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE);
 
     } else if(m_lookatPID.atSetpoint()) {
-      m_ledSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
+      if(m_flywheelSub.isAtTargetVelocity()) {
+        m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED);
+      } else if(m_pivotSub.isAtPivotAngle()) {
+        m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN);
+      } else {
+        m_ledSub.setZoneColour(LedZones.ALL, LedColour.WHITE);
+      }
     } else if(hasTarget) {
       m_ledSub.setZoneColour(LedZones.ALL, LedColour.YELLOW);
     } else {

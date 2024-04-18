@@ -14,6 +14,7 @@ public class ShooterPivotCmd extends Command {
   private final double m_targetPivotPosition;
   private final double m_maxSpeed;
   private final PivotSub m_pivotSub;
+  private int limitCounter;
 
   public ShooterPivotCmd(double targetPivotPosition, double maxSpeed, PivotSub pivotSub) {
     m_targetPivotPosition = targetPivotPosition;
@@ -30,6 +31,7 @@ public class ShooterPivotCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    limitCounter = 0;
     m_logger.fine("ShooterPivotCmd - Init");
     if(m_targetPivotPosition != 0) {
       m_pivotSub.setTargetAngle(m_targetPivotPosition);
@@ -59,8 +61,13 @@ public class ShooterPivotCmd extends Command {
   public boolean isFinished() {
     boolean hitLimit = (m_pivotSub.getPivotPower() < 0.0) ? m_pivotSub.isPivotAtReverseLimit()
         : m_pivotSub.isPivotAtForwardLimit(); // Emergency case to stop command
+    if(hitLimit) {
+      limitCounter++;
+    } else {
+      limitCounter = 0;
+    }
     if(m_targetPivotPosition != 0) {
-      return m_pivotSub.isAtPivotAngle() || hitLimit;
+      return m_pivotSub.isAtPivotAngle() || limitCounter == 3;
     } else {
       return hitLimit;
     }

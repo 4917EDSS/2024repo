@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.28,
-        "y": 2.4348026877871947
+        "x": 8.29962790515921,
+        "y": 2.4525089479517073
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.188909031673976,
-        "y": 0.4846275166611164
+        "x": 5.670890769330734,
+        "y": 0.9692550333222316
       },
       "isLocked": false,
       "linkedName": "Second Note Center Line"
@@ -20,8 +20,8 @@
         "y": 3.58
       },
       "prevControl": {
-        "x": 3.3503960098829286,
-        "y": 2.423235504652827
+        "x": 3.335867279963541,
+        "y": 2.0413098429059118
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0
   },
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 33.69006752597973,
     "velocity": 0
   },
   "useDefaultConstraints": true

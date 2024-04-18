@@ -38,7 +38,7 @@ public class IntakeUntilNoteInCmd extends Command {
   @Override
   public void initialize() {
     m_logger.fine("IntakeUntilNoteInCmd - Init");
-
+    m_feederSub.finishedNoteIntake = false;
     m_feederSub.setIntakeMotors(Constants.Intake.kNoteIntakePower);
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
     m_LedSub.setZoneColour(LedZones.ALL, LedColour.RED);
@@ -87,6 +87,7 @@ public class IntakeUntilNoteInCmd extends Command {
     // }
     if(lowerSensorTripped) {
       if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorFwNear)) {
+        m_feederSub.finishedNoteIntake = true;
         return true;
       }
       return false;

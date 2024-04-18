@@ -17,7 +17,7 @@ public class NoteVisionAlignCmd extends Command {
 
   private double noteAngle = 0.0;
 
-  private final double drivePower = 0.3;
+  private final double drivePower = 0.5;
 
   private PIDController m_turnPID = new PIDController(0.01, 0.0, 0.0);
 

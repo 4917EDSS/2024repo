@@ -25,14 +25,22 @@ public class ShooterShootCmd extends Command {
   private final LedSub m_ledSub;
 
   private Instant start;
+  private double velocity = Constants.Flywheel.kFlywheelShootVelocity;
 
-  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub) {
+  public ShooterShootCmd(double shooterVelocity, ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub,
+      LedSub ledSub) {
     m_arduinoSub = arduinoSub;
     m_feederSub = feederSub;
     m_flywheelSub = flywheelSub;
     m_ledSub = ledSub;
 
+    velocity = shooterVelocity;
+
     addRequirements(feederSub, flywheelSub); // It's fine if two commands change LEDs
+  }
+
+  public ShooterShootCmd(ArduinoSub arduinoSub, FeederSub feederSub, FlywheelSub flywheelSub, LedSub ledSub) {
+    this(Constants.Flywheel.kFlywheelShootVelocity, arduinoSub, feederSub, flywheelSub, ledSub);
   }
 
   // Called when the command is initially scheduled.
@@ -40,13 +48,14 @@ public class ShooterShootCmd extends Command {
   public void initialize() {
     m_logger.fine("ShooterShootCmd - Init");
     start = Instant.now();
-    m_flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelShootVelocity);
+    m_flywheelSub.enableFlywheel(velocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Flywheel should always be at targetr speed
+    m_feederSub.finishedNoteIntake = false;
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower,
         Constants.Shooter.kNoteUpperIntakePower);
   }

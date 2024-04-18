@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2806111279485535,
-        "y": 1.5038243843213994
+        "x": 3.9697046666820603,
+        "y": 2.5280901470893857
       },
       "isLocked": false,
       "linkedName": "Shoot From Angle"
@@ -20,8 +20,8 @@
         "y": 2.4348026877871947
       },
       "prevControl": {
-        "x": 3.4645429145403757,
-        "y": 1.2407232087191458
+        "x": 5.583577712607359,
+        "y": 0.9142171011573736
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,12 +39,12 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 1.5,
+    "velocity": 2.0,
     "rotation": 0,
     "rotateFast": false
   },

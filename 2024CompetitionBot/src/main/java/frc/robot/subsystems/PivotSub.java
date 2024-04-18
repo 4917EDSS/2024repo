@@ -33,7 +33,7 @@ public class PivotSub extends SubsystemBase {
 
   private final SparkAbsoluteEncoder m_pivotAbsoluteEncoder = m_pivot.getAbsoluteEncoder(Type.kDutyCycle);
 
-  private final PIDController m_pivotPID = new PIDController(0.025, 0.0, 0.0);
+  private final PIDController m_pivotPID = new PIDController(0.03, 0.0, 0.0);
   private double m_targetAngle;
   private boolean m_areWeTryingToHold = false;
   private final ArmFeedforward m_pivotFeedforward = new ArmFeedforward(Constants.Shooter.ks, Constants.Shooter.kg, 0); // Tuned by finding the max power it ever needs to move (horizontal) and splitting it between static and gravity gain
@@ -227,7 +227,6 @@ public class PivotSub extends SubsystemBase {
   }
 
   public void runPivotControl(boolean justCalculate) {
-    //double fixedAngle = MathUtil.clamp(angle, 0.0, 275.0); // Make sure it isn't trying to go to an illegal value
     double pidPower = m_pivotPID.calculate(getPivotAngle(), m_targetAngle);
     double fedPower = m_pivotFeedforward.calculate(Math.toRadians(getPivotAngle() - 90.0), pidPower); // Feed forward expects 0 degrees as horizontal
 

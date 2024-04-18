@@ -12,6 +12,8 @@ import frc.robot.Constants;
 
 public class FeederSub extends SubsystemBase {
   /** Creates a new FeederSub. */
+  public boolean finishedNoteIntake = false;
+
   private final CANSparkMax m_intakeRollers =
       new CANSparkMax(Constants.CanIds.kIntakeRollers, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkMax m_upperFeeder =

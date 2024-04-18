@@ -3,16 +3,17 @@
   "robotLength": 0.76,
   "holonomicMode": true,
   "pathFolders": [
+    "2 Far Notes Under Stage Auto",
     "Ampshot",
     "Five Note Score Auto",
     "Five Note Steal Auto",
     "Four Note Auto",
-    "2 Far Notes Under Stage Auto",
+    "Amp side Vision",
     "Steal And Score Auto"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.2,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 360.0,
   "defaultMaxAngAccel": 540.0,
   "maxModuleSpeed": 4.2

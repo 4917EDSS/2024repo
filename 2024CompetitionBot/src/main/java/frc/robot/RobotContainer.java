@@ -128,8 +128,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("VisionAlignCmdGrp",
         new AlignVisionGrp(m_driverController, m_operatorController, m_arduinoSub, m_drivetrainSub, m_feederSub,
             m_flywheelSub, m_ledSub, m_pivotSub, m_visionSub));
-    NamedCommands.registerCommand("NoteVisionAlignCmd",
-        new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
     NamedCommands.registerCommand("ZeroPivot",
         new ShooterPivotCmd(0, m_pivotSub));
     NamedCommands.registerCommand("NoteVisionAlignInAutoCmd",
@@ -150,13 +148,14 @@ public class RobotContainer {
 
     // m_driverController.square()
 
+    // Implicitly being used in DriveFieldRelativeCmd
     // m_driverController.cross()
 
     //m_driverController.circle()
 
     //m_driverController.triangle()
 
-    //m_driverController.L1()
+    //m_driverController.options()
 
     m_driverController.R1().onTrue(new ExpelAmpNoteCmd(m_feederSub, m_ledSub));
 
@@ -170,17 +169,24 @@ public class RobotContainer {
     m_driverController.share()
         .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
 
-    //m_driverController.options()
 
     m_driverController.PS().onTrue(new InstantCommand(() -> m_drivetrainSub.fun(), m_drivetrainSub)); // Will only actually run in test mode
 
     m_driverController.touchpad().onTrue(new GameCmd(m_driverController, m_arduinoSub)); // Will only actually run in test mode
 
-    //m_driverController.povUp()
+    m_driverController.povUp()
+        .onTrue(
+            new SequentialCommandGroup(new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED)),
+                new ShooterPivotCmd(150.0, m_pivotSub),
+                new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
+    m_driverController.povDown()
+        .onTrue(
+            new SequentialCommandGroup(new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.RED)),
+                new ShooterPivotCmd(1.0, m_pivotSub),
+                new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
+
 
     //m_driverController.povRight()
-
-    //m_driverController.povDown()
 
     //m_driverController.povLeft()
 
@@ -202,8 +208,8 @@ public class RobotContainer {
             m_arduinoSub, m_feederSub, m_flywheelSub,
             m_pivotSub, m_ledSub));
 
-    m_operatorController.circle()
-        .onTrue(new SourceIntakeGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+    m_operatorController.circle().onTrue(
+        new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
 
     m_operatorController.triangle()
         .onTrue(new ZeroPivotNoFlywheelGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
@@ -220,7 +226,9 @@ public class RobotContainer {
     m_operatorController.R2()
         //  .onTrue(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub));
         .onTrue(new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub)
-            .andThen(new ShooterShootCmd(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub)));
+            .andThen(new ShooterShootCmd(Constants.Flywheel.kFlywheelLobVelocity, m_arduinoSub, m_feederSub,
+                m_flywheelSub, m_ledSub))
+            .andThen(new ShooterPivotCmd(0, m_pivotSub)));
 
     m_operatorController.share()
         .onTrue(new ClimbSetHeightCmd(Constants.Climb.kHeightTallHookRaised, 1.0, m_climbSub, m_drivetrainSub));
@@ -250,8 +258,7 @@ public class RobotContainer {
                     new AmpShotPrepCmd(m_arduinoSub, m_feederSub))),
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
-    m_operatorController.povLeft().onTrue(
-        new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub));
+    //m_operatorController.povLeft()
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub));
@@ -276,13 +283,13 @@ public class RobotContainer {
     m_Chooser.addOption("With Vision 4NoteAuto", new PathPlannerAuto("With Vision 4NoteAuto"));
     m_Chooser.addOption("3NoteAuto Leave", new PathPlannerAuto("3NoteAuto Leave"));
     m_Chooser.addOption("Default Auto", new PathPlannerAuto("Default Auto"));
-    m_Chooser.addOption("Shoot and Leave Auto", new PathPlannerAuto("Shoot and Leave Auto"));
     m_Chooser.addOption("Note Vision Shoot and Leave Auto", new PathPlannerAuto("Note Vision Shoot and Leave Auto"));
     //m_Chooser.addOption("No Vision Shoot and Leave Auto", new PathPlannerAuto("No Vision Shoot and Leave Auto"));
     m_Chooser.addOption("2 Far Notes Under Stage", new PathPlannerAuto("2 Far Notes Under Stage"));
-    m_Chooser.addOption("1meterAuto", new PathPlannerAuto("1meterAuto"));
-    m_Chooser.addOption("StealBecauseWeAreMean", new PathPlannerAuto("StealBecauseWeAreMean"));
     m_Chooser.addOption("Mess Up Everything Auto", new PathPlannerAuto("Mess Up Everything Auto"));
+    m_Chooser.addOption("2nd Note Vision Shoot and Leave Auto",
+        new PathPlannerAuto("2nd Note Vision Shoot and Leave Auto"));
+    m_Chooser.addOption("Far note to Amp note vision", new PathPlannerAuto("Far note to Amp note vision"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }

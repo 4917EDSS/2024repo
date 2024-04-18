@@ -24,6 +24,7 @@ public class IntakeNoteFeederCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_feederSub.finishedNoteIntake = false;
     m_feederSub.spinBothFeeders(Constants.Shooter.kNoteLowerIntakePower, Constants.Shooter.kNoteUpperIntakePower);
   }
 

@@ -247,7 +247,7 @@ public final class Constants {
     public static final int kNoteSensorIntakeNear = 7;
 
     public static final double ks = 0;//0.037;
-    public static final double kg = 0.011;
+    public static final double kg = 0.018;
 
     // Angles are in degrees
     public static final double kPivotAngleConversion = 360; // Radians to Degrees

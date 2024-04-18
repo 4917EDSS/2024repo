@@ -16,6 +16,31 @@
           "data": {
             "pathName": "Mess Up Everything"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pic up mess up evething"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNoteGrp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "NoteVisionAlignInAutoCmd"
+                }
+              }
+            ]
+          }
         }
       ]
     }

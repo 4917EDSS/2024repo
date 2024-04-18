@@ -28,6 +28,7 @@ public class ExpelAmpNoteCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_feederSub.finishedNoteIntake = false;
     m_feederSub.spinBothFeeders(-0.5, -0.5);
     start = Instant.now();
   }
