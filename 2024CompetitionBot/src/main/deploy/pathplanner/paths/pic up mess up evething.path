@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.350483755512967,
-        "y": 6.910674062241119
+        "x": 8.363543999815272,
+        "y": 6.99655944766435
       },
       "isLocked": false,
       "linkedName": "end of mess up everthing"
     },
     {
       "anchor": {
-        "x": 7.48623457288284,
-        "y": 7.327897234833035
+        "x": 8.05569538411804,
+        "y": 6.78199829126931
       },
       "prevControl": {
-        "x": 7.941490724897829,
-        "y": 7.069012019062929
+        "x": 8.074352875978478,
+        "y": 6.912600734292378
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 107.74467162505744,
+    "rotation": 91.46880071438581,
     "rotateFast": false
   },
   "reversed": false,

@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.941718428891403,
-        "y": 6.651395848246243
+        "x": 8.314313587482273,
+        "y": 5.800844517610323
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9123470642452745,
-        "y": 6.607338801277051
+        "x": 6.640145802652965,
+        "y": 7.298784114562863
       },
       "isLocked": false,
-      "linkedName": "Amp waypoint"
+      "linkedName": null
     },
     {
       "anchor": {
         "x": 3.941718428891403,
-        "y": 7.052531923245665
+        "y": 6.651395848246243
       },
       "prevControl": {
-        "x": 3.9044034451705265,
-        "y": 6.912600734292378
+        "x": 4.866916415244442,
+        "y": 6.6954528952154355
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Amp waypoint"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": -136.8985557134628,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -175.91438322002512,
+    "rotation": -154.32702554767556,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp side Vision",
   "previewStartingState": {
-    "rotation": -158.802078710402,
+    "rotation": 6.340191745909978,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.VisionSub;
 
@@ -77,7 +78,7 @@ public class NoteVisionAlignInAutoCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Duration.between(start, Instant.now()).toMillis() > 150) {
+    if(Duration.between(start, Instant.now()).toMillis() > 150 || RobotContainer.noteInFeeder) {
       // if(!hasSeenNote){
       //  goingForSecondNote = true;
       // }

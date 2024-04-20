@@ -52,10 +52,12 @@ public class DriveFieldRelativeCmd extends Command {
     }
     if(m_driverController.cross().getAsBoolean()) { // Override robot rotation with target heading
       if(DriverStation.getAlliance().get() == Alliance.Blue) { // On blue side
-        rotationPower = m_drivetrainSub.getLobRotationPower(55.0);
+        rotationPower = m_drivetrainSub.getLobRotationPower(58.0);
       } else {
-        rotationPower = m_drivetrainSub.getLobRotationPower(125.0);
+        rotationPower = m_drivetrainSub.getLobRotationPower(122.0);
       }
+    } else if(m_driverController.square().getAsBoolean()) {
+      rotationPower = m_drivetrainSub.getLobRotationPower(90.0); // Angle facing drivers
     }
 
     // SmartDashboard.putNumber("rotationPower", rotationPower);

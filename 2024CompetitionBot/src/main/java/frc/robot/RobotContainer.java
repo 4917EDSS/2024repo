@@ -75,6 +75,7 @@ public class RobotContainer {
   // Disables large amount of prints from DrivetrainSub, pivotSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
   public static boolean disableShuffleboardPrint = true;
+  public static boolean noteInFeeder = false;
 
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
@@ -146,6 +147,7 @@ public class RobotContainer {
     // This basically takes over the robot right now
     m_driverController.L1().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
 
+    // Implicitly being used in DriveFieldRelativeCmd
     // m_driverController.square()
 
     // Implicitly being used in DriveFieldRelativeCmd
@@ -292,6 +294,7 @@ public class RobotContainer {
     m_Chooser.addOption("2nd Note Vision Shoot and Leave Auto",
         new PathPlannerAuto("2nd Note Vision Shoot and Leave Auto"));
     m_Chooser.addOption("Far note to Amp note vision", new PathPlannerAuto("Far note to Amp note vision"));
+    m_Chooser.addOption("New Amp", new PathPlannerAuto("Whatever"));
 
     SmartDashboard.putData("auto choices", m_Chooser);
   }
