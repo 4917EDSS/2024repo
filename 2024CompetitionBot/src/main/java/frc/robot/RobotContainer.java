@@ -74,6 +74,7 @@ public class RobotContainer {
   // Fixes a lot of CommandLoop overruns from prints
   public static boolean disableShuffleboardPrint = true;
   public static boolean noteInFeeder = false;
+  public static boolean m_demoMode = false;
 
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
@@ -142,20 +143,20 @@ public class RobotContainer {
   private void configureBindings() {
     // ======================================== Driver controller bindings ========================================
 
-    // This basically takes over the robot right now
-    m_driverController.L1().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
-
-    // Implicitly being used in DriveFieldRelativeCmd
     // m_driverController.square()
 
-    // Implicitly being used in DriveFieldRelativeCmd
     // m_driverController.cross()
 
     //m_driverController.circle()
 
-    //m_driverController.triangle()
+    // Enter demo mode (turn down drive and shot power)
+    m_driverController.triangle().onTrue(new InstantCommand(() -> setDemoMode(true)));
 
-    //m_driverController.options()
+    // Exit demo mode
+    m_driverController.options().onTrue(new InstantCommand(() -> setDemoMode(false)));
+
+    // This basically takes over the robot right now
+    m_driverController.L1().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
 
     m_driverController.R1().onTrue(new SequentialCommandGroup(new ExpelAmpNoteCmd(m_feederSub, m_ledSub),
         new ShooterPivotCmd(0.0, m_pivotSub)));
@@ -427,6 +428,10 @@ public class RobotContainer {
 
   public void postAutoInit() {
     m_drivetrainSub.postAutoResetYaw();
+  }
+
+  public void setDemoMode(boolean enable) {
+    m_demoMode = enable;
   }
 }
 

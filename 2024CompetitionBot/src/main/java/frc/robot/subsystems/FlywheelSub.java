@@ -129,7 +129,13 @@ public class FlywheelSub extends SubsystemBase {
 
   public void enableFlywheel(double flywheelVelocity) {
     m_isFlywheelEnabled = true;
-    m_flywheelShootVelocity = flywheelVelocity;
+
+    // Slow down the shot if in demo mode (will break vision shots)
+    if(RobotContainer.m_demoMode) {
+      m_flywheelShootVelocity = flywheelVelocity * 0.3;
+    } else {
+      m_flywheelShootVelocity = flywheelVelocity;
+    }
     //System.out.println("En Flywheel");
   }
 

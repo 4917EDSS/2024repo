@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSub;
 
 public class DriveFieldRelativeCmd extends Command {
@@ -61,11 +62,17 @@ public class DriveFieldRelativeCmd extends Command {
 
     // SmartDashboard.putNumber("rotationPower", rotationPower);
 
+    // Hack to slow down the robot when novice drivers are using it.
+    double leftX = m_driverController.getLeftX();
+    double leftY = m_driverController.getLeftY();
+    if(RobotContainer.m_demoMode) {
+      leftX *= 0.3;
+      leftY *= 0.3;
+    }
+
     m_drivetrainSub.drive(
-        (Math.abs(m_driverController.getLeftX()) < m_deadband ? 0.0
-            : -m_driverController.getLeftX()),
-        (Math.abs(m_driverController.getLeftY()) < m_deadband ? 0.0
-            : m_driverController.getLeftY()),
+        (Math.abs(leftX) < m_deadband ? 0.0 : -leftX),
+        (Math.abs(leftY) < m_deadband ? 0.0 : leftY),
         rotationPower,
         0.02); // this is the duration fo the timestep the speeds should be applied to. Should probably be changed
   }
