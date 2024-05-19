@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.logging.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +21,6 @@ import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.VisionSub;
 
 public class AlignVisionCmd extends Command {
-  private static Logger m_logger = Logger.getLogger(AlignVisionCmd.class.getName());
   private static final double kRotationTolerance = 1.5;
   private static final double kTurnFedPower = 0.017;
 

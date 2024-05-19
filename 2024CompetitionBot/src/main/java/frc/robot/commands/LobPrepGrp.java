@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -38,7 +37,8 @@ public class LobPrepGrp extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new ConditionalCommand(new InstantCommand(), new WaitCommand(0.3),
                     () -> pivotSub.getPivotAngle() > 10.0),
-                new InstantCommand(() -> flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelLobVelocity)),
+                new InstantCommand(
+                    () -> flywheelSub.enableFlywheel(Constants.Flywheel.kFlywheelLobVelocity)),
                 new ExpelNoteABitCmd(arduinoSub, feederSub),
                 new InstantCommand(() -> ledSub.setZoneColour(LedZones.ALL, LedColour.BLUE)))));
   }
