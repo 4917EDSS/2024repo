@@ -47,18 +47,47 @@ public class DrivetrainSub extends SubsystemBase {
   public static final double kMaxTurnSpeed = 9.0; // In radians/s
 
   // Locations of Swerve Modules relative to the center of the robot
+  //Includes translation 2d offset (Is 0.381 the robot width sqrt(2*length^2)? Possibly in meters?)
+  //Translation 2d has an x and y component, which together represent a two dimensional vector or point.
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.318); // I have no idea why these are 0.381
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.318);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.318);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.318);
+  //Creates a shuffleboard tab and adds entries to it
   private final ShuffleboardTab m_shuffleboardTab = Shuffleboard.getTab("DriveTrain");
   private final GenericEntry m_sbYPOS, m_sbXPOS, m_sbTargetXPOS, m_sbTargetYPOS, m_sbTargetROT, m_sbGYRO, m_sbYaw,
       m_sbRoll, m_sbPitch, m_sbFLEncoder,
       m_sbFREncoder, m_sbBLEncoder, m_sbBREncoder, m_sbRotKP, m_sbRotKD, m_sbRotThreshold, m_sbPathKP, m_sbPathKD,
       m_sbPathThreshold, m_sbSerialNumber, m_sbRobotName;
 
+  /*
+   * WIP
+   * PID explanation (Uses cruise control as a metaphor):
+   * PID contains three components, proportional, integral, and derivative. The PID takes in a setpoint value, which is
+   * a goal defined by the user.
+   * The setpoint is the equivalent of the set speed in a cruise control system. The process value is the value being
+   * manipulated by the PID, like
+   * the actual speed of the car. The output is the system used to control the process value, like the throttle.
+   * Finally, the error is value used by
+   * the PID to determine how it wants to manipulate the output, it's represented by the setpoint minus the process
+   * value (set speed minus actual
+   * speed).
+   * 
+   * The controller itself, as was previously stated, is made up of three components. These components are modified by
+   * the gain, which is just a
+   * multiplication factor. The user sets the gain values for each component seperately. They impact how much effect
+   * each component has on the
+   * output.
+   * 
+   * Proportional - The proportional is used for very corse adjustment. It has a large, immediate impact on the output,
+   * which lessens as the error
+   * approaches the setpoint. The proportional is calculated by multiplying the proportional gain by the error.
+   * 
+   * Integral
+   */
+
   // PID value setting
-  private double kPIDp = 0.4;
+  private double kPIDp = 0.4; //Proportional value
   private double kPIDd = 0.0;
   private double kThreshold = 0.05;
 
