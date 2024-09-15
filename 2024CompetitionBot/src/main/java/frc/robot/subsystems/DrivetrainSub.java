@@ -79,16 +79,28 @@ public class DrivetrainSub extends SubsystemBase {
    * each component has on the
    * output.
    * 
-   * Proportional - The proportional is used for very corse adjustment. It has a large, immediate impact on the output,
-   * which lessens as the error
-   * approaches the setpoint. The proportional is calculated by multiplying the proportional gain by the error.
+   * Proportional - The proportional is used for very coarse adjustment. It has a large, immediate impact on the output,
+   * which lessens as the error approaches the setpoint. The proportional is calculated by multiplying the proportional
+   * gain by the error.
    * 
-   * Integral
+   * Integral - The integral is a more fine adjustment to start, but then gradually accumulates. Every cycle, the
+   * integral gain is multipled
+   * the error value and cycle time, then added to the integral total. In otherwords, the longer it takes to reach the
+   * setpoint, the greater
+   * the impact of the integral.
+   * 
+   * Derivative - The derivative is intended to "predict" where the process value is headed, and oppose the propotional
+   * and integral to
+   * prevent overshoot. It's calculated by subtracting the previous error from the current error value, multiplying the
+   * result by the
+   * derivative gain, then dividing it by the cycle time.
+   * 
+   * Output - The output is found by adding the P, I, and D values together.
    */
 
   // PID value setting
   private double kPIDp = 0.4; //Proportional value
-  private double kPIDd = 0.0;
+  private double kPIDd = 0.0; //Derivative value
   private double kThreshold = 0.05;
 
   private double kRotPIDp = 0.005;
