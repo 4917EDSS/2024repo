@@ -101,39 +101,48 @@ public class DrivetrainSub extends SubsystemBase {
   // PID value setting
   private double kPIDp = 0.4; //Proportional value
   private double kPIDd = 0.0; //Derivative value
-  private double kThreshold = 0.05;
+  private double kThreshold = 0.05; //Error threshold of the robot's position (acceptable distance from the goal in meters). Used by PID
 
-  private double kRotPIDp = 0.005;
-  private double kRotPIDd = 0.0;
-  private double kTurnThreshold = 1.0;
+  private double kRotPIDp = 0.005; //Proportional value (rotational)
+  private double kRotPIDd = 0.0; //Derivative value (rotational)
+  private double kTurnThreshold = 1.0; //Error threshold of the robot's rotational position (acceptable rotational distance from the goal in degrees). Unused as of now.
 
+  //Create target positions coordinate with Pose2d (translation2d+rotation2d)
+  //Rotation2d is a single radian value in this case, it is a continuous value
   private Pose2d targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+  //Constructs new PID controllers using the previously set values. One PID for x translation, one for y, one for chassis rotation.
+  //and one for lob pass specifically
   private PIDController m_odometryPIDx = new PIDController(kPIDp, 0.0, kPIDd); // X and Y PIDs
   private PIDController m_odometryPIDy = new PIDController(kPIDp, 0.0, kPIDd);
   private PIDController m_odometryPIDr = new PIDController(kRotPIDp, 0.0, kRotPIDd); // Rotational PID
   private PIDController m_rotateToLobPID = new PIDController(0.005, 0.0, 0.0); // Rotational PID
 
 
-  // Swerve Modules that control the motors
+  // Swerve Modules that control the motors, each one is a unique swerve module object.
   private final SwerveModule m_frontLeft;
   private final SwerveModule m_frontRight;
   private final SwerveModule m_backLeft;
   private final SwerveModule m_backRight;
 
+  //Uses the Kauai labs gyro class to create a new gyro object
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  // Kinematics controls movement, Odemetry tracks position
+  // Kinematics controls movement, Odemetry tracks position.
+  //The kinematics object will be used later in the construction of the SwerveDriveModule and SwerveDriveKinematics objects.
+  //The odometry object will be mainly used for robot positioning during the autonomous period
   private final SwerveDriveKinematics m_kinematics;
   private final SwerveDriveOdometry m_odometry;
 
 
   /** Creates a new DrivetrainSub. */
   public DrivetrainSub() {
+    //Initializes a variable used for determining robot specific values, and varibalbes for holding the encoder offsets
     String robotName;
     double AbsoluteEncoderOffsetFL;
     double AbsoluteEncoderOffsetFR;
     double AbsoluteEncoderOffsetBL;
     double AbsoluteEncoderOffsetBR;
+    //Gets the correct encoder values from constants and assigns each one to its respective variable
     if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
       robotName = "Practice";
       AbsoluteEncoderOffsetFL = Constants.RobotSpecific.Practice.kAbsoluteEncoderOffsetFL;
@@ -154,6 +163,7 @@ public class DrivetrainSub extends SubsystemBase {
       AbsoluteEncoderOffsetBR = Constants.RobotSpecific.Unknown.kAbsoluteEncoderOffsetBR;
     }
 
+    //Creates the swerve module objects, taking in drive motor, steering motor, and encoder objects as parameters as well as the encoder offset
     m_frontLeft =
         new SwerveModule(Constants.CanIds.kDriveMotorFL, Constants.CanIds.kSteeringMotorFL, Constants.CanIds.kEncoderFL,
             AbsoluteEncoderOffsetFL);
@@ -166,14 +176,22 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight =
         new SwerveModule(Constants.CanIds.kDriveMotorBR, Constants.CanIds.kSteeringMotorBR, Constants.CanIds.kEncoderBR,
             AbsoluteEncoderOffsetBR);
+    //Assigns the kinematics object a new SwerveDriveKinematics object which is comprised of the previously created swerve module objects
+    //This is used for interacting with the chassis as a whole, instead each swerve module indepenently
     m_kinematics =
         new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+    //Assigns the odometry object a new SwerveDriveOdometry object which is comprised of the kinematics object, the robot's rotation, and array
+    //of all the swerve module positions (module rotation and wheel rotation)
     m_odometry =
         new SwerveDriveOdometry(m_kinematics, getYawRotation2d(), new SwerveModulePosition[] {
             m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(),
             m_backRight.getPosition()});
 
+    //Resets the gyro yaw value
     resetGyroYaw(0);
+
+    //Sets the tolerances of the PID for the x, y, rotational values, and note lobing
+    //Constrains the rotational PID to a fixed input range (-180, 180 degrees)
     m_odometryPIDx.setTolerance(kThreshold); // In meters
     m_odometryPIDy.setTolerance(kThreshold); // In meters
 
@@ -184,6 +202,7 @@ public class DrivetrainSub extends SubsystemBase {
     m_rotateToLobPID.enableContinuousInput(-180.0, 180.0);
 
 
+    //Adds the listed values to the drivetrain tab on the smart dashboard
     m_sbXPOS = m_shuffleboardTab.add("XPOS", 0.0).getEntry();
     m_sbYPOS = m_shuffleboardTab.add("YPOS", 0.0).getEntry();
     m_sbTargetXPOS = m_shuffleboardTab.add("TARGET XPOS", 0.0).getEntry();
@@ -211,6 +230,9 @@ public class DrivetrainSub extends SubsystemBase {
 
     m_sbRobotName.setString(robotName);
 
+    //Configures pathplanner to work with a holonominc drivetrain (swerve). Provides the robots x,y position, a method to reset the odometry?,
+    //the current chassis speed, a goal chassis speed, and a pathing configuarion object (check kPathConfig definition for more infotmation).
+    //Returns a boolean based on the alliance colour
     AutoBuilder.configureHolonomic(this::getOdometryPose2d, this::resetOdometry, this::getChassisSpeeds,
         this::driveChassisSpeeds, Constants.Drivetrain.kPathingConfig,
         () -> {
@@ -218,6 +240,7 @@ public class DrivetrainSub extends SubsystemBase {
         }, this);
   }
 
+  //Adds info to logs and resets gyro
   public void init() {
     m_logger.info("Initializing DrivetrainSub");
     resetGyroYaw(0);
@@ -229,10 +252,13 @@ public class DrivetrainSub extends SubsystemBase {
 
     // Only run the odometry when the driver's station has Auto selected (doesn't have to be enabled)
     //if(DriverStation.isAutonomous()) {
+    //Runs the reset odometry method
     updateOdometry();
+    //Sets the odometry values to the robot's current position
     double xPos = m_odometry.getPoseMeters().getX();
     double yPos = m_odometry.getPoseMeters().getY();
     //if(!RobotContainer.disableShuffleboardPrint) {
+    //Sets shuffleboard values for x, y, rotation, and encoder values
     m_sbXPOS.setDouble(xPos);
     m_sbYPOS.setDouble(yPos);
     //}
@@ -242,10 +268,12 @@ public class DrivetrainSub extends SubsystemBase {
     m_sbFREncoder.setDouble(m_frontRight.getTurningEncoder());
     m_sbBLEncoder.setDouble(m_backLeft.getTurningEncoder());
     m_sbBREncoder.setDouble(m_backRight.getTurningEncoder());
+    //Sets variables for chassis speed and robot velocity
     ChassisSpeeds currentSpeeds = getChassisSpeeds();
     double vx = currentSpeeds.vxMetersPerSecond;
     double vy = currentSpeeds.vyMetersPerSecond;
     double currentSpeed = Math.sqrt(vx * vx + vy * vy);
+    //Adds speed and motor power to smart dashboard
     SmartDashboard.putNumber("Speed (m/s)", currentSpeed);
     SmartDashboard.putNumber("FL Power", m_frontLeft.testGetPower());
     SmartDashboard.putNumber("FR Power", m_frontRight.testGetPower());
@@ -255,6 +283,8 @@ public class DrivetrainSub extends SubsystemBase {
     if(!RobotContainer.disableShuffleboardPrint) {
       // SmartDashboard.putNumber("Held Angle", MathUtil.inputModulus(previousRotation.getDegrees(), -180.0, 180.0));
 
+
+      //Sets target position, roll, pitch, gyro angle, and serial number values for shuffleboard
       double rot = MathUtil.inputModulus(targetPos.getRotation().getDegrees(), -180.0, 180.0);
       m_sbTargetXPOS.setDouble(targetPos.getX());
       m_sbTargetYPOS.setDouble(targetPos.getY());
@@ -274,6 +304,7 @@ public class DrivetrainSub extends SubsystemBase {
       // kRotPIDd = SmartDashboard.getNumber("Rot kD", kRotPIDd);
       // kTurnThreshold = SmartDashboard.getNumber("Rot Threshold", kTurnThreshold);
 
+      //Sets PID values for shuffleboard
       m_sbRotKP.setDouble(kRotPIDp);
       m_sbRotKD.setDouble(kRotPIDd);
       m_sbRotThreshold.setDouble(kTurnThreshold);
@@ -296,20 +327,27 @@ public class DrivetrainSub extends SubsystemBase {
     m_odometryPIDr.setTolerance(kTurnThreshold);
   }
 
+  //Method to get yaw rotation2d using gyro angle
   public Rotation2d getYawRotation2d() {
     return m_gyro.getRotation2d();
   }
 
+  //Method to get yaw angle degrees using previously created yaw rotation2d method
   public double getYawRotationDegrees() {
     return MathUtil.inputModulus(getYawRotation2d().getDegrees(), -180.0, 180.0);
   }
 
+  //Method to reset gyro angle
   public void resetGyroYaw(double angle) {
     m_gyro.setAngleAdjustment(-angle - Constants.Drivetrain.kGyroPhysicalOffsetAngle); // NavX is oriented 90deg off of front
     m_gyro.reset();
     resetOdometry(); // Feed in rotation here too
   }
 
+  //Used to adjust gyro angle post auto if the robot starts on the blue alliance. This is necessary because all autos are the same
+  //regrardless of alliance, so the robot always assumes it starts on red. This would cause the robot to be inverted when on the bue alliacne.
+  //It adds 180 to the gyro if the angle is less than 0 since we use values between -180 and 180 doing this above 0 would cause the gyro to
+  //pass 180, and mess up the code. This is the opposite for angles greater than 0
   public void postAutoResetYaw() {
     if(DriverStation.getAlliance().get() != Alliance.Blue) {
       double previousAngleAdjustment = m_gyro.getAngleAdjustment();
@@ -319,35 +357,44 @@ public class DrivetrainSub extends SubsystemBase {
       } else {
         angleAdjustment -= 180;
       }
+      //Updates logs, sets Gyro, and resets odometry
       m_logger.fine("Adj " + m_gyro.getAngleAdjustment() + " current " + angleAdjustment);
       m_gyro.setAngleAdjustment(angleAdjustment);
       resetOdometry();
     }
   }
 
+  //Method to get robot rotation using the gyro's pitch
   public float getRollRotationDegrees() {
     // proto type bot roll is navx pitch
     return m_gyro.getPitch();
   }
 
+  //Creates drive method using x, y and rotation speeds, and the period (0.02 seconds)
   public void drive(double xSpeed, double ySpeed, double rotationSpeed, double periodSeconds) { // Period should be time period between whenever this is called
+    //Sets the max x and y speeds with the kMaxChassisSpeed constant
     xSpeed *= Constants.Drivetrain.kMaxChassisSpeed;
     ySpeed *= Constants.Drivetrain.kMaxChassisSpeed;
+    //Sets max rotation speed with the kMaxTurnSpeed constant
     rotationSpeed *= kMaxTurnSpeed; // This is negative so it's CCW Positive
     //var swerveStates = m_kinematics.toSwerveModuleStates(speedS); // Get swerve states
     // X and Y are swapped because it drives sideways for some reason
+
+    //Takes in chassis speed (x, y, rotation) and converts it to swerve module states (wheel speed and angle)
     var swerveStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.discretize(
         ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, getYawRotation2d()), periodSeconds)); // Get swerve states
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, Constants.Drivetrain.kMaxChassisSpeed); // Keep motors below max speed (Might not need to be used)
 
     // Drive motors
+    //Assigns drive motors swerve module states
     m_frontLeft.setState(swerveStates[0]);
     m_frontRight.setState(swerveStates[1]);
     m_backLeft.setState(swerveStates[2]);
     m_backRight.setState(swerveStates[3]);
   }
 
+  //Gets chassis speed using swerve module states
   public ChassisSpeeds getChassisSpeeds() { // Returns current chassis speeds (for Pathing)
     return m_kinematics.toChassisSpeeds(new SwerveModuleState[] {m_frontLeft.getState(), m_frontRight.getState(),
         m_backLeft.getState(), m_backRight.getState()});
@@ -360,6 +407,8 @@ public class DrivetrainSub extends SubsystemBase {
     m_backRight.setState(swerveStates[3]);
   }
 
+  //Sets target chassis speeds to the normalized wheel speeds, then assigns the target states (which use the target speeds) to the
+  //trajectory specific drive states
   public void driveChassisSpeeds(ChassisSpeeds speeds) {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02); // Everyone uses 0.02 for the period for some reason
     SwerveModuleState[] targetStates = m_kinematics.toSwerveModuleStates(targetSpeeds);
@@ -374,6 +423,9 @@ public class DrivetrainSub extends SubsystemBase {
     targetPos = new Pose2d(pos.getTranslation(), pos.getRotation());
   }
 
+  //Calculates PID power to reach a target position using the current rotation, and the target location
+  //Accomodates the continuous nature of the rotation using the inputMouulus method.
+  //Clamps the power between 1 and -1
   public double getRotationPIDPowerDegrees(double target) {
     return MathUtil.clamp(
         m_odometryPIDr.calculate(getYawRotationDegrees(),
@@ -381,6 +433,7 @@ public class DrivetrainSub extends SubsystemBase {
         -1.0, 1.0);
   }
 
+  //Preforms a similar calculation to the previous method, with the addition of what appears to be an error threshold
   public double getLobRotationPower(double target) {
     // SmartDashboard.putNumber("difference", Math.abs(getYawRotationDegrees() - target));
     // SmartDashboard.putNumber("speed", Math.abs(m_gyro.getRate()));
@@ -393,6 +446,7 @@ public class DrivetrainSub extends SubsystemBase {
         -1.0, 1.0);
   }
 
+  //Calculates the required power to reach the target position using PIDs and 0.5/-0.5 clamps, then calls the drive command using the power values
   public boolean updateOdometryTransform() { // Returns true when at position
     //double rotationDifference = m_odometryPIDr.getPositionError(); // In degrees
     double xPower = MathUtil.clamp(m_odometryPIDx.calculate(getPos().getX(), targetPos.getX()), -0.5, 0.5);
@@ -402,6 +456,7 @@ public class DrivetrainSub extends SubsystemBase {
     return ((m_odometryPIDx.atSetpoint() && m_odometryPIDy.atSetpoint()) && m_odometryPIDr.atSetpoint());
   }
 
+  //Same as previous except it takes in max power and passthough parameters, 
   public boolean updateOdometryTransform(double maxPower, boolean passthrough) { // Returns true when at position
     //double rotationDifference = m_odometryPIDr.getPositionError(); // In degrees
     double rotationClamp = 1.0;
@@ -421,11 +476,13 @@ public class DrivetrainSub extends SubsystemBase {
     }
   }
 
+  //Updates swerve drive odometry using the swerve module positions and the gyro angle
   public void updateOdometry() {
     m_odometry.update(getYawRotation2d(), new SwerveModulePosition[] {
         m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()});
   }
 
+  //Resets the odomety by creating a new Pose2d with zero values, then setting the swerve module positions equal to that Pose2d
   public void resetOdometry() {
     Pose2d zero = new Pose2d(new Translation2d(0.0, 0.0), getYawRotation2d());
     m_odometry.resetPosition(getYawRotation2d(), new SwerveModulePosition[] {
@@ -433,6 +490,7 @@ public class DrivetrainSub extends SubsystemBase {
         zero);
   }
 
+  //Same as previous method expet the Pose2d is taken in as a parameter instead of being immedietly set to 0
   public void resetOdometry(Pose2d pos) {
     resetGyroYaw(pos.getRotation().getDegrees());
     m_odometry.resetPosition(getYawRotation2d(), new SwerveModulePosition[] {
@@ -444,6 +502,7 @@ public class DrivetrainSub extends SubsystemBase {
     return m_odometry.getPoseMeters().getTranslation();
   }
 
+  //The next five methods get Pose2d values and encoder values
   public Pose2d getOdometryPose2d() {
     return m_odometry.getPoseMeters();
   }
@@ -464,6 +523,7 @@ public class DrivetrainSub extends SubsystemBase {
     return m_backRight.getTurningEncoder();
   }
 
+  //For playing music, thanks Aidan
   public void fun() {
     if(Robot.inTestMode) { // Only run this in test mode
       if(!orca1.isPlaying() || !orca2.isPlaying()) { // TalonFX developers had a skill issue and forgot to implement multiple tracks
