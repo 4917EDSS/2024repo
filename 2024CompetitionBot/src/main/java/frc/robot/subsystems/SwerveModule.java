@@ -42,18 +42,27 @@ public class SwerveModule extends SubsystemBase {
   // PID Controllers
   private final PIDController m_drivePID = new PIDController(0.5, 0, 0.0);
 
+  //Profiled PID controller combines a trapezoidal motion profile and PID
+  //A trapezoidal motion profile splits the motion into three segments, acceleration, constant velocity, and deceleration
+  //It takes maximum velocity and acceleration as parameters
   private final ProfiledPIDController m_steeringPID =
       new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(
           Constants.ModuleConstants.kMaxModuleAngularSpeed,
           Constants.ModuleConstants.kMaxModuleAngularAcceleration));
 
   // These predict PID values which makes it work in real time
+  //It has three parameters, ks, kv, ka
+  //ks is the voltage required to overcome the static friction of the motor. Some constant portion of the motor's power will always be dedicated to
+  //overcoming this friction
+  //kv is the voltage needed to hold the motors at a constant velocity, the relationship between speed and voltage is almost completely linear
+  //ka is the voltage needed to induce a given acceleration in the motor shaft, like kv the relationship is almost linear
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.2);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0.0, 0);
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
     // Initialize motors and sensors
 
+    //Creates drive and steering motors/encoders
     m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     m_steeringMotor = new TalonFX(steeringMotorID);
     m_driveEncoder = m_driveMotor.getEncoder();
@@ -69,6 +78,7 @@ public class SwerveModule extends SubsystemBase {
 
     m_turningEncoderOffset = absoluteEncoderOffsetRad;
 
+    //Changes gear ratio based on which roborio it detects
     double GearRatio;
     if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
       GearRatio = Constants.RobotSpecific.Practice.kGearRatio;
@@ -77,9 +87,11 @@ public class SwerveModule extends SubsystemBase {
     } else {
       GearRatio = Constants.RobotSpecific.Unknown.kGearRatio;
     }
+    //Calculates the circumfrence of the wheel, and divides it by the gear ratio
     kDriveDistanceFactor = (Math.PI * Constants.ModuleConstants.kWheelBaseDiameter) / (GearRatio);
     kDriveVelocityFactor = kDriveDistanceFactor / 60.0;
 
+    //Sets the conversion factor
     m_driveEncoder.setVelocityConversionFactor(kDriveVelocityFactor);
     m_driveEncoder.setPositionConversionFactor(kDriveDistanceFactor);
 
@@ -87,6 +99,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void init() {
+    //Prints "Initializing a SwerveModule" to the logs
     m_logger.info("Initializing a SwerveModule");
   }
 
@@ -96,6 +109,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getTurningRotation() { // In radians
+    //Gets the steering encoder value as a double
     double position = (m_steeringEncoder.getAbsolutePosition().getValueAsDouble());// -0.5 to 0.5
 
     position *= Math.PI * 2.0; // Converts from -0.5 to 0.5 to -PI to PI
@@ -121,10 +135,12 @@ public class SwerveModule extends SubsystemBase {
     return position;// - m_turningEncoderOffset;
   }
 
+  //Sets the p value of the PID
   public void setP(double val) {
     m_drivePID.setP(val);
   }
 
+  //Gets the p value of the PID
   public double getP() {
     return m_drivePID.getP();
   }
@@ -146,16 +162,19 @@ public class SwerveModule extends SubsystemBase {
     return position;
   }
 
+  //Gets the swerve module state (velocity and rotation)
   public SwerveModuleState getState() { // Swerve states are what Kinematics uses for calculations
     return new SwerveModuleState(m_driveEncoder.getVelocity(),
         new Rotation2d(getTurningRotation()));
   }
 
+  //Gets the swerve module position (position and rotation)
   public SwerveModulePosition getPosition() { // Get current SwerveModule position
     return new SwerveModulePosition(m_driveEncoder.getPosition(),
         new Rotation2d(getTurningRotation()));
   }
 
+  //Gets the drive motor power
   public double testGetPower() {
     return m_driveMotor.get();
   }
@@ -186,6 +205,7 @@ public class SwerveModule extends SubsystemBase {
         m_steeringPID.calculate(getTurningRotation(), betterState.angle.getRadians());
     double steeringFeedforward = m_steeringFeedforward.calculate(m_steeringPID.getSetpoint().velocity);
 
+    //Gets drive and steering power by combining output with feedforward
     double drivePower = driveOutput + driveFeedforward;
     double steeringPower = steeringOutput + steeringFeedforward;
     m_driveMotor.set(MathUtil.clamp(drivePower, -1.0, 1.0)); // Safety first
@@ -193,6 +213,7 @@ public class SwerveModule extends SubsystemBase {
     m_steeringMotor.set(MathUtil.clamp(steeringPower, -1.0, 1.0)); // This clamp doesn't actually affect the PID calculation so it can just be a -1 to 1 clamp
   }
 
+  //Method to stop drive and steering motors
   public void stop() {
     m_driveMotor.set(0);
     m_steeringMotor.set(0);
