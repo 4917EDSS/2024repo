@@ -132,7 +132,7 @@ public class FlywheelSub extends SubsystemBase {
 
     // Slow down the shot if in demo mode (will break vision shots)
     if(RobotContainer.m_demoMode) {
-      m_flywheelShootVelocity = flywheelVelocity * 0.3;
+      m_flywheelShootVelocity = flywheelVelocity * 0.75;
     } else {
       m_flywheelShootVelocity = flywheelVelocity;
     }

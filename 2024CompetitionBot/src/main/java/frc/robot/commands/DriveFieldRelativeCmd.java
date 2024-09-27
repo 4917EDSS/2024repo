@@ -68,6 +68,8 @@ public class DriveFieldRelativeCmd extends Command {
     if(RobotContainer.m_demoMode) {
       leftX *= 0.3;
       leftY *= 0.3;
+      rotationPower *= 0.3;
+
     }
 
     m_drivetrainSub.drive(
