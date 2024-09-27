@@ -269,11 +269,17 @@ public final class Constants {
 
     public static final double kNoteUpperSurfaceSpeedDifferential = 0.9;
 
-    public static final double kNoteLowerIntakePower = 1.0;
+    public static final double kNoteLowerIntakePower = -1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * kNoteUpperSurfaceSpeedDifferential;
 
-    public static final double kNoteLowerExpelPower = -0.3;
+    public static final double kNoteLowerExpelPower = 0.3;
     public static final double kNoteUpperExpelPower = kNoteLowerExpelPower * kNoteUpperSurfaceSpeedDifferential;
+
+    public static final double kLowerExpelPower = 0.5;
+    public static final double kUpperExpelPower = 0.5;
+
+    public static final double kLowerExpelPowerAmpShot = 0.4;
+    public static final double kUpperExpelPowerAmpShot = 0.4;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;

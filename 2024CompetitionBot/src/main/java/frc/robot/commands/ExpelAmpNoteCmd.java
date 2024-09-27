@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.FeederSub;
 import frc.robot.subsystems.LedSub;
 import frc.robot.subsystems.LedSub.LedColour;
@@ -29,7 +30,7 @@ public class ExpelAmpNoteCmd extends Command {
   @Override
   public void initialize() {
     m_feederSub.finishedNoteIntake = false;
-    m_feederSub.spinBothFeeders(-0.5, -0.5);
+    m_feederSub.spinBothFeeders(Constants.Shooter.kLowerExpelPower, Constants.Shooter.kUpperExpelPower);
     start = Instant.now();
   }
 

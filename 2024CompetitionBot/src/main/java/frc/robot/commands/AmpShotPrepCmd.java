@@ -27,7 +27,7 @@ public class AmpShotPrepCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_feederSub.spinBothFeeders(-0.4, -0.4);
+    m_feederSub.spinBothFeeders(Constants.Shooter.kLowerExpelPowerAmpShot, Constants.Shooter.kUpperExpelPowerAmpShot);
     start = Instant.now();
   }
 
