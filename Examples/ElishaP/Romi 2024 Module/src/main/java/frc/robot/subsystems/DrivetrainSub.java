@@ -4,14 +4,31 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class DrivetrainSub extends SubsystemBase {
+  private final Spark m_leftMotor = new Spark(1);
+  private final Spark m_rightMotor = new Spark(0);
+
+
   /** Creates a new DrivetrainSub. */
-  public DrivetrainSub() {}
+  public DrivetrainSub() {
+
+  }
+
+
+  public void drive(double leftPower, double rightPower) {
+    m_leftMotor.set(leftPower);
+    m_rightMotor.set(rightPower);
+  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+
 }

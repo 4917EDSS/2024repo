@@ -5,12 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.RomiDrivetrain;
+import frc.robot.subsystems.DrivetrainSub;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj.Encoder;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,16 +25,18 @@ public class RobotContainer {
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
   // The robot's subsystems and commands are defined here...
-  private final RomiDrivetrain m_romiDrivetrain = new RomiDrivetrain();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_romiDrivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_drivetrainSub.setDefaultCommand(new RunCommand(
+        () -> m_drivetrainSub.drive(-m_driverController.getLeftY(), -m_driverController.getRightY()),
+        m_drivetrainSub));
 
     // Configure the button bindings
     configureButtonBindings();
   }
+
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -44,6 +49,8 @@ public class RobotContainer {
     m_driverController.square().onTrue(new PrintCommand("Square Pressed!"));
     m_driverController.cross().onTrue(new PrintCommand("Cross Pressed!"));
     m_driverController.circle().onTrue(new PrintCommand("Circle Pressed!"));
+    m_driverController.cross().whileTrue(new StartEndCommand(() -> m_drivetrainSub.drive(0.25, -0.25),
+        () -> m_drivetrainSub.drive(0.0, 0.0), m_drivetrainSub));
 
   }
 
@@ -54,6 +61,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return new PrintCommand("No auto");
   }
 }

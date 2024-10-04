@@ -17,4 +17,11 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public final static class DioIds {
+    public final static int kLeftEncoder1 = 4;
+    public final static int kLeftEncoder2 = 5;
+    public final static int kRightEncoder1 = 6;
+    public final static int kRightEncoder2 = 7;
+  }
+
 }
