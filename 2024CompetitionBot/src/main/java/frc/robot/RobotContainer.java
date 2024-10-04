@@ -261,8 +261,11 @@ public class RobotContainer {
                     new AmpShotPrepCmd(m_arduinoSub, m_feederSub))),
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
-    // m_operatorController.povLeft()
-    //     .onTrue();
+    m_operatorController.povLeft()
+        .onTrue(new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub)
+            .andThen(new ShooterPivotCmd(Constants.Shooter.kAngleAutoLineAmp, m_pivotSub))
+            .andThen(new ShooterShootCmd(Constants.Flywheel.kFlywheelShootAmpVelocity, m_arduinoSub, m_feederSub,
+                m_flywheelSub, m_ledSub)));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub));

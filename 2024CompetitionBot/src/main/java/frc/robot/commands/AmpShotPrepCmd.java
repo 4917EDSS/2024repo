@@ -34,12 +34,13 @@ public class AmpShotPrepCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorIntakeFar)) {
+    if(m_arduinoSub.isSensorTripped(Constants.Shooter.kNoteSensorIntakeMid)) {
       m_feederSub.spinBothFeeders(-0.0, -0.1);
     }
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted. 
+
   @Override
   public void end(boolean interrupted) {
     m_feederSub.spinBothFeeders(0, 0);
