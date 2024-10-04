@@ -150,10 +150,10 @@ public class RobotContainer {
     //m_driverController.circle()
 
     // Enter demo mode (turn down drive and shot power)
-    m_driverController.triangle().onTrue(new InstantCommand(() -> setDemoMode(true)));
+    //m_driverController.triangle().onTrue(new InstantCommand(() -> setDemoMode(true)));
 
     // Exit demo mode
-    m_driverController.options().onTrue(new InstantCommand(() -> setDemoMode(false)));
+    //m_driverController.options().onTrue(new InstantCommand(() -> setDemoMode(false)));
 
     // This basically takes over the robot right now
     m_driverController.L1().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
