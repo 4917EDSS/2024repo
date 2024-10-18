@@ -150,10 +150,10 @@ public class RobotContainer {
     //m_driverController.circle()
 
     // Enter demo mode (turn down drive and shot power)
-    m_driverController.triangle().onTrue(new InstantCommand(() -> setDemoMode(true)));
+    //m_driverController.triangle().onTrue(new InstantCommand(() -> setDemoMode(true)));
 
     // Exit demo mode
-    m_driverController.options().onTrue(new InstantCommand(() -> setDemoMode(false)));
+    //m_driverController.options().onTrue(new InstantCommand(() -> setDemoMode(false)));
 
     // This basically takes over the robot right now
     m_driverController.L1().whileTrue(new NoteVisionAlignCmd(m_visionSub, m_drivetrainSub));
@@ -261,7 +261,11 @@ public class RobotContainer {
                     new AmpShotPrepCmd(m_arduinoSub, m_feederSub))),
             new InstantCommand(() -> m_ledSub.setZoneColour(LedZones.ALL, LedColour.GREEN))));
 
-    //m_operatorController.povLeft()
+    m_operatorController.povLeft()
+        .onTrue(new LobPrepGrp(m_arduinoSub, m_feederSub, m_flywheelSub, m_ledSub, m_pivotSub)
+            .andThen(new ShooterPivotCmd(Constants.Shooter.kAngleAutoLineAmp, m_pivotSub))
+            .andThen(new ShooterShootCmd(Constants.Flywheel.kFlywheelShootAmpVelocity, m_arduinoSub, m_feederSub,
+                m_flywheelSub, m_ledSub)));
 
     m_operatorController.L3()
         .onTrue(new KillAllCmd(m_climbSub, m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub));
