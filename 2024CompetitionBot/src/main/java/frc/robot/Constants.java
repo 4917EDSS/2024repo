@@ -279,8 +279,8 @@ public final class Constants {
     public static final double kLowerExpelPower = 0.5;
     public static final double kUpperExpelPower = 0.5;
 
-    public static final double kLowerExpelPowerAmpShot = 0.4; //bigger
-    public static final double kUpperExpelPowerAmpShot = 0.4;
+    public static final double kLowerExpelPowerAmpShot = 0.8; //bigger
+    public static final double kUpperExpelPowerAmpShot = 0.1;
 
     public static final double kNoteLowerAmpShotPower = -1.0;
     public static final double kNoteUpperAmpShotPower = -1.0;
