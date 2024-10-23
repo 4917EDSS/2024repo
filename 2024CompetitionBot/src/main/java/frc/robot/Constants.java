@@ -132,10 +132,10 @@ public final class Constants {
     }
 
     public static final class Competition {
-      public static final double kAbsoluteEncoderOffsetFL = 1.831;
-      public static final double kAbsoluteEncoderOffsetFR = -2.371;
-      public static final double kAbsoluteEncoderOffsetBL = 0.984;
-      public static final double kAbsoluteEncoderOffsetBR = -0.489;
+      public static final double kAbsoluteEncoderOffsetFL = 1.841;
+      public static final double kAbsoluteEncoderOffsetFR = -2.357;
+      public static final double kAbsoluteEncoderOffsetBL = 0.982;
+      public static final double kAbsoluteEncoderOffsetBR = 1.969;
       public static final boolean kInvertLowerFeeder = true;
       public static final double kGearRatio = 6.05; // THIS IS WRONG, USE WITH CAUTION
     }
@@ -270,10 +270,10 @@ public final class Constants {
 
     public static final double kNoteUpperSurfaceSpeedDifferential = 0.9;
 
-    public static final double kNoteLowerIntakePower = -1.0;
+    public static final double kNoteLowerIntakePower = 1.0;
     public static final double kNoteUpperIntakePower = kNoteLowerIntakePower * kNoteUpperSurfaceSpeedDifferential;
 
-    public static final double kNoteLowerExpelPower = 0.3;
+    public static final double kNoteLowerExpelPower = -0.3;
     public static final double kNoteUpperExpelPower = kNoteLowerExpelPower * kNoteUpperSurfaceSpeedDifferential;
 
     public static final double kLowerExpelPower = 0.5;
