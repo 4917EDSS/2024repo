@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -44,6 +45,8 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.cross()
         .whileTrue(new StartEndCommand(() -> m_krakenSub.runMotor(0.1), () -> m_krakenSub.runMotor(0.0), m_krakenSub));
+    m_driverController.triangle()
+        .whileTrue(new RunCommand(() -> m_krakenSub.resetPosition(), m_krakenSub));
   }
 
   /**
