@@ -19,8 +19,10 @@ public final class Constants {
   }
 
   public final static class CanIds {
-    public final static int kKrakenMotor = 1;
-    public final static int kKrakenMotor2 = 2;
+    public final static int kDriveMotorFL = 1;
+    public final static int kDriveMotorFR = 3;
+    public final static int kDriveMotorBL = 5;
+    public final static int kDriveMotorBR = 7;
 
 
   }
