@@ -8,13 +8,15 @@
 package frc.robot.subsystems;
 
 import java.util.logging.Logger;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -30,9 +32,8 @@ public class SwerveModule extends SubsystemBase {
   private static Logger m_logger = Logger.getLogger(SwerveModule.class.getName());
 
   // Motors and Encoders
-  private final CANSparkMax m_driveMotor;
+  private final TalonFX m_driveMotor;
   public final TalonFX m_steeringMotor;
-  private final RelativeEncoder m_driveEncoder;
   private final CANcoder m_steeringEncoder;
   private final double m_turningEncoderOffset;
 
@@ -58,19 +59,38 @@ public class SwerveModule extends SubsystemBase {
   //ka is the voltage needed to induce a given acceleration in the motor shaft, like kv the relationship is almost linear
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.02, 0.2);
   private final SimpleMotorFeedforward m_steeringFeedforward = new SimpleMotorFeedforward(0.0, 0);
+  public final StatusSignal<Double> m_driveMotorPosition;
+  public final StatusSignal<Double> m_driveMotorVelocity;
+  public final StatusSignal<Double> m_driveMotorAcceleration;
 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, double absoluteEncoderOffsetRad) { // Drive motor ID, Steering motor ID
     // Initialize motors and sensors
 
     //Creates drive and steering motors/encoders
-    m_driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
+    m_driveMotor = new TalonFX(driveMotorID);
+    m_driveMotorPosition = m_driveMotor.getPosition();
+    m_driveMotorVelocity = m_driveMotor.getVelocity();
+    m_driveMotorAcceleration = m_driveMotor.getAcceleration();
     m_steeringMotor = new TalonFX(steeringMotorID);
-    m_driveEncoder = m_driveMotor.getEncoder();
     m_steeringEncoder = new CANcoder(steeringEncoderID);
 
     // Make it loop from -PI to PI
-    m_driveMotor.setIdleMode(IdleMode.kBrake);
-    m_driveMotor.setSmartCurrentLimit(40);
+    TalonFXConfigurator talonFxConfiguarator = m_driveMotor.getConfigurator();
+    CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
+    limitConfigs.StatorCurrentLimit = 3;
+    limitConfigs.StatorCurrentLimitEnable = true;
+    talonFxConfiguarator.apply(limitConfigs);
+
+    MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
+    outputConfigs.DutyCycleNeutralDeadband = 0.02; // Ignore values below 2%
+    outputConfigs.Inverted = InvertedValue.CounterClockwise_Positive; // Invert = Clockwise
+    outputConfigs.NeutralMode = NeutralModeValue.Brake;
+    talonFxConfiguarator.apply(outputConfigs);
+
+    FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+    feedbackConfigs.SensorToMechanismRatio = 0.5;
+    talonFxConfiguarator.apply(feedbackConfigs);
+
     m_steeringMotor.setNeutralMode(NeutralModeValue.Brake);
     m_steeringPID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -90,10 +110,6 @@ public class SwerveModule extends SubsystemBase {
     //Calculates the circumfrence of the wheel, and divides it by the gear ratio
     kDriveDistanceFactor = (Math.PI * Constants.ModuleConstants.kWheelBaseDiameter) / (GearRatio);
     kDriveVelocityFactor = kDriveDistanceFactor / 60.0;
-
-    //Sets the conversion factor
-    m_driveEncoder.setVelocityConversionFactor(kDriveVelocityFactor);
-    m_driveEncoder.setPositionConversionFactor(kDriveDistanceFactor);
 
     init();
   }
@@ -164,13 +180,13 @@ public class SwerveModule extends SubsystemBase {
 
   //Gets the swerve module state (velocity and rotation)
   public SwerveModuleState getState() { // Swerve states are what Kinematics uses for calculations
-    return new SwerveModuleState(m_driveEncoder.getVelocity(),
+    return new SwerveModuleState(m_driveMotorPosition.getValueAsDouble(),
         new Rotation2d(getTurningRotation()));
   }
 
   //Gets the swerve module position (position and rotation)
   public SwerveModulePosition getPosition() { // Get current SwerveModule position
-    return new SwerveModulePosition(m_driveEncoder.getPosition(),
+    return new SwerveModulePosition(m_driveMotorPosition.getValueAsDouble(),
         new Rotation2d(getTurningRotation()));
   }
 
@@ -198,7 +214,8 @@ public class SwerveModule extends SubsystemBase {
     betterState.speedMetersPerSecond *= betterState.angle.minus(steeringRotation).getCos();
 
     // Calculate power using velocity and PID
-    double driveOutput = m_drivePID.calculate(m_driveEncoder.getVelocity(), betterState.speedMetersPerSecond);
+    double driveOutput =
+        m_drivePID.calculate(m_driveMotorPosition.getValueAsDouble(), betterState.speedMetersPerSecond);
     double driveFeedforward = m_driveFeedforward.calculate(betterState.speedMetersPerSecond);
     // Calculate steering power using difference in angle
     double steeringOutput =
