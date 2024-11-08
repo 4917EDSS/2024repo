@@ -34,7 +34,8 @@ public class Robot extends TimedRobot {
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
   @Override
@@ -59,7 +60,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
+    if(m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
@@ -74,7 +75,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
+    if(m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
   }
@@ -91,7 +92,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_robotContainer.testPeriodic();
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

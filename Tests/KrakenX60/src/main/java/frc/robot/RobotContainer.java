@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithJoystickCmd;
+import frc.robot.commands.tests.RunTestsGrp;
 import frc.robot.subsystems.KrakenSub;
+import frc.robot.utils.ShuffleBoardBuilder;
+import frc.robot.utils.StateOfRobot;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,15 +25,15 @@ import frc.robot.subsystems.KrakenSub;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  KrakenSub m_krakenSub = new KrakenSub();
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final KrakenSub m_krakenSub = new KrakenSub();
+  private final ShuffleBoardBuilder m_shuffleBoardBuilder = new ShuffleBoardBuilder(new RunTestsGrp(m_krakenSub));
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_krakenSub.setDefaultCommand(new DriveWithJoystickCmd(m_driverController, m_krakenSub));
+    m_shuffleBoardBuilder.setTestsOverallResult(false);
 
     // Configure the trigger bindings
     configureBindings();
@@ -57,5 +60,13 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new PrintCommand("No Auto");
+  }
+
+  public void testPeriodic() {
+    // Update the overall-tests-results light on the Shuffleboard
+    if(StateOfRobot.m_newTestResults) {
+      StateOfRobot.m_newTestResults = false;
+      m_shuffleBoardBuilder.setTestsOverallResult(StateOfRobot.m_testsOverallResult);
+    }
   }
 }
