@@ -4,22 +4,38 @@
 
 package frc.robot.utils;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.commands.tests.RunTestsGrp;
 
 /** Add your docs here. */
 public class ShuffleBoardBuilder {
-  public ShuffleBoardBuilder() {
+  public int m_nextTestRow = 0;
+  private GenericEntry m_testOverallResult;
+
+  public ShuffleBoardBuilder(RunTestsGrp testsCommand) {
+    ShuffleboardTab tab;
+    ShuffleboardLayout layout;
+
     // Establish all of the Shuffleboard tabs we'll want to use (in order of appearance)
+    tab = Shuffleboard.getTab("Tests");
+    m_testOverallResult = tab.add("Overall", false)
+        .withWidget(BuiltInWidgets.kBooleanBox)
+        .withSize(1, 1)
+        .withPosition(0, 0)
+        .getEntry();
+    tab.add("Run Tests", testsCommand);
+    m_nextTestRow++;
 
-    ShuffleboardTab tab = Shuffleboard.getTab("About");
 
-    ShuffleboardLayout layout = tab.getLayout("Build Info", BuiltInLayouts.kList)
-        .withSize(2, 3)
+    tab = Shuffleboard.getTab("About");
+    layout = tab.getLayout("Build Info", BuiltInLayouts.kList)
+        .withSize(2, 4)
         .withPosition(0, 0);
-
     // WARNING: These "GVersion" values get created when you first build this project
     // It's okay for them to be red until then.  See build.gradle and utils/GVersion.java.
     layout.add("Project", GVersion.MAVEN_NAME);
@@ -28,5 +44,14 @@ public class ShuffleBoardBuilder {
     layout.add("Git Branch", GVersion.GIT_BRANCH);
     layout.add("Git Commit Date", GVersion.GIT_DATE); // Doesn't mean much unless dirty = 0
     layout.add("Git Commit SHA", GVersion.GIT_SHA); // Doesn't mean much unless dirty = 0
+  }
+
+  /**
+   * Sets the overall result "light"
+   * 
+   * @param result true = green (pass_, false = red (failed or incomplete)
+   */
+  public void setTestsOverallResult(boolean result) {
+    m_testOverallResult.setBoolean(result);
   }
 }

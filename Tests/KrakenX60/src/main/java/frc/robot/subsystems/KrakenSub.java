@@ -23,6 +23,7 @@ public class KrakenSub extends SubsystemBase {
   private final StatusSignal<Double> m_testMotorPosition = m_testMotor.getPosition();
   private final StatusSignal<Double> m_testMotorVelocity = m_testMotor.getVelocity();
   private final StatusSignal<Double> m_testMotorAcceleration = m_testMotor.getAcceleration();
+  private final StatusSignal<Double> m_testMotorAmps = m_testMotor.getSupplyCurrent();
 
   //private final TalonFX m_testMotor2 = new TalonFX(Constants.CanIds.kKrakenMotor2);
   private final DutyCycleOut m_testMotorDutyCycle = new DutyCycleOut(0.0); // Create a permanent duty cycle object to improve performance
@@ -82,6 +83,11 @@ public class KrakenSub extends SubsystemBase {
   public double getAcceleration() {
     m_testMotorAcceleration.refresh();
     return m_testMotorAcceleration.getValueAsDouble();
+  }
+
+  public double getAmps() {
+    m_testMotorAmps.refresh();
+    return m_testMotorAmps.getValueAsDouble();
   }
 
   public void resetPosition() {

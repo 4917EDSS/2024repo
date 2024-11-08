@@ -14,14 +14,23 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
+  public static final class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public final static class CanIds {
-    public final static int kKrakenMotor = 1;
-    public final static int kKrakenMotor2 = 2;
+  public static final class CanIds {
+    public static final int kKrakenMotor = 1;
+    public static final int kKrakenMotor2 = 2;
+  }
 
-
+  public static final class Tests {
+    public static final double kDriveMotorPower = 0.1; // Power to test motor at
+    public static final long kDriveMotorTimeMs = 2000; // How long to run the motor for, in milliseconds
+    public static final double kDriveMotorExpectedPosition = 31; // What the expected encoder position is (in ? units)
+    public static final double kDriveMotorPositionTolerance = 0.75; // How for off the position can be (+ or -) and still considered OK
+    public static final double kDriveMotorPositionMinimum = 1; // Minimum position change to be considered a partial pass
+    public static final double kDriveMotorExpectedAmps = 0.06; // How much current we expect it to pull just before the end of the test
+    public static final double kDriveMotorAmpsTolerance = 0.03; // How far off the amps can be (+ or -) and still be considered OK
+    public static final double kDriveMotorAmpsMinimum = 0.02; // Minimum current to be considered a partial pass
   }
 }

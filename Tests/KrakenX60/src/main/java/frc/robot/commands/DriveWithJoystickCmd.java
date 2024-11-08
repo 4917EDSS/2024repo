@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.KrakenSub;
 
 public class DriveWithJoystickCmd extends Command {
-  CommandPS4Controller m_controller;
-  KrakenSub m_krakenSub;
+  private final CommandPS4Controller m_controller;
+  private final KrakenSub m_krakenSub;
 
   /** Creates a new DriveWithJoystickCmd. */
   public DriveWithJoystickCmd(CommandPS4Controller controller, KrakenSub krakenSub) {
