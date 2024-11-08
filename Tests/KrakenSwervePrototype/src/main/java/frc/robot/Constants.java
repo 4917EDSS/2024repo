@@ -123,11 +123,11 @@ public final class Constants {
     public static final String serialNumber = System.getenv("serialnum");
 
     public static final class Practice {
-      public static final double kAbsoluteEncoderOffsetFL = 2.359;
-      public static final double kAbsoluteEncoderOffsetFR = 1.472;
-      public static final double kAbsoluteEncoderOffsetBL = 1.056;
-      public static final double kAbsoluteEncoderOffsetBR = -1.072;
-      public static final double kGearRatio = 6.12;
+      public static final double kAbsoluteEncoderOffsetFL = 1.9742;
+      public static final double kAbsoluteEncoderOffsetFR = 3.0050;
+      public static final double kAbsoluteEncoderOffsetBL = 0.4080;
+      public static final double kAbsoluteEncoderOffsetBR = 3.0986;
+      public static final double kGearRatio = 5.14; // L1 = 8.14, L2 = 6.75, L3 = 6.12, L4 = 5.14
       public static final boolean kInvertLowerFeeder = false;
     }
 
@@ -188,7 +188,7 @@ public final class Constants {
     public static final double kMaxModuleAngularAcceleration = 100.0 * Math.PI; // In Radians Per Second Squared
 
     // Conversion factors
-    public static final double kWheelBaseDiameter = 0.1016; // Meters
+    public static final double kWheelDiameter = 0.1016; // Meters
   }
 
   public final static class Drivetrain {

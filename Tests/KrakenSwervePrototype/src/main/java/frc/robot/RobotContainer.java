@@ -8,7 +8,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.subsystems.DrivetrainSub;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 /**
@@ -37,7 +39,12 @@ public class RobotContainer {
    * Use this method to define your trigger->command mappings. .
    */
   private void configureBindings() {
+    m_driverController.cross()
+        .whileTrue(new StartEndCommand(() -> m_drivetrainSub.runMotor(1.0), () -> m_drivetrainSub.runMotor(0.0),
+            m_drivetrainSub));
 
+    m_driverController.share()
+        .onTrue(new InstantCommand(() -> m_drivetrainSub.resetGyroYaw(0), m_drivetrainSub));
   }
 
   /**
