@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveFieldRelativeCmd;
+import frc.robot.subsystems.DrivetrainSub;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -24,6 +27,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_drivetrainSub.setDefaultCommand(
+        new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));
     // Configure the trigger bindings
     configureBindings();
   }
