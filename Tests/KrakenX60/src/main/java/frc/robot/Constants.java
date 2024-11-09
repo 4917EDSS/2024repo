@@ -24,6 +24,7 @@ public final class Constants {
   }
 
   public static final class Tests {
+    public static final String kTabName = "Tests";
     public static final double kDriveMotorPower = 0.1; // Power to test motor at
     public static final long kDriveMotorTimeMs = 2000; // How long to run the motor for, in milliseconds
     public static final double kDriveMotorExpectedPosition = 31; // What the expected encoder position is (in ? units)

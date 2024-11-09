@@ -7,7 +7,7 @@ package frc.robot.commands.tests;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.KrakenSub;
-import frc.robot.utils.StateOfRobot;
+import frc.robot.utils.TestManager;
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
@@ -15,14 +15,12 @@ import frc.robot.utils.StateOfRobot;
 public class RunTestsGrp extends SequentialCommandGroup {
 
   /** Creates a new RunTestsGrp. */
-  public RunTestsGrp(KrakenSub krakenSub) {
+  public RunTestsGrp(KrakenSub krakenSub, TestManager testManager) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new InstantCommand(() -> StateOfRobot.m_testsOverallResult = false), // Stay "red" until we pass all tests
-        new InstantCommand(() -> StateOfRobot.m_newTestResults = true), // Tell RobotContainer to update the results status
-        new TestKrakenSubCmd(krakenSub),
-        new InstantCommand(() -> StateOfRobot.m_newTestResults = true) // Test done.  Tell RobotContainer to update the results status
-    );
+        new InstantCommand(() -> testManager.resetTestStatuses()),
+        new TestKrakenSubCmd(krakenSub, testManager),
+        new InstantCommand(() -> testManager.updateOverallStatus()));
   }
 }

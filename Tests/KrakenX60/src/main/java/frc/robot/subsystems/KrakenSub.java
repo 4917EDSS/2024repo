@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -66,8 +67,14 @@ public class KrakenSub extends SubsystemBase {
     resetPosition();
   }
 
-  public void runMotor(double power) {
-    m_testMotor.setControl(m_testMotorDutyCycle.withOutput(power));
+  /**
+   * Run the motor at the specified output power
+   * 
+   * @param power Power from -1.0 to 1.0
+   * @return Motor controller's status code. If not OK(0), an error has occurred.
+   */
+  public StatusCode runMotor(double power) {
+    return m_testMotor.setControl(m_testMotorDutyCycle.withOutput(power));
   }
 
   public double getPosition() {

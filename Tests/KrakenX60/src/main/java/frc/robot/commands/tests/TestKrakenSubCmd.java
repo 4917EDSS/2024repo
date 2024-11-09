@@ -6,10 +6,12 @@ package frc.robot.commands.tests;
 
 import java.time.Duration;
 import java.time.Instant;
+import com.ctre.phoenix6.StatusCode;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.KrakenSub;
-import frc.robot.utils.StateOfRobot;
+import frc.robot.utils.TestManager;
+import frc.robot.utils.TestManager.Result;
 
 /**
  * This test checks that the motor is communicating. Then it runs it for a given time. While
@@ -23,26 +25,38 @@ import frc.robot.utils.StateOfRobot;
  */
 public class TestKrakenSubCmd extends Command {
   private final KrakenSub m_krakenSub;
-  private Instant startTime;
+  private final TestManager m_testManager;
+  private final int m_testId;
+  private Instant m_startTime;
+  private boolean m_abortTest = false;
 
   /** Creates a new TestKrakenSubCmd. */
-  public TestKrakenSubCmd(KrakenSub krakenSub) {
+  public TestKrakenSubCmd(KrakenSub krakenSub, TestManager testManager) {
     m_krakenSub = krakenSub;
+    m_testManager = testManager;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(krakenSub);
+
+    m_testId = m_testManager.registerNewTest("Kraken 1");
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // Make sure the motor is there
-    //TODO: Figure out how to check if the motor is even there before we start trying to use it
-
     // Reset the encoder and run the motor for a given time
-    startTime = Instant.now();
+    m_startTime = Instant.now();
     m_krakenSub.resetPosition();
-    m_krakenSub.runMotor(Constants.Tests.kDriveMotorPower);
+    StatusCode sc = m_krakenSub.runMotor(Constants.Tests.kDriveMotorPower);
+
+    if(sc != StatusCode.OK) {
+      // Motor isn't working correctly.  Make sure it's off and end the test.
+      m_abortTest = true;
+      m_krakenSub.runMotor(0.0);
+      String resultsText = "Motor error " + sc.value + " - " + sc.getName() + " - " + sc.getDescription();
+      m_testManager.updateTestStatus(m_testId, TestManager.Result.kFail, resultsText);
+      System.out.println("KrakenSub " + resultsText);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,6 +68,17 @@ public class TestKrakenSubCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if(m_abortTest) {
+      // Already stopped the motor and reported the test results, just quit
+      return;
+    }
+
+    if(interrupted) {
+      m_krakenSub.runMotor(0.0);
+      m_testManager.updateTestStatus(m_testId, Result.kFail, "Test interrupted");
+      return;
+    }
+
     // Before turning off the motor, read the current current (amps) and position
     double currentAmps = m_krakenSub.getAmps();
     double currentPosition = m_krakenSub.getPosition();
@@ -61,44 +86,43 @@ public class TestKrakenSubCmd extends Command {
     // Stop the motor
     m_krakenSub.runMotor(0.0);
 
-    // TODO: Finish this logic
     // Check to see if the measured current is good, ok or bad
-    if(Math.abs(currentAmps - Constants.Tests.kDriveMotorExpectedAmps) < Constants.Tests.kDriveMotorAmpsTolerance) {
-
-    } else if(currentAmps > Constants.Tests.kDriveMotorAmpsMinimum) {
-
-    } else {
-
-    }
-    System.out.println("Got " + currentAmps + " (Target=" + Constants.Tests.kDriveMotorExpectedAmps + "+/-"
-        + Constants.Tests.kDriveMotorAmpsTolerance + ")");
+    TestManager.Result ampsResult = m_testManager.determineResult(currentAmps, Constants.Tests.kDriveMotorExpectedAmps,
+        Constants.Tests.kDriveMotorAmpsTolerance, Constants.Tests.kDriveMotorAmpsMinimum);
+    String ampsText = "Amps=" + currentAmps + " (Target=" + Constants.Tests.kDriveMotorExpectedAmps + "+/-"
+        + Constants.Tests.kDriveMotorAmpsTolerance + ")";
+    System.out.println("KrakenSub " + ampsText);
 
     // Check to see if the measured position is good, ok or bad
-    if(Math.abs(
-        currentPosition - Constants.Tests.kDriveMotorExpectedPosition) < Constants.Tests.kDriveMotorPositionTolerance) {
+    TestManager.Result positionResult =
+        m_testManager.determineResult(currentPosition, Constants.Tests.kDriveMotorExpectedPosition,
+            Constants.Tests.kDriveMotorPositionTolerance, Constants.Tests.kDriveMotorPositionMinimum);
+    String positionText =
+        "Position=" + currentPosition + " (Target=" + Constants.Tests.kDriveMotorExpectedPosition + "+/-"
+            + Constants.Tests.kDriveMotorPositionTolerance + ")";
+    System.out.println("KrakenSub " + positionText);
 
-    } else if(currentPosition > Constants.Tests.kDriveMotorPositionMinimum) {
-
-    } else {
-
+    // Figure out the overall test result
+    TestManager.Result testResult = TestManager.Result.kPass;
+    if((ampsResult == TestManager.Result.kFail) || (positionResult == TestManager.Result.kFail)) {
+      testResult = TestManager.Result.kFail;
+    } else if((ampsResult == TestManager.Result.kWarn) || (positionResult == TestManager.Result.kWarn)) {
+      testResult = TestManager.Result.kWarn;
     }
-    System.out.println("Got " + currentPosition + " (Target=" + Constants.Tests.kDriveMotorExpectedPosition + "+/-"
-        + Constants.Tests.kDriveMotorPositionTolerance + ")");
 
-
-    // If not, check if they are at least over the minimums
-
-    // Set the current test pass/fail status and set the global status on a fail
-
-    StateOfRobot.m_testsOverallResult = true; // TODO: Fix
-
+    // Update the test results
+    m_testManager.updateTestStatus(m_testId, testResult, ampsText + " " + positionText);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // Wait for the test time to have elapsed
-    if(Duration.between(startTime, Instant.now()).toMillis() > Constants.Tests.kDriveMotorTimeMs) {
+    // Check if we should abort
+    if(m_abortTest) {
+      return true;
+    }
+    // Otherwise, wait for the test time to have elapsed
+    else if(Duration.between(m_startTime, Instant.now()).toMillis() > Constants.Tests.kDriveMotorTimeMs) {
       return true;
     }
     return false;
