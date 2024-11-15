@@ -25,6 +25,9 @@ public final class Constants {
 
   public static final class Tests {
     public static final String kTabName = "Tests";
+    public static final int kDashboardRows = 5; // Max rows that we can use to display tests (start new column after this row)
+    public static final int kDashboardCols = 6; // Max columns that we cna use to display tests (start a new tab after this column)
+
     public static final double kDriveMotorPower = 0.1; // Power to test motor at
     public static final long kDriveMotorTimeMs = 2000; // How long to run the motor for, in milliseconds
     public static final double kDriveMotorExpectedPosition = 31; // What the expected encoder position is (in ? units)

@@ -95,7 +95,9 @@ public class TestManager {
         .withSize(1, 1)
         .withPosition(0, 0)
         .getEntry();
-    m_boardTab.add(testsCommand);
+    m_boardTab.add(testsCommand)
+        .withSize(1, 1)
+        .withPosition(1, 0);
   }
 
   /**
@@ -121,7 +123,7 @@ public class TestManager {
         .getEntry();
     newTest.m_text = "Not run";
     newTest.m_textDisplay = m_boardTab.add(name + " Status", newTest.m_text)
-        .withSize(2, 1)
+        .withSize(1, 1)
         .withPosition(testLocation.m_y + 1, testLocation.m_x)
         .getEntry();
 
@@ -210,10 +212,12 @@ public class TestManager {
     m_nextTestCoordinates.m_x++;
 
     // Make sure we aren't falling off the bottom of the dashboard
-    if(m_nextTestCoordinates.m_x > 6) {
+    if(m_nextTestCoordinates.m_x > Constants.Tests.kDashboardRows) {
       m_nextTestCoordinates.m_x = 0;
       m_nextTestCoordinates.m_y += 2;
     }
+
+    // TODO: Make sure we're not falling off the right side of the dashboard.  If so, create a new tab
 
     return nextPosition;
   }
