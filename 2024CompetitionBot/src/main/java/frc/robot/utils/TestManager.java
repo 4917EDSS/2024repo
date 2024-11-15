@@ -210,10 +210,12 @@ public class TestManager {
     m_nextTestCoordinates.m_x++;
 
     // Make sure we aren't falling off the bottom of the dashboard
-    if(m_nextTestCoordinates.m_x > 5) {
+    if(m_nextTestCoordinates.m_x > Constants.Tests.kDashboardRows) {
       m_nextTestCoordinates.m_x = 0;
       m_nextTestCoordinates.m_y += 2;
     }
+
+    // TODO: Make sure we're not falling off the right side of the dashboard.  If so, create a new tab
 
     return nextPosition;
   }
