@@ -219,5 +219,28 @@ public class SwerveModule extends SubsystemBase {
     m_steeringMotor.set(0);
   }
 
+  public void testSetDrivePower(double power) {
+    m_driveMotor.set(power);
+  }
 
+  public void testSetSteeringPower(double power) {
+    m_steeringMotor.set(power);
+  }
+
+  public void testResetDriveEncoder() {
+    m_driveEncoder.setPosition(0.0);
+  }
+
+  public void testResetInternalSteeringEncoder() {
+    m_steeringMotor.setPosition(0, 0.2); // Reset the encoder and wait up to 0.2s for it to take effect
+  }
+
+  public double testGetDrivePosition() {
+    return m_driveEncoder.getPosition();
+  }
+
+  // Internal means the built-in motor encoder instead of the CANcoder
+  public double testGetInternalSteeringPosition() {
+    return m_steeringMotor.getPosition().getValueAsDouble();
+  }
 }

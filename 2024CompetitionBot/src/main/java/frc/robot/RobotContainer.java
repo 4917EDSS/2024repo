@@ -39,6 +39,7 @@ import frc.robot.commands.ShooterIntakeGrp;
 import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
+import frc.robot.commands.tests.RunTestsGrp;
 import frc.robot.subsystems.ArduinoSub;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
@@ -50,6 +51,7 @@ import frc.robot.subsystems.LedSub.LedZones;
 import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.PowerSub;
 import frc.robot.subsystems.VisionSub;
+import frc.robot.utils.TestManager;
 
 
 /**
@@ -69,6 +71,7 @@ public class RobotContainer {
   private final PowerSub m_powerSub = new PowerSub();
   private final PivotSub m_pivotSub = new PivotSub();
   private final VisionSub m_visionSub = new VisionSub();
+  private final TestManager m_testManager = new TestManager();
 
   // Disables large amount of prints from DrivetrainSub, pivotSub, PowerSub, and VisionSub
   // Fixes a lot of CommandLoop overruns from prints
@@ -86,6 +89,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_testManager.setTestCommand(new RunTestsGrp(m_drivetrainSub, m_testManager));
+
     // Subsystem default commands
     m_drivetrainSub.setDefaultCommand(
         new DriveFieldRelativeCmd(m_driverController, m_drivetrainSub));

@@ -33,6 +33,12 @@ import frc.robot.RobotContainer;
 
 
 public class DrivetrainSub extends SubsystemBase {
+  public final int NUM_SWERVE_MODULES = 4;
+  public final int MOTOR_FL = 0;
+  public final int MOTOR_FR = 1;
+  public final int MOTOR_BL = 2;
+  public final int MOTOR_BR = 3;
+
   private static Logger m_logger = Logger.getLogger(DrivetrainSub.class.getName());
 
   private final Orchestra orca1 = new Orchestra();
@@ -562,5 +568,103 @@ public class DrivetrainSub extends SubsystemBase {
       orca3.stop();
       orca4.stop();
     }
+  }
+
+  public void testResetDriveEncoder(int motorId) {
+    switch(motorId) {
+      case MOTOR_FL:
+        m_frontLeft.testResetDriveEncoder();
+        break;
+      case MOTOR_FR:
+        m_frontRight.testResetDriveEncoder();
+        break;
+      case MOTOR_BL:
+        m_backLeft.testResetDriveEncoder();
+        break;
+      case MOTOR_BR:
+        m_backRight.testResetDriveEncoder();
+        break;
+    }
+  }
+
+  public void testResetInternalSteeringEncoder(int motorId) {
+    switch(motorId) {
+      case MOTOR_FL:
+        m_frontLeft.testResetInternalSteeringEncoder();
+        break;
+      case MOTOR_FR:
+        m_frontRight.testResetInternalSteeringEncoder();
+        break;
+      case MOTOR_BL:
+        m_backLeft.testResetInternalSteeringEncoder();
+        break;
+      case MOTOR_BR:
+        m_backRight.testResetInternalSteeringEncoder();
+        break;
+    }
+  }
+
+  public void testSetDriveMotorPower(int motorId, double power) {
+    switch(motorId) {
+      case MOTOR_FL:
+        m_frontLeft.testSetDrivePower(power);
+        break;
+      case MOTOR_FR:
+        m_frontRight.testSetDrivePower(power);
+        break;
+      case MOTOR_BL:
+        m_backLeft.testSetDrivePower(power);
+        break;
+      case MOTOR_BR:
+        m_backRight.testSetDrivePower(power);
+        break;
+    }
+  }
+
+  public void testSetSteeringMotorPower(int motorId, double power) {
+    switch(motorId) {
+      case MOTOR_FL:
+        m_frontLeft.testSetSteeringPower(power);
+        break;
+      case MOTOR_FR:
+        m_frontRight.testSetSteeringPower(power);
+        break;
+      case MOTOR_BL:
+        m_backLeft.testSetSteeringPower(power);
+        break;
+      case MOTOR_BR:
+        m_backRight.testSetSteeringPower(power);
+        break;
+    }
+  }
+
+  public double testGetDrivePosition(int motorId) {
+    switch(motorId) {
+      case MOTOR_FL:
+        return m_frontLeft.testGetDrivePosition();
+      case MOTOR_FR:
+        return m_frontRight.testGetDrivePosition();
+      case MOTOR_BL:
+        return m_backLeft.testGetDrivePosition();
+      case MOTOR_BR:
+        return m_backRight.testGetDrivePosition();
+    }
+
+    return 0.0;
+  }
+
+  public double testGetInternalSteeringPosition(int motorId) {
+    switch(motorId) {
+      case MOTOR_FL:
+        return m_frontLeft.testGetInternalSteeringPosition();
+      case MOTOR_FR:
+        return m_frontRight.testGetInternalSteeringPosition();
+      case MOTOR_BL:
+        return m_backLeft.testGetInternalSteeringPosition();
+      case MOTOR_BR:
+        return m_backRight.testGetInternalSteeringPosition();
+    }
+
+    return 0.0;
   }
 }
