@@ -46,7 +46,7 @@ public class SwerveModule extends SubsystemBase {
   public final double kDriveVelocityFactor; // RPM to m/s
 
   // PID Controllers
-  private final PIDController m_drivePID = new PIDController(0.5, 0, 0.0);
+  private final PIDController m_drivePID = new PIDController(0.0, 0, 0.0);
 
   //Profiled PID controller combines a trapezoidal motion profile and PID
   //A trapezoidal motion profile splits the motion into three segments, acceleration, constant velocity, and deceleration
@@ -82,11 +82,11 @@ public class SwerveModule extends SubsystemBase {
     TalonFXConfigurator steeringConfigurator = m_steeringMotor.getConfigurator();
 
     CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
-    limitConfigs.StatorCurrentLimit = 10;
+    limitConfigs.StatorCurrentLimit = 40;
     limitConfigs.StatorCurrentLimitEnable = true;
     driveConfigurator.apply(limitConfigs);
 
-    limitConfigs.StatorCurrentLimit = 10;
+    limitConfigs.StatorCurrentLimit = 40;
     limitConfigs.StatorCurrentLimitEnable = true;
     steeringConfigurator.apply(limitConfigs);
 
