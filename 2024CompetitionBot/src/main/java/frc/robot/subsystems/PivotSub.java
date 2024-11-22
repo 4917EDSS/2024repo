@@ -236,7 +236,7 @@ public class PivotSub extends SubsystemBase {
     }
   }
 
-  public void testMovePivot(power){
+  public void testMovePivot(double power) {
     m_pivot.set(power);
   }
 }

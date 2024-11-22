@@ -25,7 +25,7 @@ public class TestPivotMotorsCmd extends Command {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(pivotsub);
-    m_testId = m_testManager.registerNewTest("Pivot Motor")
+    m_testId = m_testManager.registerNewTest("Pivot Motor");
 
   }
 
@@ -33,7 +33,7 @@ public class TestPivotMotorsCmd extends Command {
   @Override
   public void initialize() {
     m_startTime = Instant.now();
-    m_pivotSub.testMovePivot(Constants.Tests.kPivotMotorPower)
+    m_pivotSub.testMovePivot(Constants.Tests.kPivotMotorPower);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,33 +50,35 @@ public class TestPivotMotorsCmd extends Command {
       return;
     }
 
-    double[] currentAngle = {m_pivotSub.getPivotAngle()}; // get the angle
+    double currentAngle = m_pivotSub.getPivotAngle(); // get the angle
 
     m_pivotSub.testMovePivot(0); // Stop the motor
 
 
     // Check to see if the measured angle is good, ok or bad
-      TestManager.Result angleResult =
-          m_testManager.determineResult(currentAngle, Constants.Tests.kPivotMotorExpectedPosition,
-              Constants.Tests.kPivotMotorPositionTolerance, Constants.Tests.kPivotMotorPositionMinimum);
-      String angleText =
-          "Position=" + currentAngle + "°" + " (Target=" + Constants.Tests.kPivotMotorExpectedPosition + "°" + "+/-"
-              + Constants.Tests.kPivotMotorPositionTolerance + "°" + ")"; // create a string for motor (angle) information
-      System.out.println("PivotSub " + angleResult); /* print out the motor (angle) information into the console, just
-       in case the Shuffleboard ain't working */
+    TestManager.Result angleResult =
+        m_testManager.determineResult(currentAngle, Constants.Tests.kPivotMotorExpectedPosition,
+            Constants.Tests.kPivotMotorPositionTolerance, Constants.Tests.kPivotMotorPositionMinimum);
+    String angleText =
+        "Position=" + currentAngle + "°" + " (Target=" + Constants.Tests.kPivotMotorExpectedPosition + "°" + "+/-"
+            + Constants.Tests.kPivotMotorPositionTolerance + "°" + ")"; // create a string for motor (angle) information
+    System.out.println("PivotSub " + angleResult); /*
+                                                    * print out the motor (angle) information into the console, just
+                                                    * in case the Shuffleboard ain't working
+                                                    */
 
-      // Figure out the overall test result
-      TestManager.Result testResult = TestManager.Result.kPass;
-      if(angleResult == TestManager.Result.kFail) {
-        testResult = TestManager.Result.kFail;
-      } else if(angleResult == TestManager.Result.kWarn) {
-        testResult = TestManager.Result.kWarn;
-      }
-
-      // Update the test results
-      m_testManager.updateTestStatus(m_testId, testResult, angleText);
+    // Figure out the overall test result
+    TestManager.Result testResult = TestManager.Result.kPass;
+    if(angleResult == TestManager.Result.kFail) {
+      testResult = TestManager.Result.kFail;
+    } else if(angleResult == TestManager.Result.kWarn) {
+      testResult = TestManager.Result.kWarn;
     }
+
+    // Update the test results
+    m_testManager.updateTestStatus(m_testId, testResult, angleText);
   }
+
 
   // Returns true when the command should end.
   @Override
