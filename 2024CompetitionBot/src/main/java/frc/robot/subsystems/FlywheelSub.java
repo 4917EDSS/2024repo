@@ -112,6 +112,11 @@ public class FlywheelSub extends SubsystemBase {
     m_flywheelL.setIdleMode(IdleMode.kCoast);
   }
 
+  public void testFlywheelMotorPower(double power) {
+    m_flywheelL.set(power);
+    m_flywheelR.set(power);
+  }
+
   public void setFlywheelVoltage(double voltage) {
     m_flywheelL.setVoltage(voltage);
     m_flywheelR.setVoltage(voltage);

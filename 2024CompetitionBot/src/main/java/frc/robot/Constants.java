@@ -327,5 +327,11 @@ public final class Constants {
     public static final double kDriveMotorExpectedAmps = 0.06; // How much current we expect it to pull just before the end of the test
     public static final double kDriveMotorAmpsTolerance = 0.03; // How far off the amps can be (+ or -) and still be considered OK
     public static final double kDriveMotorAmpsMinimum = 0.02; // Minimum current to be considered a partial pass
+
+    public static final double kFlywheelMotorPower = 0;
+    public static final double kFlywheelMotorTimeMs = 0;
+    public static final double kFlywheelMotorExpectedPosition = 0;
+    public static final double kFlywheelMotorPositionTolerance = 0;
+    public static final double kFlywheelMotorPositionMinimum = 0;
   }
 }
