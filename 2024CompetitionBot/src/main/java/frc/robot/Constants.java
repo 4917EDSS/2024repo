@@ -327,5 +327,17 @@ public final class Constants {
     public static final double kDriveMotorExpectedAmps = 0.06; // How much current we expect it to pull just before the end of the test
     public static final double kDriveMotorAmpsTolerance = 0.03; // How far off the amps can be (+ or -) and still be considered OK
     public static final double kDriveMotorAmpsMinimum = 0.02; // Minimum current to be considered a partial pass
+
+
+    // Pivot motor test parameters 
+    public static final double kPivotMotorPower = 0.05; // power
+    public static final long kPivotMotorTimeMs = 500; // how long it runs
+    public static final double kPivotMotorExpectedPosition = 0; // idk what this is yet
+    public static final double kPivotMotorPositionTolerance = 0;
+    public static final double kPivotMotorPositionMinimum = 0;
+    public static final double kPivotMotorExpectedAmps = 0.06;
+    public static final double kPivotMotorAmpsTolerance = 0.03;
+    public static final double kPivotMotorAmpsMinimum = 0.02;
+
   }
 }
