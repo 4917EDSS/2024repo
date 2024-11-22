@@ -339,5 +339,8 @@ public final class Constants {
     public static final double kPivotMotorAmpsTolerance = 0.03;
     public static final double kPivotMotorAmpsMinimum = 0.02;
 
+    public static final double kIntakeRollers = 0;
+    public static final double kUpperFeeder = 0;
+    public static final double kLowerFeeder = 0;
   }
 }

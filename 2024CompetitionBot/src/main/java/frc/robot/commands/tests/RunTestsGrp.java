@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.PivotSub;
+import frc.robot.subsystems.FeederSub;
 import frc.robot.utils.TestManager;
+
 
 // NOTE: Consider using this command inline, rather than writing a subclass. For more
 // information, see:
@@ -16,12 +18,16 @@ import frc.robot.utils.TestManager;
 public class RunTestsGrp extends SequentialCommandGroup {
 
   /** Creates a new RunTestsGrp. */ 
-  public RunTestsGrp(DrivetrainSub drivetrainSub, PivotSub pivotsub, TestManager testManager) { /* import all of the subsystems required */
+  public RunTestsGrp(DrivetrainSub drivetrainSub, FeederSub feederSub, PivotSub pivotsub, TestManager testManager) { /* import all of the subsystems required */
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new InstantCommand(() -> testManager.resetTestStatuses()),
         new TestSwerveDriveMotorsCmd(drivetrainSub, testManager),
-        new InstantCommand(() -> testManager.updateOverallStatus()));
+        new TestFeederMotorsCmd(feederSub, testManager)),
+        // Add new tests here
+        new InstantCommand(() -> testManager.updateOverallStatus());
+
+
   }
 }
