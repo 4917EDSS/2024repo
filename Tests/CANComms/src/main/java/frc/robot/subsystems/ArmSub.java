@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSub extends SubsystemBase {
+  //private final 
   /** Creates a new ArmSub. */
   public ArmSub() {}
 
