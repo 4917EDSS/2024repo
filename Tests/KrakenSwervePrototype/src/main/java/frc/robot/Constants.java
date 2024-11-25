@@ -123,10 +123,10 @@ public final class Constants {
     public static final String serialNumber = System.getenv("serialnum");
 
     public static final class Practice {
-      public static final double kAbsoluteEncoderOffsetFL = 1.9742;
-      public static final double kAbsoluteEncoderOffsetFR = 3.0050;
-      public static final double kAbsoluteEncoderOffsetBL = 0.4080;
-      public static final double kAbsoluteEncoderOffsetBR = 3.0986;
+      public static final double kAbsoluteEncoderOffsetFL = 1.971;
+      public static final double kAbsoluteEncoderOffsetFR = 2.994;
+      public static final double kAbsoluteEncoderOffsetBL = 0.424;
+      public static final double kAbsoluteEncoderOffsetBR = 3.049;
       public static final double kGearRatio = 5.14; // L1 = 8.14, L2 = 6.75, L3 = 6.12, L4 = 5.14
       public static final boolean kInvertLowerFeeder = false;
     }
