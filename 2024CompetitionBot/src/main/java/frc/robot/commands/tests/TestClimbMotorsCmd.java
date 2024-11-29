@@ -12,7 +12,7 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.utils.TestManager;
 import frc.robot.utils.TestManager.Result;
 
-public class TestPivotMotorsCmd extends Command {
+public class TestClimbMotorsCmd extends Command {
   private final ClimbSub m_climbSub;
   private final TestManager m_testManager;
   private final int m_testId;
@@ -58,8 +58,8 @@ public class TestPivotMotorsCmd extends Command {
 
     // get the positions
     double[] currentPositions = {
-      m_climbSub.getLeftVelocity(),
-      m_climbSub.getRightVelocity()
+      m_climbSub.getLeftHeight(),
+      m_climbSub.getRightHeight()
     };
 
     m_climbSub.testClimbMotorPower(0); // Stop the motor
