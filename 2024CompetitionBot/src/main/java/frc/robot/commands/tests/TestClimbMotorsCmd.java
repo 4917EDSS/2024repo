@@ -12,7 +12,7 @@ import frc.robot.subsystems.ClimbSub;
 import frc.robot.utils.TestManager;
 import frc.robot.utils.TestManager.Result;
 
-public class TestPivotMotorsCmd extends Command {
+public class TestClimbMotorsCmd extends Command {
   private final ClimbSub m_climbSub;
   private final TestManager m_testManager;
   private final int m_testId;
