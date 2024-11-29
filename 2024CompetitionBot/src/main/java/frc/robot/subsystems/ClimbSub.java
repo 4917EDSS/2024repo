@@ -143,4 +143,11 @@ public class ClimbSub extends SubsystemBase {
     m_logger.warning("Resetting right encoder");
     m_climbMotorRight.getEncoder().setPosition(0.0);
   }
+
+  public void testClimbMotorPower(double power) {
+    m_climbMotorLeft.set(power);
+    m_climbMotorRight.set(power);
+  }
 }
+
+

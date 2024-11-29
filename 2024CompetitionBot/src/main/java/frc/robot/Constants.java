@@ -328,15 +328,16 @@ public final class Constants {
     public static final double kDriveMotorAmpsTolerance = 0.03; // How far off the amps can be (+ or -) and still be considered OK
     public static final double kDriveMotorAmpsMinimum = 0.02; // Minimum current to be considered a partial pass
 
+    //Flyweel motor test parameters
     public static final double kFlywheelMotorPower = 0;
     public static final double kFlywheelMotorTimeMs = 0;
     public static final double kFlywheelMotorExpectedPosition = 0;
     public static final double kFlywheelMotorPositionTolerance = 0;
     public static final double kFlywheelMotorPositionMinimum = 0;
 
-    // Pivot motor test parameters 
+    //Pivot motor test parameters 
     public static final double kPivotMotorPower = 0.05; // power
-    public static final long kPivotMotorTimeMs = 500; // how long it runs
+    public static final long kPivotMotorTimeMs = 500; // how long it runs, in milliseconds
     public static final double kPivotMotorExpectedPosition = 0; // idk what this is yet
     public static final double kPivotMotorPositionTolerance = 0;
     public static final double kPivotMotorPositionMinimum = 0;
@@ -344,6 +345,19 @@ public final class Constants {
     public static final double kPivotMotorAmpsTolerance = 0.03;
     public static final double kPivotMotorAmpsMinimum = 0.02;
 
+    //Climb motor test parameters
+    public static final double kClimbMotorPower = 0.05; // power
+    public static final long kClimbMotorTimeMs = 500; // how long it runs, in milliseconds
+
+    public static final double kClimbMotorExpectedPosition = 0; // position it should be at (idk what this is yet)
+    public static final double kClimbMotorPositionTolerance = 0;
+    public static final double kClimbMotorPositionMinimum = 0;
+
+    public static final double kClimbMotorExpectedAmps = 0.06;
+    public static final double kClimbMotorAmpsTolerance = 0.03;
+    public static final double kClimbMotorAmpsMinimum = 0.02;
+
+    //Intake motor test parameters
     public static final double kIntakeRollers = 0;
     public static final double kUpperFeeder = 0;
     public static final double kLowerFeeder = 0;

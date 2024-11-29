@@ -18,7 +18,7 @@ public class TestPivotMotorsCmd extends Command {
   private final int m_testId;
   private Instant m_startTime;
 
-  /** Creates a new TestPivotCmd. */
+  /** Creates a new TestPivotMotorsCmd. */
   public TestPivotMotorsCmd(PivotSub pivotsub, TestManager testManager) {
     m_pivotSub = pivotsub;
     m_testManager = testManager;
