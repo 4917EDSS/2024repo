@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.utils.TestManager;
 import frc.robot.utils.TestManager.Result;
@@ -51,30 +50,31 @@ public class TestFlywheelMotorsCmd extends Command {
       m_testManager.updateTestStatus(m_testIds[0], Result.kFail, "Test interrupted");
       m_testManager.updateTestStatus(m_testIds[1], Result.kFail, "Test interrupted");
     }
-    double[] currentPositions = {
+    double[] currentVelocities = {
         m_flywheelSub.getFlywheelVelocityL(),
         m_flywheelSub.getFlywheelVelocityR()
     };
-    // Check to see if the measured position is good, ok or bad
+    // Check to see if the measured velocity is good, ok or bad
     for(int motorId = 0; motorId <= m_testIds.length; motorId++) {
-      TestManager.Result positionResult =
-          m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kFlywheelMotorExpectedPosition,
-              Constants.Tests.kFlywheelMotorPositionTolerance, Constants.Tests.kFlywheelMotorPositionMinimum);
+      TestManager.Result velocityResult =
+          m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kFlywheelMotorExpectedVelocity,
+              Constants.Tests.kFlywheelMotorVelocityTolerance, Constants.Tests.kFlywheelMotorVelocityMinimum);
 
-      String positionText =
-          "Position=" + currentPositions[motorId] + " (Target=" + Constants.Tests.kFlywheelMotorExpectedPosition + "+/-"
-              + Constants.Tests.kFlywheelMotorPositionTolerance + ")";
-      System.out.println("DrivetrainSub " + positionText);
+      String velocityText =
+          "Velocity=" + currentVelocities[motorId] + " (Target=" + Constants.Tests.kFlywheelMotorExpectedVelocity
+              + "+/-"
+              + Constants.Tests.kFlywheelMotorVelocityTolerance + ")";
+      System.out.println("DrivetrainSub " + velocityText);
 
       // Figure out the overall test result
       TestManager.Result testResult = TestManager.Result.kPass;
-      if((positionResult == TestManager.Result.kFail)) {
+      if((velocityResult == TestManager.Result.kFail)) {
         testResult = TestManager.Result.kFail;
-      } else if((positionResult == TestManager.Result.kWarn)) {
+      } else if((velocityResult == TestManager.Result.kWarn)) {
         testResult = TestManager.Result.kWarn;
       }
       // Update the test results
-      m_testManager.updateTestStatus(m_testIds[motorId], testResult, positionText);
+      m_testManager.updateTestStatus(m_testIds[motorId], testResult, velocityText);
     }
 
 

@@ -331,9 +331,9 @@ public final class Constants {
     //Flyweel motor test parameters
     public static final double kFlywheelMotorPower = 0;
     public static final double kFlywheelMotorTimeMs = 0;
-    public static final double kFlywheelMotorExpectedPosition = 0;
-    public static final double kFlywheelMotorPositionTolerance = 0;
-    public static final double kFlywheelMotorPositionMinimum = 0;
+    public static final double kFlywheelMotorExpectedVelocity = 0;
+    public static final double kFlywheelMotorVelocityTolerance = 0;
+    public static final double kFlywheelMotorVelocityMinimum = 0;
 
     //Pivot motor test parameters 
     public static final double kPivotMotorPower = 0.05; // power
