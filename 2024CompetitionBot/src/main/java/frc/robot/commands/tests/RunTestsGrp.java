@@ -10,6 +10,7 @@ import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.PivotSub;
 import frc.robot.subsystems.FeederSub;
+import frc.robot.subsystems.ClimbSub;
 import frc.robot.utils.TestManager;
 
 
@@ -20,6 +21,7 @@ public class RunTestsGrp extends SequentialCommandGroup {
 
   /** Creates a new RunTestsGrp. */
   public RunTestsGrp(DrivetrainSub drivetrainSub, FeederSub feederSub, FlywheelSub flywheelSub, PivotSub pivotsub,
+      ClimbSub climbSub,
       TestManager testManager) { /* import all of the subsystems required */
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -28,6 +30,7 @@ public class RunTestsGrp extends SequentialCommandGroup {
         new TestSwerveDriveMotorsCmd(drivetrainSub, testManager),
         new TestFlywheelMotorsCmd(flywheelSub, testManager),
         new TestFeederMotorsCmd(feederSub, testManager),
+        new TestClimbMotorsCmd(climbSub, testManager),
         // Add new tests here
         new InstantCommand(() -> testManager.updateOverallStatus()));
 

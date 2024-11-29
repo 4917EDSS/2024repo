@@ -90,7 +90,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_testManager
-        .setTestCommand(new RunTestsGrp(m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub, m_testManager));
+        .setTestCommand(
+            new RunTestsGrp(m_drivetrainSub, m_feederSub, m_flywheelSub, m_pivotSub, m_climbSub, m_testManager));
 
     // Subsystem default commands
     m_drivetrainSub.setDefaultCommand(
