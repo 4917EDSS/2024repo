@@ -62,6 +62,11 @@ public class FeederSub extends SubsystemBase {
     m_lowerFeeder.set(power);
   }
 
+  public void testIntakeRollers(double power) {
+    m_lowerFeeder.set(power);
+    m_upperFeeder.set(power);
+  }
+
   public void spinBothFeeders(double lowerPower, double upperPower) {
     spinLowerFeeder(lowerPower);
     spinUpperFeeder(upperPower);
@@ -73,9 +78,18 @@ public class FeederSub extends SubsystemBase {
     m_intakeRollers.set(power);
   }
 
+  public double getUpperFeeder() {
+    return m_upperFeeder.getEncoder().getVelocity();
+  }
+
+  public double getLowerFeeder() {
+    return m_lowerFeeder.getEncoder().getVelocity();
+  }
+
   @Override
   public void periodic() {
     RobotContainer.noteInFeeder = finishedNoteIntake;
     // This method will be called once per scheduler run
   }
+
 }

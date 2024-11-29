@@ -311,4 +311,48 @@ public final class Constants {
     public static final double kPositionConversionFactor = 10.0 / 9.524; // Was 10.0 / 16.5 with previous gearing
     public static final double kVelocityConversionFactor = 1.0 / 60.0; // RPM to RPS
   }
+<<<<<<< Updated upstream
+=======
+
+  public static final class Tests {
+    // Global test parameters
+    public static final String kTabName = "Tests";
+    public static final int kDashboardRows = 5; // Max rows that we can use to display tests (start new column after this row)
+    public static final int kDashboardCols = 6; // Max columns that we cna use to display tests (start a new tab after this column)
+
+    // Swerve drive-motor test parameters
+    public static final double kDriveMotorPower = 0.1; // Power to test motor at (keep it as low as pratical)
+    public static final long kDriveMotorTimeMs = 2000; // How long to run the motor for, in milliseconds
+    public static final double kDriveMotorExpectedPosition = 31; // What the expected encoder position is (in motor shaft rotations)
+    public static final double kDriveMotorPositionTolerance = 0.75; // How for off the position can be (+ or -) and still considered OK
+    public static final double kDriveMotorPositionMinimum = 1; // Minimum position change to be considered a partial pass
+    public static final double kDriveMotorExpectedAmps = 0.06; // How much current we expect it to pull just before the end of the test
+    public static final double kDriveMotorAmpsTolerance = 0.03; // How far off the amps can be (+ or -) and still be considered OK
+    public static final double kDriveMotorAmpsMinimum = 0.02; // Minimum current to be considered a partial pass
+
+    public static final double kFlywheelMotorPower = 0;
+    public static final double kFlywheelMotorTimeMs = 0;
+    public static final double kFlywheelMotorExpectedPosition = 0;
+    public static final double kFlywheelMotorPositionTolerance = 0;
+    public static final double kFlywheelMotorPositionMinimum = 0;
+
+    // Pivot motor test parameters 
+    public static final double kPivotMotorPower = 0.05; // power
+    public static final long kPivotMotorTimeMs = 500; // how long it runs
+    public static final double kPivotMotorExpectedPosition = 0; // idk what this is yet
+    public static final double kPivotMotorPositionTolerance = 0;
+    public static final double kPivotMotorPositionMinimum = 0;
+    public static final double kPivotMotorExpectedAmps = 0.06;
+    public static final double kPivotMotorAmpsTolerance = 0.03;
+    public static final double kPivotMotorAmpsMinimum = 0.02;
+
+    public static final double kIntakeRollers = 0;
+    public static final double kUpperFeeder = 0;
+    public static final double kLowerFeeder = 0;
+    public static final double kIntakeRollerTimeMs = 0;
+    public static final double kIntakeRollerExpectedPosition = 0;
+    public static final double kIntakeRollerPositionTolerance = 0;
+    public static final double kIntakeRollerPositionMinimum = 0;
+  }
+>>>>>>> Stashed changes
 }
