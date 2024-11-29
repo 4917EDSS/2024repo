@@ -58,8 +58,8 @@ public class TestPivotMotorsCmd extends Command {
 
     // get the positions
     double[] currentPositions = {
-      m_climbSub.getLeftVelocity(),
-      m_climbSub.getRightVelocity()
+      m_climbSub.getLeftHeight(),
+      m_climbSub.getRightHeight()
     };
 
     m_climbSub.testClimbMotorPower(0); // Stop the motor
