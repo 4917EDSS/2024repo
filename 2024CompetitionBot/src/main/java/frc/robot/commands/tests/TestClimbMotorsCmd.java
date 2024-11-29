@@ -15,16 +15,16 @@ import frc.robot.utils.TestManager.Result;
 public class TestClimbMotorsCmd extends Command {
   private final ClimbSub m_climbSub;
   private final TestManager m_testManager;
-  private final int m_testId;
+  private final int[] m_testIds;
   private Instant m_startTime;
 
   /** Creates a new TestClimbMotorsCmd. */
-  public TestClimbMotorsCmd(ClimbSub climbsub, TestManager testManager) {
-    m_climbSub = climbsub;
+  public TestClimbMotorsCmd(ClimbSub climbSub, TestManager testManager) {
+    m_climbSub = climbSub;
     m_testManager = testManager;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climbsub);
+    addRequirements(climbSub);
     m_testIds = new int[2];
     m_testIds[0] = m_testManager.registerNewTest("Climb L");
     m_testIds[1] = m_testManager.registerNewTest("Climb R");
@@ -50,44 +50,44 @@ public class TestClimbMotorsCmd extends Command {
       m_climbSub.testClimbMotorPower(0);
 
       // this is if the test gets interrupted
-      m_testManager.updateTestStatus(m_testIds[0], Result.kFail, "Test interrupted"); 
+      m_testManager.updateTestStatus(m_testIds[0], Result.kFail, "Test interrupted");
       m_testManager.updateTestStatus(m_testIds[1], Result.kFail, "Test interrupted");
-    }
       return;
     }
+    
 
-    // get the positions
-    double[] currentPositions = {
+  // get the positions
+  double[] currentPositions = {
       m_climbSub.getLeftHeight(),
       m_climbSub.getRightHeight()
     };
+    
 
-    m_climbSub.testClimbMotorPower(0); // Stop the motor
+  
+  // Check to see if the measured position is good, ok or bad
+  for(int motorId = 0;motorId<=m_testIds.length;motorId++) {
+    TestManager.Result positionResult =
+        m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kClimbMotorExpectedPosition,
+            Constants.Tests.kClimbMotorPositionTolerance, Constants.Tests.kClimbMotorPositionMinimum);
 
-
-    // Check to see if the measured position is good, ok or bad
-    for(int motorId = 0; motorId <= m_testIds.length; motorId++) {
-      TestManager.Result positionResult =
-          m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kClimbMotorExpectedPosition,
-              Constants.Tests.kClimbMotorPositionTolerance, Constants.Tests.kClimbMotorPositionMinimum);
-
-      String positionText =
-          "Position=" + currentPositions[motorId] + " (Target=" + Constants.Tests.kClimbMotorExpectedPosition + "+/-"
-              + Constants.Tests.kClimbMotorPositionTolerance + ")";
-      System.out.println("ClimbSub " + positionText);
+    String positionText =
+        "Position=" + currentPositions[motorId] + " (Target=" + Constants.Tests.kClimbMotorExpectedPosition + "+/-"
+            + Constants.Tests.kClimbMotorPositionTolerance + ")";
+    System.out.println("ClimbSub " + positionText);
 
 
     // Figure out the overall test result
     TestManager.Result testResult = TestManager.Result.kPass;
-      if((positionResult == TestManager.Result.kFail)) {
-        testResult = TestManager.Result.kFail;
-      } else if((positionResult == TestManager.Result.kWarn)) {
-        testResult = TestManager.Result.kWarn;
-      }
-      // Update the test results
-      m_testManager.updateTestStatus(m_testIds[motorId], testResult, positionText);
-  }
+    if((positionResult == TestManager.Result.kFail)) {
+      testResult = TestManager.Result.kFail;
+    } else if((positionResult == TestManager.Result.kWarn)) {
+      testResult = TestManager.Result.kWarn;
+    }
+    // Update the test results
+   
 
+  }
+  }
 
   // Returns true when the command should end.
   @Override
