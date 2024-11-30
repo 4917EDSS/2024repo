@@ -26,7 +26,7 @@ void CAN::Update()
         auto err = m_mcp2515->readMessage(&frame);
         if (err == MCP2515::ERROR::ERROR_OK)
         {
-            auto masked = frame.can_id & CAN_EFF_MASK;
+            int32_t masked = frame.can_id & CAN_EFF_MASK;
             for (uint8_t i = 0; i < m_canCount; i++)
             {
                 auto canClass = m_canClasses[i];
@@ -53,6 +53,15 @@ void CAN::Update()
             }
         }
     }
+}
+
+int16_t CAN::matchesId(int32_t id) {
+    constexpr int32_t mask = 0x1FFF003F;
+    constexpr int32_t filter = 0x0000FFC0;
+    if ((id & mask) == m_messageMask) {
+      return (id & filter) >> 6;
+    }
+    return -1;
 }
 
 void CAN::AddToReadList()
@@ -83,6 +92,14 @@ bool CAN::WritePacket(const uint8_t *data, uint8_t length, int apiId)
 
     return m_mcp2515->sendMessage(&frame) == MCP2515::ERROR::ERROR_OK;
 }
+
+/* RTR (Remote Transmission Request) A Remote Frame requests the 
+transmission of a message by another node. The requested data frame, 
+identified by a unique message ID, may be accepted by any number 
+of nodes in the network according to the individual application 
+needs but can only be sent by one node associated with the 
+requested message.
+*/
 
 bool CAN::WriteRTRFrame(uint8_t length, int apiId)
 {

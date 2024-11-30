@@ -76,6 +76,8 @@ public:
 
   bool WriteRTRFrame(uint8_t length, int apiId);
 
+  //void SetCANId(uint16_t apiId, uint8_t deviceId, uint8_t manufacturer, uint8_t deviceType);
+
 private:
   static MCP2515* m_mcp2515;
   static uint8_t m_interruptPin;
@@ -84,14 +86,7 @@ private:
   static CAN* m_canClasses[16];
   static uint8_t m_canCount;
 
-  int16_t matchesId(int32_t id) {
-    constexpr int32_t mask = 0x1FFF003F;
-    constexpr int32_t filter = 0x0000FFC0;
-    if ((id & mask) == m_messageMask) {
-      return (id & filter) >> 6;
-    }
-    return -1;
-  }
+  int16_t matchesId(int32_t id);
   uint32_t m_messageMask = 0;
 };
 } // namespace frc

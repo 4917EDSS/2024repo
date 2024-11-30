@@ -10,21 +10,38 @@
 frc::MCP2515 mcp2515{CAN_CS};
 
 // Create an FRC CAN Device. You can create up to 16 of these in 1 progam
-// Any more will overflow a global array
-frc::CAN frcCANDevice{1};
+// Any more will overflow a global array.  The device number, manufacturer 
+// and devicetype are basically filters for all incoming data.  You will 
+// receive all callbacks associated with these and further process it
+// based on the API ID and data packets.
+frc::CAN frcCANDevice{0, frc::CANManufacturer::kNI, frc::CANDeviceType::kRobotController};
+
 
 // Callback function. This will be called any time a new message is received
 // Matching one of the enabled devices.
 void CANCallback(frc::CAN* can, int apiId, bool rtr, const frc::CANData& data) {
     Serial.print("In callback. API: ");
-    Serial.println(apiId, HEX);
+    Serial.print(apiId, HEX);
+
+    Serial.print(" RTR: ");
+    Serial.print(rtr);
+
+    Serial.print(" Data: ");
+
+    for (int i = 0; i < data.length; i++)
+    {
+      Serial.print(data.data[i], HEX);
+      Serial.print(" ");
+    }
+
+    Serial.print("\n");
 }
 
 // Callback function for any messages not matching a known device.
 // This would still have flags for RTR and Extended set, its a raw ID
 void UnknownMessageCallback(uint32_t id, const frc::CANData& data) {
-  Serial.print("Unknown message");
-  Serial.println(id & CAN_EFF_MASK, HEX);
+    Serial.print("Unknown message");
+    Serial.println(id & CAN_EFF_MASK, HEX);
 }
 
 

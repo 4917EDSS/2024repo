@@ -33,6 +33,7 @@ typedef __u32 canid_t;
 #define CAN_EFF_ID_BITS     29
 
 /* CAN payload length and DLC definitions according to ISO 11898-1 */
+// DLC: Data Length Code
 #define CAN_MAX_DLC 8
 #define CAN_MAX_DLEN 8
 
