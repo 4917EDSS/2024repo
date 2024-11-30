@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.CanSub;
 import frc.robot.Constants.OperatorConstants;
 
 /**
@@ -19,6 +23,7 @@ import frc.robot.Constants.OperatorConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final CanSub m_CanSub = new CanSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -26,6 +31,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_CanSub.setDefaultCommand(new SequentialCommandGroup(
+        new RunCommand(
+            () -> m_CanSub.UpdateCustomSensor(Constants.CanSub.kSensorID)),
+        new PrintCommand(String.valueOf(m_CanSub.getDataBufferByte(0))),
+        new WaitCommand(0.04)));
     // Configure the trigger bindings
     configureBindings();
   }
