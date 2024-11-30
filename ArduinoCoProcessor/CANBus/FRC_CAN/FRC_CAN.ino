@@ -14,7 +14,7 @@ frc::MCP2515 mcp2515{CAN_CS};
 // and devicetype are basically filters for all incoming data.  You will 
 // receive all callbacks associated with these and further process it
 // based on the API ID and data packets.
-frc::CAN frcCANDevice{0, frc::CANManufacturer::kNI, frc::CANDeviceType::kRobotController};
+frc::CAN frcCANDevice{17, frc::CANManufacturer::kTeamUse, frc::CANDeviceType::kMiscellaneous};
 
 
 // Callback function. This will be called any time a new message is received
@@ -40,8 +40,18 @@ void CANCallback(frc::CAN* can, int apiId, bool rtr, const frc::CANData& data) {
 // Callback function for any messages not matching a known device.
 // This would still have flags for RTR and Extended set, its a raw ID
 void UnknownMessageCallback(uint32_t id, const frc::CANData& data) {
-    Serial.print("Unknown message");
-    Serial.println(id & CAN_EFF_MASK, HEX);
+    Serial.print("Unknown message ");
+    Serial.print(id & CAN_EFF_MASK, HEX);
+
+    Serial.print(" Data: ");
+
+    for (int i = 0; i < data.length; i++)
+    {
+      Serial.print(data.data[i], HEX);
+      Serial.print(" ");
+    }
+
+    Serial.print("\n");    
 }
 
 
@@ -56,8 +66,8 @@ void setup() {
     err = mcp2515.setBitrate(frc::CAN_1000KBPS, frc::CAN_CLOCK::MCP_16MHZ);
 
     // Set up to normal CAN mode
-    //err = mcp2515.setNormalMode();
-    err = mcp2515.setListenOnlyMode();
+    err = mcp2515.setNormalMode();
+    //err = mcp2515.setListenOnlyMode();
 
     // Prepare our interrupt pin
     pinMode(CAN_INTERRUPT, INPUT);
@@ -70,7 +80,7 @@ void setup() {
     frcCANDevice.AddToReadList();
 }
 
-unsigned long long lastSend20Ms = 0;
+unsigned long long lastSendMs = 0;
 int count = 0;
 
 void loop() {
@@ -81,12 +91,18 @@ void loop() {
 
     // Writes can happen any time, this uses a periodic send
     auto now = millis();
-    if (now - lastSend20Ms > 20) {
-        // 20 ms periodic
+    if (now - lastSendMs > 50) {
+        lastSendMs += 50;
+
+        // zero memory buffer
         memset(data, 0, 8);
+
+        // increment byte 0
         data[0] = count;
         count++;
 
-        //frcCANDevice.WritePacket(data, 1, 1);
+        // Send bytes. The API command is any 10 bit value specific to the device though
+        // typically used for commands and configuration.
+        frcCANDevice.WritePacket(data, 8, 0x123);
     }
 }
