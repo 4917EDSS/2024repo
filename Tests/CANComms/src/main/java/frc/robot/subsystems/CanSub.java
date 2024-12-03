@@ -14,11 +14,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class CanSub extends SubsystemBase {
   byte m_data_buffer[];
   DigitalOutput m_do0;
+  DigitalOutput m_do1;
+  DigitalOutput m_do2;
 
   /** Creates a new CanSub. */
   public CanSub() {
     m_data_buffer = new byte[8];
     m_do0 = new DigitalOutput(0);
+    m_do1 = new DigitalOutput(1);
+    m_do2 = new DigitalOutput(2);
   }
 
   @Override
@@ -47,11 +51,22 @@ public class CanSub extends SubsystemBase {
 
     try {
       //Return call is data, selection is assigned
-      m_data_buffer =
-          CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetedMessageID.asIntBuffer(), 0xFFFFFFFF, timeStamp);
+      m_data_buffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetedMessageID.asIntBuffer(), 0xFFFFFFFF, timeStamp);
       //Send back the acknowledgement of selection
       //CANJNI.FRCNetCommCANSessionMuxSendMessage(0x1E040001, currentS, 100); 
       m_do0.set(!m_do0.get());
+
+      if(( m_data_buffer != null) && (timeStamp != null)) {
+        if (m_data_buffer.length >= 3)
+        {
+          m_do1.set(m_data_buffer[1] > 0);
+          m_do2.set(m_data_buffer[2] > 0);        
+        }
+
+        //System.currentTimeMillis();
+
+
+      }
 
     } catch (edu.wpi.first.hal.can.CANMessageNotFoundException e) {
       return;

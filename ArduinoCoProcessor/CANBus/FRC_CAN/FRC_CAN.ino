@@ -6,6 +6,10 @@
 #define CAN_CS 10
 #define CAN_INTERRUPT 2
 
+// Define the switches
+int button1 = 4;
+int button2 = 3;
+
 // Create an MCP2515 device. Only need to create 1 of these
 frc::MCP2515 mcp2515{CAN_CS};
 
@@ -56,7 +60,7 @@ void UnknownMessageCallback(uint32_t id, const frc::CANData& data) {
 
 
 void setup() {
-
+    // Begin serial port
     Serial.begin(115200);
     
     // Initialize the MCP2515. If any error values are set, initialization failed
@@ -71,6 +75,11 @@ void setup() {
 
     // Prepare our interrupt pin
     pinMode(CAN_INTERRUPT, INPUT);
+
+    // Define the buttons that have been attached
+    // They are INPUT_PULLUP because when the switch is high, the pin will get pulled to GND 
+    pinMode(button1, INPUT_PULLUP);
+    pinMode(button2, INPUT_PULLUP);
     
     // Set up FRC CAN to be able to use the CAN Impl and callbacks
     // Last parameter can be set to nullptr if unknown messages should be skipped
@@ -100,6 +109,27 @@ void loop() {
         // increment byte 0
         data[0] = count;
         count++;
+
+        // Check button 1
+        if (digitalRead(button1) == LOW) {
+          // Button has been pressed, set 1
+          data[1] = 1;
+        
+        } else {
+          // Button not pressed, set 0
+          data[1] = 0;
+        }
+
+        // Check button 2
+        if (digitalRead(button2) == LOW) {
+          // Button 2 has been pressed!
+          data[2] = 1;
+
+        } else {
+          // Button is not currently being pressed
+          data[2] = 0;
+        }
+
 
         // Send bytes. The API command is any 10 bit value specific to the device though
         // typically used for commands and configuration.
