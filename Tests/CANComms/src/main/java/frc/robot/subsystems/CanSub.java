@@ -16,21 +16,23 @@ public class CanSub extends SubsystemBase {
   DigitalOutput m_do0;
   DigitalOutput m_do1;
   DigitalOutput m_do2;
+  int m_CustomSensorID;
 
   /** Creates a new CanSub. */
-  public CanSub() {
+  public CanSub(int m_CustomSensorID) {
     m_data_buffer = new byte[8];
     m_do0 = new DigitalOutput(0);
     m_do1 = new DigitalOutput(1);
     m_do2 = new DigitalOutput(2);
+    this.m_CustomSensorID = m_CustomSensorID;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
 
-    UpdateCustomSensor(3);
+
+    UpdateCustomSensor(m_CustomSensorID);
   }
 
   public byte getDataBufferByte(int byteIndex) {
@@ -51,16 +53,18 @@ public class CanSub extends SubsystemBase {
 
     try {
       //Return call is data, selection is assigned
-      m_data_buffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetedMessageID.asIntBuffer(), 0xFFFFFFFF, timeStamp);
+      //m_data_buffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetedMessageID.asIntBuffer(), 0xFFFFFFFF, timeStamp);
+      System.arraycopy(
+          CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetedMessageID.asIntBuffer(), 0xFFFFFFFF, timeStamp), 0,
+          m_data_buffer, 0, m_data_buffer.length);
       //Send back the acknowledgement of selection
       //CANJNI.FRCNetCommCANSessionMuxSendMessage(0x1E040001, currentS, 100); 
       m_do0.set(!m_do0.get());
 
-      if(( m_data_buffer != null) && (timeStamp != null)) {
-        if (m_data_buffer.length >= 3)
-        {
+      if((m_data_buffer != null) && (timeStamp != null)) {
+        if(m_data_buffer.length >= 3) {
           m_do1.set(m_data_buffer[1] > 0);
-          m_do2.set(m_data_buffer[2] > 0);        
+          m_do2.set(m_data_buffer[2] > 0);
         }
 
         //System.currentTimeMillis();
