@@ -14,7 +14,7 @@ frc::MCP2515 mcp2515{CAN_CS};
 // and devicetype are basically filters for all incoming data.  You will 
 // receive all callbacks associated with these and further process it
 // based on the API ID and data packets.
-frc::CAN frcCANDevice{17, frc::CANManufacturer::kTeamUse, frc::CANDeviceType::kMiscellaneous};
+frc::CAN frcCANDevice{3, frc::CANManufacturer::kTeamUse, frc::CANDeviceType::kMiscellaneous};
 
 
 // Callback function. This will be called any time a new message is received
@@ -40,7 +40,7 @@ void CANCallback(frc::CAN* can, int apiId, bool rtr, const frc::CANData& data) {
 // Callback function for any messages not matching a known device.
 // This would still have flags for RTR and Extended set, its a raw ID
 void UnknownMessageCallback(uint32_t id, const frc::CANData& data) {
-    Serial.print("Unknown message ");
+    /*Serial.print("Unknown message ");
     Serial.print(id & CAN_EFF_MASK, HEX);
 
     Serial.print(" Data: ");
@@ -51,7 +51,7 @@ void UnknownMessageCallback(uint32_t id, const frc::CANData& data) {
       Serial.print(" ");
     }
 
-    Serial.print("\n");    
+    Serial.print("\n");    */
 }
 
 
@@ -91,8 +91,8 @@ void loop() {
 
     // Writes can happen any time, this uses a periodic send
     auto now = millis();
-    if (now - lastSendMs > 50) {
-        lastSendMs += 50;
+    if (now - lastSendMs > 100) {
+        lastSendMs += 100;
 
         // zero memory buffer
         memset(data, 0, 8);

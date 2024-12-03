@@ -29,7 +29,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_CanSub.setDefaultCommand(new UpdateSensorCmd(m_CanSub));
+    //m_CanSub.setDefaultCommand(new UpdateSensorCmd(m_CanSub));
     // Configure the trigger bindings
     configureBindings();
   }
