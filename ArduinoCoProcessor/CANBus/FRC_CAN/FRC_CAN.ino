@@ -18,7 +18,7 @@ frc::MCP2515 mcp2515{CAN_CS};
 // and devicetype are basically filters for all incoming data.  You will 
 // receive all callbacks associated with these and further process it
 // based on the API ID and data packets.
-frc::CAN frcCANDevice{3, frc::CANManufacturer::kTeamUse, frc::CANDeviceType::kMiscellaneous};
+frc::CAN frcCANDevice{4, frc::CANManufacturer::kTeamUse, frc::CANDeviceType::kMiscellaneous};
 
 
 // Callback function. This will be called any time a new message is received
