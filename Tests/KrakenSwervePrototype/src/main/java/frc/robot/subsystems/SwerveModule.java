@@ -82,11 +82,11 @@ public class SwerveModule extends SubsystemBase {
     TalonFXConfigurator steeringConfigurator = m_steeringMotor.getConfigurator();
 
     CurrentLimitsConfigs limitConfigs = new CurrentLimitsConfigs();
-    limitConfigs.StatorCurrentLimit = 40;
+    limitConfigs.StatorCurrentLimit = 20;
     limitConfigs.StatorCurrentLimitEnable = true;
     driveConfigurator.apply(limitConfigs);
 
-    limitConfigs.StatorCurrentLimit = 40;
+    limitConfigs.StatorCurrentLimit = 20;
     limitConfigs.StatorCurrentLimitEnable = true;
     steeringConfigurator.apply(limitConfigs);
 
