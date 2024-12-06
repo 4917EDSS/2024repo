@@ -54,39 +54,38 @@ public class TestClimbMotorsCmd extends Command {
       m_testManager.updateTestStatus(m_testIds[1], Result.kFail, "Test interrupted");
       return;
     }
-    
 
-  // get the positions
-  double[] currentPositions = {
-      m_climbSub.getLeftHeight(),
-      m_climbSub.getRightHeight()
+
+    // get the positions
+    double[] currentPositions = {
+        m_climbSub.getLeftHeight(),
+        m_climbSub.getRightHeight()
     };
-    
-
-  
-  // Check to see if the measured position is good, ok or bad
-  for(int motorId = 0;motorId<=m_testIds.length;motorId++) {
-    TestManager.Result positionResult =
-        m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kClimbMotorExpectedPosition,
-            Constants.Tests.kClimbMotorPositionTolerance, Constants.Tests.kClimbMotorPositionMinimum);
-
-    String positionText =
-        "Position=" + currentPositions[motorId] + " (Target=" + Constants.Tests.kClimbMotorExpectedPosition + "+/-"
-            + Constants.Tests.kClimbMotorPositionTolerance + ")";
-    System.out.println("ClimbSub " + positionText);
 
 
-    // Figure out the overall test result
-    TestManager.Result testResult = TestManager.Result.kPass;
-    if((positionResult == TestManager.Result.kFail)) {
-      testResult = TestManager.Result.kFail;
-    } else if((positionResult == TestManager.Result.kWarn)) {
-      testResult = TestManager.Result.kWarn;
+    // Check to see if the measured position is good, ok or bad
+    for(int motorId = 0; motorId < m_testIds.length; motorId++) {
+      TestManager.Result positionResult =
+          m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kClimbMotorExpectedPosition,
+              Constants.Tests.kClimbMotorPositionTolerance, Constants.Tests.kClimbMotorPositionMinimum);
+
+      String positionText =
+          "Position=" + currentPositions[motorId] + " (Target=" + Constants.Tests.kClimbMotorExpectedPosition + "+/-"
+              + Constants.Tests.kClimbMotorPositionTolerance + ")";
+      System.out.println("ClimbSub " + positionText);
+
+
+      // Figure out the overall test result
+      TestManager.Result testResult = TestManager.Result.kPass;
+      if((positionResult == TestManager.Result.kFail)) {
+        testResult = TestManager.Result.kFail;
+      } else if((positionResult == TestManager.Result.kWarn)) {
+        testResult = TestManager.Result.kWarn;
+      }
+      // Update the test results
+      m_testManager.updateTestStatus(m_testIds[motorId], testResult, positionText);
+
     }
-    // Update the test results
-   
-
-  }
   }
 
   // Returns true when the command should end.

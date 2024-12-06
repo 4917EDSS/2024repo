@@ -49,13 +49,14 @@ public class TestFlywheelMotorsCmd extends Command {
       m_flywheelSub.testFlywheelMotorPower(0);
       m_testManager.updateTestStatus(m_testIds[0], Result.kFail, "Test interrupted");
       m_testManager.updateTestStatus(m_testIds[1], Result.kFail, "Test interrupted");
+      return;
     }
     double[] currentVelocities = {
         m_flywheelSub.getFlywheelVelocityL(),
         m_flywheelSub.getFlywheelVelocityR()
     };
     // Check to see if the measured velocity is good, ok or bad
-    for(int motorId = 0; motorId <= m_testIds.length; motorId++) {
+    for(int motorId = 0; motorId < m_testIds.length; motorId++) {
       TestManager.Result velocityResult =
           m_testManager.determineResult(m_testIds[motorId], Constants.Tests.kFlywheelMotorExpectedVelocity,
               Constants.Tests.kFlywheelMotorVelocityTolerance, Constants.Tests.kFlywheelMotorVelocityMinimum);

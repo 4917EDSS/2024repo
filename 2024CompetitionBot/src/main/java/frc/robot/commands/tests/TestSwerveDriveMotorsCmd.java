@@ -90,7 +90,7 @@ public class TestSwerveDriveMotorsCmd extends Command {
     m_drivetrainSub.testSetDriveMotorPower(m_drivetrainSub.MOTOR_BR, 0.0);
 
     // Check to see if the measured position is good, ok or bad
-    for(int motorId = 0; motorId <= m_drivetrainSub.NUM_SWERVE_MODULES; motorId++) {
+    for(int motorId = 0; motorId < m_drivetrainSub.NUM_SWERVE_MODULES; motorId++) {
       // Check to see if the measured current is good, ok or bad
       TestManager.Result ampsResult = Result.kPass; // Just pass it since we can't measure it
       // TestManager.Result ampsResult = m_testManager.determineResult(currentAmps[motorId], Constants.Tests.kDriveMotorExpectedAmps,
