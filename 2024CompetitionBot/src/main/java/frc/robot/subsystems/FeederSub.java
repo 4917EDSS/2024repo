@@ -30,14 +30,17 @@ public class FeederSub extends SubsystemBase {
   public void init() {
     m_intakeRollers.setSmartCurrentLimit(40);
 
-    m_upperFeeder.setInverted(false);
-    if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
-    } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Competition.kInvertLowerFeeder);
-    } else {
-      m_lowerFeeder.setInverted(Constants.RobotSpecific.Unknown.kInvertLowerFeeder);
-    }
+    m_upperFeeder.setInverted(true);
+    m_lowerFeeder.setInverted(false);
+    /*
+     * if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.PracticeSerialNumber)) {
+     * m_lowerFeeder.setInverted(Constants.RobotSpecific.Practice.kInvertLowerFeeder);
+     * } else if(Constants.Drivetrain.serialNumber.equals(Constants.RobotSpecific.CompetitionSerialNumber)) {
+     * m_lowerFeeder.setInverted(Constants.RobotSpecific.Competition.kInvertLowerFeeder);
+     * } else {
+     * m_lowerFeeder.setInverted(Constants.RobotSpecific.Unknown.kInvertLowerFeeder);
+     * }
+     */
 
     m_upperFeeder.setIdleMode(IdleMode.kBrake);
     m_lowerFeeder.setIdleMode(IdleMode.kBrake);
