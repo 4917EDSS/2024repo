@@ -361,5 +361,11 @@ public final class Constants {
     public static final double kIntakeRollers = 0;
     public static final double kUpperFeeder = 0;
     public static final double kLowerFeeder = 0;
+    public static final double kIntakeMotorExpectedVelocity = 0;
+    public static final double kIntakeMotorVelocityTolerance = 0;
+    public static final double kIntakeMotorVelocityMinimum = 0;
+    public static final double kIntakeMotorPower = 0;
+    public static final double kIntakeMotorTimeMs = 0;
+
   }
 }

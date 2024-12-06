@@ -73,6 +73,19 @@ public class FeederSub extends SubsystemBase {
     m_intakeRollers.set(power);
   }
 
+  public void testIntakeMotorPower(double power) {
+    m_upperFeeder.set(power);
+    m_lowerFeeder.set(power);
+  }
+
+  public double getUpperIntakeRollerVelocity() {
+    return m_upperFeeder.getEncoder().getVelocity();
+  }
+
+  public double getLowerIntakeRollerVelocity() {
+    return m_lowerFeeder.getEncoder().getVelocity();
+  }
+
   @Override
   public void periodic() {
     RobotContainer.noteInFeeder = finishedNoteIntake;
