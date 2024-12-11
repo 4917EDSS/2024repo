@@ -234,7 +234,6 @@ public class DrivetrainSub extends SubsystemBase {
 
   //Adds info to logs and resets gyro
   public void init() {
-    System.out.println("e");
     m_logger.info("Initializing DrivetrainSub");
     resetGyroYaw(0);
   }
