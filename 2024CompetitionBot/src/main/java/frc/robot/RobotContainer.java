@@ -40,6 +40,7 @@ import frc.robot.commands.ShooterPivotCmd;
 import frc.robot.commands.ShooterPrepGrp;
 import frc.robot.commands.ShooterShootCmd;
 import frc.robot.subsystems.ArduinoSub;
+import frc.robot.subsystems.CanSub;
 import frc.robot.subsystems.ClimbSub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FeederSub;
@@ -61,6 +62,7 @@ import frc.robot.subsystems.VisionSub;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ArduinoSub m_arduinoSub = new ArduinoSub();
+  private final CanSub m_CanSub = new CanSub(3);
   private final ClimbSub m_climbSub = new ClimbSub();
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
   private final FeederSub m_feederSub = new FeederSub();
