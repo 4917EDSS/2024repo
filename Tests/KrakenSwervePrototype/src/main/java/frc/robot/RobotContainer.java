@@ -7,9 +7,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveFieldRelativeCmd;
 import frc.robot.commands.DriveToRelativePositionCmd;
+import frc.robot.subsystems.VisionSub;
 import frc.robot.subsystems.DrivetrainSub;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -26,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSub m_drivetrainSub = new DrivetrainSub();
+  private final VisionSub m_visionSub = new VisionSub();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -68,7 +74,12 @@ public class RobotContainer {
     m_driverController.povDown()
         .onTrue(new SequentialCommandGroup(new DriveToRelativePositionCmd(firstDiagonalPos, m_drivetrainSub),
             new DriveToRelativePositionCmd(secondDiagonalPos, m_drivetrainSub)));
+
+    m_driverController.cross().onTrue(new InstantCommand(() -> ReefAlign(0.5)));//Offset value is wrong
+
+    m_driverController.circle().onTrue(new InstantCommand(() -> ReefAlign(-0.5)));//Offset value is wrong
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -78,5 +89,16 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new PrintCommand("No Autos");
+  }
+
+
+  public void ReefAlign(double offset) {
+    Pose2d targetPos;
+    if(m_visionSub.simpleHasTarget()) {
+      targetPos = (m_visionSub.getTarget2D()).transformBy(new Transform2d(0, offset, new Rotation2d(0)));
+    } else {
+      targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+    }
+    new DriveToRelativePositionCmd(targetPos, m_drivetrainSub);
   }
 }

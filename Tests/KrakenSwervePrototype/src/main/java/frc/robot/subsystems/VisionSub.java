@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.util.logging.Logger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -17,9 +20,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.DriveToRelativePositionCmd;
 
 public class VisionSub extends SubsystemBase {
-  private static Logger m_logger = Logger.getLogger(VisionSub.class.getName());
 
   //Gets the limelight network table values (list of labels associated with values)
   /*
@@ -79,30 +82,23 @@ public class VisionSub extends SubsystemBase {
   }
 
   public void init() {
-    //Tells the log that teh sub is being intitiated
-    m_logger.info("Initializing VisionSub");
     //Sets the apriltag pipeline
     setPipeline(1); // Apriltag vision
   }
 
   @Override
-  public void periodic() {
+  public void periodic() {}
 
-    //The shuffleboard print isn't disabled, update the shuffleboard
-    if(!RobotContainer.disableShuffleboardPrint) {
-      // This method will be called once per scheduler run
-      updateShuffleBoard();
-    }
-  }
-
-  //Method to get the apriltag heights from constants since not all have the same heeght, 
+  //Method to get the apriltag heights from constants since not all have the same height, 
   public double getDistance(int id) { // In meters
-    if(id < 1 || id > 16) // Got bad apriltag, since the ID values used are between 1 and 16 (inclusive)
-      return 0.0;
-    double height = Constants.Vision.kApriltagHeights[id + 1] + Constants.Vision.kApriltagOffset;
-    //Calculates the distacne from the apriltag to the robot using the calcDistacne mehtod
-    double distance = calcDistance(height);
+    /*
+     * if(id < 1 || id > 16) // Got bad apriltag, since the ID values used are between 1 and 16 (inclusive)
+     * return 0.0;
+     * double height = Constants.Vision.kApriltagHeights[id + 1] + Constants.Vision.kApriltagOffset;
+     * //Calculates the distacne from the apriltag to the robot using the calcDistacne mehtod
+     */
 
+    double distance = calcDistance(0.17);
     return distance;
   }
 
@@ -122,7 +118,7 @@ public class VisionSub extends SubsystemBase {
 
   //Trig explanation: the tangent of an angle equals opposite/adjacent (opposite is the side not forming the angle, adjacent is the other side
   //which isn't the hypotenuse). If we call the angle θ, then tan(θ)=opposite/adjacent. If we know θ and the opposite (apriltag height), the we can re-arrange
-  //to adjacent=opposite/tan(θ) which is the equation we use.
+  //to adjacent=opposite/tan(θ) which is teh equation we use.
   private double calcDistance(double height) { // Basic trig
     //Sets theta to the angle between the camera's crosshair and the april tag
     double theta = getSimpleVerticalAngle();
@@ -140,6 +136,14 @@ public class VisionSub extends SubsystemBase {
     Translation3d position = new Translation3d(pos[0], pos[1], pos[2]);
     Rotation3d rotation = new Rotation3d(pos[3], pos[4], pos[5]);
     return new Pose3d(position, rotation);
+  }
+
+  public Pose2d getTarget2D() {
+    //Creates an array using the position values (0:2 are x,y,z, and 3:5 are yaw, roll, pitch. Not in those specific orders)
+    double pos[] = m_botpose_target.getDoubleArray(new double[6]);
+    Translation2d position2D = new Translation2d(pos[0], pos[1]);
+    Rotation2d rotation2D = new Rotation2d(pos[3]);
+    return new Pose2d(position2D, rotation2D);
   }
 
   //Gets only yaw, roll, and pitch using the same techniques as the previous method
