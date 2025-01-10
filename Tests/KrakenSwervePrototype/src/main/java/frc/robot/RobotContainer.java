@@ -75,9 +75,9 @@ public class RobotContainer {
         .onTrue(new SequentialCommandGroup(new DriveToRelativePositionCmd(firstDiagonalPos, m_drivetrainSub),
             new DriveToRelativePositionCmd(secondDiagonalPos, m_drivetrainSub)));
 
-    m_driverController.cross().onTrue(new InstantCommand(() -> ReefAlign(0.5)));//Offset value is wrong
+    m_driverController.cross().onTrue(new InstantCommand(() -> ReefAlign(0.164338)));//TODO: Make a constant
 
-    m_driverController.circle().onTrue(new InstantCommand(() -> ReefAlign(-0.5)));//Offset value is wrong
+    m_driverController.circle().onTrue(new InstantCommand(() -> ReefAlign(-0.164338)));//TODO: Make a constant
   }
 
 
@@ -94,8 +94,8 @@ public class RobotContainer {
 
   public void ReefAlign(double offset) {
     Pose2d targetPos;
-    if(m_visionSub.simpleHasTarget()) {
-      targetPos = (m_visionSub.getTarget2D()).transformBy(new Transform2d(0, offset, new Rotation2d(0)));
+    if(m_visionSub.simpleHasTarget() && (m_visionSub.getPrimaryID()>=6&&m_visionSub.getPrimaryID()<=11 || m_visionSub.getPrimaryID()>=17&&m_visionSub.getPrimaryID()<=22)) {
+      targetPos = (m_visionSub.getTarget2D()).transformBy(new Transform2d(offset, 0, new Rotation2d(0)));
     } else {
       targetPos = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
     }
